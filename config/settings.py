@@ -20,7 +20,7 @@ def load_env(
     
     if not env_file.exists(): return
     
-    with open(env_file, OpenTextMode = "r", encoding = "utf-8") as file:
+    with open(env_file, mode = "r", encoding = "utf-8") as file:
         for line in file:
             line = line.strip()
 
