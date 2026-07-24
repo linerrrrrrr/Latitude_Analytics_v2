@@ -1,7 +1,13 @@
 import os
+import pandas as pd
 from pathlib import Path
 from typing import Optional
 
+
+pd.set_option("display.max_rows", None)
+pd.set_option("display.max_columns", None)
+pd.set_option("display.max_colwidth", None)
+pd.set_option("display.width", 300)
 
 # =============================================================================
 # .env 文件加载
