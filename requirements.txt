@@ -2,6 +2,7 @@ akshare==1.18.30
 arch==8.0.0
 beautifulsoup4==4.14.3
 bs4==0.0.2
+click>=8.1,<9
 dill==0.4.0
 importnb==2023.11.1
 ipykernel==7.2.0
