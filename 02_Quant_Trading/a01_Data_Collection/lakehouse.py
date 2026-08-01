@@ -46,3 +46,6 @@ def replace_dataset(
     if table_path.exists():
         shutil.rmtree(table_path)
     shutil.move(str(staging_path), str(table_path))
+
+
+
