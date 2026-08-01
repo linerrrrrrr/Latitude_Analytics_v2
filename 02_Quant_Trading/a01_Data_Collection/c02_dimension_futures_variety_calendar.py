@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import pathlib
 import re
 import sys
 from datetime import date, datetime, timezone
@@ -11,8 +12,17 @@ import click
 import pandas as pd
 import pyarrow as pa
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(PROJECT_ROOT))
+project_markers = [".git", ".env", "config/settings.py"]
+current_path = pathlib.Path.cwd().resolve()  # 当前工作目录
+
+for candidate_root in [current_path, *current_path.parents]:
+    if all((candidate_root / marker).exists() for marker in project_markers):
+        sys.path.insert(0, str(candidate_root))
+        break
+else:
+    raise RuntimeError("未找到项目根目录")
+
+PROJECT_ROOT = candidate_root
 
 from config.data_contracts import FUTURES_VARIETY_CALENDAR_SCHEMA, pandas_to_arrow  # noqa: E402
 from config.settings import settings  # noqa: E402
