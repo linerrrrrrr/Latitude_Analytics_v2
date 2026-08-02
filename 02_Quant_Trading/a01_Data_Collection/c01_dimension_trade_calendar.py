@@ -1,4 +1,16 @@
-"""Create or incrementally update the Chinese-market trading calendar."""
+#!/usr/bin/env python
+# coding: utf-8
+
+# # c01_dimension_trade_calendar
+# 
+# 创建或增量更新中国市场交易日历。
+# 
+# 本 Notebook 是该业务工作流的唯一可编辑源文件；同名 `.py` 由项目标准 `latitude` 环境中的默认 PythonExporter 完整生成。
+
+# In[ ]:
+
+
+"""创建或增量更新中国市场交易日历。"""
 
 from __future__ import annotations
 
@@ -25,13 +37,19 @@ else:
 
 PROJECT_ROOT = candidate_root
 
-from config.data_contracts import TRADE_CALENDAR_SCHEMA, pandas_to_arrow  # noqa: E402
+from config.data_contracts import (  # noqa: E402
+    TRADE_CALENDAR_SCHEMA,
+    arrow_to_pandas,
+    empty_pandas,
+    pandas_to_arrow,
+)
 from config.settings import settings  # noqa: E402
-from lakehouse import replace_dataset  # noqa: E402
+from c00_jqdata_connection import authenticate_jqdata  # noqa: E402
+from c00_lakehouse import replace_dataset  # noqa: E402
 
 
 CHINA_TIMEZONE = timezone(timedelta(hours=8), name="Asia/Shanghai")
-START_DATE = date(2024, 1, 1)
+START_DATE = date(2010, 1, 1)
 CUTOFF_TIME = time(20, 0)
 TABLE_PATH = (
     PROJECT_ROOT
@@ -46,8 +64,11 @@ YEAR_PARTITIONING = ds.partitioning(
 )
 
 
+# In[ ]:
+
+
 def calendar_end_date(as_of_datetime: datetime | None = None) -> date:
-    """Use today after 20:00 China time; otherwise use yesterday."""
+    """北京时间 20:00 后使用当天，否则使用前一天。"""
     current_datetime = as_of_datetime or datetime.now(CHINA_TIMEZONE)
     if current_datetime.tzinfo is None:
         current_datetime = current_datetime.replace(tzinfo=CHINA_TIMEZONE)
@@ -58,16 +79,20 @@ def calendar_end_date(as_of_datetime: datetime | None = None) -> date:
     return current_datetime.date() - timedelta(days=1)
 
 
-def fetch_trading_dates(start_date: date, end_date: date) -> set[date]:
-    """Get official trading dates from JQData."""
-    import jqdatasdk
+# In[ ]:
 
-    jqdatasdk.auth(settings.jqdata_id, settings.jqdata_secret)
-    jq_dates = jqdatasdk.get_trade_days(
+
+def fetch_trading_dates(start_date: date, end_date: date) -> set[date]:
+    """从 JQData 获取官方交易日期。"""
+    jqdata = authenticate_jqdata(settings.jqdata_id, settings.jqdata_secret)
+    jq_dates = jqdata.get_trade_days(
         start_date=start_date.isoformat(),
         end_date=end_date.isoformat(),
     )
     return {pd.Timestamp(jq_date).date() for jq_date in jq_dates}
+
+
+# In[ ]:
 
 
 def build_calendar_df(
@@ -75,7 +100,7 @@ def build_calendar_df(
     end_date: date,
     trading_dates: set[date],
 ) -> pd.DataFrame:
-    """Build one row for every calendar date."""
+    """为日历范围内的每个自然日生成一行数据。"""
     updated_at = datetime.now(timezone.utc).replace(microsecond=0)
     calendar_dates = pd.date_range(start_date, end_date, freq="D").date
 
@@ -97,14 +122,21 @@ def build_calendar_df(
     )
 
 
+# In[ ]:
+
+
 def read_calendar_df(table_path: Path) -> pd.DataFrame:
     if not table_path.exists():
-        return pd.DataFrame(columns=TRADE_CALENDAR_SCHEMA.names)
-    return ds.dataset(
+        return empty_pandas(TRADE_CALENDAR_SCHEMA)
+    table = ds.dataset(
         table_path,
         format="parquet",
         partitioning=YEAR_PARTITIONING,
-    ).to_table().to_pandas(types_mapper=pd.ArrowDtype)
+    ).to_table()
+    return arrow_to_pandas(table, TRADE_CALENDAR_SCHEMA)
+
+
+# In[ ]:
 
 
 def write_calendar_df(calendar_df: pd.DataFrame, table_path: Path) -> None:
@@ -121,7 +153,15 @@ def write_calendar_df(calendar_df: pd.DataFrame, table_path: Path) -> None:
     calendar_df["year"] = calendar_df["year"].astype("int16")
 
     calendar_table = pandas_to_arrow(calendar_df, TRADE_CALENDAR_SCHEMA)
-    replace_dataset(calendar_table, table_path, YEAR_PARTITIONING)
+    replace_dataset(
+        calendar_table,
+        table_path,
+        YEAR_PARTITIONING,
+        TRADE_CALENDAR_SCHEMA,
+    )
+
+
+# In[ ]:
 
 
 def update_trade_calendar(
@@ -131,14 +171,14 @@ def update_trade_calendar(
     full_refresh: bool = False,
     as_of_datetime: datetime | None = None,
 ) -> pd.DataFrame:
-    """Update the file and return the complete calendar."""
+    """更新数据集并返回完整交易日历。"""
     target_end_date = end_date or calendar_end_date(as_of_datetime)
     target_start_date = start_date or START_DATE
     existing_df = read_calendar_df(table_path)
 
     if full_refresh or existing_df.empty:
         fetch_start_date = target_start_date
-        existing_df = pd.DataFrame(columns=TRADE_CALENDAR_SCHEMA.names)
+        existing_df = empty_pandas(TRADE_CALENDAR_SCHEMA)
     else:
         last_date = existing_df["calendar_date"].max()
         if last_date >= target_end_date:
@@ -154,6 +194,9 @@ def update_trade_calendar(
     return calendar_df
 
 
+# In[ ]:
+
+
 @click.command()
 @click.option("--table-path", type=click.Path(path_type=Path), default=TABLE_PATH, show_default=True)
 @click.option("--start-date", type=click.DateTime(["%Y-%m-%d"]), default=str(START_DATE), show_default=True)
@@ -165,7 +208,7 @@ def main(
     end_date: datetime | None,
     full_refresh: bool,
 ) -> None:
-    """Create or incrementally update the Chinese-market trading calendar."""
+    """创建或增量更新中国市场交易日历。"""
     calendar_df = update_trade_calendar(
         table_path=table_path,
         start_date=start_date.date() if start_date else None,
@@ -177,5 +220,28 @@ def main(
     click.echo(f"last_date: {calendar_df['calendar_date'].max()}")
 
 
+# In[ ]:
+
+
+def running_in_ipykernel() -> bool:
+    try:
+        from ipykernel.kernelapp import IPKernelApp
+    except ImportError:
+        return False
+
+    return IPKernelApp.initialized()
+
+
 if __name__ == "__main__":
-    main()
+    in_kernel = running_in_ipykernel()
+    main(
+        args=[] if in_kernel else None,
+        standalone_mode=not in_kernel,
+    )
+
+
+# In[ ]:
+
+
+
+

@@ -1,2 +1,1 @@
-"""New data collection system for Latitude Analytics."""
-
+"""Latitude Analytics 的新数据采集系统。"""

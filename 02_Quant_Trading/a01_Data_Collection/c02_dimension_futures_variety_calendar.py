@@ -1,4 +1,16 @@
-"""Create or incrementally update the domestic futures variety calendar."""
+#!/usr/bin/env python
+# coding: utf-8
+
+# # c02_dimension_futures_variety_calendar
+# 
+# 创建或增量更新国内期货品种日历。
+# 
+# 本 Notebook 是该业务工作流的唯一可编辑源文件；同名 `.py` 由项目标准 `latitude` 环境中的默认 PythonExporter 完整生成。
+
+# In[ ]:
+
+
+"""创建或增量更新国内期货品种日历。"""
 
 from __future__ import annotations
 
@@ -24,9 +36,15 @@ else:
 
 PROJECT_ROOT = candidate_root
 
-from config.data_contracts import FUTURES_VARIETY_CALENDAR_SCHEMA, pandas_to_arrow  # noqa: E402
+from config.data_contracts import (  # noqa: E402
+    FUTURES_VARIETY_CALENDAR_SCHEMA,
+    TRADE_CALENDAR_SCHEMA,
+    empty_pandas,
+    pandas_to_arrow,
+)
 from config.settings import settings  # noqa: E402
-from lakehouse import hive_partitioning, read_dataset, replace_dataset  # noqa: E402
+from c00_jqdata_connection import authenticate_jqdata  # noqa: E402
+from c00_lakehouse import hive_partitioning, read_dataset, replace_dataset  # noqa: E402
 
 LAKE_ROOT = PROJECT_ROOT / "03_Futures_Database" / "futures_lake" / "silver"
 CALENDAR_PATH = LAKE_ROOT / "dim_trade_calendar"
@@ -34,7 +52,11 @@ TABLE_PATH = LAKE_ROOT / "dim_futures_variety_calendar"
 PARTITIONING = hive_partitioning(
     [pa.field("exchange_code", pa.string()), pa.field("year", pa.int16()), pa.field("month", pa.int8())]
 )
+TRADE_CALENDAR_PARTITIONING = hive_partitioning([pa.field("year", pa.int16())])
 SUPPORTED_EXCHANGES = {"XDCE", "XSGE", "XZCE", "XINE", "GFEX"}
+
+
+# In[ ]:
 
 
 def fixed_contract(code: str) -> bool:
@@ -42,8 +64,14 @@ def fixed_contract(code: str) -> bool:
     return bool(re.fullmatch(r"[A-Za-z]+[0-9]+", stem)) and not stem.endswith(("8888", "9999"))
 
 
+# In[ ]:
+
+
 def underlying(code: str) -> str:
     return re.match(r"[A-Za-z]+", code).group().upper()
+
+
+# In[ ]:
 
 
 def update_variety_calendar(
@@ -51,18 +79,24 @@ def update_variety_calendar(
     table_path: Path = TABLE_PATH,
     full_refresh: bool = False,
 ) -> pd.DataFrame:
-    import jqdatasdk
-
-    calendar_df = pd.read_parquet(calendar_path, dtype_backend="pyarrow")
+    calendar_df = read_dataset(
+        calendar_path,
+        TRADE_CALENDAR_PARTITIONING,
+        TRADE_CALENDAR_SCHEMA,
+    )
     trading_dates = sorted(calendar_df.loc[calendar_df["is_trading_day"], "calendar_date"].tolist())
-    existing_df = pd.DataFrame() if full_refresh else read_dataset(table_path, PARTITIONING)
+    existing_df = (
+        empty_pandas(FUTURES_VARIETY_CALENDAR_SCHEMA)
+        if full_refresh
+        else read_dataset(table_path, PARTITIONING, FUTURES_VARIETY_CALENDAR_SCHEMA)
+    )
     last_date = existing_df["trading_date"].max() if not existing_df.empty else None
     pending_dates = [value for value in trading_dates if last_date is None or value > last_date]
     if not pending_dates:
         return existing_df
 
-    jqdatasdk.auth(settings.jqdata_id, settings.jqdata_secret)
-    securities_df = jqdatasdk.get_all_securities(["futures"]).rename_axis("contract_code").reset_index()
+    jqdata = authenticate_jqdata(settings.jqdata_id, settings.jqdata_secret)
+    securities_df = jqdata.get_all_securities(["futures"]).rename_axis("contract_code").reset_index()
     securities_df = securities_df[securities_df["contract_code"].map(fixed_contract)].copy()
     securities_df["underlying_code"] = securities_df["contract_code"].map(underlying)
     securities_df["exchange_code"] = securities_df["contract_code"].str.rsplit(".", n=1).str[-1]
@@ -99,8 +133,12 @@ def update_variety_calendar(
         pandas_to_arrow(combined_df, FUTURES_VARIETY_CALENDAR_SCHEMA),
         table_path,
         PARTITIONING,
+        FUTURES_VARIETY_CALENDAR_SCHEMA,
     )
     return combined_df
+
+
+# In[ ]:
 
 
 @click.command()
@@ -108,11 +146,28 @@ def update_variety_calendar(
 @click.option("--table-path", type=click.Path(path_type=Path), default=TABLE_PATH)
 @click.option("--full-refresh", is_flag=True)
 def main(calendar_path: Path, table_path: Path, full_refresh: bool) -> None:
-    """Update only through the upstream trade-calendar watermark."""
+    """仅更新至上游交易日历的数据水位。"""
     result_df = update_variety_calendar(calendar_path, table_path, full_refresh)
     click.echo(f"row_count: {len(result_df)}")
     click.echo(f"last_date: {result_df['trading_date'].max()}")
 
 
+# In[ ]:
+
+
+def running_in_ipykernel() -> bool:
+    try:
+        from ipykernel.kernelapp import IPKernelApp
+    except ImportError:
+        return False
+
+    return IPKernelApp.initialized()
+
+
 if __name__ == "__main__":
-    main()
+    in_kernel = running_in_ipykernel()
+    main(
+        args=[] if in_kernel else None,
+        standalone_mode=not in_kernel,
+    )
+
