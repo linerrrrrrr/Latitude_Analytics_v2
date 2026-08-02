@@ -1,0 +1,33 @@
+# Local environment and secrets
+.env
+.env.*
+!.env.template
+!.env.example
+
+# Materialized data lake datasets
+/03_Futures_Database/futures_lake/
+
+# Python bytecode, caches, and local test output
+__pycache__/
+*.py[cod]
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Jupyter local state
+.ipynb_checkpoints/
+
+# IDE and local agent/tool state
+.idea/
+.vscode/
+.codeartsdoer/
+
+# Logs and operating-system metadata
+*.log
+.DS_Store
+Thumbs.db
+Desktop.ini
