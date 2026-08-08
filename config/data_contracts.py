@@ -6,6 +6,7 @@
 - ``.env.template``：项目根目录定位代码的权威模板；
 - ``03_Futures_Database/AGENTS.md``：数据库目录级 Agent 规则及字段与跨引擎类型规范；
 - ``02_Quant_Trading/a01_Data_Collection/README.md``：采集链路与表级规范。
+- ``02_Quant_Trading/a02_Feature_Engineering/README.md``：主力连续合约与派生特征表规范。
 
 修改 Schema、``ARROW_TYPE_MAPPINGS`` 或转换入口时，必须在同一次变更中同步检查并
 更新以上规范；文本映射与可执行映射表达的是同一份约束。
@@ -179,6 +180,73 @@ FUTURES_MINUTE_SCHEMA = pa.schema(
     ]
 )
 
+FUTURES_MAIN_CONTRACT_DAILY_SCHEMA = pa.schema(
+    [
+        pa.field("exchange_code", pa.string(), nullable=False),
+        pa.field("underlying_code", pa.string(), nullable=False),
+        pa.field("trading_date", pa.date32(), nullable=False),
+        pa.field("main_contract_code", pa.string(), nullable=False),
+        pa.field("signal_trading_date", pa.date32(), nullable=False),
+        pa.field("continuity_segment", pa.int32(), nullable=False),
+        pa.field("previous_main_contract_code", pa.string()),
+        pa.field("challenger_contract_code", pa.string()),
+        pa.field("selection_metric", pa.string(), nullable=False),
+        pa.field("main_contract_signal_volume", pa.float64()),
+        pa.field("incumbent_signal_volume", pa.float64()),
+        pa.field("challenger_signal_volume", pa.float64()),
+        pa.field("roll_trigger_ratio", pa.float64(), nullable=False),
+        pa.field("is_roll", pa.bool_(), nullable=False),
+        pa.field("selection_reason", pa.string(), nullable=False),
+        pa.field("roll_anchor_date", pa.date32()),
+        pa.field("previous_contract_anchor_close", pa.float64()),
+        pa.field("main_contract_anchor_close", pa.float64()),
+        pa.field("roll_log_gap", pa.float64()),
+        pa.field("source", pa.string(), nullable=False),
+        pa.field("updated_at", pa.timestamp("us", tz="UTC"), nullable=False),
+        pa.field("year", pa.int16(), nullable=False),
+        pa.field("month", pa.int8(), nullable=False),
+    ]
+)
+
+FUTURES_MAIN_CONTINUOUS_DAILY_SCHEMA = pa.schema(
+    [
+        pa.field("exchange_code", pa.string(), nullable=False),
+        pa.field("underlying_code", pa.string(), nullable=False),
+        pa.field("trading_date", pa.date32(), nullable=False),
+        pa.field("main_contract_code", pa.string(), nullable=False),
+        pa.field("signal_trading_date", pa.date32(), nullable=False),
+        pa.field("continuity_segment", pa.int32(), nullable=False),
+        pa.field("is_roll", pa.bool_(), nullable=False),
+        pa.field("roll_log_gap", pa.float64()),
+        pa.field("open", pa.float64()),
+        pa.field("high", pa.float64()),
+        pa.field("low", pa.float64()),
+        pa.field("close", pa.float64()),
+        pa.field("volume", pa.float64()),
+        pa.field("money", pa.float64()),
+        pa.field("open_interest", pa.float64()),
+        pa.field("has_market_data", pa.bool_(), nullable=False),
+        pa.field("log_open", pa.float64()),
+        pa.field("log_high", pa.float64()),
+        pa.field("log_low", pa.float64()),
+        pa.field("log_close", pa.float64()),
+        pa.field("forward_log_adjustment", pa.float64(), nullable=False),
+        pa.field("backward_log_adjustment", pa.float64(), nullable=False),
+        pa.field("forward_adjusted_log_open", pa.float64()),
+        pa.field("forward_adjusted_log_high", pa.float64()),
+        pa.field("forward_adjusted_log_low", pa.float64()),
+        pa.field("forward_adjusted_log_close", pa.float64()),
+        pa.field("backward_adjusted_log_open", pa.float64()),
+        pa.field("backward_adjusted_log_high", pa.float64()),
+        pa.field("backward_adjusted_log_low", pa.float64()),
+        pa.field("backward_adjusted_log_close", pa.float64()),
+        pa.field("source", pa.string(), nullable=False),
+        pa.field("updated_at", pa.timestamp("us", tz="UTC"), nullable=False),
+        pa.field("year", pa.int16(), nullable=False),
+        pa.field("month", pa.int8(), nullable=False),
+    ]
+)
+
 
 DATASET_SCHEMAS = {
     "dim_trade_calendar": TRADE_CALENDAR_SCHEMA,
@@ -189,6 +257,8 @@ DATASET_SCHEMAS = {
     "fact_futures_missing_bar": FUTURES_MISSING_BAR_SCHEMA,
     "fact_futures_daily": FUTURES_DAILY_SCHEMA,
     "fact_futures_minute": FUTURES_MINUTE_SCHEMA,
+    "fact_futures_main_contract_daily": FUTURES_MAIN_CONTRACT_DAILY_SCHEMA,
+    "fact_futures_main_continuous_daily": FUTURES_MAIN_CONTINUOUS_DAILY_SCHEMA,
 }
 
 

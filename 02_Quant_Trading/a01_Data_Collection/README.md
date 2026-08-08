@@ -8,8 +8,9 @@
 - [根目录 AGENTS.md](../../AGENTS.md)：项目环境、根目录定位与规范路由。
 - [量化交易 AGENTS.md](../AGENTS.md)：Notebook/Python 双轨及旧项目只读规则。
 - [数据库 AGENTS.md](../../03_Futures_Database/AGENTS.md)：字段、类型、Schema 与读取规范。
-- [可执行数据契约](../../config/data_contracts.py)：八张数据湖表的唯一 Arrow Schema。
-- [数据湖读取 Demo](../../03_Futures_Database/read_futures_lake_demo.ipynb)：八张表各自独立的契约化读取示例。
+- [特征工程 README](../a02_Feature_Engineering/README.md)：消费本目录 silver 表的主力连续合约与 gold 派生表规范。
+- [可执行数据契约](../../config/data_contracts.py)：八张 silver 采集表及 gold 派生表的唯一 Arrow Schema。
+- [数据湖读取 Demo](../../03_Futures_Database/read_futures_lake_demo.ipynb)：八张 silver 表与两张 gold 表各自独立的契约化读取示例。
 
 ## 工作流与共享模块
 
@@ -116,7 +117,7 @@ XZCE: CY FG MA ME PF PL PR PX SA SF SH SM TA TC UR ZC
 `evidence_level='authoritative'` 且 `is_fetch_exempt=True` 后，c07 才允许把对应 Session 的
 `is_fetch_required` 设为假。旧 `dim_futures_session_exception_calendar` 不再作为生产输入。
 
-## 八张表的粒度、主键与 Hive 分区
+## 八张 silver 采集表的粒度、主键与 Hive 分区
 
 | 数据集 | 粒度 / 主键 | Hive 分区顺序 |
 |---|---|---|
@@ -136,7 +137,7 @@ XZCE: CY FG MA ME PF PL PR PX SA SF SH SM TA TC UR ZC
 ## 第一阶段正式执行顺序
 
 ```powershell
-E:\anaconda3\envs\latitude\python.exe scripts/verify_runtime.py
+E:\anaconda3\envs\latitude\python.exe 00_draft_collection_02/scripts/verify_runtime.py
 E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c01_dimension_trade_calendar.py --start-date 2010-01-01 --full-refresh
 E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c02_dimension_futures_variety_calendar.py --full-refresh
 E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c03_dimension_futures_contract_calendar.py --full-refresh
@@ -145,7 +146,7 @@ E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c07_f
 E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c04_fact_futures_daily.py --full-refresh --dry-run
 E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c04_fact_futures_daily.py --full-refresh
 E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c08_fact_futures_missing_bar.py
-E:\anaconda3\envs\latitude\python.exe scripts/verify_futures_calendar_pipeline.py
+E:\anaconda3\envs\latitude\python.exe 00_draft_collection_02/scripts/verify_futures_calendar_pipeline.py
 ```
 
 第一阶段不运行 `c05_fact_futures_minute.py`。分钟阶段确认后，先执行：
@@ -180,5 +181,5 @@ E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c05_f
 
 ```powershell
 E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c08_fact_futures_missing_bar.py
-E:\anaconda3\envs\latitude\python.exe scripts/verify_futures_calendar_pipeline.py
+E:\anaconda3\envs\latitude\python.exe 00_draft_collection_02/scripts/verify_futures_calendar_pipeline.py
 ```

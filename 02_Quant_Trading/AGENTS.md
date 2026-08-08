@@ -2,7 +2,7 @@
 
 - 本文件是 `E:\Latitude_Analytics_v2\02_Quant_Trading` 整棵目录树的目录级 Agent 规则入口，适用于目录本身以及任意层级的当前子目录、只读旧项目和未来新增目录。
 - 本文件用于集中定义或索引量化交易目录的全部 Agent 规则；`.ipynb/.py` 双轨及 PythonExporter 只是当前其中一个专题，不代表本文件只负责双轨。
-- 覆盖范围包括但不限于 `a01_Data_Collection`、`old_01_Data_Fetching` 及其全部后代目录；其中 `old_01_Data_Fetching` 只适用下述“旧项目只读保护”，不得把其他目录的可写规则套用于该目录。
+- 覆盖范围包括但不限于 `a01_Data_Collection`、`a02_Feature_Engineering`、`old_01_Data_Fetching` 及其全部后代目录；其中 `old_01_Data_Fetching` 只适用下述“旧项目只读保护”，不得把其他目录的可写规则套用于该目录。
 - 除明确标注适用于只读旧项目的规则外，本文件的业务开发、双轨生成和交付规则只适用于 `old_01_Data_Fetching` 之外的可写目录。未来新增量化交易目录级规则时，应直接加入本文件或由本文件建立明确索引，不得另建无法从这里发现的孤立规范。
 - 本目录继承根目录 [AGENTS.md](../AGENTS.md) 的全部规则。下级 `AGENTS.md` 或 README 可以增加更严格的要求，但未经用户明确同意，不得豁免、弱化或缩小本文件的覆盖范围。
 
@@ -37,6 +37,17 @@ E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c00_s
 - `--check` 是默认模式，只检查而不写文件，适合交付复核和 CI。
 - 该脚本只扫描自身所在目录且不递归；不得扩展到或传入只读 `old_01_Data_Fetching`。修改 `a01_Data_Collection` 的业务 Notebook 后，必须运行 `--write`；交付前必须运行 `--check`。
 - `c00_sync_notebook_exports.py` 是运维与验证脚本，不是业务工作流入口，不要求创建同名 Notebook。
+
+`a02_Feature_Engineering` 同样使用自身目录的 `c00_sync_notebook_exports.py`，只扫描本目录的
+`c01` 起始业务 Notebook：
+
+```powershell
+E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a02_Feature_Engineering/c00_sync_notebook_exports.py --write
+E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a02_Feature_Engineering/c00_sync_notebook_exports.py --check
+```
+
+主力连续合约的表级契约、gold 存放位置、log 双向复权与期限结构边界以
+[a02_Feature_Engineering/README.md](a02_Feature_Engineering/README.md) 为准。
 
 以下代码是该脚本及本目录树内其他允许修改业务入口从 `.ipynb` → `.py` 的唯一底层生成方式。不得对只读旧项目执行导出，也不得传入自定义模板、preprocessor 或其他改变导出文本的配置：
 
@@ -85,6 +96,7 @@ if script_path.read_bytes() != script_source.encode("utf-8"):
 - [.env.template](../.env.template)：项目根目录定位代码的权威模板。
 - [03_Futures_Database/AGENTS.md](../03_Futures_Database/AGENTS.md)：数据库目录级 Agent 规则，以及字段命名、跨引擎类型与数据湖 Schema 文本规范。
 - [a01_Data_Collection/README.md](a01_Data_Collection/README.md)：当前国内期货数据采集链路、具体双轨清单及 `c00` 同步入口。
-- [config/data_contracts.py](../config/data_contracts.py)：数据湖 Schema 及 DataFrame 类型转换的可执行契约。
+- [a02_Feature_Engineering/README.md](a02_Feature_Engineering/README.md)：主力连续合约、log 双向复权、期限结构边界及 gold 派生表规范。
+- [config/data_contracts.py](../config/data_contracts.py)：silver 与 gold 数据湖 Schema 及 DataFrame 类型转换的可执行契约。
 - 修改本文件时，必须同步检查根目录规范索引和受影响子目录的规范；不得形成只在本文件可见的孤立约束。
 - 修改数据湖字段、Schema、生产者、读取者、类型转换或相关验证时，必须同时读取并遵循 `03_Futures_Database/AGENTS.md` 与 `config/data_contracts.py`。

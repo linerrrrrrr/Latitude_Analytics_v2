@@ -16,8 +16,9 @@
 - [02_Quant_Trading/AGENTS.md](../02_Quant_Trading/AGENTS.md)：量化交易整棵目录树的目录级 Agent 规则入口，包含双轨、PythonExporter、`c00` 同步入口及旧项目只读规定。
 - [.env.template](../.env.template)：项目根目录定位代码的权威模板。
 - [数据采集链路 README](../02_Quant_Trading/a01_Data_Collection/README.md)：双轨同步入口、表粒度、主键、分区和更新水位规范。
+- [特征工程 README](../02_Quant_Trading/a02_Feature_Engineering/README.md)：主力连续合约、log 双向复权、期限结构边界及 gold 派生表规范。
 - [config/data_contracts.py](../config/data_contracts.py)：数据湖 Schema 及 Pandas、Polars、Arrow 转换的可执行契约。
-- [read_futures_lake_demo.ipynb](read_futures_lake_demo.ipynb)：八张当前数据湖表的契约化读取演示。
+- [read_futures_lake_demo.ipynb](read_futures_lake_demo.ipynb)：八张 silver 表与两张 gold 派生表的契约化读取演示。
 - 修改本规范时，必须同步检查以上索引项；字段、类型、Schema 或转换入口发生变化时，相关文本和代码必须在同一次变更中更新。
 
 ## 1. 通用命名
@@ -115,6 +116,8 @@ DataFrame 前执行 Arrow Schema 校验。禁止直接读取后依赖 Pandas 或
 | `fact_futures_missing_bar` | `FUTURES_MISSING_BAR_SCHEMA` |
 | `fact_futures_daily` | `FUTURES_DAILY_SCHEMA` |
 | `fact_futures_minute` | `FUTURES_MINUTE_SCHEMA` |
+| `fact_futures_main_contract_daily` | `FUTURES_MAIN_CONTRACT_DAILY_SCHEMA` |
+| `fact_futures_main_continuous_daily` | `FUTURES_MAIN_CONTINUOUS_DAILY_SCHEMA` |
 
 统一转换入口：
 
@@ -144,13 +147,19 @@ Hive 分区；后续分区字段分别遵循采集 README 中的表级契约。`
 其 `is_fetch_exempt` 必须为假；只有 `evidence_level='authoritative'` 的记录才允许设置
 `is_fetch_exempt=True` 并影响拉取要求。不得把工作日休市间隔的推断直接等同于 Session 已确认关闭。
 
+两张主力连续合约派生表位于 `futures_lake/gold`，均按
+`exchange_code / underlying_code / year / month` 分区。其主力选择、换月锚点、log 前后复权和
+期限结构不复权边界以 `02_Quant_Trading/a02_Feature_Engineering/README.md` 为准。gold 派生表与
+silver 输入表一样，生产写入必须先通过 `config/data_contracts.py` 的对应 Arrow Schema。
+
 ## 4. 数据湖读取 Demo
 
-- `read_futures_lake_demo.ipynb` 是当前八张数据湖表的标准读取演示，必须覆盖
+- `read_futures_lake_demo.ipynb` 是当前十张数据湖表的标准读取演示，必须覆盖
   `dim_trade_calendar`、`dim_futures_variety_calendar`、
   `dim_futures_contract_calendar`、`dim_futures_session_schedule_signal`、
   `fact_futures_fetch_status`、
-  `fact_futures_missing_bar`、`fact_futures_daily` 和 `fact_futures_minute`。
+  `fact_futures_missing_bar`、`fact_futures_daily`、`fact_futures_minute`、
+  `fact_futures_main_contract_daily` 和 `fact_futures_main_continuous_daily`。
 - 每张表必须由独立代码单元格演示；单个演示单元格不得同时读取多张表。公共导入、项目根目录定位、
   分区定义和展示函数可以放在单独的初始化单元格。
 - Demo 必须使用项目规定的根目录标记文件搜索方式、`latitude` 环境、
@@ -158,4 +167,6 @@ Hive 分区；后续分区字段分别遵循采集 README 中的表级契约。`
   Pandas 或 Polars 推断落盘类型。
 - 维表和日线示例使用 `c00_lakehouse.py` 的统一读取入口。分钟线示例必须先按交易所、品种、
   年和月执行分区过滤，再通过相应 Arrow Schema 校验并转换，禁止为了演示而把整张分钟表载入内存。
+- gold 示例必须从 `futures_lake/gold` 读取，并先按交易所、品种、年和月过滤；不得把 gold 路径
+  混写为 silver 表路径。
 - 表名、字段、分区、Schema 或读取/转换入口发生变化时，必须在同一次变更中更新并验证该 Demo。
