@@ -13,7 +13,7 @@ from nbconvert.exporters import PythonExporter
 
 EXPECTED_ENVIRONMENT = "latitude"
 WORKFLOW_DIR = Path(__file__).resolve().parent
-WORKFLOW_PATTERN = "c[0-9][0-9]_*.ipynb"
+WORKFLOW_PATTERN = "b[0-9][0-9]_*.ipynb"
 
 
 @dataclass(frozen=True)
@@ -28,7 +28,7 @@ class ExportArtifact:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "同步并检查 a01_Data_Collection 中 c01 起始的业务 Notebook 与同名脚本。"
+            "同步并检查 a02_Feature_Engineering 中 b01 起始的业务 Notebook 与同名脚本。"
         )
     )
     mode_group = parser.add_mutually_exclusive_group()
@@ -55,16 +55,16 @@ def ensure_standard_runtime() -> None:
 
 
 def discover_workflows() -> tuple[list[Path], list[Path]]:
-    """只发现当前目录的 c01+ 工作流；不递归进入任何其他目录。"""
+    """只发现当前目录的 b01+ 工作流，不递归扫描其他目录。"""
     notebook_paths = sorted(
         path
         for path in WORKFLOW_DIR.glob(WORKFLOW_PATTERN)
-        if not path.stem.startswith("c00_")
+        if not path.stem.startswith("b00_")
     )
     script_paths = sorted(
         path
-        for path in WORKFLOW_DIR.glob("c[0-9][0-9]_*.py")
-        if not path.stem.startswith("c00_")
+        for path in WORKFLOW_DIR.glob("b[0-9][0-9]_*.py")
+        if not path.stem.startswith("b00_")
     )
     return notebook_paths, script_paths
 

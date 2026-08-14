@@ -1,185 +1,225 @@
-# 国内期货数据采集链路
+# 数据采集重建项目
 
-本目录负责从 JQData 构建国内商品期货日历、拉取状态、日线和分钟线，并写入
-`03_Futures_Database/futures_lake/silver`。数据起点统一为 `2010-01-01`。
+本目录是按照 `a01_Data_Collection_Rebuild_Blueprint` 从空白目录实现的新采集项目。正式
+silver 目标为 7 张日历维度表和 11 张事实表，共 18 张；所有 Arrow Schema 与中文
+metadata 由 `config/data_contracts.py` 统一约束。
 
-规范索引：
+## 强制执行边界
 
-- [根目录 AGENTS.md](../../AGENTS.md)：项目环境、根目录定位与规范路由。
-- [量化交易 AGENTS.md](../AGENTS.md)：Notebook/Python 双轨及旧项目只读规则。
-- [数据库 AGENTS.md](../../03_Futures_Database/AGENTS.md)：字段、类型、Schema 与读取规范。
-- [特征工程 README](../a02_Feature_Engineering/README.md)：消费本目录 silver 表的主力连续合约与 gold 派生表规范。
-- [可执行数据契约](../../config/data_contracts.py)：八张 silver 采集表及 gold 派生表的唯一 Arrow Schema。
-- [数据湖读取 Demo](../../03_Futures_Database/read_futures_lake_demo.ipynb)：八张 silver 表与两张 gold 表各自独立的契约化读取示例。
+- 当前实现顺序受
+  [重建执行清单](../a01_Data_Collection_Rebuild_Blueprint/08_EXECUTION_CHECKLIST.md)
+  约束：代码、消费者和空湖验证全部通过后，才允许编写或运行数据迁移程序。
+- 业务 Notebook 是唯一直接编辑的源文件；同名 `.py` 仅由默认 PythonExporter 生成。
+- 所有命令都要求操作员显式启动；当前不提供根级 BAT 编排，不创建定时任务或后台恢复。
+- 业务入口不设置独立的 API 调用开关：命令启动后直接执行数据采集与契约校验；`--write` 是唯一的
+  “是否写入”开关，不带 `--write` 时不得改动数据湖、日历状态或完成水位。
+- `.env` 的 `FUTURES_LAKE_ROOT` 指向唯一正式湖根目录，业务代码通过
+  `settings.futures_lake_root` 引用；`--lake-root` 只作为非正式临时湖覆盖。首次重建前，将旧
+  `03_Futures_Database/futures_lake` 在同一磁盘直接移动到
+  `04_Old_Projects/futures_lake_pre_rebuild_20260810`；禁止读取旧数据后重新写入归档。
+- 运行任何业务入口前必须先验证 `latitude` 环境和 Notebook/Python 双轨同步状态；预检失败时不调用 API。
+- API 成功、确认空、可重试错误、永久错误、Schema 错误和质量错误分别处理；事实正式路径
+  复读成功前不得回写日历完成状态。
 
-## 工作流与共享模块
+## 自动更新范围与日期参数禁令
 
-业务入口必须同时保留同名 `.ipynb` 与 `.py`；Notebook 是唯一可直接编辑的源文件：
-
-```text
-c01_dimension_trade_calendar.ipynb              ↔ c01_dimension_trade_calendar.py
-c02_dimension_futures_variety_calendar.ipynb    ↔ c02_dimension_futures_variety_calendar.py
-c03_dimension_futures_contract_calendar.ipynb   ↔ c03_dimension_futures_contract_calendar.py
-c04_fact_futures_daily.ipynb                     ↔ c04_fact_futures_daily.py
-c05_fact_futures_minute.ipynb                    ↔ c05_fact_futures_minute.py
-c06_dimension_futures_session_schedule_signal.ipynb ↔ c06_dimension_futures_session_schedule_signal.py
-c07_fact_futures_fetch_status.ipynb              ↔ c07_fact_futures_fetch_status.py
-c08_fact_futures_missing_bar.ipynb               ↔ c08_fact_futures_missing_bar.py
-```
-
-`c00_*.py` 是共享库或运维入口，不要求同名 Notebook：
-
-- `c00_futures_universe.py`：日线全品种与已确认 59 个分钟品种的唯一筛选配置。
-- `c00_futures_fetch_control.py`：`build_fetch_requirements()`、`mark_fetch_completed()`、`detect_missing_bars()`。
-- `c00_futures_contract_calendar.py`：合约 Session 日历的分区流式构建。
-- `c00_futures_daily_fetch.py` / `c00_futures_minute_fetch.py`：配额感知的事实表拉取与分区写入。
-- `c00_jqdata_connection.py`：认证与 Windows 直连出口。
-- `c00_lakehouse.py`：Arrow/Hive 读写、流式复读校验和可恢复替换。
-- `c00_sync_notebook_exports.py`：默认 PythonExporter 双轨同步。
-
-双轨同步命令：
-
-```powershell
-E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c00_sync_notebook_exports.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c00_sync_notebook_exports.py --check
-```
-
-## 数据来源与遍历依据
+正式更新的唯一范围规则是：
 
 ```text
-get_trade_days
-  → dim_trade_calendar
-  → get_all_securities(list_date / delist_date)
-  → dim_futures_variety_calendar
-  → get_futures_info(trade_time / multiplier / tick_size)
-  → dim_futures_contract_calendar
-  → dim_futures_session_schedule_signal（推断/权威 Session 开闭市证据）
-  → c00_futures_universe 业务选择 + 仅权威确认的拉取豁免
-  → fact_futures_fetch_status
-  → get_price(1d / 1m)
-  → fact_futures_daily / fact_futures_minute
-  → fact_futures_missing_bar + 回写状态表缺失字段
+上游当前有效格点
+    − 下游已经完整落盘的格点
+    = 本次自动更新范围
 ```
 
-`get_futures_info` 不是判断某日有哪些合约的唯一来源。固定合约全集、上市日和退市日来自
-`get_all_securities(["futures"])`；`get_futures_info` 只补充合约乘数、最小变动价位和按有效期变化的
-`trade_time`。某交易日的候选合约由“品种日历中的交易日 + 上市/退市区间”确定；只有当天存在
-有效 `trade_time` 规则时才生成 Session、日线合约日和拉取要求。候选区间内没有有效规则的合约日
-不视为可交易，c03 会跳过并报告数量；Session 编号、起止时间和理论分钟数由有效规则展开。
+“完整落盘”不是“日期不晚于下游最大日期”的同义词。格点必须具有完整主键，并通过权威
+Arrow Schema/metadata、表级质量规则和正式路径复读；尾部新增、历史内部空洞以及内容不完整的格点都进入
+待补集合。下游没有文件时，已完整格点集合为空，同一差集自然产生全量建表，不另设生产全量日期参数。
 
-日线不再遍历“所有合约 × 全历史日期”的矩形。`c04` 只读取状态表中的合约日键，按交易所/年份
-分组，再根据每个合约的预期有效交易日数构造请求批次。每批目标最多 90,000 返回行、最多 200
-个合约，使用 `skip_paused=True`，单次返回达到 1,000,000 行即停止；每次请求前要求保留默认
-5,000,000 行日配额。JQData 连接保持单进程串行，不并发消耗配额。
+完整业务语义由每张表自己的生产者在转换、staging 复读和正式路径复读中证明。消费者信任已经正式提交的
+上游表，不复制上游全部表级质检；消费者只检查权威 Schema/metadata 以及自身计算直接依赖的主键、范围和
+覆盖边界，并对自己的输出执行完整契约与质量校验。
 
-## 品种范围
+写入 `FUTURES_LAKE_ROOT` 指向的正式湖时，禁止显式指定起止日期。带日期参数的命令只能：
 
-第一阶段执行全部维表与 87 个固定商品期货品种的全部日线；排除 CCFX，排除 `8888`、`9999`
-连续代码。实际 87 数量由 2010 年以来上游元数据确定，日线业务条件是
-`all_fixed_commodity_futures`，不会在代码里另列一份容易过期的 87 代码清单。
+- 不带 `--write` 做定向采集和校验；或
+- 同时用 `--lake-root` 指向解析后明确不同于正式湖的临时/测试湖。
 
-分钟线第一阶段不拉取。后续已确认 59 个品种，配置集中在 `c00_futures_universe.py`：
+当前 `b01/c01_trade_calendar` 至 `b01/c08_full_minute_quality` 已完成逐文件迁移；其中 c01 每次自动运行都会
+重新取得完整有效区间的 JQData 交易日集合，以同时发现缺失日期和历史交易状态修订；c03 按交易所—年月
+流式比较 Session 当前真值；c04 从完整 Session 上游逐月比较全部 `1d`/`1m` 结构格点并保留未变化格点的
+下游回写状态；c05 在完整 `1d` 格点上应用共享事实白名单，再以选中格点减去完整日线事实并使用 JQData 自动补缺；
+c06 在完整 `1m` 格点上应用同一白名单，再以选中的 Session 减去由正式分钟事实和日历状态共同证明完整的 Session，按品种月分区补缺；c07 按证据指纹自动选择需重跑的疑似休市 Session；c08 则是独立手工全量审计，不属于日常差集更新。其他 10 个采集入口仍按
+逐脚本审查顺序迁移。本轮文字契约对全链路生效，但不表示其他入口的旧代码已经自动完成对齐。
 
-```text
-GFEX: LC PD PS PT SI
-XDCE: BB BZ EB EG FB I J JM L LG PG PP V
-XINE: BC EC LU NR SC
-XSGE: AD AG AL AO AU BR BU CU FU HC NI OP PB RB RU SN SP SS WR ZN
-XZCE: CY FG MA ME PF PL PR PX SA SF SH SM TA TC UR ZC
-```
+## 目录和目标表
 
-`RB`、`CU` 以 `required` 原因优先；其余按能源、金属、工业分类。若将来某交易所在上述规则下
-没有任何可用品种，则依次优先 GFEX `SI`、XDCE `I`、XINE `SC`、XSGE `RB`、XZCE `TA`；仍
-不可用时取该交易所代码排序第一的固定品种，并记录 `exchange_fallback`。
+| 业务目录 | 入口数 | 目标表/职责 |
+|---|---:|---|
+| `b01_Futures_Market_Data` | 8 | 交易日历、品种/合约/行情日历、日线、分钟线、定向校对、分钟全量质检 |
+| `b02_Futures_Exchange_Reports` | 3 | 报告日历、排名与会员类型持仓、仓单 |
+| `b03_External_Market_Data` | 4 | 外部市场日历、现货基差、境外期货、外部指数 |
+| `b04_Macro_And_Interest_Rates` | 3 | 宏观发布日历、SHIBOR、宏观发布值 |
 
-## 状态与缺失语义
+当前各表字段、主键、分区、来源列和质量规则以 `config/data_contracts.py` 的可执行 Schema/metadata 为准，
+永久文本约束见数据库 `AGENTS.md`；重建蓝图四份 metadata 文档只记录本次搭建的设计输入，搭建完成后冻结，
+不得继续作为当前语义来源。
 
-`fact_futures_fetch_status` 是“是否要拉取 / 是否已经拉取 / 是否缺失”的主表：
+## Notebook 语义浏览
 
-- 日线粒度：`bar_frequency + contract_code + trading_date + session_number`，其中日线固定
-  `bar_frequency='1d'`、`session_number=0`。
-- 分钟粒度：同一主键，`bar_frequency='1m'`，每个合约日 Session 一行。
-- `is_fetch_required`：由上游日历、合约区间、分钟品种配置及权威确认的 Session 拉取豁免确定；
-  `suspected_closed / inferred` 信号仍保持为真。
-- `is_fetch_completed`：只有对应 API 范围完整执行、事实数据写入并复读校验成功后才为真；它与
-  是否有行情是两个独立事实。
-- `is_data_missing`：只对 `is_fetch_required=True AND is_fetch_completed=True` 的行检测；未拉取
-  不能被误标为缺失。
-- `actual_bar_count` / `missing_bar_count`：记录该日线键或 Session 的实际与缺失数量。
+业务 Notebook 使用 `config/notebook_schema_browser.py` 统一展示当前工作流直接涉及的权威 Arrow Schema。
+界面先展示 Schema 列表，再分别通过紧邻对应 metadata 表的 Schema 和 Field 下拉框查看完整表级与字段级语义。
 
-`fact_futures_missing_bar` 只保存真实缺失：日线用交易日零点（Asia/Shanghai）表示缺失日；分钟线
-逐条保存 `(session_start_at, session_end_at]` 内缺少的具体分钟。不区分认证、网络、超时或其他 API
-异常，也不把这些异常写入缺失表。
+该界面只读取 `config/data_contracts.py` 中的 Schema 及其 metadata，不定义表名、字段、主键或分区，也不代替
+契约验证。当前 `b01/c01` 至 `b01/c08` 已接入；其余业务 Notebook 在本次重建期间按
+[Arrow 中文 metadata 契约](../a01_Data_Collection_Rebuild_Blueprint/01_METADATA_CONVENTION.md) 接入同一个共享实现；
+重建完成后的持续治理以 [数据库 AGENTS.md](../../03_Futures_Database/AGENTS.md) 为准。
+展示单元格只在交互式 Notebook 内核中运行，导出的命令行 `.py` 不加载 widgets。
 
-`dim_futures_session_schedule_signal` 单独保存 Session 开闭市证据。由“相邻交易日之间存在工作日
-休市”派生的记录使用 `schedule_status='suspected_closed'`、`evidence_level='inferred'`、
-`is_fetch_exempt=False`，不会阻止 API 拉取，也不会隐藏实际行情。只有依据交易所公告等权威来源写入
-`evidence_level='authoritative'` 且 `is_fetch_exempt=True` 后，c07 才允许把对应 Session 的
-`is_fetch_required` 设为假。旧 `dim_futures_session_exception_calendar` 不再作为生产输入。
+同一单一来源规则也适用于业务执行代码：每个 Notebook 直接导入具名权威 Schema，在模块初始化时从
+`table_name`、`primary_key` 和 `partition_columns` metadata 各读取一次，后续路径、分区、唯一性校验和
+日志只复用读取结果。不得在业务代码中平行硬编码这些值，不得在每个使用点重复解码，也不得增加
+`SCHEMA = ...` 纯改名层。长期约束及标准写法同样以数据库 `AGENTS.md` 为准。
 
-## 八张 silver 采集表的粒度、主键与 Hive 分区
-
-| 数据集 | 粒度 / 主键 | Hive 分区顺序 |
-|---|---|---|
-| `dim_trade_calendar` | `calendar_date` | `year` |
-| `dim_futures_variety_calendar` | `underlying_code + exchange_code + trading_date` | `exchange_code / year / month` |
-| `dim_futures_contract_calendar` | `contract_code + trading_date + session_number` | `exchange_code / year / month` |
-| `dim_futures_session_schedule_signal` | `exchange_code + trading_date + session_start_at + session_end_at` | `exchange_code / year / month` |
-| `fact_futures_fetch_status` | `bar_frequency + contract_code + trading_date + session_number` | `bar_frequency / exchange_code / year / month` |
-| `fact_futures_missing_bar` | `bar_frequency + contract_code + trading_date + session_number + expected_bar_at` | `bar_frequency / exchange_code / underlying_code / year / month` |
-| `fact_futures_daily` | `contract_code + trading_date` | `exchange_code / year / month` |
-| `fact_futures_minute` | `contract_code + bar_at` | `exchange_code / underlying_code / year / month` |
-
-`bar_frequency` 必须是状态表和缺失表的第一层 Hive 分区，使日线/分钟线可以在目录裁剪阶段完全
-分离。所有生产写入都通过 `config/data_contracts.py` 的 Arrow Schema；分区或全表结果先写旁路目录，
-流式复读类型与行数校验通过后再替换正式目录。旧正式目录在替换过程中暂存为同盘备份，失败会恢复。
-
-## 第一阶段正式执行顺序
+## 双轨同步
 
 ```powershell
-E:\anaconda3\envs\latitude\python.exe 00_draft_collection_02/scripts/verify_runtime.py
-E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c01_dimension_trade_calendar.py --start-date 2010-01-01 --full-refresh
-E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c02_dimension_futures_variety_calendar.py --full-refresh
-E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c03_dimension_futures_contract_calendar.py --full-refresh
-E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c06_dimension_futures_session_schedule_signal.py
-E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c07_fact_futures_fetch_status.py
-E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c04_fact_futures_daily.py --full-refresh --dry-run
-E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c04_fact_futures_daily.py --full-refresh
-E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c08_fact_futures_missing_bar.py
-E:\anaconda3\envs\latitude\python.exe 00_draft_collection_02/scripts/verify_futures_calendar_pipeline.py
+E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/b00_sync_notebook_exports.py --write
+E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/b00_sync_notebook_exports.py --check
 ```
 
-第一阶段不运行 `c05_fact_futures_minute.py`。分钟阶段确认后，先执行：
+同步入口只递归扫描四个正式 `b` 目录中的 `cNN_*.ipynb`，不扫描蓝图、草稿或归档项目。
+
+## 当前运行边界
+
+原 `run_full_rebuild.bat`、`run_daily_incremental.bat` 和 `run_full_minute_quality.bat`
+已按用户要求删除。当前只保留各业务目录下的 `cNN_*.py` 命令入口，执行前先运行：
 
 ```powershell
-E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c05_fact_futures_minute.py --dry-run
+E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/verify_runtime.py
+E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/b00_sync_notebook_exports.py --check
 ```
 
-本项目的生产更新是半自动流程：由操作者手动执行下面的命令，程序在本次进程内按默认“仅未完成状态”
-模式连续处理；不配置 LLM 心跳、定时任务、cron 或额度重置后的自动续跑。
+已经迁移的八个 `b01` 入口写入正式湖时不传湖路径和日期：
 
 ```powershell
-E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c05_fact_futures_minute.py
+E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/b01_Futures_Market_Data/c01_trade_calendar.py --write
+E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/b01_Futures_Market_Data/c02_futures_variety_calendar.py --write
+E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/b01_Futures_Market_Data/c03_futures_contract_calendar.py --write
+E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/b01_Futures_Market_Data/c04_futures_bar_calendar.py --write
+E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/b01_Futures_Market_Data/c05_futures_daily.py --write
+E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/b01_Futures_Market_Data/c06_futures_minute.py --write
+E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/b01_Futures_Market_Data/c07_suspected_session_reconciliation.py --write
+E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/b01_Futures_Market_Data/c08_full_minute_quality.py --confirm-full-quality --write
 ```
 
-需要人工优先处理指定品种时，可重复传入 `--target EXCHANGE.UNDERLYING`；例如只续拉上期所铜和
-螺纹钢：
+程序会先输出自动差集计划；不带 `--write` 时只采集、比较和校验，不提交。
 
-```powershell
-E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c05_fact_futures_minute.py --target XSGE.CU --target XSGE.RB
-```
+空湖搭建可以按
+[数据流与依赖顺序](../a01_Data_Collection_Rebuild_Blueprint/06_DATA_FLOW_AND_DEPENDENCIES.md)
+由操作员逐个调用业务入口。`c01` 至 `c07` 已使用自动差集或证据指纹兼容空湖全量和日常补缺；`c08` 已实现独立全量审计；多数后续表当前仍以
+“触达分区整体替换”方式提交，尚未完成统一迁移。在分区内保留、主键覆盖和日历完成状态回写全部完成前，
+不建立跨 18 张表的根级自动编排入口。
 
-目标参数只缩小本次运行范围，不修改固定 59 品种宇宙或其他品种的应拉取状态。
+因此，不带 `--write` 运行采集入口仍会访问其规定的上游 API 并完成内存中的转换和校验，只是不提交结果；
+不调用 API 的 `c07`、`c08` 则完成正式湖只读校验而不回写日历。
+是否允许 Agent 发起具体生产批次，仍受量化交易目录的人工触发规则约束。
 
-每次 API 请求只覆盖一个交易所/品种/年/月分区，理论返回量不得
-超过 900,000 行；请求前读取 JQData 剩余额度，并默认保留 5,000,000 行。余额不足以完整覆盖下一个
-分区时正常停止，不会发起半分区请求。每个分区即使返回空集，也会先原子替换对应事实分区，再标记
-对应 Session 完成；因此中断后可从未完成状态继续，不依赖模糊的全局最大日期水位，也不会把旧分区
-残留误认为本次返回结果。额度重置后由操作者再次手动运行同一命令。
+定向校对直接调用 `b01_Futures_Market_Data/c07_suspected_session_reconciliation.py`。默认模式只处理
+c06 正式复读为 0 条后形成或证据发生变化的 `is_fetch_required=true AND suspected_closed` Session；
+显式日期或合约范围不得写回正式湖。一致结果只形成 `reconciled` 旁证，不确认休市、不取消拉取。分钟全量
+校对直接调用 `b01_Futures_Market_Data/c08_full_minute_quality.py` 并显式传入
+`--confirm-full-quality`。c08 不提供日期、月份或合约过滤；不带 `--write` 时只在系统临时目录构建并复读
+staging，带 `--write` 时全量替换缺失明细并协调提交所有触达的行情日历叶分区，任一步失败共同回滚。
+两者当前也不再由 BAT 包装。
 
-当 `--dry-run` 显示 `session_count: 0` 后，由操作者手动执行缺失检测和最终验证：
+供应商明确返回空结果时，通常不伪造业务行；入口会建立 0 行 `schema.parquet`，使该表仍可按
+Arrow Schema 和 Hive 分区契约读取。`fact_futures_daily` 是明确例外：它必须为每个已请求的日历格点
+保留一行，并用 `has_market_data=false`、空行情度量和日历中的缺失计数表达 JQData 没有有效收盘价。
+网络超时、页面结构异常和 Schema 错误不得按确认空处理。c06 只有在 JQData 请求成功、分钟事实正式提交且
+对应 Session 从正式路径复读仍为 0 条时，才写入 `suspected_closed + inferred` 并交给 c07 定向校对；
+后续正式分钟恢复非空时撤销该疑似信号。供应商原始分钟行若违反 OHLC 关系，c06 拒收该行且不修写价格，
+在对应 Session 的缺失计数和 `warning` 原因中留痕；若 0 条由此产生，不得误判为疑似休市。
 
-```powershell
-E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/c08_fact_futures_missing_bar.py
-E:\anaconda3\envs\latitude\python.exe 00_draft_collection_02/scripts/verify_futures_calendar_pipeline.py
-```
+## 完整日历宇宙与期货事实采集白名单
+
+品种日历入口必须调用 `get_all_securities(["futures"], date=None)` 取得跨全部日期的完整期货合约目录，
+再由项目自己按合约代码和上市/退市区间构建日历。处理顺序为：
+
+`JQData 完整期货证券目录 → 固定月份合约 → 排除 8888/9998/9999 合成代码 → dim_futures_variety_calendar`
+
+事实采集白名单不得参与 `dim_futures_variety_calendar`、`dim_futures_contract_calendar`、
+`dim_futures_bar_calendar` 或 `dim_futures_exchange_report_calendar` 的行筛选。四张日历表保留完整目录宇宙，
+不按交易所白名单过滤；`CCFX` 等完整目录中的固定月份合约也必须保留。`c04_futures_bar_calendar` 本身不读取
+或解释白名单：它只生成完整 1d/1m 理论格点。1d 格点先安全初始化为需要采集，1m 新格点先初始化为
+未选择；随后由 `c05_futures_daily`、`c06_futures_minute` 分别应用同一事实白名单并回写
+`is_fetch_required` 与 `selection_reason`。
+
+白名单唯一来源是共享策略模块
+[`config/futures_fact_collection_policy.py`](../../config/futures_fact_collection_policy.py)；业务目录不得复制或维护第二份白名单。模块中的映射直接列出五个交易所、
+59 个期货事实采集品种：
+
+| 交易所代码 | 品种（数量） |
+|---|---|
+| `GFEX` | `LC PD PS PT SI`（5） |
+| `XDCE` | `BB BZ EB EG FB I J JM L LG PG PP V`（13） |
+| `XINE` | `BC EC LU NR SC`（5） |
+| `XSGE` | `AD AG AL AO AU BR BU CU FU HC NI OP PB RB RU SN SP SS WR ZN`（20） |
+| `XZCE` | `CY FG MA ME PF PL PR PX SA SF SH SM TA TC UR ZC`（16） |
+
+所有 JQData 调用方统一从
+[`config/jqdata_connection.py`](../../config/jqdata_connection.py) 导入认证入口。该模块只负责认证及
+Windows TUN 环境下的物理出口绑定，不负责决定采集范围、API 调用时机或是否写入；这些业务语义仍保留在
+各 Notebook 入口中，`--write` 仍是唯一的“是否写入”开关。
+
+白名单作用边界按接口调用粒度确定：
+
+- `1d` 日线理论格点全部保留。`c05_futures_daily` 在完整格点上应用共享白名单并回写选择状态，只对
+  选中格点批量调用 JQData `get_price(frequency="daily")` 与
+  `get_extras("futures_sett_price"/"futures_positions")`；未选中格点保留并标为无需采集。
+- `1m` 分钟格点由 `c04` 全部保留，`c04` 不判断白名单。`c06_futures_minute` 读取完整 1m 格点后统一应用
+  共享白名单，把选择结果写回 `is_fetch_required` 和 `selection_reason`，再调用 JQData `get_price(1m)`；
+  白名单由实际分钟采集器控制请求数和分钟额度。被选择 Session 只有在正式分钟事实复读计数与日历完成状态
+  共同一致时才属于完整下游格点；每个品种月分区成功后立即回写状态，遇配额边界正常停止。
+- 排名、会员类型持仓和仓单的报告格点全部保留；`is_fetch_required` 同时要求品种在白名单内、日期位于
+  对应 API 覆盖期且交易所—品种受该 API 支持。白名单外格点写为 `not_required`，事实入口不会消费。
+  当前报告日历入口尚未配置额外覆盖排除，因而现阶段该条件等价于“命中白名单”；后续增加覆盖配置时
+  必须与白名单取交集，不能删除格点。
+
+某个历史品种在指定交易日没有活跃合约时，该日可以没有对应品种日历行。白名单调整由 `c05`、`c06`
+重新评估各自频率的选择状态，不得触发 `c04` 重建理论格点，也不得重写或缩小任何日历历史。白名单缩减
+只停止后续采集并把对应格点标为无需采集，不自动删除已经正式落盘的历史日线或分钟事实。
+
+## 2026-08-10 单日完整流程验收
+
+- 旧 `03_Futures_Database/futures_lake` 已同卷直接移动到
+  `04_Old_Projects/futures_lake_pre_rebuild_20260810`，未读取或重写旧数据内容。
+- 新湖使用 `2026-08-07` 完成交易日历、期货行情、交易所报告、外部市场、宏观利率和分钟全量
+  质检链路；18 张 silver Dataset 均通过精确 Schema/metadata 和主键唯一性检查。
+- 新湖包含 262,650 行分钟数据；全量质检缺失 0 行。品种日历当天有 57 个活跃品种；
+  白名单中的历史郑商所代码 `ME`、`TC` 当天无活跃固定月份合约。
+- `fact_futures_member_position_daily`、`fact_macro_release` 和
+  `fact_futures_missing_bar` 当天确认空，均以 0 行契约 Dataset 存在。
+- 上述验收使用了“白名单过滤品种日历”的旧语义。完整目录日历与事实白名单分离后，该单日湖必须按
+  新的 `1.1.0` 日历契约重新生成，不能作为新语义下的生产基线。
+
+## 数据源与迁移原则
+
+- 日线：JQData `get_price(frequency="daily", panel=False, fq=None, skip_paused=True, fill_paused=False, round=False)`
+  提供 OHLC、成交量、元计成交额和昨收；`get_extras("futures_sett_price")` 与
+  `get_extras("futures_positions")` 提供结算价和持仓量，昨结、两种相对昨结涨跌及持仓变化由同一合约的
+  上一有效交易日值派生。
+- 分钟：JQData `get_price(frequency="1m", panel=False, fq=None, skip_paused=True)`。
+- `XDCE.A`、`XZCE.AP` 等白名单外品种仍进入完整日历维度，但不补拉其日线、分钟、持仓或仓单事实；
+  各事实入口只消费任务日历中 `is_fetch_required=true` 的格点。
+- 存量数据优先做同字段迁移和派生转换；只有日历差集、缺列或质量失败部分才进入 API 补拉清单。
+- 迁移工具与迁移报告在 CODE-GATE 完成后才允许进入 `00_draft_collection_02`。
+
+## 相关规范
+
+- [项目级规则](../../AGENTS.md)
+- [环境变量模板](../../.env.template)
+- [量化交易目录规则](../AGENTS.md)
+- [数据库字段与分区规则](../../03_Futures_Database/AGENTS.md)
+- [本次一次性重建蓝图](../a01_Data_Collection_Rebuild_Blueprint/README.md)
+- [本次一次性执行与退出清单](../a01_Data_Collection_Rebuild_Blueprint/08_EXECUTION_CHECKLIST.md)
+- [可执行契约](../../config/data_contracts.py)

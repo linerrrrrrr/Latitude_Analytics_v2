@@ -1,7 +1,9 @@
 import os
-import pandas as pd
+from datetime import date
 from pathlib import Path
 from typing import Optional
+
+import pandas as pd
 
 
 pd.set_option("display.max_rows", None)
@@ -42,6 +44,30 @@ def load_env(
 class Settings:
 
     def __init__(self) -> None: load_env()
+
+    @property
+    def futures_data_start_date(self) -> date:
+        value = os.environ.get("FUTURES_DATA_START_DATE", "").strip()
+        if not value:
+            raise ValueError("环境变量 FUTURES_DATA_START_DATE 未定义或为空，请在 .env 文件中设置")
+        try:
+            return date.fromisoformat(value)
+        except ValueError as exc:
+            raise ValueError(
+                "环境变量 FUTURES_DATA_START_DATE 必须使用 YYYY-MM-DD 格式"
+            ) from exc
+
+    @property
+    def futures_lake_root(self) -> Path:
+        value = os.environ.get("FUTURES_LAKE_ROOT", "").strip()
+        if not value:
+            raise ValueError("环境变量 FUTURES_LAKE_ROOT 未定义或为空，请在 .env 文件中设置")
+
+        lake_root = Path(value).expanduser()
+        if not lake_root.is_absolute():
+            project_root = Path(__file__).resolve().parent.parent
+            lake_root = project_root / lake_root
+        return lake_root.resolve()
 
     @property
     def tushare_token(self) -> str:
