@@ -1,7 +1,8 @@
 """Arrow/Parquet 写入端与 DataFrame 读取端共用的数据契约。
 
-18 张稳定 silver Schema 最初由一次性数据采集重建蓝图逐字段展开；每个字段和表都显式携带
-UTF-8 中文 metadata。实验性 gold 输出由所属下游工作流局部定义，不进入本模块。
+17 张稳定 silver Schema（7 张维度表、10 张事实表）最初由一次性数据采集重建蓝图逐字段展开；
+每个字段和表都显式携带 UTF-8 中文 metadata。生意社页面只保存原始响应，不再解析为稳定
+silver 事实表，因此不进入本模块；实验性 gold 输出也由所属下游工作流局部定义。
 
 稳定 silver 表的物理表名、业务主键和 Hive 分区顺序只定义在各自 Schema 的
 `table_name`、`primary_key` 和 `partition_columns` metadata 中。本模块不再为这些值导出一套
@@ -23,14 +24,13 @@ import pyarrow as pa
 def _utf8_metadata(values: dict[str, str]) -> dict[bytes, bytes]:
     """将规范文本编码为 Arrow 要求的 UTF-8 字节 metadata。"""
     return {
-        key.encode("utf-8"): value.encode("utf-8")
+        key.encode("utf-8"): value.encode("utf-8")  # encode 为字符串对象的方法
         for key, value in values.items()
     }
 
 
 
-
-
+# dim_trade_calendar 中国期货交易日历维度表
 TRADE_CALENDAR_SCHEMA = pa.schema(
     [
         pa.field(
@@ -256,7 +256,7 @@ TRADE_CALENDAR_SCHEMA = pa.schema(
 
 
 
-
+# dim_futures_variety_calendar 期货品种交易日历维度表
 FUTURES_VARIETY_CALENDAR_SCHEMA = pa.schema(
     [
         pa.field(
@@ -428,7 +428,7 @@ FUTURES_VARIETY_CALENDAR_SCHEMA = pa.schema(
 
 
 
-
+# dim_futures_contract_calendar 期货合约 Session 日历维度表
 FUTURES_CONTRACT_CALENDAR_SCHEMA = pa.schema(
     [
         pa.field(
@@ -834,7 +834,7 @@ FUTURES_CONTRACT_CALENDAR_SCHEMA = pa.schema(
 
 
 
-
+# dim_futures_bar_calendar 期货行情拉取与质检日历维度表
 FUTURES_BAR_CALENDAR_SCHEMA = pa.schema(
     [
         pa.field(
@@ -1718,15 +1718,15 @@ FUTURES_BAR_CALENDAR_SCHEMA = pa.schema(
         "source_columns_zh": "上游合约/Session 字段、日线 OHLCV/OI、分钟 OHLCV/OI；状态和批次字段由系统生成。",
         "dimension_dependencies": "dim_futures_contract_calendar",
         "update_mode_zh": "c04 按上游新增、删除或修订格点自动比较完整交易所—年月分区；结构未变化时完整保留下游回写状态，结构变化时只重置受影响格点。1d 新格点先初始化为需要采集、1m 新格点先初始化为未选择，随后分别由 c05、c06 应用期货事实采集政策；c06 正式空响应形成疑似休市，c07 按版本化输入指纹自动校对新增或变化候选；事实复读和质检入口都以完整叶分区回写状态。",
-        "quality_rules_zh": "主键唯一；完整合约日历中的 1d/1m 格点不得被事实采集政策删除；c04 不读取期货事实白名单；1d/1m 的选择状态分别由 c05/c06 评估；1d 选中格点期望 1 条，1m 选中格点期望等于 Session 理论分钟数；c07 旁证不得确认休市或取消拉取；只有权威证据可确认休市；状态不得先于事实分区复读。",
-        "schema_version": "1.3.0",
+        "quality_rules_zh": "主键唯一；完整合约日历中的 1d/1m 格点不得被事实采集政策删除；c04 不读取期货事实白名单；1d/1m 的选择状态分别由 c05/c06 评估；1d 选中格点期望 1 条，1m 选中格点期望等于 Session 理论分钟数；来源 OHLC 为有限数但高低关系异常时，事实仍按原值提交，对应 1d 格点或 1m Session 必须保留 warning 留痕；c07 旁证不得确认休市或取消拉取；只有权威证据可确认休市；状态不得先于事实分区复读。",
+        "schema_version": "1.4.0",
         "metadata_language": "zh-CN",
     }),
 )
 
 
 
-
+# fact_futures_daily 国内期货合约日线事实表
 FUTURES_DAILY_SCHEMA = pa.schema(
     [
         pa.field(
@@ -1849,10 +1849,10 @@ FUTURES_DAILY_SCHEMA = pa.schema(
                 "source_column": "open",
                 "transformation_zh": "原值规范化；单位：报价单位；角色：价格度量。",
                 "unit_zh": "报价单位",
-                "nullable_reason_zh": "无行情时可空；非空时应在低高价区间内。",
+                "nullable_reason_zh": "无行情时可空。",
                 "semantic_role_zh": "价格度量",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "无行情时可空；非空时应在低高价区间内。",
+                "quality_rules_zh": "非空时必须为有限数；来源 OHLC 高低关系异常时原值保留，并在对应 1d 日历格点记录 warning。",
             }),
         ),
         pa.field(
@@ -1867,10 +1867,10 @@ FUTURES_DAILY_SCHEMA = pa.schema(
                 "source_column": "high",
                 "transformation_zh": "原值规范化；单位：报价单位。",
                 "unit_zh": "报价单位",
-                "nullable_reason_zh": "无行情时可空；非空时不低于开收低价。",
+                "nullable_reason_zh": "无行情时可空。",
                 "semantic_role_zh": "度量或说明",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "无行情时可空；非空时不低于开收低价。",
+                "quality_rules_zh": "非空时必须为有限数；来源 OHLC 高低关系异常时原值保留，并在对应 1d 日历格点记录 warning。",
             }),
         ),
         pa.field(
@@ -1885,10 +1885,10 @@ FUTURES_DAILY_SCHEMA = pa.schema(
                 "source_column": "low",
                 "transformation_zh": "原值规范化；单位：报价单位。",
                 "unit_zh": "报价单位",
-                "nullable_reason_zh": "无行情时可空；非空时不高于开收高价。",
+                "nullable_reason_zh": "无行情时可空。",
                 "semantic_role_zh": "度量或说明",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "无行情时可空；非空时不高于开收高价。",
+                "quality_rules_zh": "非空时必须为有限数；来源 OHLC 高低关系异常时原值保留，并在对应 1d 日历格点记录 warning。",
             }),
         ),
         pa.field(
@@ -1903,10 +1903,10 @@ FUTURES_DAILY_SCHEMA = pa.schema(
                 "source_column": "close",
                 "transformation_zh": "原值规范化；单位：报价单位。",
                 "unit_zh": "报价单位",
-                "nullable_reason_zh": "无行情时可空；非空时在低高价区间内。",
+                "nullable_reason_zh": "无行情时可空。",
                 "semantic_role_zh": "度量或说明",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "无行情时可空；非空时在低高价区间内。",
+                "quality_rules_zh": "非空时必须为有限数；来源 OHLC 高低关系异常时原值保留，并在对应 1d 日历格点记录 warning。",
             }),
         ),
         pa.field(
@@ -2063,12 +2063,12 @@ FUTURES_DAILY_SCHEMA = pa.schema(
                 "source_system_zh": "系统生成",
                 "source_api": "系统生成",
                 "source_column": "—",
-                "transformation_zh": "固定写 JQData_get_price_daily_get_extras_raw；角色：来源。",
+                "transformation_zh": "新采集固定写 JQData_get_price_daily_get_extras_raw；迁移旧行允许 JQData_get_price_1d_skip_paused。旧行来自未请求 pre_close、futures_sett_price、futures_positions 的历史 API 边界，新增昨收、结算及变化字段保留 null；角色：来源。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空。",
                 "semantic_role_zh": "来源",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "不可空。",
+                "quality_rules_zh": "不可空；新采集使用 JQData_get_price_daily_get_extras_raw，历史迁移允许 JQData_get_price_1d_skip_paused；不得伪造旧行缺失的昨收、结算及变化字段。",
             }),
         ),
         pa.field(
@@ -2142,15 +2142,15 @@ FUTURES_DAILY_SCHEMA = pa.schema(
         "source_columns_zh": "get_price 的 code,time,open,high,low,close,volume,money,pre_close；get_extras 的 futures_sett_price、futures_positions；上一有效交易日值用于派生昨结、两种涨跌和持仓变化。",
         "dimension_dependencies": "dim_futures_bar_calendar",
         "update_mode_zh": "c05 先在完整 1d 日历上应用 config/futures_fact_collection_policy.py 并回写选择状态，再以选中格点减去正式事实表已完整落盘格点自动求待办；空湖自然得到全部选中格点，日常补尾部、内部空洞和质量失败格点；只重写触达的品种月分区，并在事实正式复读后回写或修复日历状态；白名单缩减不自动删除既有历史日线事实。",
-        "quality_rules_zh": "主键唯一；写入键必须属于待办日历；JQData money 已为元；昨结、两种涨跌和持仓变化必须由同一合约的 JQData 序列可复算；OHLC 关系合法；交易量、成交额和持仓非负；无有效收盘价通过 has_market_data=false 明示。",
-        "schema_version": "1.3.0",
+        "quality_rules_zh": "主键唯一；写入键必须属于待办日历；JQData money 已为元；新采集行的昨结、两种涨跌和持仓变化必须由同一合约 JQData 序列可复算；迁移旧行允许上述六个新增可空字段全部为 null，不得用相邻行伪造；OHLC 非空值必须有限，来源提供的有限 OHLC 高低关系异常时按原值落盘且对应 1d 日历格点必须记录 warning；交易量、成交额和持仓非负；无有效收盘价通过 has_market_data=false 明示。",
+        "schema_version": "1.5.0",
         "metadata_language": "zh-CN",
     }),
 )
 
 
 
-
+# fact_futures_minute 国内期货合约一分钟行情事实表
 FUTURES_MINUTE_SCHEMA = pa.schema(
     [
         pa.field(
@@ -2273,10 +2273,10 @@ FUTURES_MINUTE_SCHEMA = pa.schema(
                 "source_column": "open",
                 "transformation_zh": "原值规范化；单位：报价单位。",
                 "unit_zh": "报价单位",
-                "nullable_reason_zh": "API 缺值时可空；非空时位于低高价区间。",
+                "nullable_reason_zh": "API 缺值时可空。",
                 "semantic_role_zh": "度量或说明",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "API 缺值时可空；非空时位于低高价区间。",
+                "quality_rules_zh": "非空时必须为有限数；来源 OHLC 高低关系异常时原值保留，并在所属 Session 日历记录 warning。",
             }),
         ),
         pa.field(
@@ -2291,10 +2291,10 @@ FUTURES_MINUTE_SCHEMA = pa.schema(
                 "source_column": "high",
                 "transformation_zh": "原值规范化；单位：报价单位。",
                 "unit_zh": "报价单位",
-                "nullable_reason_zh": "API 缺值时可空；不低于其他价格。",
+                "nullable_reason_zh": "API 缺值时可空。",
                 "semantic_role_zh": "度量或说明",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "API 缺值时可空；不低于其他价格。",
+                "quality_rules_zh": "非空时必须为有限数；来源 OHLC 高低关系异常时原值保留，并在所属 Session 日历记录 warning。",
             }),
         ),
         pa.field(
@@ -2309,10 +2309,10 @@ FUTURES_MINUTE_SCHEMA = pa.schema(
                 "source_column": "low",
                 "transformation_zh": "原值规范化；单位：报价单位。",
                 "unit_zh": "报价单位",
-                "nullable_reason_zh": "API 缺值时可空；不高于其他价格。",
+                "nullable_reason_zh": "API 缺值时可空。",
                 "semantic_role_zh": "度量或说明",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "API 缺值时可空；不高于其他价格。",
+                "quality_rules_zh": "非空时必须为有限数；来源 OHLC 高低关系异常时原值保留，并在所属 Session 日历记录 warning。",
             }),
         ),
         pa.field(
@@ -2327,10 +2327,10 @@ FUTURES_MINUTE_SCHEMA = pa.schema(
                 "source_column": "close",
                 "transformation_zh": "原值规范化；单位：报价单位。",
                 "unit_zh": "报价单位",
-                "nullable_reason_zh": "API 缺值时可空；位于低高价区间。",
+                "nullable_reason_zh": "API 缺值时可空。",
                 "semantic_role_zh": "度量或说明",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "API 缺值时可空；位于低高价区间。",
+                "quality_rules_zh": "非空时必须为有限数；来源 OHLC 高低关系异常时原值保留，并在所属 Session 日历记录 warning。",
             }),
         ),
         pa.field(
@@ -2397,12 +2397,12 @@ FUTURES_MINUTE_SCHEMA = pa.schema(
                 "source_system_zh": "系统生成",
                 "source_api": "系统生成",
                 "source_column": "—",
-                "transformation_zh": "固定写 JQData_get_price_1m_skip_paused_fq_none；角色：来源。",
+                "transformation_zh": "新采集固定写 JQData_get_price_1m_skip_paused_fq_none；历史迁移允许 JQData_get_price_1m、JQData_get_price_1m_skip_paused；角色：来源。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空。",
                 "semantic_role_zh": "来源",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "不可空。",
+                "quality_rules_zh": "不可空；新采集使用 JQData_get_price_1m_skip_paused_fq_none，历史迁移允许 JQData_get_price_1m 或 JQData_get_price_1m_skip_paused。",
             }),
         ),
         pa.field(
@@ -2476,15 +2476,15 @@ FUTURES_MINUTE_SCHEMA = pa.schema(
         "source_columns_zh": "索引/列 time、多标的列 code、open,high,low,close,volume,money,open_interest。",
         "dimension_dependencies": "dim_futures_bar_calendar",
         "update_mode_zh": "c06 先在完整 1m 日历上应用 config/futures_fact_collection_policy.py 的共享期货事实采集政策，再以选中的有效 Session 减去正式分钟事实与日历状态共同证明完整的 Session 自动求待办；空湖自然得到全部选中格点。按交易所、品种、年、月逐叶分区拉取、合并、正式复读并立即回写状态，配额边界后从剩余 Session 续跑；白名单缩减停止新增但不自动删除既有历史分钟事实。",
-        "quality_rules_zh": "主键唯一；bar 必须落在对应 (session_start_at,session_end_at] 并继承正确交易日与 Session 编号；OHLC 合法、所有非空值有限、数量非负；API 无返回不伪造分钟；供应商原始 OHLC 无效行拒收且不得修写价格，并在 Session 缺失 warning 中留痕，0 条由此产生时不得误判休市；触达分区保留未触达及白名单外历史事实；事实正式复读后才回写实际/缺失条数和完成状态。",
-        "schema_version": "1.3.0",
+        "quality_rules_zh": "主键唯一；bar 必须落在对应 (session_start_at,session_end_at] 并继承正确交易日与 Session 编号；所有非空值必须有限且数量非负；API 无返回不伪造分钟；供应商返回的有限 OHLC 高低关系异常行必须原值保留并正常落盘，不得修写或丢弃，同时在所属 Session 的 warning 原因中继续留痕；历史迁移允许既有 JQData_get_price_1m、JQData_get_price_1m_skip_paused 来源标签，新采集仍固定使用当前标签；触达分区保留未触达及白名单外历史事实；事实正式复读后才回写实际/缺失条数、完成状态和异常质量结论。",
+        "schema_version": "1.5.0",
         "metadata_language": "zh-CN",
     }),
 )
 
 
 
-
+# fact_futures_missing_bar 国内期货缺失 bar 明细事实表
 FUTURES_MISSING_BAR_SCHEMA = pa.schema(
     [
         pa.field(
@@ -2692,7 +2692,7 @@ FUTURES_MISSING_BAR_SCHEMA = pa.schema(
 
 
 
-
+# dim_futures_exchange_report_calendar 期货交易所报告采集日历维度表
 FUTURES_EXCHANGE_REPORT_CALENDAR_SCHEMA = pa.schema(
     [
         pa.field(
@@ -3049,20 +3049,20 @@ FUTURES_EXCHANGE_REPORT_CALENDAR_SCHEMA = pa.schema(
         "partition_columns": "dataset_name,exchange_code,year,month",
         "role_zh": "日历维度表",
         "calendar_role_zh": "枚举三类交易所报告应存在或应被确认不存在的品种日频格点。",
-        "source_systems_zh": "dim_futures_variety_calendar；Tushare Pro；聚宽 JQData 财务库；系统生成",
-        "source_apis_zh": "pro.fut_holding；jqdatasdk.finance.FUT_WAREHOUSE_RECEIPT；事实表复读结果",
+        "source_systems_zh": "dim_futures_variety_calendar；聚宽 JQData 财务库；系统生成",
+        "source_apis_zh": "jqdatasdk.finance.FUT_MEMBER_POSITION_RANK；jqdatasdk.finance.FUT_WAREHOUSE_RECEIPT；事实表复读结果",
         "source_columns_zh": "上游品种交易日键；API 返回行数；拉取和质检字段由系统生成。",
         "dimension_dependencies": "dim_futures_variety_calendar",
-        "update_mode_zh": "空库由完整品种日历与三个数据集枚举做笛卡尔展开，再按事实白名单、数据源历史覆盖期和支持范围设置是否拉取；日常先追加新交易日格点，随后事实采集器只消费 required 待办并在复读后更新状态。",
-        "quality_rules_zh": "主键唯一；所有品种日期必须存在于完整品种日历且不得被事实采集白名单删除；白名单外格点必须为 not_required；completed 状态必须有运行批次和完成时间；实际记录数必须等于相应事实表复读计数；空数据与请求失败严格区分。",
-        "schema_version": "1.1.0",
+        "update_mode_zh": "完整品种日历与三个数据集枚举的当前有效格点减去正式表中主键、选择规则、状态和质量均完整的格点，得到本次自动更新范围；空湖差集即全量，尾部新增、历史内部缺口、上游格点撤销和事实白名单或覆盖规则变化都按完整叶分区协调更新，正式写入不接受人工日期范围。",
+        "quality_rules_zh": "主键唯一；所有品种日期必须存在于完整品种日历且不得被事实采集白名单删除；白名单外格点必须为 not_required；状态未变化时保留事实采集器回写，规则变化时只重置受影响格点；completed 状态必须有运行批次和完成时间；实际记录数必须等于相应事实表复读计数；空数据与请求失败严格区分；staging 和正式路径复读必须一致。",
+        "schema_version": "1.3.0",
         "metadata_language": "zh-CN",
     }),
 )
 
 
 
-
+# fact_futures_position_rank_daily 期货会员每日成交持仓排名事实表
 FUTURES_POSITION_RANK_DAILY_SCHEMA = pa.schema(
     [
         pa.field(
@@ -3072,10 +3072,10 @@ FUTURES_POSITION_RANK_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "排名报告交易日",
                 "description_zh": "排名报告交易日。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "trade_date",
-                "transformation_zh": "从 YYYYMMDD 解析；角色：主键、时间。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "day",
+                "transformation_zh": "转为 date32；角色：主键、时间。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空，必须等于待办日历日期。",
                 "semantic_role_zh": "主键、时间",
@@ -3090,10 +3090,10 @@ FUTURES_POSITION_RANK_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "项目标准交易所代码",
                 "description_zh": "项目标准交易所代码。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "exchange；缺列时来自日历",
-                "transformation_zh": "映射为项目/JQData 标准代码；角色：主键、分区。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "exchange；待办日历",
+                "transformation_zh": "以待办日历的 JQData 标准交易所代码为准并复核响应；角色：主键、分区。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空。",
                 "semantic_role_zh": "主键、分区",
@@ -3110,8 +3110,8 @@ FUTURES_POSITION_RANK_DAILY_SCHEMA = pa.schema(
                 "description_zh": "报告所属期货品种。",
                 "source_system_zh": "派生",
                 "source_api": "派生",
-                "source_column": "请求品种 + symbol",
-                "transformation_zh": "以日历品种为准并用 symbol 复核；角色：主键、分区。",
+                "source_column": "请求品种 + underlying_code + code",
+                "transformation_zh": "以日历品种为准并用响应品种和合约代码复核；角色：主键、分区。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空。",
                 "semantic_role_zh": "主键、分区",
@@ -3124,11 +3124,11 @@ FUTURES_POSITION_RANK_DAILY_SCHEMA = pa.schema(
             pa.string(),
             nullable=False,
             metadata=_utf8_metadata({
-                "field_name_zh": "Tushare 原样返回的合约或产品代码",
-                "description_zh": "Tushare 原样返回的合约或产品代码。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "symbol",
+                "field_name_zh": "JQData 原样返回的合约代码",
+                "description_zh": "JQData 原样返回的合约代码。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "code",
                 "transformation_zh": "仅做字符串规范化，不丢失原值；角色：主键、来源标识。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空。",
@@ -3146,8 +3146,8 @@ FUTURES_POSITION_RANK_DAILY_SCHEMA = pa.schema(
                 "description_zh": "可明确识别时的项目标准固定月份合约代码。",
                 "source_system_zh": "派生",
                 "source_api": "派生",
-                "source_column": "symbol + exchange",
-                "transformation_zh": "symbol 含交割年月时映射后缀，否则保持空；角色：业务键。",
+                "source_column": "code + exchange",
+                "transformation_zh": "code 可明确识别为固定月份合约时规范为项目标准代码，否则保持空；角色：业务键。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "产品级报告允许为空；非空时必须为固定合约。",
                 "semantic_role_zh": "业务键",
@@ -3162,9 +3162,9 @@ FUTURES_POSITION_RANK_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "期货公司会员简称",
                 "description_zh": "期货公司会员简称。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "broker",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "member_name",
                 "transformation_zh": "去除首尾空白但不擅自统一机构名；角色：主键、实体。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空。",
@@ -3174,16 +3174,34 @@ FUTURES_POSITION_RANK_DAILY_SCHEMA = pa.schema(
             }),
         ),
         pa.field(
+            "volume_rank",
+            pa.int16(),
+            nullable=True,
+            metadata=_utf8_metadata({
+                "field_name_zh": "该会员成交量名次",
+                "description_zh": "该会员在相应合约成交量排名中的名次。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "rank（成交量 rank_type）",
+                "transformation_zh": "按 rank_type 透视；角色：排名度量。",
+                "unit_zh": "名",
+                "nullable_reason_zh": "未进入成交量排名时允许为空；非空时大于零。",
+                "semantic_role_zh": "排名度量",
+                "enum_values_zh": "非枚举",
+                "quality_rules_zh": "未进入成交量排名时允许为空；非空时大于零。",
+            }),
+        ),
+        pa.field(
             "volume",
             pa.float64(),
             nullable=True,
             metadata=_utf8_metadata({
                 "field_name_zh": "该会员进入成交排名时的成交量",
                 "description_zh": "该会员进入成交排名时的成交量。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "vol",
-                "transformation_zh": "转浮点；单位：手；角色：数量度量。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "indicator（成交量 rank_type）",
+                "transformation_zh": "按 rank_type 透视并转浮点；单位：手；角色：数量度量。",
                 "unit_zh": "手",
                 "nullable_reason_zh": "未进入成交排名时允许为空；非空时非负。",
                 "semantic_role_zh": "数量度量",
@@ -3198,15 +3216,33 @@ FUTURES_POSITION_RANK_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "该会员成交量较上一交易日变化",
                 "description_zh": "该会员成交量较上一交易日变化。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "vol_chg",
-                "transformation_zh": "转浮点；单位：手；角色：变化度量。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "indicator_increase（成交量 rank_type）",
+                "transformation_zh": "按 rank_type 透视并转浮点；单位：手；角色：变化度量。",
                 "unit_zh": "手",
                 "nullable_reason_zh": "未提供时可空，可正可负。",
                 "semantic_role_zh": "变化度量",
                 "enum_values_zh": "非枚举",
                 "quality_rules_zh": "未提供时可空，可正可负。",
+            }),
+        ),
+        pa.field(
+            "long_position_rank",
+            pa.int16(),
+            nullable=True,
+            metadata=_utf8_metadata({
+                "field_name_zh": "该会员持买仓名次",
+                "description_zh": "该会员在相应合约持买仓排名中的名次。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "rank（持买仓 rank_type）",
+                "transformation_zh": "按 rank_type 透视；角色：排名度量。",
+                "unit_zh": "名",
+                "nullable_reason_zh": "未进入持买仓排名时允许为空；非空时大于零。",
+                "semantic_role_zh": "排名度量",
+                "enum_values_zh": "非枚举",
+                "quality_rules_zh": "未进入持买仓排名时允许为空；非空时大于零。",
             }),
         ),
         pa.field(
@@ -3216,10 +3252,10 @@ FUTURES_POSITION_RANK_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "该会员持买仓量",
                 "description_zh": "该会员持买仓量。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "long_hld",
-                "transformation_zh": "转浮点；单位：手；角色：数量度量。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "indicator（持买仓 rank_type）",
+                "transformation_zh": "按 rank_type 透视并转浮点；单位：手；角色：数量度量。",
                 "unit_zh": "手",
                 "nullable_reason_zh": "未进入持买仓排名时可空；非空时非负。",
                 "semantic_role_zh": "数量度量",
@@ -3234,15 +3270,33 @@ FUTURES_POSITION_RANK_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "持买仓量较上一交易日变化",
                 "description_zh": "持买仓量较上一交易日变化。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "long_chg",
-                "transformation_zh": "转浮点；单位：手；角色：变化度量。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "indicator_increase（持买仓 rank_type）",
+                "transformation_zh": "按 rank_type 透视并转浮点；单位：手；角色：变化度量。",
                 "unit_zh": "手",
                 "nullable_reason_zh": "未提供时可空，可正可负。",
                 "semantic_role_zh": "变化度量",
                 "enum_values_zh": "非枚举",
                 "quality_rules_zh": "未提供时可空，可正可负。",
+            }),
+        ),
+        pa.field(
+            "short_position_rank",
+            pa.int16(),
+            nullable=True,
+            metadata=_utf8_metadata({
+                "field_name_zh": "该会员持卖仓名次",
+                "description_zh": "该会员在相应合约持卖仓排名中的名次。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "rank（持卖仓 rank_type）",
+                "transformation_zh": "按 rank_type 透视；角色：排名度量。",
+                "unit_zh": "名",
+                "nullable_reason_zh": "未进入持卖仓排名时允许为空；非空时大于零。",
+                "semantic_role_zh": "排名度量",
+                "enum_values_zh": "非枚举",
+                "quality_rules_zh": "未进入持卖仓排名时允许为空；非空时大于零。",
             }),
         ),
         pa.field(
@@ -3252,10 +3306,10 @@ FUTURES_POSITION_RANK_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "该会员持卖仓量",
                 "description_zh": "该会员持卖仓量。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "short_hld",
-                "transformation_zh": "转浮点；单位：手；角色：数量度量。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "indicator（持卖仓 rank_type）",
+                "transformation_zh": "按 rank_type 透视并转浮点；单位：手；角色：数量度量。",
                 "unit_zh": "手",
                 "nullable_reason_zh": "未进入持卖仓排名时可空；非空时非负。",
                 "semantic_role_zh": "数量度量",
@@ -3270,10 +3324,10 @@ FUTURES_POSITION_RANK_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "持卖仓量较上一交易日变化",
                 "description_zh": "持卖仓量较上一交易日变化。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "short_chg",
-                "transformation_zh": "转浮点；单位：手；角色：变化度量。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "indicator_increase（持卖仓 rank_type）",
+                "transformation_zh": "按 rank_type 透视并转浮点；单位：手；角色：变化度量。",
                 "unit_zh": "手",
                 "nullable_reason_zh": "未提供时可空，可正可负。",
                 "semantic_role_zh": "变化度量",
@@ -3291,7 +3345,7 @@ FUTURES_POSITION_RANK_DAILY_SCHEMA = pa.schema(
                 "source_system_zh": "系统生成",
                 "source_api": "系统生成",
                 "source_column": "—",
-                "transformation_zh": "固定写 Tushare_fut_holding；角色：来源。",
+                "transformation_zh": "固定写 JQData_FUT_MEMBER_POSITION_RANK；角色：来源。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空。",
                 "semantic_role_zh": "来源",
@@ -3357,28 +3411,28 @@ FUTURES_POSITION_RANK_DAILY_SCHEMA = pa.schema(
     metadata=_utf8_metadata({
         "table_name": "fact_futures_position_rank_daily",
         "table_name_zh": "期货会员每日成交持仓排名事实表",
-        "description_zh": "保存 Tushare 每日成交持仓排名返回的会员明细，包括成交量及变化、持买仓及变化、持卖仓及变化。API 的 symbol 可能表示产品代码或具体合约，因此同时原样保存 source_symbol，再按可判定性生成品种和可空的标准合约代码。",
-        "content_zh": "每个报告格点下逐会员的成交和多空持仓指标；同一会员的某些指标可能因未进入对应排名而为空。",
-        "field_list": "trading_date,exchange_code,underlying_code,source_symbol,contract_code,member_name,volume,volume_change,long_position,long_position_change,short_position,short_position_change,source,updated_at,year,month",
-        "grain_zh": "每个交易日—交易所—品种—API symbol—会员一行。",
+        "description_zh": "将 JQData FUT_MEMBER_POSITION_RANK 的成交量、持买仓和持卖仓三类长表排名透视为逐会员宽行，保留各类名次、指标值和较前一日增减，并原样保存来源 code。",
+        "content_zh": "每个报告格点下逐合约、逐会员的成交和多空持仓名次与指标；同一会员未进入某类排名时，相应名次和指标允许为空。",
+        "field_list": "trading_date,exchange_code,underlying_code,source_symbol,contract_code,member_name,volume_rank,volume,volume_change,long_position_rank,long_position,long_position_change,short_position_rank,short_position,short_position_change,source,updated_at,year,month",
+        "grain_zh": "每个交易日—交易所—品种—JQData code—会员一行。",
         "primary_key": "trading_date,exchange_code,underlying_code,source_symbol,member_name",
         "partition_columns": "exchange_code,underlying_code,year,month",
         "role_zh": "事实表",
         "calendar_role_zh": "不适用，只消费 dim_futures_exchange_report_calendar 中 dataset_name=position_rank 且 is_fetch_required=true 的格点。",
-        "source_systems_zh": "Tushare Pro；报告日历；系统派生",
-        "source_apis_zh": "pro.fut_holding(trade_date/symbol/start_date/end_date/exchange)",
-        "source_columns_zh": "trade_date,symbol,broker,vol,vol_chg,long_hld,long_chg,short_hld,short_chg,exchange。",
+        "source_systems_zh": "聚宽 JQData 财务库；报告日历；系统派生",
+        "source_apis_zh": "jqdatasdk.finance.run_query(query(FUT_MEMBER_POSITION_RANK...))",
+        "source_columns_zh": "day,code,exchange,underlying_code,rank_type_ID,rank_type,rank,member_name,indicator,indicator_increase。",
         "dimension_dependencies": "dim_futures_exchange_report_calendar",
-        "update_mode_zh": "按 position_rank 待办品种日格点分批请求；只重写触达分区，事实复读后更新统一报告日历。",
-        "quality_rules_zh": "业务主键唯一；至少一个成交/持仓指标非空；数量非负、变化可正可负；API symbol 原样可追溯；交易所和品种与日历一致。",
-        "schema_version": "1.1.0",
+        "update_mode_zh": "以报告日历当前 required 格点减去两张事实与日历状态共同证明完整的格点得到自动待办；每个交易所—品种—交易日只查询一次 JQData 排名表，同时生成两张事实，按完整叶分区提交并在两张事实正式复读后统一回写报告日历，正式写入不接受人工日期范围。",
+        "quality_rules_zh": "业务主键唯一；三类名次非空时大于零且与相应指标同时存在；至少一个成交/持仓指标非空；数量非负、变化可正可负；JQData code 原样可追溯；交易所、品种和日期与日历一致；staging 与正式路径复读一致。",
+        "schema_version": "1.2.0",
         "metadata_language": "zh-CN",
     }),
 )
 
 
 
-
+# fact_futures_member_position_daily 期货会员类型每日成交持仓事实表
 FUTURES_MEMBER_POSITION_DAILY_SCHEMA = pa.schema(
     [
         pa.field(
@@ -3388,10 +3442,10 @@ FUTURES_MEMBER_POSITION_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "汇总记录交易日",
                 "description_zh": "汇总记录交易日。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "trade_date",
-                "transformation_zh": "解析 YYYYMMDD；角色：主键、时间。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "day",
+                "transformation_zh": "转为 date32；角色：主键、时间。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空。",
                 "semantic_role_zh": "主键、时间",
@@ -3406,10 +3460,10 @@ FUTURES_MEMBER_POSITION_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "项目标准交易所代码",
                 "description_zh": "项目标准交易所代码。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "exchange；缺列时来自日历",
-                "transformation_zh": "代码映射；角色：主键、分区。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "exchange；待办日历",
+                "transformation_zh": "以待办日历的 JQData 标准交易所代码为准并复核响应；角色：主键、分区。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空。",
                 "semantic_role_zh": "主键、分区",
@@ -3426,8 +3480,8 @@ FUTURES_MEMBER_POSITION_DAILY_SCHEMA = pa.schema(
                 "description_zh": "汇总记录所属品种。",
                 "source_system_zh": "派生",
                 "source_api": "派生",
-                "source_column": "请求品种 + symbol",
-                "transformation_zh": "以日历品种为准；角色：主键、分区。",
+                "source_column": "请求品种 + underlying_code + code",
+                "transformation_zh": "以日历品种为准并用响应品种和合约代码复核；角色：主键、分区。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空。",
                 "semantic_role_zh": "主键、分区",
@@ -3442,10 +3496,10 @@ FUTURES_MEMBER_POSITION_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "API 原样合约或产品代码",
                 "description_zh": "API 原样合约或产品代码。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "symbol",
-                "transformation_zh": "保留原值；角色：主键、来源标识。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "code",
+                "transformation_zh": "仅做字符串规范化，不丢失来源值；角色：主键、来源标识。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空。",
                 "semantic_role_zh": "主键、来源标识",
@@ -3460,10 +3514,10 @@ FUTURES_MEMBER_POSITION_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "汇总参与者类型",
                 "description_zh": "汇总参与者类型。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "broker",
-                "transformation_zh": "将原中文值稳定映射为英文枚举；角色：主键、分类。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "member_name",
+                "transformation_zh": "只将明确的参与者汇总标签稳定映射为英文枚举，不根据普通会员名称猜测；角色：主键、分类。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空；枚举：futures_company=期货公司、non_futures_company=非期货公司。",
                 "semantic_role_zh": "主键、分类",
@@ -3478,10 +3532,10 @@ FUTURES_MEMBER_POSITION_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "该参与者类型成交量",
                 "description_zh": "该参与者类型成交量。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "vol",
-                "transformation_zh": "转浮点；单位：手。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "indicator（成交量 rank_type）",
+                "transformation_zh": "按 rank_type 透视并转浮点；单位：手。",
                 "unit_zh": "手",
                 "nullable_reason_zh": "API 缺值时可空；非空时非负。",
                 "semantic_role_zh": "度量或说明",
@@ -3496,10 +3550,10 @@ FUTURES_MEMBER_POSITION_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "成交量变化",
                 "description_zh": "成交量变化。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "vol_chg",
-                "transformation_zh": "转浮点；单位：手。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "indicator_increase（成交量 rank_type）",
+                "transformation_zh": "按 rank_type 透视并转浮点；单位：手。",
                 "unit_zh": "手",
                 "nullable_reason_zh": "可空，可正可负。",
                 "semantic_role_zh": "度量或说明",
@@ -3514,10 +3568,10 @@ FUTURES_MEMBER_POSITION_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "持买仓量",
                 "description_zh": "持买仓量。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "long_hld",
-                "transformation_zh": "转浮点；单位：手。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "indicator（持买仓 rank_type）",
+                "transformation_zh": "按 rank_type 透视并转浮点；单位：手。",
                 "unit_zh": "手",
                 "nullable_reason_zh": "可空；非空时非负。",
                 "semantic_role_zh": "度量或说明",
@@ -3532,10 +3586,10 @@ FUTURES_MEMBER_POSITION_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "持买仓变化",
                 "description_zh": "持买仓变化。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "long_chg",
-                "transformation_zh": "转浮点；单位：手。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "indicator_increase（持买仓 rank_type）",
+                "transformation_zh": "按 rank_type 透视并转浮点；单位：手。",
                 "unit_zh": "手",
                 "nullable_reason_zh": "可空，可正可负。",
                 "semantic_role_zh": "度量或说明",
@@ -3550,10 +3604,10 @@ FUTURES_MEMBER_POSITION_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "持卖仓量",
                 "description_zh": "持卖仓量。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "short_hld",
-                "transformation_zh": "转浮点；单位：手。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "indicator（持卖仓 rank_type）",
+                "transformation_zh": "按 rank_type 透视并转浮点；单位：手。",
                 "unit_zh": "手",
                 "nullable_reason_zh": "可空；非空时非负。",
                 "semantic_role_zh": "度量或说明",
@@ -3568,10 +3622,10 @@ FUTURES_MEMBER_POSITION_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "持卖仓变化",
                 "description_zh": "持卖仓变化。",
-                "source_system_zh": "Tushare fut_holding",
-                "source_api": "Tushare fut_holding",
-                "source_column": "short_chg",
-                "transformation_zh": "转浮点；单位：手。",
+                "source_system_zh": "JQData FUT_MEMBER_POSITION_RANK",
+                "source_api": "JQData finance.run_query",
+                "source_column": "indicator_increase（持卖仓 rank_type）",
+                "transformation_zh": "按 rank_type 透视并转浮点；单位：手。",
                 "unit_zh": "手",
                 "nullable_reason_zh": "可空，可正可负。",
                 "semantic_role_zh": "度量或说明",
@@ -3589,7 +3643,7 @@ FUTURES_MEMBER_POSITION_DAILY_SCHEMA = pa.schema(
                 "source_system_zh": "系统生成",
                 "source_api": "系统生成",
                 "source_column": "—",
-                "transformation_zh": "固定写 Tushare_fut_holding_participant_summary；角色：来源。",
+                "transformation_zh": "固定写 JQData_FUT_MEMBER_POSITION_RANK_participant_summary；角色：来源。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空。",
                 "semantic_role_zh": "来源",
@@ -3655,28 +3709,28 @@ FUTURES_MEMBER_POSITION_DAILY_SCHEMA = pa.schema(
     metadata=_utf8_metadata({
         "table_name": "fact_futures_member_position_daily",
         "table_name_zh": "期货会员类型每日成交持仓事实表",
-        "description_zh": "将旧项目分别保存的“期货公司”和“非期货公司”品种日频成交持仓记录统一成长表，用 participant_type 区分参与者类型，保留成交量、多空持仓及其变化。",
-        "content_zh": "Tushare fut_holding 中 broker 为汇总参与者类型的记录，不包含逐家会员名称明细。",
+        "description_zh": "从 JQData FUT_MEMBER_POSITION_RANK 中只识别明确的“期货公司”和“非期货公司”等参与者汇总标签，将成交量、持买仓和持卖仓三类长表指标透视成宽行；普通会员名称绝不推断参与者类型。",
+        "content_zh": "JQData 会员排名表中 member_name 为明确参与者类型汇总标签的记录，不包含逐家会员名称明细。",
         "field_list": "trading_date,exchange_code,underlying_code,source_symbol,participant_type,volume,volume_change,long_position,long_position_change,short_position,short_position_change,source,updated_at,year,month",
-        "grain_zh": "每个交易日—交易所—品种—API symbol—参与者类型一行。",
+        "grain_zh": "每个交易日—交易所—品种—JQData code—参与者类型一行。",
         "primary_key": "trading_date,exchange_code,underlying_code,source_symbol,participant_type",
         "partition_columns": "exchange_code,underlying_code,year,month",
         "role_zh": "事实表",
         "calendar_role_zh": "不适用，只消费报告日历中 dataset_name=member_position 且 is_fetch_required=true 的格点；与 position_rank 共享一次原始请求。",
-        "source_systems_zh": "Tushare Pro；报告日历；系统派生",
-        "source_apis_zh": "pro.fut_holding",
-        "source_columns_zh": "trade_date,symbol,broker,vol,vol_chg,long_hld,long_chg,short_hld,short_chg,exchange。",
+        "source_systems_zh": "聚宽 JQData 财务库；报告日历；系统派生",
+        "source_apis_zh": "jqdatasdk.finance.run_query(query(FUT_MEMBER_POSITION_RANK...))",
+        "source_columns_zh": "day,code,exchange,underlying_code,rank_type_ID,rank_type,rank,member_name,indicator,indicator_increase。",
         "dimension_dependencies": "dim_futures_exchange_report_calendar",
-        "update_mode_zh": "与排名事实共享同一次 API 原始响应，筛选参与者类型汇总行后写入；不得为了少量重复再调用一遍 API。",
-        "quality_rules_zh": "主键唯一；参与者类型仅允许两类；至少一个度量非空；同一原始响应同时产出排名表和本表并各自复读。",
-        "schema_version": "1.1.0",
+        "update_mode_zh": "与排名事实共享同一次 JQData 查询响应，筛选明确参与者类型汇总行后写入；自动待办、完整叶分区提交、正式湖日期禁令和报告日历回写与排名事实协调执行，不得另发重复请求。",
+        "quality_rules_zh": "主键唯一；参与者类型仅允许两类；至少一个度量非空；数量非负、变化可正可负；普通会员名称不得猜测为参与者类型；同一 JQData 响应同时产出排名表和本表并各自完成 staging 与正式复读。",
+        "schema_version": "1.2.0",
         "metadata_language": "zh-CN",
     }),
 )
 
 
 
-
+# fact_futures_warehouse_receipt_daily 期货仓单日报事实表
 FUTURES_WAREHOUSE_RECEIPT_DAILY_SCHEMA = pa.schema(
     [
         pa.field(
@@ -3770,6 +3824,42 @@ FUTURES_WAREHOUSE_RECEIPT_DAILY_SCHEMA = pa.schema(
             }),
         ),
         pa.field(
+            "warehouse_receipt_unit",
+            pa.string(),
+            nullable=True,
+            metadata=_utf8_metadata({
+                "field_name_zh": "来源仓单计量单位",
+                "description_zh": "JQData 对该仓单数量给出的原始计量单位。",
+                "source_system_zh": "JQData finance.FUT_WAREHOUSE_RECEIPT",
+                "source_api": "JQData finance.FUT_WAREHOUSE_RECEIPT",
+                "source_column": "unit",
+                "transformation_zh": "去除首尾空白并原样保留；角色：单位。",
+                "unit_zh": "不适用",
+                "nullable_reason_zh": "来源历史记录可能不提供单位；缺失时必须在格点质量状态中留痕。",
+                "semantic_role_zh": "单位",
+                "enum_values_zh": "非枚举，保留来源原值",
+                "quality_rules_zh": "非空时去除首尾空白后仍不得为空；原样保留，缺失时必须在格点质量状态中留痕。",
+            }),
+        ),
+        pa.field(
+            "warehouse_receipt_number_change",
+            pa.float64(),
+            nullable=True,
+            metadata=_utf8_metadata({
+                "field_name_zh": "仓单数量较昨日变化",
+                "description_zh": "该仓库当日仓单数量相对昨日的增减。",
+                "source_system_zh": "JQData finance.FUT_WAREHOUSE_RECEIPT",
+                "source_api": "JQData finance.FUT_WAREHOUSE_RECEIPT",
+                "source_column": "warehouse_receipt_number_increase",
+                "transformation_zh": "转浮点并保留正负号；单位与 warehouse_receipt_unit 相同；角色：变化度量。",
+                "unit_zh": "warehouse_receipt_unit",
+                "nullable_reason_zh": "来源未提供昨日增减时允许为空。",
+                "semantic_role_zh": "变化度量",
+                "enum_values_zh": "非枚举",
+                "quality_rules_zh": "允许为空；非空时必须为有限数，可正可负。",
+            }),
+        ),
+        pa.field(
             "source",
             pa.string(),
             nullable=False,
@@ -3845,9 +3935,9 @@ FUTURES_WAREHOUSE_RECEIPT_DAILY_SCHEMA = pa.schema(
     metadata=_utf8_metadata({
         "table_name": "fact_futures_warehouse_receipt_daily",
         "table_name_zh": "期货仓单日报事实表",
-        "description_zh": "保存聚宽财务库期货仓单日报中各品种、交易日、仓库的仓单数量。外层采集状态与其他交易所报告共用统一日历。",
-        "content_zh": "每个品种交易日下逐仓库的仓单数量；API 无数据时不伪造仓库明细。",
-        "field_list": "trading_date,exchange_code,underlying_code,warehouse_name,warehouse_receipt_number,source,updated_at,year,month",
+        "description_zh": "保存聚宽财务库期货仓单日报中各品种、交易日、仓库的仓单数量、来源计量单位和较昨日增减；外层采集状态与其他交易所报告共用统一日历。",
+        "content_zh": "每个品种交易日下逐仓库的仓单数量、来源单位和日变化；API 无数据时不伪造仓库明细。",
+        "field_list": "trading_date,exchange_code,underlying_code,warehouse_name,warehouse_receipt_number,warehouse_receipt_unit,warehouse_receipt_number_change,source,updated_at,year,month",
         "grain_zh": "每个交易日—交易所—品种—仓库一行。",
         "primary_key": "trading_date,exchange_code,underlying_code,warehouse_name",
         "partition_columns": "exchange_code,underlying_code,year,month",
@@ -3855,18 +3945,18 @@ FUTURES_WAREHOUSE_RECEIPT_DAILY_SCHEMA = pa.schema(
         "calendar_role_zh": "不适用，只消费报告日历中 dataset_name=warehouse_receipt 且 is_fetch_required=true 的格点。",
         "source_systems_zh": "聚宽 JQData 财务库；报告日历；系统派生",
         "source_apis_zh": "jqdatasdk.finance.run_query(query(FUT_WAREHOUSE_RECEIPT...))",
-        "source_columns_zh": "day,underlying_code,warehouse_name,warehouse_receipt_number；交易所来自统一日历。",
+        "source_columns_zh": "day,exchange,underlying_code,warehouse_name,warehouse_receipt_number,unit,warehouse_receipt_number_increase；项目标准交易所代码继承统一日历并用来源 exchange 复核。",
         "dimension_dependencies": "dim_futures_exchange_report_calendar",
-        "update_mode_zh": "按仓单待办品种日查询，重写触达分区，复读后更新统一报告日历；空响应记录在日历而不写占位事实。",
-        "quality_rules_zh": "主键唯一；仓单数非负；事实键必须属于待办日历；实际行数与日历复读计数一致。",
-        "schema_version": "1.1.0",
+        "update_mode_zh": "以报告日历当前 required 仓单格点减去事实与日历状态共同证明完整的格点得到自动待办；每个交易所—品种—交易日查询一次 JQData，按完整品种月叶分区提交并在正式事实复读后回写日历；正式写入不接受人工日期范围。",
+        "quality_rules_zh": "主键唯一；仓单数非负；单位非空时不得为空白、缺失时日历必须为 warning；仓单变化可正可负且必须为有限数；API 日期、交易所和品种必须与待办日历一致；事实键必须属于待办日历；实际行数与日历复读计数一致；staging 和正式路径复读一致。",
+        "schema_version": "1.2.0",
         "metadata_language": "zh-CN",
     }),
 )
 
 
 
-
+# dim_external_market_calendar 外部市场数据采集日历维度表
 EXTERNAL_MARKET_CALENDAR_SCHEMA = pa.schema(
     [
         pa.field(
@@ -3897,7 +3987,7 @@ EXTERNAL_MARKET_CALENDAR_SCHEMA = pa.schema(
                 "source_system_zh": "系统配置",
                 "source_api": "系统配置",
                 "source_column": "—",
-                "transformation_zh": "现货整页为 ALL；境外期货为 FUT_GLOBAL_DAILY.code；指数为 Eastmoney INDICATOR_ID；角色：主键。",
+                "transformation_zh": "生意社原始整页归档和按日返回全表的 FUT_GLOBAL_DAILY 均为 ALL；指数为 Eastmoney INDICATOR_ID；角色：主键。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空，必须属于当前数据集配置。",
                 "semantic_role_zh": "主键",
@@ -3915,7 +4005,7 @@ EXTERNAL_MARKET_CALENDAR_SCHEMA = pa.schema(
                 "source_system_zh": "dim_trade_calendar.calendar_date 或系统候选日历",
                 "source_api": "dim_trade_calendar.calendar_date 或系统候选日历",
                 "source_column": "calendar_date",
-                "transformation_zh": "现货使用中国交易日；境外与指数按其工作日候选规则生成；角色：主键、时间。",
+                "transformation_zh": "生意社原始页面使用中国交易日；境外与指数按其工作日候选规则生成；角色：主键、时间。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空。",
                 "semantic_role_zh": "主键、时间",
@@ -3964,12 +4054,12 @@ EXTERNAL_MARKET_CALENDAR_SCHEMA = pa.schema(
             pa.bool_(),
             nullable=False,
             metadata=_utf8_metadata({
-                "field_name_zh": "请求、事实写入和复读是否完成",
-                "description_zh": "请求、事实写入和复读是否完成。",
+                "field_name_zh": "请求、下游产物提交和复读是否完成",
+                "description_zh": "请求、下游产物提交和正式复读是否完成。",
                 "source_system_zh": "系统生成",
                 "source_api": "系统生成",
                 "source_column": "—",
-                "transformation_zh": "复读成功或明确确认空响应后置真；角色：执行状态。",
+                "transformation_zh": "下游产物正式复读成功，或允许确认空的事实源明确确认空响应后置真；生意社原始页面不存在确认空语义；角色：执行状态。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空。",
                 "semantic_role_zh": "执行状态",
@@ -3992,7 +4082,7 @@ EXTERNAL_MARKET_CALENDAR_SCHEMA = pa.schema(
                 "nullable_reason_zh": "不可空；枚举：pending、success、empty_confirmed、retryable_error、permanent_error、not_required。",
                 "semantic_role_zh": "执行状态",
                 "enum_values_zh": "pending、success、empty_confirmed、retryable_error、permanent_error、not_required",
-                "quality_rules_zh": "不可空；枚举：pending、success、empty_confirmed、retryable_error、permanent_error、not_required。",
+                "quality_rules_zh": "不可空；枚举：pending、success、empty_confirmed、retryable_error、permanent_error、not_required；domestic_spot_basis 禁止 empty_confirmed。",
             }),
         ),
         pa.field(
@@ -4000,17 +4090,17 @@ EXTERNAL_MARKET_CALENDAR_SCHEMA = pa.schema(
             pa.bool_(),
             nullable=False,
             metadata=_utf8_metadata({
-                "field_name_zh": "应有数据但没有形成事实行",
-                "description_zh": "应有数据但没有形成事实行。",
+                "field_name_zh": "应有下游产物但没有形成完整产物",
+                "description_zh": "应有下游产物但没有形成完整产物。",
                 "source_system_zh": "派生",
                 "source_api": "派生",
-                "source_column": "结果状态与事实计数",
-                "transformation_zh": "对历史惯常有值但异常为空的格点标真；角色：质量状态。",
+                "source_column": "结果状态与正式下游产物计数",
+                "transformation_zh": "domestic_spot_basis 固定为假；其他允许确认空的事实源对历史惯常有值但异常为空的格点标真；角色：质量状态。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空；请求失败不得直接标缺失。",
                 "semantic_role_zh": "质量状态",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "不可空；请求失败不得直接标缺失。",
+                "quality_rules_zh": "不可空；domestic_spot_basis 固定为假；请求失败不得直接标缺失。",
             }),
         ),
         pa.field(
@@ -4018,17 +4108,17 @@ EXTERNAL_MARKET_CALENDAR_SCHEMA = pa.schema(
             pa.int32(),
             nullable=False,
             metadata=_utf8_metadata({
-                "field_name_zh": "对应事实表复读行数",
-                "description_zh": "对应事实表复读行数。",
+                "field_name_zh": "对应正式下游产物复读数量",
+                "description_zh": "对应格点已经从正式路径复读并核验的下游产物数量。",
                 "source_system_zh": "派生",
                 "source_api": "派生",
-                "source_column": "相应事实表业务键",
-                "transformation_zh": "按日历格点过滤计数；单位：条。",
-                "unit_zh": "条",
+                "source_column": "正式 raw 归档文件或相应事实表业务键",
+                "transformation_zh": "domestic_spot_basis 在正式原始页面完成字节数与 SHA-256 复读核验后固定为 1；其他数据集按日历格点过滤正式事实计数。",
+                "unit_zh": "个或条",
                 "nullable_reason_zh": "不可空且非负。",
                 "semantic_role_zh": "度量或说明",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "不可空且非负。",
+                "quality_rules_zh": "不可空且非负；domestic_spot_basis 的 success 必须等于 1。",
             }),
         ),
         pa.field(
@@ -4040,8 +4130,8 @@ EXTERNAL_MARKET_CALENDAR_SCHEMA = pa.schema(
                 "description_zh": "格点综合质检状态。",
                 "source_system_zh": "派生",
                 "source_api": "派生",
-                "source_column": "请求、结构和事实字段检查",
-                "transformation_zh": "触达检查后更新；角色：质量状态。",
+                "source_column": "请求与正式下游产物检查",
+                "transformation_zh": "触达检查后更新；生意社页面只核验原始响应字节数与 SHA-256，不解析 HTML；角色：质量状态。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空；枚举：pending、passed、warning、failed、not_applicable。",
                 "semantic_role_zh": "质量状态",
@@ -4059,7 +4149,7 @@ EXTERNAL_MARKET_CALENDAR_SCHEMA = pa.schema(
                 "source_system_zh": "系统生成",
                 "source_api": "系统生成",
                 "source_column": "—",
-                "transformation_zh": "写明 HTML 结构、API 状态、重复键或数值异常；角色：质量说明。",
+                "transformation_zh": "写明原始响应字节数与 SHA-256 核验、API 状态、重复键或数值异常；不得记录生意社 HTML 结构解析结论；角色：质量说明。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空。",
                 "semantic_role_zh": "质量说明",
@@ -4095,7 +4185,7 @@ EXTERNAL_MARKET_CALENDAR_SCHEMA = pa.schema(
                 "source_system_zh": "系统生成",
                 "source_api": "系统生成",
                 "source_column": "—",
-                "transformation_zh": "成功或确认空后记录 UTC；角色：审计。",
+                "transformation_zh": "成功或允许确认空的事实源确认空后记录 UTC；生意社只在 raw 正式复读成功后记录；角色：审计。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "未完成时允许为空。",
                 "semantic_role_zh": "审计",
@@ -4179,344 +4269,28 @@ EXTERNAL_MARKET_CALENDAR_SCHEMA = pa.schema(
     metadata=_utf8_metadata({
         "table_name": "dim_external_market_calendar",
         "table_name_zh": "外部市场数据采集日历维度表",
-        "description_zh": "枚举国内现货基差网页、境外期货日线和外部行业指数需要采集的日期/实体格点，并统一记录请求、空数据、事实行数和质检状态。",
-        "content_zh": "数据集类型、实体代码、观测日期、是否应拉取及最近一次运行/质检结果；国内现货网页使用 entity_code=ALL 表示整页请求。",
+        "description_zh": "从完整中国自然日历和项目级请求实体配置枚举生意社原始网页归档、境外期货日线与外部行业指数的完整理论请求格点，并统一记录是否应拉取、请求结果、正式下游产物数量和质检状态。",
+        "content_zh": "数据集类型、请求实体、观测日期、是否应拉取及最近一次运行/质检结果；生意社原始网页与按日返回全表的 FUT_GLOBAL_DAILY 使用 entity_code=ALL，Eastmoney 指数使用 INDICATOR_ID。",
         "field_list": "dataset_name,entity_code,observation_date,is_fetch_required,requirement_reason,is_fetch_completed,fetch_result_status,is_data_missing,actual_record_count,quality_status,quality_reason,fetch_run_id,fetch_completed_at,quality_checked_at,updated_at,year,month",
         "grain_zh": "每个外部数据集—实体—观测日期一行。",
         "primary_key": "dataset_name,entity_code,observation_date",
         "partition_columns": "dataset_name,year,month",
         "role_zh": "日历维度表",
-        "calendar_role_zh": "枚举外部市场事实应被查询的日期和实体格点，即外部数据的更新水位。",
-        "source_systems_zh": "dim_trade_calendar；系统配置；生意社；聚宽 JQData 财务库；东方财富数据中心",
-        "source_apis_zh": "https://www.100ppi.com/sf/day-{YYYY-MM-DD}.html；JQData finance.FUT_GLOBAL_DAILY；Eastmoney api/data/v1/get?reportName=RPT_INDUSTRY_INDEX",
-        "source_columns_zh": "候选日期、配置实体代码、API/网页实际返回行数；执行状态由系统生成。",
+        "calendar_role_zh": "枚举外部市场下游产物应被请求的完整日期—请求实体理论格点，并用 is_fetch_required 区分当前是否需要请求。",
+        "source_systems_zh": "dim_trade_calendar；config/external_market_entities.py；下游 raw 归档或事实生产者状态回写",
+        "source_apis_zh": "本表生产者不调用外部 API；下游入口分别原样归档生意社日页面、使用 JQData finance.FUT_GLOBAL_DAILY 和 Eastmoney RPT_INDUSTRY_INDEX，并在完成后回写本日历。",
+        "source_columns_zh": "calendar_date,is_trading_day,weekday；配置版本、请求实体及有效期；执行状态与正式产物数量由下游生产者回写。",
         "dimension_dependencies": "dim_trade_calendar",
-        "update_mode_zh": "空库按各数据集的覆盖起点、工作日规则和实体配置生成候选格点；历史事实返回日期反向校准但不删除已确认空日；日常只追加水位后的候选日期并消费待办行。",
-        "quality_rules_zh": "主键唯一；success/empty_confirmed 与请求错误区分；完成状态必须有批次与完成时间；实际行数必须等于事实表复读计数；外部页面结构变化视为失败而非空数据。",
-        "schema_version": "1.0.0",
+        "update_mode_zh": "以 dim_trade_calendar 当前有效自然日和版本化请求实体配置生成完整理论格点，减去正式日历中物理完整且选择语义未变化的格点得到自动更新范围；空湖由同一差集自然全量建表，历史缺口、上游新增、配置新增/停用及规则变化都会重建相应完整叶分区，未变化格点继承下游产物采集状态；生意社 raw 已正式完整而本日历状态陈旧时由 c02 复读字节数与 SHA-256 后无 API 修复，境外期货事实已正式完整而本日历状态或原因陈旧时由 c03 从正式事实无 API 复算并提交状态；正式写入不接受人工日期范围。",
+        "quality_rules_zh": "主键唯一；自然日范围、weekday 与年月必须匹配上游；生意社原始网页与境外期货实体固定为 ALL，指数实体必须命中项目配置；required 与 not_required 状态自洽；domestic_spot_basis 只有正式 raw 文件的字节数和 SHA-256 复读一致后才允许 success + passed，actual_record_count 固定为 1、is_data_missing 固定为 false，并且禁止 empty_confirmed、warning 和 HTML 结构解析；其他数据集继续区分 success/empty_confirmed 与请求错误；境外期货日历状态必须与正式事实双向精确：有限 OHLC 跨列异常为 success + warning 且原因匹配，正常非空事实为 success + passed 且原因匹配；完成状态必须有批次与完成时间；实际数量必须等于正式下游产物复读计数；完整叶分区经 staging 与正式路径复读一致。",
+        "schema_version": "1.3.0",
         "metadata_language": "zh-CN",
     }),
 )
 
 
 
-
-DOMESTIC_SPOT_BASIS_DAILY_SCHEMA = pa.schema(
-    [
-        pa.field(
-            "observation_date",
-            pa.date32(),
-            nullable=False,
-            metadata=_utf8_metadata({
-                "field_name_zh": "生意社现期表对应日期",
-                "description_zh": "生意社现期表对应日期。",
-                "source_system_zh": "生意社 URL",
-                "source_api": "生意社 URL",
-                "source_column": "day-{YYYY-MM-DD}.html 中的日期参数",
-                "transformation_zh": "从日历请求日期生成并与页面标题复核；角色：主键、时间。",
-                "unit_zh": "不适用",
-                "nullable_reason_zh": "不可空。",
-                "semantic_role_zh": "主键、时间",
-                "enum_values_zh": "非枚举",
-                "quality_rules_zh": "不可空。",
-            }),
-        ),
-        pa.field(
-            "exchange_name",
-            pa.string(),
-            nullable=False,
-            metadata=_utf8_metadata({
-                "field_name_zh": "页面中的交易所分组名称",
-                "description_zh": "页面中的交易所分组名称。",
-                "source_system_zh": "生意社 table#fdata",
-                "source_api": "生意社 table#fdata",
-                "source_column": "colspan=8 且含“交易所”的分组标题",
-                "transformation_zh": "去除首尾空白，保留来源中文名称；角色：主键、分类。",
-                "unit_zh": "不适用",
-                "nullable_reason_zh": "不可空。",
-                "semantic_role_zh": "主键、分类",
-                "enum_values_zh": "非枚举",
-                "quality_rules_zh": "不可空。",
-            }),
-        ),
-        pa.field(
-            "product_name",
-            pa.string(),
-            nullable=False,
-            metadata=_utf8_metadata({
-                "field_name_zh": "商品名称",
-                "description_zh": "商品名称。",
-                "source_system_zh": "生意社 table#fdata",
-                "source_api": "生意社 table#fdata",
-                "source_column": "第 1 个数据单元格中的链接文本（商品）",
-                "transformation_zh": "文本清洗；角色：主键、实体。",
-                "unit_zh": "不适用",
-                "nullable_reason_zh": "不可空。",
-                "semantic_role_zh": "主键、实体",
-                "enum_values_zh": "非枚举",
-                "quality_rules_zh": "不可空。",
-            }),
-        ),
-        pa.field(
-            "spot_price",
-            pa.float64(),
-            nullable=True,
-            metadata=_utf8_metadata({
-                "field_name_zh": "商品现货价格",
-                "description_zh": "商品现货价格。",
-                "source_system_zh": "生意社 table#fdata",
-                "source_api": "生意社 table#fdata",
-                "source_column": "第 2 个数据单元格（现货价格）",
-                "transformation_zh": "去千分位后转数值；单位：页面声明的元/吨等商品单位。",
-                "unit_zh": "页面声明的元/吨等商品单位",
-                "nullable_reason_zh": "页面缺值时可空；非空时大于 0。",
-                "semantic_role_zh": "度量或说明",
-                "enum_values_zh": "非枚举",
-                "quality_rules_zh": "页面缺值时可空；非空时大于 0。",
-            }),
-        ),
-        pa.field(
-            "nearest_contract_code",
-            pa.string(),
-            nullable=True,
-            metadata=_utf8_metadata({
-                "field_name_zh": "页面列示的近月合约代码",
-                "description_zh": "页面列示的近月合约代码。",
-                "source_system_zh": "生意社 table#fdata",
-                "source_api": "生意社 table#fdata",
-                "source_column": "第 3 个数据单元格（近月合约）",
-                "transformation_zh": "保留页面代码并去空白；角色：业务标识。",
-                "unit_zh": "不适用",
-                "nullable_reason_zh": "页面缺值时可空。",
-                "semantic_role_zh": "业务标识",
-                "enum_values_zh": "非枚举",
-                "quality_rules_zh": "页面缺值时可空。",
-            }),
-        ),
-        pa.field(
-            "nearest_contract_price",
-            pa.float64(),
-            nullable=True,
-            metadata=_utf8_metadata({
-                "field_name_zh": "近月期货合约价格",
-                "description_zh": "近月期货合约价格。",
-                "source_system_zh": "生意社 table#fdata",
-                "source_api": "生意社 table#fdata",
-                "source_column": "第 4 个数据单元格（近月价格）",
-                "transformation_zh": "去千分位转数值；单位与对应商品报价一致。",
-                "unit_zh": "不适用",
-                "nullable_reason_zh": "页面缺值时可空；非空时大于 0。",
-                "semantic_role_zh": "度量或说明",
-                "enum_values_zh": "非枚举",
-                "quality_rules_zh": "页面缺值时可空；非空时大于 0。",
-            }),
-        ),
-        pa.field(
-            "nearest_basis_value",
-            pa.float64(),
-            nullable=True,
-            metadata=_utf8_metadata({
-                "field_name_zh": "现货价减近月合约价的现期差",
-                "description_zh": "现货价减近月合约价的现期差。",
-                "source_system_zh": "生意社 table#fdata",
-                "source_api": "生意社 table#fdata",
-                "source_column": "第 5 个嵌套单元格第 1 值（近月现期差）",
-                "transformation_zh": "清洗为数值；单位：与价格相同。",
-                "unit_zh": "与价格相同",
-                "nullable_reason_zh": "页面缺值时可空；非空时与两价格之差在舍入容差内。",
-                "semantic_role_zh": "度量或说明",
-                "enum_values_zh": "非枚举",
-                "quality_rules_zh": "页面缺值时可空；非空时与两价格之差在舍入容差内。",
-            }),
-        ),
-        pa.field(
-            "nearest_basis_pct",
-            pa.float64(),
-            nullable=True,
-            metadata=_utf8_metadata({
-                "field_name_zh": "页面给出的近月现期差百分比",
-                "description_zh": "页面给出的近月现期差百分比。",
-                "source_system_zh": "生意社 table#fdata",
-                "source_api": "生意社 table#fdata",
-                "source_column": "第 5 个嵌套单元格第 2 值（百分比）",
-                "transformation_zh": "去 % 后保留百分数数值；单位：百分比。",
-                "unit_zh": "百分比",
-                "nullable_reason_zh": "页面缺值时可空；需按页面口径复核。",
-                "semantic_role_zh": "度量或说明",
-                "enum_values_zh": "非枚举",
-                "quality_rules_zh": "页面缺值时可空；需按页面口径复核。",
-            }),
-        ),
-        pa.field(
-            "main_contract_code",
-            pa.string(),
-            nullable=True,
-            metadata=_utf8_metadata({
-                "field_name_zh": "页面列示的主力合约代码",
-                "description_zh": "页面列示的主力合约代码。",
-                "source_system_zh": "生意社 table#fdata",
-                "source_api": "生意社 table#fdata",
-                "source_column": "第 6 个数据单元格（主力合约）",
-                "transformation_zh": "保留页面代码并去空白；角色：业务标识。",
-                "unit_zh": "不适用",
-                "nullable_reason_zh": "页面缺值时可空。",
-                "semantic_role_zh": "业务标识",
-                "enum_values_zh": "非枚举",
-                "quality_rules_zh": "页面缺值时可空。",
-            }),
-        ),
-        pa.field(
-            "main_contract_price",
-            pa.float64(),
-            nullable=True,
-            metadata=_utf8_metadata({
-                "field_name_zh": "主力期货合约价格",
-                "description_zh": "主力期货合约价格。",
-                "source_system_zh": "生意社 table#fdata",
-                "source_api": "生意社 table#fdata",
-                "source_column": "第 7 个数据单元格（主力价格）",
-                "transformation_zh": "去千分位转数值；单位与商品报价一致。",
-                "unit_zh": "不适用",
-                "nullable_reason_zh": "页面缺值时可空；非空时大于 0。",
-                "semantic_role_zh": "度量或说明",
-                "enum_values_zh": "非枚举",
-                "quality_rules_zh": "页面缺值时可空；非空时大于 0。",
-            }),
-        ),
-        pa.field(
-            "main_basis_value",
-            pa.float64(),
-            nullable=True,
-            metadata=_utf8_metadata({
-                "field_name_zh": "现货价减主力合约价的现期差",
-                "description_zh": "现货价减主力合约价的现期差。",
-                "source_system_zh": "生意社 table#fdata",
-                "source_api": "生意社 table#fdata",
-                "source_column": "第 8 个嵌套单元格第 1 值（主力现期差）",
-                "transformation_zh": "清洗为数值；单位：与价格相同。",
-                "unit_zh": "与价格相同",
-                "nullable_reason_zh": "页面缺值时可空；非空时与两价格之差在舍入容差内。",
-                "semantic_role_zh": "度量或说明",
-                "enum_values_zh": "非枚举",
-                "quality_rules_zh": "页面缺值时可空；非空时与两价格之差在舍入容差内。",
-            }),
-        ),
-        pa.field(
-            "main_basis_pct",
-            pa.float64(),
-            nullable=True,
-            metadata=_utf8_metadata({
-                "field_name_zh": "页面给出的主力现期差百分比",
-                "description_zh": "页面给出的主力现期差百分比。",
-                "source_system_zh": "生意社 table#fdata",
-                "source_api": "生意社 table#fdata",
-                "source_column": "第 8 个嵌套单元格第 2 值（百分比）",
-                "transformation_zh": "去 % 后保留百分数数值；单位：百分比。",
-                "unit_zh": "百分比",
-                "nullable_reason_zh": "页面缺值时可空；需按页面口径复核。",
-                "semantic_role_zh": "度量或说明",
-                "enum_values_zh": "非枚举",
-                "quality_rules_zh": "页面缺值时可空；需按页面口径复核。",
-            }),
-        ),
-        pa.field(
-            "source",
-            pa.string(),
-            nullable=False,
-            metadata=_utf8_metadata({
-                "field_name_zh": "事实来源",
-                "description_zh": "事实来源。",
-                "source_system_zh": "系统生成",
-                "source_api": "系统生成",
-                "source_column": "—",
-                "transformation_zh": "固定写 100ppi_xianqi_table；角色：来源。",
-                "unit_zh": "不适用",
-                "nullable_reason_zh": "不可空。",
-                "semantic_role_zh": "来源",
-                "enum_values_zh": "非枚举",
-                "quality_rules_zh": "不可空。",
-            }),
-        ),
-        pa.field(
-            "updated_at",
-            pa.timestamp("us", tz="UTC"),
-            nullable=False,
-            metadata=_utf8_metadata({
-                "field_name_zh": "本行最后写入时间",
-                "description_zh": "本行最后写入时间。",
-                "source_system_zh": "系统生成",
-                "source_api": "系统生成",
-                "source_column": "—",
-                "transformation_zh": "成功解析批次 UTC 时间；角色：审计。",
-                "unit_zh": "不适用",
-                "nullable_reason_zh": "不可空。",
-                "semantic_role_zh": "审计",
-                "enum_values_zh": "非枚举",
-                "quality_rules_zh": "不可空。",
-            }),
-        ),
-        pa.field(
-            "year",
-            pa.int16(),
-            nullable=False,
-            metadata=_utf8_metadata({
-                "field_name_zh": "观测年份",
-                "description_zh": "观测年份。",
-                "source_system_zh": "派生",
-                "source_api": "派生",
-                "source_column": "observation_date",
-                "transformation_zh": "取年份；角色：分区。",
-                "unit_zh": "不适用",
-                "nullable_reason_zh": "不可空。",
-                "semantic_role_zh": "分区",
-                "enum_values_zh": "非枚举",
-                "quality_rules_zh": "不可空。",
-            }),
-        ),
-        pa.field(
-            "month",
-            pa.int8(),
-            nullable=False,
-            metadata=_utf8_metadata({
-                "field_name_zh": "观测月份",
-                "description_zh": "观测月份。",
-                "source_system_zh": "派生",
-                "source_api": "派生",
-                "source_column": "observation_date",
-                "transformation_zh": "取月份；角色：分区。",
-                "unit_zh": "不适用",
-                "nullable_reason_zh": "不可空，范围 1—12。",
-                "semantic_role_zh": "分区",
-                "enum_values_zh": "非枚举",
-                "quality_rules_zh": "不可空，范围 1—12。",
-            }),
-        ),
-    ],
-    metadata=_utf8_metadata({
-        "table_name": "fact_domestic_spot_basis_daily",
-        "table_name_zh": "国内商品现货与期货基差日表",
-        "description_zh": "解析生意社“商品现货与期货价格对比表”，保存商品现货价、近月合约价和主力合约价，以及页面给出的两组现期差和百分比。",
-        "content_zh": "每个页面日期下逐交易所分组、逐商品的一条现货—近月—主力对比记录。",
-        "field_list": "observation_date,exchange_name,product_name,spot_price,nearest_contract_code,nearest_contract_price,nearest_basis_value,nearest_basis_pct,main_contract_code,main_contract_price,main_basis_value,main_basis_pct,source,updated_at,year,month",
-        "grain_zh": "每个观测日期—页面交易所分组—商品一行。",
-        "primary_key": "observation_date,exchange_name,product_name",
-        "partition_columns": "year,month",
-        "role_zh": "事实表",
-        "calendar_role_zh": "不适用，预期请求日期由 dim_external_market_calendar 的 domestic_spot_basis/ALL 行规定。",
-        "source_systems_zh": "生意社网页；外部市场日历；系统派生",
-        "source_apis_zh": "https://www.100ppi.com/sf/day-{YYYY-MM-DD}.html，HTML 表 table#fdata",
-        "source_columns_zh": "交易所分组标题；8 个页面单元格：商品、现货价格、近月合约、近月价格、近月现期差、主力合约、主力价格、主力现期差。",
-        "dimension_dependencies": "dim_external_market_calendar",
-        "update_mode_zh": "按待办日期下载原始 HTML，在同一工作流中直接解析并写触达月份；HTTP 成功但出现“暂无数据”才记确认空，找不到预期表结构视为失败。",
-        "quality_rules_zh": "页面结构必须是交易所分组加 8 列数据行；主键唯一；页面现期差应等于现货价减期货价（按页面舍入容差复核）；百分比按页面定义复核；原 HTML 请求标识可追溯。",
-        "schema_version": "1.0.0",
-        "metadata_language": "zh-CN",
-    }),
-)
-
-
-
-
+# fact_overseas_futures_daily 境外期货日线事实表
 OVERSEAS_FUTURES_DAILY_SCHEMA = pa.schema(
     [
         pa.field(
@@ -4558,7 +4332,7 @@ OVERSEAS_FUTURES_DAILY_SCHEMA = pa.schema(
         pa.field(
             "source_instrument_id",
             pa.string(),
-            nullable=True,
+            nullable=False,
             metadata=_utf8_metadata({
                 "field_name_zh": "聚宽财务库原始记录/品种标识",
                 "description_zh": "聚宽财务库原始记录/品种标识。",
@@ -4567,10 +4341,10 @@ OVERSEAS_FUTURES_DAILY_SCHEMA = pa.schema(
                 "source_column": "id",
                 "transformation_zh": "转为字符串以避免跨版本整数类型漂移；角色：来源标识。",
                 "unit_zh": "不适用",
-                "nullable_reason_zh": "API 缺值时可空；非空值在同源中应稳定。",
+                "nullable_reason_zh": "不可空；JQData 财务库记录 ID 在来源表中为非空。",
                 "semantic_role_zh": "来源标识",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "API 缺值时可空；非空值在同源中应稳定。",
+                "quality_rules_zh": "不可空、不可为空白；同一来源记录在重复查询中应稳定。",
             }),
         ),
         pa.field(
@@ -4621,10 +4395,10 @@ OVERSEAS_FUTURES_DAILY_SCHEMA = pa.schema(
                 "source_column": "open",
                 "transformation_zh": "转浮点；单位：来源品种报价单位。",
                 "unit_zh": "来源品种报价单位",
-                "nullable_reason_zh": "可空；非空时位于低高价区间。",
+                "nullable_reason_zh": "API 缺值时可空。",
                 "semantic_role_zh": "度量或说明",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "可空；非空时位于低高价区间。",
+                "quality_rules_zh": "非空时必须为有限数；来源 OHLC 高低关系异常时原值保留，并在对应请求日期日历格点记录 warning。",
             }),
         ),
         pa.field(
@@ -4639,10 +4413,10 @@ OVERSEAS_FUTURES_DAILY_SCHEMA = pa.schema(
                 "source_column": "high",
                 "transformation_zh": "转浮点；单位：来源品种报价单位。",
                 "unit_zh": "来源品种报价单位",
-                "nullable_reason_zh": "可空；不低于其他价格。",
+                "nullable_reason_zh": "API 缺值时可空。",
                 "semantic_role_zh": "度量或说明",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "可空；不低于其他价格。",
+                "quality_rules_zh": "非空时必须为有限数；来源 OHLC 高低关系异常时原值保留，并在对应请求日期日历格点记录 warning。",
             }),
         ),
         pa.field(
@@ -4657,10 +4431,10 @@ OVERSEAS_FUTURES_DAILY_SCHEMA = pa.schema(
                 "source_column": "low",
                 "transformation_zh": "转浮点；单位：来源品种报价单位。",
                 "unit_zh": "来源品种报价单位",
-                "nullable_reason_zh": "可空；不高于其他价格。",
+                "nullable_reason_zh": "API 缺值时可空。",
                 "semantic_role_zh": "度量或说明",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "可空；不高于其他价格。",
+                "quality_rules_zh": "非空时必须为有限数；来源 OHLC 高低关系异常时原值保留，并在对应请求日期日历格点记录 warning。",
             }),
         ),
         pa.field(
@@ -4675,10 +4449,10 @@ OVERSEAS_FUTURES_DAILY_SCHEMA = pa.schema(
                 "source_column": "close",
                 "transformation_zh": "转浮点；单位：来源品种报价单位。",
                 "unit_zh": "来源品种报价单位",
-                "nullable_reason_zh": "可空；位于低高价区间。",
+                "nullable_reason_zh": "API 缺值时可空。",
                 "semantic_role_zh": "度量或说明",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "可空；位于低高价区间。",
+                "quality_rules_zh": "非空时必须为有限数；来源 OHLC 高低关系异常时原值保留，并在对应请求日期日历格点记录 warning。",
             }),
         ),
         pa.field(
@@ -4836,21 +4610,21 @@ OVERSEAS_FUTURES_DAILY_SCHEMA = pa.schema(
         "primary_key": "instrument_code,trading_date",
         "partition_columns": "year,month",
         "role_zh": "事实表",
-        "calendar_role_zh": "不适用，预期格点由 dim_external_market_calendar 的 overseas_futures 行规定。",
+        "calendar_role_zh": "不适用，预期格点由 dim_external_market_calendar 的 overseas_futures/ALL 行规定。",
         "source_systems_zh": "聚宽 JQData 财务库；外部市场日历；系统派生",
         "source_apis_zh": "jqdatasdk.finance.run_query(query(FUT_GLOBAL_DAILY).filter(FUT_GLOBAL_DAILY.day == ...))",
         "source_columns_zh": "id,code,name,day,open,close,low,high,volume,change_pct,amplitude,pre_close。",
         "dimension_dependencies": "dim_external_market_calendar",
-        "update_mode_zh": "按待办日期查询全表，规范化后重写触达月份；不为 API 未返回的代码生成空事实行，缺失由日历表达。",
-        "quality_rules_zh": "主键唯一；API day 与请求日期的关系可解释；OHLC 合法、成交量非负；来源标识和代码不可空；事实行数与日历复读计数一致。",
-        "schema_version": "1.0.0",
+        "update_mode_zh": "对外部市场日历 overseas_futures/ALL required 日期先分流：正式事实缺失或不能证明完整的日期进入 API 待办，每个待办日期查询一次全表；正式事实已经完整但日历状态或原因陈旧的日期进入无 API 状态修复集合，必须从正式事实复算行数与 OHLC 结论、提交并正式复读日历，不得重拉。API 触达日期替换、未触达日期保留，按完整月份提交；不为 API 未返回的代码生成空事实行。",
+        "quality_rules_zh": "主键唯一；API day 必须等于请求 snapshot_date；来源记录 ID 和代码不可空；响应达到 5000 行上限时拒绝提交；OHLC 非空值必须有限，有限 OHLC 高低关系异常按来源原值落盘并要求日历为 success + warning 且原因匹配，正常非空事实要求日历为 success + passed 且原因匹配；成交量和振幅非负；事实行数与日历正式复读计数一致。",
+        "schema_version": "1.2.0",
         "metadata_language": "zh-CN",
     }),
 )
 
 
 
-
+# fact_external_index_daily 航运与能源金属外部指数日表
 EXTERNAL_INDEX_DAILY_SCHEMA = pa.schema(
     [
         pa.field(
@@ -5049,16 +4823,16 @@ EXTERNAL_INDEX_DAILY_SCHEMA = pa.schema(
         "source_apis_zh": "https://datacenter-web.eastmoney.com/api/data/v1/get，reportName=RPT_INDUSTRY_INDEX",
         "source_columns_zh": "INDICATOR_ID,INDICATOR_VALUE,REPORT_DATE。",
         "dimension_dependencies": "dim_external_market_calendar",
-        "update_mode_zh": "空库可按每个指标 ID 分页拉取全部历史；日常按各指标最大 REPORT_DATE 之后增量请求或复拉最近窗口，按触达月份去重覆盖。",
-        "quality_rules_zh": "主键唯一；原始指标 ID 必须与项目代码映射唯一；值为有限数；分页完整且无重复；事实日期不得晚于采集时可见日期。",
-        "schema_version": "1.0.0",
+        "update_mode_zh": "从 dim_external_market_calendar 中 external_index/INDICATOR_ID 的 required 格点减去正式事实复读计数与日历完成状态共同证明完整的格点，空湖自然得到全量；事实中已不属于当前 required 水位的格点不调用 API，并从原完整叶分区清退；按指标把待办日期切为连续 required 段分页，只接纳精确待办日期；触达格点替换、未触达格点保留、确认空删除陈旧事实，按完整 index_category/year/month 叶分区先 staging 复读、再正式路径复读，随后回写日历；显式日期不得写正式湖，--write 是唯一是否提交语义。",
+        "quality_rules_zh": "主键唯一且每个来源指标—观测日期格点最多一行；原始指标 ID 必须命中共享配置，项目代码、中文名和分类必须一一一致；指数值为有限数，观测日期不得晚于当前可见日期；分页 pages/count 与页长稳定、累计行数等于 count、来源 ID 等于请求 ID、日期不越出请求范围且跨页格点无重复；staging 与正式路径均须通过精确 Schema/metadata 和完整叶分区逐值复读；API 预期、正式事实复读与日历计数必须同为 0/1，清退格点的正式复读计数必须为 0。",
+        "schema_version": "1.1.0",
         "metadata_language": "zh-CN",
     }),
 )
 
 
 
-
+# dim_macro_release_calendar 利率观测与宏观发布日历维度表
 MACRO_RELEASE_CALENDAR_SCHEMA = pa.schema(
     [
         pa.field(
@@ -5086,10 +4860,10 @@ MACRO_RELEASE_CALENDAR_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "项目稳定指标系列代码",
                 "description_zh": "项目稳定指标系列代码。",
-                "source_system_zh": "系统配置",
-                "source_api": "系统配置",
-                "source_column": "API 原列映射",
-                "transformation_zh": "按下方映射表生成；角色：主键。",
+                "source_system_zh": "config/macro_release_entities.py",
+                "source_api": "无直接 API；配置映射到下游事实来源",
+                "source_column": "dataset_name + series_code + source_api + source_column",
+                "transformation_zh": "从版本化宏观系列配置展开；角色：主键。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空，必须命中唯一映射。",
                 "semantic_role_zh": "主键",
@@ -5104,10 +4878,10 @@ MACRO_RELEASE_CALENDAR_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "SHIBOR 观测日或宏观指标报告期日期",
                 "description_zh": "SHIBOR 观测日或宏观指标报告期日期。",
-                "source_system_zh": "Tushare shibor.date；Eastmoney 各报告",
-                "source_api": "Tushare shibor.date；Eastmoney 各报告",
-                "source_column": "REPORT_DATE",
-                "transformation_zh": "解析为日期；角色：主键、时间。",
+                "source_system_zh": "config/macro_release_entities.py；系统日期规则",
+                "source_api": "无直接 API；不是来源接口返回日期",
+                "source_column": "统一起点 + 系列 frequency",
+                "transformation_zh": "SHIBOR 生成普通工作日，月频生成月末，季频生成季末；角色：主键、时间。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空。",
                 "semantic_role_zh": "主键、时间",
@@ -5397,21 +5171,21 @@ MACRO_RELEASE_CALENDAR_SCHEMA = pa.schema(
         "partition_columns": "dataset_name,year,month",
         "role_zh": "日历维度表",
         "calendar_role_zh": "枚举利率与宏观事实应出现的系列—报告期格点，并给出策略可见性的保守日期边界。",
-        "source_systems_zh": "Tushare Pro；东方财富数据中心；系统发布规则配置；事实表复读结果",
-        "source_apis_zh": "pro.shibor；Eastmoney RPT_ECONOMY_CPI、RPT_ECONOMY_PPI、RPT_ECONOMY_PMI、RPT_ECONOMY_GDP",
-        "source_columns_zh": "SHIBOR date 与 8 个期限列；宏观 REPORT_DATE 与系列值列；可用日期由项目规则生成，不冒充 API 原列。",
+        "source_systems_zh": "config/macro_release_entities.py；FUTURES_DATA_START_DATE；系统当前日期；事实表复读状态",
+        "source_apis_zh": "本日历不调用 API；系列配置映射到下游 pro.shibor 与 Eastmoney RPT_ECONOMY_CPI/PPI/PMI/GDP",
+        "source_columns_zh": "统一起点、系列 frequency 与 availability_rule 生成报告/观测日期和可用日期；下游状态由事实生产者正式复读后回写。",
         "dimension_dependencies": "无",
-        "update_mode_zh": "空库按系列频率生成候选格点，再分页拉取历史事实并校准存在性；日常只处理 expected_available_date 已到且尚未完成的行，并可复拉最近发布窗口处理修订值。",
-        "quality_rules_zh": "主键唯一；可用日期不得早于报告期所允许的发布日期；请求失败和确认空严格区分；实际行数与事实表复读计数一致；发布规则变更必须版本化且不得静默改写回测可见日期。",
-        "schema_version": "1.0.0",
+        "update_mode_zh": "不调用 API；从 FUTURES_DATA_START_DATE 到北京时间当前日，按版本化系列频率与可用日规则生成完整理论格点，减去正式日历中政策与状态均可继承的完整格点；空湖自然得到全量，尾部新增、内部缺口、系列撤销与规则变化均由同一完整比较识别；完整 dataset_name/year/month 叶分区经 staging 与正式路径逐值复读后提交，显式日期不得写正式湖，--write 是唯一是否提交语义。",
+        "quality_rules_zh": "主键唯一；系列必须命中共享配置，SHIBOR 只使用普通工作日，月频必须为月末，GDP 必须为季末；可用日期必须逐值等于版本化规则且不早于报告/观测日期；required、完成状态、0/1 事实计数、缺失与审计时间必须自洽；规则变化重置对应下游状态且不得静默继承；staging 与正式路径均须通过精确 Schema/metadata、完整叶分区和完整表逐值复读。",
+        "schema_version": "1.1.0",
         "metadata_language": "zh-CN",
-        "availability_rule_zh": "SHIBOR 使用观测日当日；CPI/PPI 使用报告月次月 9 日并向后顺延周末；PMI 使用报告月末，旧项目对 2 月使用 3 月 4 日的保守特例；GDP 使用季末后约第 16 日。上述均是项目规则而非 API 原始发布日期，实施前必须用实际发布记录复核并形成版本化配置。",
+        "availability_rule_zh": "availability-v1.0.0：SHIBOR 使用观测日当日；CPI/PPI 使用报告月次月 9 日并向后顺延周末；PMI 使用报告月末，2 月使用 3 月 4 日的保守特例；GDP 使用季末后第 16 日。上述均是项目版本化规则而非 API 实际发布日期。",
     }),
 )
 
 
 
-
+# fact_interest_rate_daily SHIBOR 期限利率日表
 INTEREST_RATE_DAILY_SCHEMA = pa.schema(
     [
         pa.field(
@@ -5421,14 +5195,14 @@ INTEREST_RATE_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "SHIBOR 期限系列代码",
                 "description_zh": "SHIBOR 期限系列代码。",
-                "source_system_zh": "派生",
-                "source_api": "派生",
-                "source_column": "Tushare on,1w,2w,1m,3m,6m,9m,1y 列名",
-                "transformation_zh": "宽表 melt 后按 series_mapping_zh 映射；角色：主键。",
+                "source_system_zh": "config/macro_release_entities.py；Tushare Pro",
+                "source_api": "pro.shibor",
+                "source_column": "由共享配置映射 on,1w,2w,1m,3m,6m,9m,1y 原列",
+                "transformation_zh": "只把精确待办的来源期限列转成长表并映射稳定 series_code；角色：主键。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空；枚举为 8 个 SHIBOR_* 代码。",
                 "semantic_role_zh": "主键",
-                "enum_values_zh": "非枚举",
+                "enum_values_zh": "SHIBOR_ON、SHIBOR_1W、SHIBOR_2W、SHIBOR_1M、SHIBOR_3M、SHIBOR_6M、SHIBOR_9M、SHIBOR_1Y",
                 "quality_rules_zh": "不可空；枚举为 8 个 SHIBOR_* 代码。",
             }),
         ),
@@ -5439,8 +5213,8 @@ INTEREST_RATE_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "SHIBOR 观测日期",
                 "description_zh": "SHIBOR 观测日期。",
-                "source_system_zh": "Tushare shibor",
-                "source_api": "Tushare shibor",
+                "source_system_zh": "Tushare Pro",
+                "source_api": "pro.shibor",
                 "source_column": "date",
                 "transformation_zh": "从 YYYYMMDD 解析；角色：主键、时间。",
                 "unit_zh": "不适用",
@@ -5457,15 +5231,15 @@ INTEREST_RATE_DAILY_SCHEMA = pa.schema(
             metadata=_utf8_metadata({
                 "field_name_zh": "对应期限的 SHIBOR 利率",
                 "description_zh": "对应期限的 SHIBOR 利率。",
-                "source_system_zh": "Tushare shibor",
-                "source_api": "Tushare shibor",
-                "source_column": "由 series_code 映射到原期限列",
+                "source_system_zh": "Tushare Pro",
+                "source_api": "pro.shibor",
+                "source_column": "由共享 series_code 映射到原期限列",
                 "transformation_zh": "转浮点，不做除以 100；单位：百分比年利率。",
                 "unit_zh": "百分比年利率",
-                "nullable_reason_zh": "不可空且为有限数；合理范围由契约配置。",
+                "nullable_reason_zh": "不可空且为有限数；硬边界为 [-100, 100] 百分比年利率。",
                 "semantic_role_zh": "度量或说明",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "不可空且为有限数；合理范围由契约配置。",
+                "quality_rules_zh": "不可空、必须为有限数且位于 [-100, 100] 百分比年利率；不得擅自除以 100。",
             }),
         ),
         pa.field(
@@ -5544,7 +5318,7 @@ INTEREST_RATE_DAILY_SCHEMA = pa.schema(
     metadata=_utf8_metadata({
         "table_name": "fact_interest_rate_daily",
         "table_name_zh": "SHIBOR 期限利率日表",
-        "description_zh": "将 Tushare SHIBOR 接口的 8 个期限宽列转换为统一长表；每个期限是稳定的 series_code，避免新增期限时扩宽事实表。",
+        "description_zh": "消费宏观发布日历的 required SHIBOR 格点，将 Tushare Pro shibor 接口的 8 个期限宽列转换为统一长表；每个期限使用共享配置中的稳定 series_code。",
         "content_zh": "隔夜、1 周、2 周、1 月、3 月、6 月、9 月和 1 年 SHIBOR 的日观测利率。",
         "field_list": "series_code,observation_date,rate,source,updated_at,year,month",
         "grain_zh": "每个 SHIBOR 期限系列—观测日期一行。",
@@ -5556,9 +5330,9 @@ INTEREST_RATE_DAILY_SCHEMA = pa.schema(
         "source_apis_zh": "pro.shibor(date/start_date/end_date)",
         "source_columns_zh": "date,on,1w,2w,1m,3m,6m,9m,1y。",
         "dimension_dependencies": "dim_macro_release_calendar",
-        "update_mode_zh": "空库分日期窗口拉取并 melt 成长表；日常只请求待办日期或复拉最近窗口，按触达月份去重覆盖，复读后更新日历。",
-        "quality_rules_zh": "主键唯一；系列必须属于 8 期限映射；利率为有限数且处于契约允许范围；同一 API 日期可完整对应 8 行，API 缺期限时由日历标缺。",
-        "schema_version": "1.0.0",
+        "update_mode_zh": "以 dim_macro_release_calendar 中 interest_rate required 格点减去正式事实与日历状态共同证明完整的格点自动求差；正式事实完整但日历状态陈旧时从正式事实无 API 修复；事实缺口按 year/month 月度窗口调用 pro.shibor，只接纳精确待办格点并保留同月未触达事实；完整事实叶经 staging 与正式路径逐值复读后才回写日历。空湖由同一差集自然得到全量；显式日期不得写正式湖，--write 是唯一是否提交语义。",
+        "quality_rules_zh": "主键唯一；系列与 Tushare 原列必须逐项命中 config/macro_release_entities.py 的 8 期限映射；月度请求显式选择 date,on,1w,2w,1m,3m,6m,9m,1y，日期唯一、位于请求范围且单次不超过官方 2000 行；非空利率必须为有限数并位于 [-100, 100] 百分比年利率，不除以 100。完整响应中某精确期限为 None、pd.NA 或 NaN 时才可确认空；缺列、重复、越界、布尔值、无穷值和其他非法数值必须失败；每个上游格点正式事实只能 0 或 1 行。完整 year/month 事实叶与 interest_rate/year/month 日历叶在 staging 和正式路径均须通过精确 Schema/metadata 与逐值复读，事实正式复读后才能推进日历。",
+        "schema_version": "1.1.0",
         "metadata_language": "zh-CN",
         "series_mapping_zh": "SHIBOR_ON=on（隔夜）；SHIBOR_1W=1w（1周）；SHIBOR_2W=2w（2周）；SHIBOR_1M=1m（1个月）；SHIBOR_3M=3m（3个月）；SHIBOR_6M=6m（6个月）；SHIBOR_9M=9m（9个月）；SHIBOR_1Y=1y（1年）",
     }),
@@ -5566,7 +5340,7 @@ INTEREST_RATE_DAILY_SCHEMA = pa.schema(
 
 
 
-
+# fact_macro_release 中国宏观指标发布事实表
 MACRO_RELEASE_SCHEMA = pa.schema(
     [
         pa.field(
@@ -5592,17 +5366,17 @@ MACRO_RELEASE_SCHEMA = pa.schema(
             pa.date32(),
             nullable=False,
             metadata=_utf8_metadata({
-                "field_name_zh": "API 标识的宏观报告期日期，不是发布日期",
-                "description_zh": "API 标识的宏观报告期日期，不是发布日期。",
+                "field_name_zh": "归一化后的宏观报告期月末或季末日期",
+                "description_zh": "将 Eastmoney 使用报告月 1 日编码的 REPORT_DATE 归一到项目月末或季末报告期；不是发布日期。",
                 "source_system_zh": "Eastmoney 各宏观报告",
                 "source_api": "Eastmoney 各宏观报告",
                 "source_column": "REPORT_DATE",
-                "transformation_zh": "去除时间部分转日期；角色：主键、报告期时间。",
+                "transformation_zh": "校验来源日期为报告月 1 日；月度系列归一到当月最后一个自然日，GDP 仅允许 3/6/9/12 月并归一到季末；角色：主键、报告期时间。",
                 "unit_zh": "不适用",
                 "nullable_reason_zh": "不可空。",
                 "semantic_role_zh": "主键、报告期时间",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "不可空。",
+                "quality_rules_zh": "不可空；来源必须为报告月 1 日编码，归一后必须与上游日历的月末或季末格点一致。",
             }),
         ),
         pa.field(
@@ -5633,12 +5407,12 @@ MACRO_RELEASE_SCHEMA = pa.schema(
                 "source_system_zh": "Eastmoney",
                 "source_api": "Eastmoney",
                 "source_column": "由 series_code 映射到下方原始列",
-                "transformation_zh": "转浮点；单位见系列映射，多数为百分比或指数点。",
+                "transformation_zh": "按 config/macro_release_entities.py 的原列转有限浮点；CPI/PPI 累计指数减 100 转为累计同比百分比，其余保持来源数值；单位见系列映射。",
                 "unit_zh": "不适用",
-                "nullable_reason_zh": "API 缺值时可空；非空值必须为有限数。",
+                "nullable_reason_zh": "保留物理兼容；当前生产器遇到 API 缺值时不写空值事实，而以正式 0 行和日历 empty_confirmed 表达。",
                 "semantic_role_zh": "度量或说明",
                 "enum_values_zh": "非枚举",
-                "quality_rules_zh": "API 缺值时可空；非空值必须为有限数。",
+                "quality_rules_zh": "当前生产事实值不可空且必须为有限数；完整分页中的精确系列缺值不得制造空值行。",
             }),
         ),
         pa.field(
@@ -5717,7 +5491,7 @@ MACRO_RELEASE_SCHEMA = pa.schema(
     metadata=_utf8_metadata({
         "table_name": "fact_macro_release",
         "table_name_zh": "中国宏观指标发布事实表",
-        "description_zh": "将 Eastmoney 的 CPI、PPI、PMI 和 GDP 宽表转为统一长表，每个原始值列对应稳定系列代码，并保存项目规则推定的保守可用日期以避免回测直接使用报告期日期。",
+        "description_zh": "将 Eastmoney 的 CPI、PPI、PMI 和 GDP 宽表转为统一长表，把来源使用报告月 1 日编码的 REPORT_DATE 归一到项目月末或季末报告期；每个原始值列对应稳定系列代码，并保存项目规则推定的保守可用日期以避免回测直接使用报告期日期。",
         "content_zh": "CPI 全国/城市/农村同比、环比、累计共 9 个系列，PPI 2 个系列，PMI 2 个系列，GDP 总体及三次产业同比 4 个系列。",
         "field_list": "series_code,report_date,available_date,value,source,updated_at,year,month",
         "grain_zh": "每个宏观系列—报告期日期一行。",
@@ -5727,11 +5501,11 @@ MACRO_RELEASE_SCHEMA = pa.schema(
         "calendar_role_zh": "不适用，预期格点与可用日期由 dim_macro_release_calendar 的 macro_release 行规定。",
         "source_systems_zh": "东方财富数据中心；宏观发布日历；系统派生",
         "source_apis_zh": "https://datacenter-web.eastmoney.com/api/data/v1/get，报告名 RPT_ECONOMY_CPI/PPI/PMI/GDP",
-        "source_columns_zh": "REPORT_DATE 及下方系列映射中列出的 17 个原始数值列。",
+        "source_columns_zh": "REPORT_DATE（来源以报告月 1 日编码，按共享频率归一到项目月末或季末）；PPI 同比读取 BASE_SAME；CPI 全国/城市/农村累计与 PPI 累计读取各自 ACCUMULATE 列并减 100；其余原列由 config/macro_release_entities.py 定义。",
         "dimension_dependencies": "dim_macro_release_calendar",
-        "update_mode_zh": "空库按四个报告名分页拉取全部历史并转成长表；日常复拉最近若干报告期以接收修订值，只覆盖触达月份，复读后更新日历。",
-        "quality_rules_zh": "主键唯一；系列与报告名/原列映射唯一；available_date 来自日历而非 API；值为有限数；API REPORT_DATE 不得被当成实际发布日期。",
-        "schema_version": "1.0.0",
+        "update_mode_zh": "以 dim_macro_release_calendar 中 macro_release required 系列—报告期格点减去正式事实与日历状态共同证明完整的格点自动求差；正式事实完整但日历状态陈旧时从正式事实无 API 修复；事实缺口按报告名与 year/month 窗口严格分页请求 Eastmoney，只接纳精确待办格点并保留同月未触达事实；完整事实叶经 staging 与正式路径逐值复读后才回写日历。空湖由同一差集自然得到全量；显式日期不得写正式湖，--write 是唯一是否提交语义。",
+        "quality_rules_zh": "主键唯一；17 个系列与 config/macro_release_entities.py 的报告名、原列、数值偏移及来源映射逐项一致，PPI 同比必须读取 BASE_SAME，CPI/PPI 累计指数必须减 100 后保存为累计同比百分比；每个请求首页冻结 pages/count，后续页的元数据、页长和累计行数必须一致，跨页 REPORT_DATE 唯一且位于请求范围；来源 REPORT_DATE 必须为报告月 1 日，月度系列归一到月末，GDP 只允许季度末月份并归一到季末；available_date 必须逐值等于上游日历 expected_available_date，不得把 API REPORT_DATE 当作实际发布日期；当前事实值不可空、不得为布尔值且必须为有限数，完整响应缺值只能形成正式 0 行和日历 empty_confirmed；每个上游格点正式事实只能 0 或 1 行。完整 year/month 事实叶与 macro_release/year/month 日历叶在 staging 和正式路径均须通过精确 Schema/metadata 与逐值复读，事实正式复读后才能推进日历。",
+        "schema_version": "1.1.0",
         "metadata_language": "zh-CN",
     }),
 )
@@ -5739,12 +5513,30 @@ MACRO_RELEASE_SCHEMA = pa.schema(
 
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True)  # frozen 要求生成的类实例是不可变
 class DataFrameTypeMapping:
     """单个 Arrow 类型对应的 Pandas 与 Polars 类型。"""
 
     pandas_dtype: pd.ArrowDtype
+    # pandas 0.23.0 起允许开发者定义自己的 dtype，只要继承
+    # pandas.api.extensions.ExtensionDtype 并实现相应方法即可。
+    # 其中内置的 ArrowDtype 为基于 Arrow 的通用类型
+
     polars_dtype: pl.DataType | type[pl.DataType]
+    # pl.Int64 是一个类，继承自 pl.DataType
+    # pl.Int64() 是 pl.DataType 的实例
+
+    # type( pl.Int64  ): <class 'type'>
+    # type( pl.Int64() ): <class 'polars.datatypes.classes.Int64'>
+
+    # 实例化 面向 pl.Decimal(10, 2) 这种需要传参来定义的情况
+    # 它与无需传参的如 pI.int64 的情况 一同被兼容为字段定义方式
+
+    # type[pl.DataType] 为 Polars 数据类型的类本身
+    # pl.DataType 为 Polars 数据类型实例
+
+    # pl.DataType | type[pl.DataType] 告诉静态类型检查器（如 mypy、pyright）和 IDE
+    # 参数同时被允许为类或类实例，防止被警告
 
 
 def _type_mapping(
@@ -5752,7 +5544,10 @@ def _type_mapping(
     polars_dtype: pl.DataType | type[pl.DataType],
 ) -> DataFrameTypeMapping:
     """组合一个 Arrow 类型在 Pandas 和 Polars 中的对应类型。"""
-    return DataFrameTypeMapping(pd.ArrowDtype(arrow_type), polars_dtype)
+
+    return DataFrameTypeMapping(pd.ArrowDtype(arrow_type), polars_dtype) # 注意直接传 pyarrow 的数据类型后转为 pd.ExtensionDtype
+    # print( _type_mapping(pa.int64(), pl.Int64) )
+    # DataFrameTypeMapping(pandas_dtype=<ArrowDtype: int64>, polars_dtype=<class 'polars.datatypes.classes.Int64'>)
 
 
 ARROW_TYPE_MAPPINGS: dict[pa.DataType, DataFrameTypeMapping] = {
@@ -5774,11 +5569,11 @@ ARROW_TYPE_MAPPINGS: dict[pa.DataType, DataFrameTypeMapping] = {
 def resolve_type_mapping(arrow_type: pa.DataType) -> DataFrameTypeMapping:
     """返回 Arrow 类型对应的 Pandas/Polars 类型。"""
     mapping = ARROW_TYPE_MAPPINGS.get(arrow_type)
-    if mapping is not None:
+    if mapping is not None: # 先查“固定类型字典”
         return mapping
-    if pa.types.is_decimal128(arrow_type):
+    if pa.types.is_decimal128(arrow_type):  # 如果没查到，再判断它是不是需要动态构造映射的 Decimal 类型
         return _type_mapping(arrow_type, pl.Decimal(precision=arrow_type.precision, scale=arrow_type.scale))
-    raise TypeError(f"Arrow 类型 {arrow_type} 尚未登记 Pandas/Polars 映射。")
+    raise TypeError(f"Arrow 类型 {arrow_type} 尚未登记 Pandas/Polars 映射。")  # 两种情况都不符合时报错
 
 
 def pandas_dtypes(schema: pa.Schema) -> dict[str, pd.ArrowDtype]:
@@ -5793,7 +5588,7 @@ def polars_dtypes(schema: pa.Schema) -> dict[str, pl.DataType | type[pl.DataType
 
 def _validate_columns(actual_columns: list[str], schema: pa.Schema) -> None:
     """要求实际列名及其顺序与 Schema 完全一致。"""
-    if actual_columns != schema.names:
+    if actual_columns != schema.names: # schema.names 是查看字段名的快捷方式，意味着 [field.name for field in schema]
         raise ValueError(f"数据列与 Schema 不一致。期望 {schema.names}，实际 {actual_columns}。")
 
 
@@ -5805,10 +5600,12 @@ def validate_arrow_table(table: pa.Table, schema: pa.Schema) -> pa.Table:
     if not isinstance(table, pa.Table):
         raise TypeError(f"期望 pyarrow.Table，实际为 {type(table).__name__}。")
 
-    pandas_dtypes(schema)
+    pandas_dtypes(schema) # 底层函数 resolve_type_mapping 会执行检查报错
     polars_dtypes(schema)
     _validate_columns(table.column_names, schema)
-    typed_table = table.cast(schema, safe=True)
+
+    # 把一个 PyArrow Table 的每一列转换成目标 schema 规定的类型，并拒绝可能丢失数据或产生错误的转换
+    typed_table = table.cast(schema, safe=True) # safe=True 只允许 Arrow 认为安全的转换，否则抛出异常
     for field in schema:
         if not field.nullable and typed_table[field.name].null_count:
             raise ValueError(f"非空字段 {field.name!r} 包含空值。")
@@ -5829,7 +5626,8 @@ def polars_to_arrow(dataframe: pl.DataFrame, schema: pa.Schema) -> pa.Table:
     if not isinstance(dataframe, pl.DataFrame):
         raise TypeError(f"期望 polars.DataFrame，实际为 {type(dataframe).__name__}。")
     _validate_columns(dataframe.columns, schema)
-    return validate_arrow_table(dataframe.to_arrow(), schema)
+    table = dataframe.to_arrow()
+    return validate_arrow_table(table, schema)
 
 
 def arrow_to_pandas(table: pa.Table, schema: pa.Schema) -> pd.DataFrame:

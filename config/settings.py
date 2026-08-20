@@ -47,6 +47,8 @@ class Settings:
 
     @property
     def futures_data_start_date(self) -> date:
+        """当前稳定采集统一正式起点；属性名为兼容既有期货入口而保留。"""
+
         value = os.environ.get("FUTURES_DATA_START_DATE", "").strip()
         if not value:
             raise ValueError("环境变量 FUTURES_DATA_START_DATE 未定义或为空，请在 .env 文件中设置")

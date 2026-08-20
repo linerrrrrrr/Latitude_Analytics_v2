@@ -11,10 +11,10 @@
 - [.env.template](../../.env.template)：正式湖仓根路径 `FUTURES_LAKE_ROOT` 的权威模板。
 - [量化交易 AGENTS.md](../AGENTS.md)：Notebook/Python 双轨与 PythonExporter 规则。
 - [数据库 AGENTS.md](../../03_Futures_Database/AGENTS.md)：字段、类型、Schema 与读取规范。
-- [数据采集 README](../a01_Data_Collection/README.md)：18 张 silver 表的粒度、分区与运行边界。
-- [数据采集系统重建蓝图](../a01_Data_Collection_Rebuild_Blueprint/README.md)：当前 silver 重建目标、字段与维度依赖。
-- [可执行数据契约](../../config/data_contracts.py)：18 张稳定 silver 表的唯一 Arrow Schema。
-- [数据湖读取 Demo](../../03_Futures_Database/read_futures_lake_demo.ipynb)：18 张稳定 silver 表的逐表契约化读取示例。
+- [数据采集 README](../a01_Data_Collection/README.md)：17 张 silver 表的粒度、分区与运行边界。
+- [数据采集系统重建蓝图](../a01_Data_Collection_Rebuild_Blueprint/README.md)：已冻结的历史重建设计与当时字段、维度依赖。
+- [可执行数据契约](../../config/data_contracts.py)：17 张稳定 silver 表的唯一 Arrow Schema。
+- [数据湖读取 Demo](../../03_Futures_Database/read_futures_lake_demo.ipynb)：17 张稳定 silver 表的逐表契约化读取示例，并另示范生意社 raw 原文字节与摘要核对。
 
 ## b01 主力连续合约
 

@@ -1,17 +1,19 @@
 # 规范索引与同步要求
 
 - [AGENTS.md](AGENTS.md)：项目运行环境、根目录定位与规范路由的项目级强制规则。
-- [.env.template](.env.template)：项目根目录定位代码、国内期货正式起点及正式湖仓根路径环境变量的权威模板。
+- [.env.template](.env.template)：项目根目录定位代码、当前稳定采集统一正式起点，以及包含 `raw`、`silver`、`gold` 的正式湖仓根路径环境变量权威模板。
 - [02_Quant_Trading/AGENTS.md](02_Quant_Trading/AGENTS.md)：`E:\Latitude_Analytics_v2\02_Quant_Trading` 整棵目录树的目录级 Agent 规则入口，包含双轨、PythonExporter、`b00` 同步入口及根级旧项目归档路由。
 - [03_Futures_Database/AGENTS.md](03_Futures_Database/AGENTS.md)：`E:\Latitude_Analytics_v2\03_Futures_Database` 整棵目录树的目录级 Agent 规则入口，以及字段命名、跨引擎类型、Schema metadata 单一来源与 Notebook 语义浏览的永久文本规范。
-- [03_Futures_Database/read_futures_lake_demo.ipynb](03_Futures_Database/read_futures_lake_demo.ipynb)：18 张稳定 silver 表的契约化读取示例；每张表必须由独立代码单元格演示。
+- [03_Futures_Database/read_futures_lake_demo.ipynb](03_Futures_Database/read_futures_lake_demo.ipynb)：17 张稳定 silver 表的契约化读取示例；每张表必须由独立代码单元格演示；另含不计入 silver 表数的生意社 raw 原文与摘要核对示例。
 - [02_Quant_Trading/a01_Data_Collection/README.md](02_Quant_Trading/a01_Data_Collection/README.md)：数据采集链路、双轨同步入口、Schema metadata 运行时读取、Notebook 语义浏览、表粒度、主键、分区与更新水位规范。
-- [02_Quant_Trading/a01_Data_Collection_Rebuild_Blueprint/README.md](02_Quant_Trading/a01_Data_Collection_Rebuild_Blueprint/README.md)：本次删除并重建采集项目的一次性目标、中文 metadata、Notebook 语义浏览、维度依赖、空库/增量流程、质检与实现步骤索引；搭建完成后冻结为历史实施记录，不再承担持续语义治理。
+- [02_Quant_Trading/a01_Data_Collection_Rebuild_Blueprint/README.md](02_Quant_Trading/a01_Data_Collection_Rebuild_Blueprint/README.md)：本次删除并重建采集项目的一次性历史实施记录；文件保持冻结，其中与当前 17 表契约或生意社原文归档政策不一致的旧设计均由当前规范和可执行契约覆盖。
 - [02_Quant_Trading/a01_Data_Collection_Rebuild_Blueprint/08_EXECUTION_CHECKLIST.md](02_Quant_Trading/a01_Data_Collection_Rebuild_Blueprint/08_EXECUTION_CHECKLIST.md)：本次一次性重建的强制执行顺序与蓝图退出门禁；完成全部代码和代码门禁前禁止编写或执行数据迁移。
 - [02_Quant_Trading/a02_Feature_Engineering/README.md](02_Quant_Trading/a02_Feature_Engineering/README.md)：主力连续合约、log 双向复权、期限结构边界及当前 gold 实验工作流说明。
 - [config/futures_fact_collection_policy.py](config/futures_fact_collection_policy.py)：日线、分钟线和逐品种交易所报告共用的国内期货事实采集白名单唯一权威来源；白名单只含明确列出的交易所—品种，不得把它解释为品种、合约、日历或研究宇宙。
+- [config/external_market_entities.py](config/external_market_entities.py)：外部市场日历与外部指数事实共用的请求实体、Eastmoney 指标映射及有效期唯一权威来源；配置不调用 API、不决定是否写入。
+- [config/macro_release_entities.py](config/macro_release_entities.py)：宏观发布日历、SHIBOR 与宏观事实共用的 25 个系列、来源列、宏观数值偏移、理论频率及版本化可用日规则唯一权威来源；配置不调用 API、不决定是否写入。
 - [config/jqdata_connection.py](config/jqdata_connection.py)：JQData 认证以及 Windows TUN 物理出口绑定的项目级共享连接边界；业务采集与是否写入仍由各业务入口负责。
-- [config/data_contracts.py](config/data_contracts.py)：18 张稳定 silver 数据湖 Schema、表名/主键/分区 metadata 单一来源及 Pandas、Polars、Arrow 转换的可执行契约。
+- [config/data_contracts.py](config/data_contracts.py)：17 张稳定 silver 数据湖 Schema（7 张日历维度表、10 张事实表）、表名/主键/分区 metadata 单一来源及 Pandas、Polars、Arrow 转换的可执行契约。
 - [00_draft_collection_02](00_draft_collection_02)：尚未经用户确认接纳为正式项目代码的脚本、测试、审计与验证工具的统一暂存目录。
 - [04_Old_Projects/AGENTS.md](04_Old_Projects/AGENTS.md)：根级旧项目只读归档规则；包含重建前采集实现、更早历史采集项目和旧特征工程项目。
 - 修改以上任一规范、模板或可执行契约前，必须检查其余索引项，并在同一次变更中同步所有受影响的描述、示例与代码。
@@ -326,9 +328,12 @@ else:
 from config.settings import settings
 ```
 
-# 正式期货湖仓定位与 silver 自动更新契约
+# 正式期货湖仓定位、raw 归档与 silver 自动更新契约
 
-- `.env` 的 `FUTURES_LAKE_ROOT` 是正式期货湖仓根目录的唯一配置来源；稳定 `silver` 位于其 `silver` 子目录，实验性 gold 输出若落盘则位于其 `gold` 子目录。生产代码通过 `config.settings.settings.futures_lake_root` 引用，不得另写一份正式路径常量。该路径约定不构成对 gold 表集合、字段、Schema、组织方式或研究方法的统一定义。
+- `.env` 的 `FUTURES_LAKE_ROOT` 是正式期货湖仓根目录的唯一配置来源；来源原文归档、稳定表和实验性输出分别位于其 `raw`、`silver`、`gold` 子目录。生产代码通过 `config.settings.settings.futures_lake_root` 引用，不得另写一份正式路径常量。该路径约定不构成对 gold 表集合、字段、Schema、组织方式或研究方法的统一定义。
+- 生意社国内现货基差链路长期只归档 HTTP `response.content` 原始字节及其 SHA-256 sidecar，不解析页面、不提取字段，也不生产结构化现货基差事实。正式路径固定为 `raw/100ppi/domestic_spot_basis/year=YYYY/month=MM/observation_date=YYYY-MM-DD/{response.html,response.sha256}`。HTTP 200 的任意响应内容在两文件正式复读并核对摘要后，都回写外部市场日历为 `success`、`record_count=1`、`passed`；不得根据空正文、HTML 结构或业务内容另作质量判断。
+- 生意社原文待办集合定义为：`上游 required 日期 −（原文字节与 SHA-256 sidecar 共同完整且外部市场日历状态完整的日期）`。原文归档完整但日历状态缺失或陈旧时，只从正式 raw 复读证据无 API 修复日历；原文缺失或摘要不一致才重新请求。页面结构监测、历史重采、解析、字段提取和结构化事实生产均属于未来另行确认的独立项目。
+- `fact_domestic_spot_basis_daily` 不再属于稳定 silver 契约；若旧正式湖中仍存在该表，当前采集入口和契约变更不得自动删除、迁移或改写它，应留待用户另行决定处置。
 - silver 业务表的默认更新集合统一定义为：`上游当前有效格点 − 下游已经完整落盘的格点 = 本次自动更新范围`。空目录只是下游完整格点集合为空的普通情形，必须由同一自动入口自然得到全量建表，不另设一套生产日期范围。
 - “已经完整落盘”至少要求主键存在、整行通过权威 Arrow Schema/metadata 与表级质量约束；依赖完成状态的事实格点还必须已经从正式路径复读成功。不得只用下游最大日期判断无缺口。
 - 每张 silver 表的生产者负责在转换、staging 复读和正式路径复读时执行该表的完整 Schema/metadata 与表级业务质量约束。下游消费者可以信任已经由生产者正式提交的上游表，不重复执行上游全部业务规则；消费者只校验物理兼容性以及自身计算直接依赖的主键、范围、覆盖等边界条件，并继续对自己的输出承担完整验证责任。
