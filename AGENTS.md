@@ -298,6 +298,14 @@ Do not move down this list without a concrete reason.
 - 使用标准解释器执行 `python -m pip`，不要使用裸 `pip`。
 - 运行 `E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading\verify_runtime.py`，验证当前运行环境及核心 DataFrame 依赖。
 
+# 长时间任务的人工启动、后台执行与可见监控
+
+- 预计运行超过 10 分钟的任务，必须先在小范围、非正式目标上完成同一执行路径的样本验证；样本失败时不得启动正式全量任务，并须保留失败现场。
+- 正式长任务只能由用户在当前交互中明确授权为一个边界清楚的批次。允许把该批次交给与 Codex 回合解耦的 detached/background worker，但不得据此创建定时任务、常驻守护服务、自动恢复或未来批次授权。
+- 后台 worker 必须同时配有独立、用户可见且不依赖 LLM 的 Terminal 窗口或 pane，持续显示当前阶段、可量化进度、累计耗时、心跳新鲜度和失败信息；仅写日志文件不构成可见监控。
+- worker 和 monitor 都不得要求 Codex 回合保持活动。Codex 只做一次有界健康检查；确认 worker、业务子进程、心跳和可见 monitor 均正常后，必须立即结束回合，不得用 sleep、进程轮询或 tail 日志维持 Agent 存活。
+- worker 不得自动重试。普通失败、配额停止或监控异常都必须停止后续阶段，保留状态、日志和事务证据，等待用户再次调用 Codex 后再决定如何继续。
+
 # 草稿脚本与测试收纳规则
 
 - 项目根目录不得新建或恢复 `scripts`、`tests` 目录；原有内容统一暂存于 `00_draft_collection_02/scripts` 和 `00_draft_collection_02/tests`。

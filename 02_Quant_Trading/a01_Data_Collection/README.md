@@ -11,7 +11,7 @@
   [重建执行清单](../a01_Data_Collection_Rebuild_Blueprint/08_EXECUTION_CHECKLIST.md)
   约束：代码、消费者和空湖验证全部通过后，才允许编写或运行数据迁移程序。
 - 业务 Notebook 是唯一直接编辑的源文件；同名 `.py` 仅由默认 PythonExporter 生成。
-- 所有命令都要求操作员显式启动；当前不提供根级 BAT 编排，不创建定时任务或后台恢复。
+- 所有命令都要求操作员显式启动；当前不提供根级 BAT 编排，不创建定时任务或后台恢复。预计超过 10 分钟的当前授权批次必须先通过非正式小样本，随后才可由边界明确且不自动重试的 detached worker 执行；运行时须另开不依赖 LLM 的用户可见 Terminal，持续显示阶段、进度、耗时、心跳和失败。确认 worker 与 monitor 健康后，Codex 必须结束回合，不得靠轮询保持活动。
 - 业务入口不设置独立的 API 调用开关：命令启动后直接执行数据采集与契约校验；`--write` 是唯一的
   “是否写入”开关，不带 `--write` 时不得改动数据湖、日历状态或完成水位。
 - `.env` 的 `FUTURES_LAKE_ROOT` 指向唯一正式湖根目录，其下按职责分为 `raw`、`silver`、`gold`；业务代码通过
@@ -55,6 +55,8 @@ Arrow Schema/metadata、表级质量规则和正式路径复读；尾部新增�
 流式比较 Session 当前真值；c04 从完整 Session 上游逐月比较全部 `1d`/`1m` 结构格点并保留未变化格点的
 下游回写状态；c05 在完整 `1d` 格点上应用共享事实白名单，再以选中格点减去完整日线事实并使用 JQData 自动补缺；
 c06 在完整 `1m` 格点上应用同一白名单，再以选中的 Session 减去由正式分钟事实和日历状态共同证明完整的 Session，按品种月分区补缺；c07 按证据指纹自动选择需重跑的疑似休市 Session；c08 则是独立手工全量审计，不属于日常差集更新。b02/c01 不调用外部 API，从完整品种日历展开三类报告格点，自动识别新增、缺口、撤销与政策变化，并保留未变化格点的事实采集状态；b02/c02 对排名和会员类型的共同待办格点只查询一次 JQData `finance.FUT_MEMBER_POSITION_RANK`，将长表透视成两张事实；b02/c03 对仓单 required 格点自动求差，查询 JQData `finance.FUT_WAREHOUSE_RECEIPT` 并保存数量、来源单位与较昨日变化。两类事实入口都在正式复读后回写报告日历。b03/c01 不调用外部 API，从完整自然日历与共享请求实体配置生成现货、境外期货全表和 19 个外部指数的完整理论请求格点，保留无需请求日并继承未变化格点的下游状态；b03/c02 以 `domestic_spot_basis/ALL` required 日期减去 raw 原文与日历共同证明完整的日期，只归档生意社 `response.content` 原始字节及 SHA-256 sidecar，不解析或提取，并对 raw 完整但日历陈旧的日期无 API 修复状态；b03/c03 对 `overseas_futures/ALL` required 日期先分流，正式事实缺失或不完整的日期才查询 JQData `finance.FUT_GLOBAL_DAILY`，正式事实完整但日历状态或原因陈旧的日期则从正式事实复算行数与 OHLC 结论、无 API 提交并复读日历；来源 ID、请求日期、返回上限和非有限值继续严格检查，有限 OHLC 高低关系异常按原值落盘并以 `warning` 留痕；b03/c04 以 `external_index/INDICATOR_ID` required 格点减去正式事实与日历状态共同证明完整的格点，按共享配置逐指标将连续待办段分页请求 Eastmoney `RPT_INDUSTRY_INDEX`，只接纳精确待办日期，严格校验分页计数、来源映射、日期和有限值，并把不再属于当前 required 水位的旧事实无 API 清退；完整指数分类—年月分区复读后才回写成功、确认空或失败状态。
+
+其中 c08 的全量审计严格收缩为 `c04 required 且已完成的理论分钟主键 − c06 正式分钟事实的 contract_code、bar_at 主键`。它不读取行情值、不复核 c06 已承担的主键、Session、范围、数值或 OHLC 门禁，也不调用 c07；只回写日历的实际/缺失计数与检查时间，质量结论、旁证和完成状态逐值继承。
 
 b04/c01 不调用 API，从环境统一起点到北京时间当前日按共享配置生成 8 个 SHIBOR 普通工作日格点和 17 个宏观月末/季末格点，计算版本化可用日，继承政策未变化的事实状态，并以完整 `dataset_name/year/month` 叶分区提交和正式复读。b04/c02 以 `interest_rate` required 系列—日期格点减去正式 SHIBOR 事实与日历状态共同证明完整的格点；正式事实完整但日历陈旧时无 API 修复状态，事实缺口按年月窗口调用 Tushare `pro.shibor`，只接纳精确待办期限，完整事实叶正式复读后才回写成功或确认空。b04/c03 以 `macro_release` required 系列—报告期格点自动求差或无 API 修复日历；事实缺口按报告名和年月严格分页请求 Eastmoney，将来源报告月 1 日归一到项目月末/季末，按共享配置读取 PPI `BASE_SAME` 并把 CPI/PPI 累计指数减 100 转成累计同比百分比，完整事实叶正式复读后才回写日历。至此 18 个正式采集入口均已迁移完成。
 
@@ -141,6 +143,8 @@ E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/b04_M
 [数据流与依赖顺序](../a01_Data_Collection_Rebuild_Blueprint/06_DATA_FLOW_AND_DEPENDENCIES.md)
 由操作员逐个调用业务入口。`b01/c01` 至 `b01/c07` 已使用自动差集或证据指纹兼容空湖全量和日常补缺；`b01/c08` 已实现独立全量审计；`b02/c01` 已从上游品种日历自动维护完整报告格点并保留事实采集状态；`b02/c02`、`b02/c03` 已分别以报告日历 required 格点减去事实和日历状态共同证明完整的格点，自动查询 JQData、按完整叶分区提交并回写状态；`b03/c01` 已从完整自然日历和版本化请求实体配置自动维护完整理论请求格点，识别内部缺口、上游撤销和配置变化并保留未变化下游状态；`b03/c02` 已按现货 required 日期减去 raw 原文与日历共同完整的日期，只归档原始响应字节和摘要，并对原文完整但日历陈旧的日期无 API 修复；`b03/c03` 已把境外期货 required 日期分成事实缺口 API 待办与事实完整但日历陈旧的无 API 状态修复集合，后者只从正式事实复算并复读日历；`b03/c04` 已按外部指数 required 指标—日期格点自动补缺，逐指标分页查询 Eastmoney、只接纳精确待办日期，并把上游失效旧事实从原完整叶分区无 API 清退；完整指数分类—年月分区正式复读后才回写外部市场日历；`b04/c01` 已按统一起点、共享系列配置和当前日自动维护完整宏观理论日历并继承未变化事实状态；`b04/c02` 已按上游 SHIBOR required 格点自动补缺或无 API 修复日历，逐月调用 Tushare、只触达精确待办期限并在完整事实叶正式复读后回写状态；`b04/c03` 已按上游宏观 required 格点自动补缺或无 API 修复日历，逐报告严格分页调用 Eastmoney，归一来源日期并按共享配置转换数值，完整事实叶正式复读后才回写状态。至此所有 18 个正式入口均完成分区内保留、主键覆盖和日历状态回写；项目仍不建立跨 17 张稳定 silver 表的根级自动编排入口。
 
+这里的 c08 “独立全量审计”特指分钟主键投影求差；不是对 c06 行情值质量或 c07 旁证的第二次全表复核。
+
 因此，存在 API 待办时，不带 `--write` 运行采集入口仍会访问其规定的上游 API 并完成内存中的转换和校验，只是不提交结果；纯 `b03/c02` 日历状态修复只复读 raw 原文及摘要、不请求生意社，纯 `b03/c03` 日历状态修复不认证或重拉 JQData，纯外部指数失效事实清退计划不创建 Eastmoney 会话，纯 `b04/c02` 日历状态修复不创建或调用 Tushare 客户端，纯 `b04/c03` 日历状态修复不创建 Eastmoney 会话；
 不调用 API 的 `b01/c07`、`b01/c08`、`b02/c01`、`b03/c01` 和 `b04/c01` 则完成正式湖只读计算与校验，不带 `--write` 时不提交任何状态。
 是否允许 Agent 发起具体生产批次，仍受量化交易目录的人工触发规则约束。
@@ -149,7 +153,10 @@ E:\anaconda3\envs\latitude\python.exe 02_Quant_Trading/a01_Data_Collection/b04_M
 c06 正式复读为 0 条后形成或证据发生变化的 `is_fetch_required=true AND suspected_closed` Session；
 显式日期或合约范围不得写回正式湖。一致结果只形成 `reconciled` 旁证，不确认休市、不取消拉取。分钟全量
 校对直接调用 `b01_Futures_Market_Data/c08_full_minute_quality.py` 并显式传入
-`--confirm-full-quality`。c08 不提供日期、月份或合约过滤；不带 `--write` 时只在系统临时目录构建并复读
+`--confirm-full-quality`。c08 不提供日期、月份或合约过滤，只处理 required 且已完成的 `1m` Session；分钟事实严格只投影
+`contract_code,bar_at`，以向量主键求差生成明细，只回写日历的 `actual_bar_count`、`is_data_missing`、
+`missing_bar_count`、`missing_checked_at`、`updated_at`。它不扫描行情值、不重复执行 c06 的质量门禁，也不调用 c07；
+c06 质量结论、c07 旁证和拉取完成状态必须逐值继承。不带 `--write` 时只在系统临时目录构建并复读
 staging，带 `--write` 时全量替换缺失明细并协调提交所有触达的行情日历叶分区，任一步失败共同回滚。
 两者当前也不再由 BAT 包装。
 
@@ -180,12 +187,12 @@ OHLC 仅违反 high/low 跨列关系，生产者保留来源原值并正常落�
 
 白名单唯一来源是共享策略模块
 [`config/futures_fact_collection_policy.py`](../../config/futures_fact_collection_policy.py)；业务目录不得复制或维护第二份白名单。模块中的映射直接列出五个交易所、
-59 个期货事实采集品种：
+60 个期货事实采集品种：
 
 | 交易所代码 | 品种（数量） |
 |---|---|
 | `GFEX` | `LC PD PS PT SI`（5） |
-| `XDCE` | `BB BZ EB EG FB I J JM L LG PG PP V`（13） |
+| `XDCE` | `BB BZ EB EG FB I J JM L LG LH PG PP V`（14） |
 | `XINE` | `BC EC LU NR SC`（5） |
 | `XSGE` | `AD AG AL AO AU BR BU CU FU HC NI OP PB RB RU SN SP SS WR ZN`（20） |
 | `XZCE` | `CY FG MA ME PF PL PR PX SA SF SH SM TA TC UR ZC`（16） |
