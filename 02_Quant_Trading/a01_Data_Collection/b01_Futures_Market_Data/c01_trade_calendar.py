@@ -15,7 +15,7 @@
 
 # ## Schema 契约交互浏览
 
-# In[19]:
+# In[1]:
 
 
 from __future__ import annotations
@@ -55,7 +55,7 @@ from config.data_contracts import (
 )
 
 
-# In[20]:
+# In[2]:
 
 
 if "ipykernel" in sys.modules:
@@ -63,7 +63,7 @@ if "ipykernel" in sys.modules:
     display_schema_metadata([TRADE_CALENDAR_SCHEMA])
 
 
-# In[21]:
+# In[3]:
 
 
 # 表名、分区、主键和日级数据生效时间。
@@ -75,7 +75,7 @@ EFFECTIVE_AFTER = time(20, 0)
 
 # ## 表级业务规则校验
 
-# In[22]:
+# In[4]:
 
 
 def validate_calendar_table(
@@ -139,7 +139,7 @@ def validate_calendar_table(
 
 # ## 分区合并、提交与失败回滚
 
-# In[23]:
+# In[5]:
 
 
 def commit_partitions(frame: pd.DataFrame, lake_root: pathlib.Path) -> int:
@@ -348,7 +348,7 @@ def commit_partitions(frame: pd.DataFrame, lake_root: pathlib.Path) -> int:
 
 # ## JQData 交易日采集与标准化
 
-# In[24]:
+# In[6]:
 
 
 def collect(start: date, end: date) -> pd.DataFrame:
@@ -391,7 +391,7 @@ def collect(start: date, end: date) -> pd.DataFrame:
 
 # ## 命令行入口与更新水位
 
-# In[25]:
+# In[7]:
 
 
 # 不带日期时按有效格点差集自动建表或补缺；显式日期只用于检查或非正式测试湖。
@@ -658,7 +658,7 @@ def main(
         )
 
 
-# In[26]:
+# In[8]:
 
 
 # 用 Jupyter / IPython 运行时，内核进程的启动命令类似: ipykernel_launcher.py -f /path/to/connection.json
@@ -679,10 +679,8 @@ if "ipykernel" in sys.modules:
 
     # Notebook：显式传入 Click 参数，不读取 ipykernel 的 -f 参数。
     notebook_args = [
-        "--start-date",
-        "2026-08-01",
-        "--end-date",
-        "2026-08-15",
+        "--start-date", "2026-08-01",
+        "--end-date", "2026-08-15",
     ]
 
     main.main(
@@ -699,5 +697,8 @@ elif __name__ == "__main__":
 # In[26]:
 
 
-
+# conda env list
+# conda activate latitude
+# cd E:\Latitude_Analytics_v2
+# python 02_Quant_Trading\a01_Data_Collection\b01_Futures_Market_Data\c01_trade_calendar.py --write
 

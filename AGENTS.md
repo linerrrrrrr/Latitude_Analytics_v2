@@ -305,6 +305,8 @@ Do not move down this list without a concrete reason.
 - 后台 worker 必须同时配有独立、用户可见且不依赖 LLM 的 Terminal 窗口或 pane，持续显示当前阶段、可量化进度、累计耗时、心跳新鲜度和失败信息；仅写日志文件不构成可见监控。
 - worker 和 monitor 都不得要求 Codex 回合保持活动。Codex 只做一次有界健康检查；确认 worker、业务子进程、心跳和可见 monitor 均正常后，必须立即结束回合，不得用 sleep、进程轮询或 tail 日志维持 Agent 存活。
 - worker 不得自动重试。普通失败、配额停止或监控异常都必须停止后续阶段，保留状态、日志和事务证据，等待用户再次调用 Codex 后再决定如何继续。
+- Windows monitor 读取原子状态文件时，必须使用允许 `ReadWrite` 与 `Delete` 的文件共享方式，读取后立即释放句柄；禁止用会阻塞 `os.replace` 的默认独占/非删除共享读取持续轮询状态文件。2026-08-21 的样本运行曾因 monitor 与 worker 对 `status.json` 发生共享冲突，导致业务仍正常时控制面报 `WinError 5` 并停止，此项是据此冻结的强制边界。
+- worker 的状态发布必须采用同目录临时文件、flush/fsync、原子替换；只允许对状态文件替换时的 Windows `WinError 5/32` 做短时有界重试。该控制面重试不属于业务重试，不得据此重试 API、阶段或事务。状态发布最终失败时，worker 必须终止当前业务子进程并保留现场，不能留下失去监控的孤儿任务。
 
 # 草稿脚本与测试收纳规则
 
