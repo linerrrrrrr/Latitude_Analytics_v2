@@ -1,59 +1,43 @@
 # 适用范围与规范地位
 
 - 本文件是 `E:\Latitude_Analytics_v2\03_Futures_Database` 整棵目录树的目录级 Agent 规则入口，适用于目录本身以及任意层级的当前和未来子目录。
-- 本文件同时是全项目字段命名、跨引擎类型和数据湖 Schema 行为约束的文本权威来源；修改其他目录中的数据生产者、读取者、转换代码或验证脚本时，只要涉及这些事项，也必须先读取并遵循本文件。
-- 17 张稳定 silver 表（7 张日历维度表、10 张事实表）的可执行 Schema 以 `config/data_contracts.py` 为唯一权威来源；本文件负责规定 Agent 的修改流程、命名、类型映射和同步责任，两者不得冲突。来源原文归档属于 raw 层，不计入 silver 表数；实验性 gold 输出由所属下游工作流局部定义，不进入数据库级表清单或统一 Schema。
+- 本文件同时是全项目数据字段命名、跨引擎类型和数据湖 Schema 行为约束的文本权威来源；修改其他目录中的数据生产者、读取者、转换代码或验证脚本时，只要涉及这些事项，也必须先读取并遵循本文件。项目级变量命名与是否需要改名统一服从根目录 `AGENTS.md`。
+- 17 张稳定 silver 表（7 张日历维度表、10 张事实表）的可执行 Schema 以 `config/data_contracts.py` 为唯一权威来源；本文件负责规定 Agent 的修改流程、数据字段命名、类型映射和同步责任，两者不得冲突。来源原文与证据归档属于 raw 层，不计入 silver 表数；实验性 gold 输出由所属下游工作流局部定义，不进入数据库级表清单或统一 Schema。
 - 下级 `AGENTS.md` 或 README 可以补充更具体的目录规则，但未经用户明确同意，不得豁免、弱化或覆盖本文件的数据契约要求。
 
-# 数据字段、变量命名与类型规范
+# 数据字段命名与类型规范
 
 本项目以 **Arrow/Parquet schema 作为落盘数据的唯一类型契约**。Pandas、Polars、NumPy
 只是计算层；写入 Parquet 前必须转换并通过 Arrow schema 校验。
 
 ## 0. 规范索引与同步要求
 
-- [根目录 AGENTS.md](../AGENTS.md)：项目运行环境、根目录定位和规范路由的项目级强制规则。
-- [02_Quant_Trading/AGENTS.md](../02_Quant_Trading/AGENTS.md)：量化交易整棵目录树的目录级 Agent 规则入口，包含双轨、PythonExporter、`b00` 同步入口及根级旧项目归档路由。
+- [根目录 AGENTS.md](../AGENTS.md)：变量命名与最小改动、项目运行环境、根目录定位和规范路由的项目级强制规则。
+- [02_Futures_Lakehouse/AGENTS.md](../02_Futures_Lakehouse/AGENTS.md)：期货湖仓生产与运维目录树的目录级 Agent 规则入口，包含采集双轨、PythonExporter、`b00` 同步入口、operations 及根级旧项目归档路由。
 - [.env.template](../.env.template)：项目根目录定位代码、当前稳定采集统一正式起点，以及包含 `raw`、`silver`、`gold` 的正式湖仓根路径环境变量权威模板。
-- [数据采集链路 README](../02_Quant_Trading/a01_Data_Collection/README.md)：双轨同步入口、Notebook 语义浏览、表粒度、主键、分区和更新水位规范。
-- [数据采集系统重建蓝图](../02_Quant_Trading/a01_Data_Collection_Rebuild_Blueprint/README.md)：冻结的一次性历史实施记录；其中与当前 17 表契约或生意社 raw 原文归档政策不一致的旧设计由本规范和当前可执行契约覆盖。
-- [数据采集系统重建执行清单](../02_Quant_Trading/a01_Data_Collection_Rebuild_Blueprint/08_EXECUTION_CHECKLIST.md)：本次一次性重建的强制代码完成门禁和蓝图退出条件；门禁通过前禁止编写或执行数据迁移。
-- [旧项目归档规则](../04_Old_Projects/AGENTS.md)：重建前采集实现、更早历史采集项目和旧特征工程项目的只读保护。
-- [特征工程 README](../02_Quant_Trading/a02_Feature_Engineering/README.md)：主力连续合约、log 双向复权、期限结构边界及当前 gold 实验工作流说明。
+- [数据采集链路 README](../02_Futures_Lakehouse/a01_Data_Collection/README.md)：19 个正式采集入口（含人工 c08）的来源异常留存与验收语义、双轨同步入口、Notebook 开篇 Schema 契约呈现、表粒度、主键、分区和更新水位规范。
+- [数据采集 operations AGENTS.md](../02_Futures_Lakehouse/a02_Data_Collection_Operations/AGENTS.md)：18 个默认日常阶段的人工启动、detached worker、可见 monitor、状态发布、失败停止、现场保留与人工核查规范。
+- [数据采集 operations README](../02_Futures_Lakehouse/a02_Data_Collection_Operations/README.md)：正式 worker、monitor 与状态证据的操作说明。
+- [旧项目归档规则](../05_Old_Projects/AGENTS.md)：重建前采集实现、更早历史采集项目和旧特征工程项目的只读保护。
+- [特征工程 AGENTS.md](../04_Feature_Engineering/AGENTS.md)：独立特征工程项目的双轨、silver 消费与当前结构迁移阻塞规范。
+- [特征工程 README](../04_Feature_Engineering/README.md)：主力连续合约、log 双向复权、期限结构边界及当前 gold 实验工作流说明；当前结构迁移不代表入口已恢复运行。
+- [中国期货市场演变方法复现项目](../01_project_collection/china_futures_market_evolution_reproduction/AGENTS.md)：正式 silver 的只读研究消费者及固定复现口径路由。
+- [中国商品期货日内波动预测方法复现项目](../01_project_collection/china_commodity_futures_intraday_volatility_forecasting_reproduction/AGENTS.md)：正式 silver 的只读研究消费者，以及项目专属版本化研究成果、项目内长批次控制、固定研究口径与逐项 Notebook 实施规范。
 - [国内期货事实采集白名单](../config/futures_fact_collection_policy.py)：日线、分钟线和逐品种交易所报告共用的交易所—品种白名单唯一权威来源。
+- [成交持仓排名特殊案例配置](../config/futures_position_rank_special_cases.py)：已人工核实的特殊案例、完整坏载荷指纹、交易所原文摘要与完整校准值唯一配置来源。
 - [外部市场请求实体配置](../config/external_market_entities.py)：外部市场日历与外部指数事实共用的请求实体、Eastmoney 指标映射及有效期唯一权威来源。
 - [宏观发布系列与可用日配置](../config/macro_release_entities.py)：宏观发布日历、SHIBOR 与宏观事实共用的 25 个系列、来源列、宏观数值偏移、理论频率及版本化可用日规则唯一权威来源。
 - [JQData 共享连接边界](../config/jqdata_connection.py)：JQData 认证与 Windows TUN 物理出口绑定的项目级实现；不承载业务采集或写入语义。
 - [config/data_contracts.py](../config/data_contracts.py)：17 张稳定 silver Schema 及 Pandas、Polars、Arrow 转换的可执行契约。
 - [read_futures_lake_demo.ipynb](read_futures_lake_demo.ipynb)：17 张稳定 silver 表的契约化读取演示，以及不计入 silver 表数的生意社 raw 原文与摘要核对示例。
-- 修改本规范时，必须同步检查以上索引项；字段、类型、Schema 或转换入口发生变化时，相关文本和代码必须在同一次变更中更新。
+- 修改本规范时，必须同步检查以上索引项；数据字段命名、类型、Schema 或转换入口发生变化时，相关文本和代码必须在同一次变更中更新。
 
-## 1. 通用命名
+## 1. 数据字段命名
 
-- 一律使用英文 `snake_case`，字段名和变量名不使用缩写拼音。
-- 单数表示单个对象，复数表示集合，例如 `trade_date`、`trading_dates`。
-- 字段名表达业务含义；变量名可增加对象类型后缀。
-- 禁止用 `data`、`value`、`temp`、`result` 表示长期存在的变量。
-
-### Python 变量后缀
-
-| 对象 | 命名格式 | 示例 |
-|---|---|---|
-| `datetime.date` | `*_date` | `start_date`, `calendar_date` |
-| `datetime.datetime` | `*_datetime` 或业务明确的 `*_at` | `as_of_datetime`, `updated_at` |
-| `datetime.time` | `*_time` | `cutoff_time` |
-| `datetime.timedelta` | `*_duration` | `lookback_duration` |
-| 字符串 | `*_text`；业务代码/名称可直接按语义命名 | `raw_date_text`, `symbol`, `exchange_code` |
-| `Path` | `*_path`；目录使用 `*_dir` / `*_root` | `table_path`, `lake_root` |
-| Pandas DataFrame | `*_df` | `calendar_df` |
-| Polars DataFrame/LazyFrame | `*_pl_df` / `*_lazy_df` | `calendar_pl_df` |
-| NumPy ndarray | `*_array` | `returns_array` |
-| Arrow Table | `*_table` | `calendar_table` |
-| 布尔值 | `is_*`, `has_*`, `can_*`, `should_*` | `is_trading_day` |
-| 数量 | `*_count` | `row_count` |
-
-`date`、`datetime`、`time` 不可混用：`trade_date` 永远不包含时分秒；`event_datetime`
-必须包含日期和时刻；表示事件发生/更新时间的数据库字段优先使用 `*_at`。
+- 数据字段一律使用英文 `snake_case`，不使用缩写拼音。
+- 表示单个业务值的字段使用单数；字段名应直接表达业务含义，不依赖调用方上下文猜测。
+- 日期、时间戳和一天内时间的字段语义不可混用：`trade_date` 永远不包含时分秒，`event_datetime` 必须包含日期和时刻，表示事件发生或更新时间的数据库字段优先使用 `*_at`。
+- Python 变量命名及是否需要改名统一遵循根目录 `AGENTS.md` 的“变量命名与最小改动”。本文件不强制所有变量统一增加对象类型后缀；但当业务身份、数据表示、来源、处理阶段或契约后置条件有助于理解时，允许并鼓励使用稳定业务词根、真实角色修饰词及 `*_df`、`*_table`、`*_dataset`、`*_schema` 等显式表示后缀。`pandas_to_arrow()`、`arrow_to_pandas()` 等转换只改变对象表示并执行相应 Schema 契约，不自动改变业务身份、来源或生命周期；同一对象应保留角色修饰词和业务词根，只替换表示后缀，例如 `new_variety_calendar_df -> new_variety_calendar_table`，不得无真实语义地改成 `incoming_variety_calendar_table`。改名只在当前任务已触及的连贯代码边界内保持一致，不扩展为无关模块的批量风格清洗。
 
 ## 2. 跨引擎类型契约
 
@@ -169,14 +153,18 @@ raw 文件不套用 Arrow Schema、Hive Dataset 或 silver metadata；但写入�
 `field_list`、`primary_key` 和 `partition_columns` 均使用英文逗号分隔字段名，不插入说明文字；
 `field_list` 必须与实际 Schema 字段顺序完全一致，`primary_key` 中的字段必须真实存在，
 `partition_columns` 必须按 Hive 目录层级顺序排列。`metadata_language` 固定为 `zh-CN`；
-`schema_version` 使用语义化版本，并在字段、类型、nullable 或业务语义发生变化时同步调整。
+`schema_version` 使用语义化版本，并在字段、类型、nullable 或持久值语义发生变化时同步调整。只校正
+`description_zh`、`update_mode_zh`、`quality_rules_zh` 等描述性文字或运行策略说明，且字段与持久值语义不变时，
+不得为此升级物理版本或重写历史 Parquet。
 
 `role_zh` 只能按真实职责填写 `日历维度表` 或 `事实表`，不得恢复含混的“状态表”；日历表的
 `calendar_role_zh` 说明其枚举的预期格点，事实表说明预期格点由哪个直接上游日历规定。
 `dimension_dependencies` 只列直接依赖的 `dim_*` 表，不把 API、库、配置、事实表或质检回写列为维度。
-`update_mode_zh` 必须服从“上游当前有效格点 − 下游已经完整落盘的格点”，并说明空湖如何由同一规则自然
-得到全量；不得把人工日期范围写成正式生产更新方式。`quality_rules_zh` 必须覆盖表级主键、完整性、范围、
-对账和正式路径复读边界。
+`update_mode_zh` 必须准确记录所属入口的当前生产水位。b01/c01—c04 默认只推进尾部新增，历史维护由显式
+`--full` 完成；c05/c06 按当前白名单和可信 `is_fetch_completed` 形成待办；其他入口继续服从
+“上游当前有效格点 − 下游已经完整落盘的格点”。metadata 必须说明空湖如何自然全建、显式全历史或定向
+维护边界，以及 `--write` 只提交当前计划。`quality_rules_zh` 必须覆盖表级主键、完整性、范围、对账和所属
+提交链路实际执行的复读摘要边界。
 
 不可空字段的 `nullable_reason_zh` 写明不可为空；可空字段必须写出允许为空的具体业务条件。
 枚举字段的 `enum_values_zh` 列出允许值及含义，非枚举字段明确标为非枚举；字段级
@@ -186,8 +174,8 @@ raw 文件不套用 Arrow Schema、Hive Dataset 或 silver metadata；但写入�
 派生字段使用实际输入列并说明转换，不得伪造 API 原列；常量、运行状态和审计字段标为系统生成；多源证据字段
 列全直接证据来源。表级 `field_list` 只用于快速阅读和顺序校验，不能替代逐字段 metadata。
 
-稳定 silver Schema 变更必须在同一次变更中同步生产者、消费者、读取 Demo、验证、现有 Parquet 数据及本
-规范。验收至少覆盖字段名、顺序、Arrow 类型、nullable、全部强制 metadata 键、UTF-8 解码、
+稳定 silver 的物理 Schema 或持久值语义变更必须在同一次变更中同步生产者、消费者、读取 Demo、验证、
+现有 Parquet 数据及本规范；纯描述性 metadata 校正同步当前代码与规范即可，不迁移历史文件。验收至少覆盖字段名、顺序、Arrow 类型、nullable、全部强制 metadata 键、UTF-8 解码、
 `field_list` 一致性、fragment physical schema 兼容性以及 Dataset 重开后的 metadata round-trip。
 
 ### 3.2 Schema metadata 的单一来源与运行时读取
@@ -223,11 +211,11 @@ PRIMARY_KEY = FUTURES_VARIETY_CALENDAR_SCHEMA.metadata[
 也不得回写为表级 Schema metadata。不得仅为隐藏三次 metadata 解码而创建 accessor、adapter、数据类或
 其他薄封装；项目级 metadata 完整性验证则可以作为独立的数据契约校验操作集中实现。
 
-### 3.3 Notebook Schema 语义浏览
+### 3.3 Notebook 开篇 Schema 契约呈现
 
-Notebook 语义浏览界面是权威 Schema 的只读投影，不是第二份语义来源。所有业务 Notebook 使用
-`config/notebook_schema_browser.py` 中的同一展示实现，只传入当前工作流直接涉及的具名权威 Schema，
-并按上游依赖在前、当前产出在后的顺序排列。
+直接涉及权威 Arrow Schema 的业务 Notebook，应在开篇呈现当前工作流的 Schema 契约。该呈现是权威
+Schema 的只读投影，不是第二份语义来源。Notebook 使用 `config/notebook_schema_browser.py` 中的同一
+展示实现，只传入当前工作流直接涉及的具名权威 Schema，并按上游依赖在前、当前产出在后的顺序排列。
 
 界面固定按以下顺序展示：Schema 列表、Schema 下拉框、表级 metadata 表、字段目录表、Field 下拉框、
 单字段完整 metadata 表。Schema 下拉框必须紧邻表级 metadata 表，Field 下拉框必须紧邻单字段完整
@@ -260,8 +248,10 @@ API、读取数据湖、产生写入副作用，也不得代替 Schema/metadata 
 保留在拥有该实验的工作流内，可随研究迭代，不加入本节清单，也不要求同步数据库标准 Demo。
 
 `dim_futures_bar_calendar` 与 `fact_futures_missing_bar` 必须把 `bar_frequency` 作为第一层
-Hive 分区；其他表严格使用各 Schema 的 `partition_columns` metadata 顺序。所有 staging 和正式路径
-复读都必须再次执行 Schema/metadata 校验；分钟线分区增量写入也必须先通过
+Hive 分区；其他表严格使用各 Schema 的 `partition_columns` metadata 顺序。b01/c01—c07 与 `b02/c03` 的 dirty 完整叶只
+执行一次完整业务 validator，staging 与正式安装只检查物理字段、类型、nullable、表名、主键、分区和
+行数/主键摘要；运行时允许描述性 metadata 与历史文件不同，并以当前 `config/data_contracts.py` 为说明权威。
+其他入口继续按各自既有 staging/正式复读契约执行。分钟线分区增量写入仍必须先通过
 `pandas_to_arrow()` 或 `polars_to_arrow()`，禁止由某批 DataFrame 的推断类型暗中改变数据库类型。
 
 `dim_futures_bar_calendar` 中 `evidence_level='reconciled'` 的记录只表达日线—分钟重聚合旁证；
@@ -272,8 +262,9 @@ Hive 分区；其他表严格使用各 Schema 的 `partition_columns` metadata �
 `get_all_securities(["futures"], date=None)` 的完整固定月份合约目录，事实采集白名单不得裁剪维度行。
 `dim_futures_bar_calendar` 与 `dim_futures_exchange_report_calendar` 同样保留完整理论格点。`c04` 不读取或
 解释事实采集白名单，其内容只由 `config/futures_fact_collection_policy.py` 定义。`c05` 和 `c06` 分别在
-完整 `1d`、`1m` 理论格点上应用同一政策，通过 `is_fetch_required`、`selection_reason` 回写选择结果，且
-不得删除理论格点。白名单缩减只停止后续事实采集，不得由采集器自动删除已经正式落盘的历史事实。
+完整 `1d`、`1m` 理论格点上窄列向量应用同一政策，通过 `is_fetch_required`、`selection_reason` 回写政策变化，
+且不得删除理论格点。白名单扩大自动回补从未完成历史格点；缩减只停止后续事实采集并清零当前缺失，
+不得删除事实或清除成功批次、实际条数、质量与 c07 证据；再次纳入的已完成格点不得重复拉取。
 逐品种交易所报告的同一白名单与覆盖规则由报告日历生产者应用；具体报告还必须同时满足 API 覆盖期及
 交易所—品种支持范围。
 
@@ -329,18 +320,38 @@ Eastmoney `REPORT_DATE` 使用报告月 1 日编码：CPI/PPI/PMI 归一到该�
 
 ### 正式湖根路径、raw 归档与 silver 写入水位
 
-- `.env` 的 `FUTURES_LAKE_ROOT` 定义唯一正式湖根目录；来源原文归档、稳定表和实验性输出分别位于 `settings.futures_lake_root / "raw"`、`settings.futures_lake_root / "silver"`、`settings.futures_lake_root / "gold"`。生产者、消费者和读取示例不得各自硬编码 `03_Futures_Database/futures_lake`。raw 的专门归档契约按本文件执行；这一目录约定不定义 gold 的表集合或 Schema。
-- 每张 silver 表的生产待更新集合必须从契约化格点求差：`上游当前有效格点 − 下游已经完整落盘的格点`。目标表自身的完整性由其生产者通过 Schema/metadata、主键和表级质量校验证明，不能把“日期不晚于最大日期”直接等同于完整。
-- 下游消费者可以信任已由生产者正式提交的上游表，不重复执行上游的完整表级业务质检。消费者仍必须精确检查上游 Schema/metadata，并验证自身计算直接依赖的主键唯一性、请求范围、日期覆盖或其他边界条件；消费者对自己的输出继续承担完整契约与质量校验。
-- 正式 silver 写入命令不得由操作者指定日期区间。显式日期只允许只读检查，或写入解析后与 `settings.futures_lake_root` 不同的临时/测试湖。
+- `.env` 的 `FUTURES_LAKE_ROOT` 定义唯一正式湖根目录；来源原文与证据归档、稳定表和实验性输出分别位于 `settings.futures_lake_root / "raw"`、`settings.futures_lake_root / "silver"`、`settings.futures_lake_root / "gold"`。生产者、消费者和读取示例不得各自硬编码 `03_Futures_Database/futures_lake`。raw 的专门归档契约按本文件执行；这一目录约定不定义 gold 的表集合或 Schema。
+
+#### 来源异常留存与 silver 验收
+
+- 质量异常不等于采集失败。来源响应能够按目标表粒度、主键、字段类型和持久值语义无歧义表达时，生产者必须保留来源值提交 silver，并在对应格点记录持久 `warning`；该完成证据不得因质量状态不是 `passed` 而触发日常重拉。
+- 已取得的响应若不完整或不能无损表达为唯一契约事实，必须先按该生产者的 raw 证据契约留存完整接收载荷、请求坐标、采集时间、摘要和失败原因。只有具有显式且可追溯的归一化或校准规则才可继续提交 silver，否则必须阻断；raw 留存不等于 silver 通过。
+- raw 证据的路径、编码、原子提交、正式复读和保留边界必须在对应生产者迁移时一并确认并同步代码、metadata 与测试。尚未具备该契约的生产者继续执行现有 silver 门禁、失败留痕及已经冻结的显式归一化，不得自行发明通用 raw 路径、新增静默取舍或提前放宽校验。下文的失败、硬失败和拒绝提交均指 silver 验收结果。
+
+- 除 b01 已迁移日常链路和 `b02/c03_warehouse_receipt` 外，每张 silver 表的生产待更新集合仍从契约化格点求差：`上游当前有效格点 − 下游已经完整落盘的格点`。b01/c01—c04 默认只处理可信水位后的尾部新增，历史内部缺口、删除与修订由 `--full` 发现；c05/c06 只以当前白名单和 `is_fetch_completed=false` 形成事实待办。空湖仍由同一默认入口自然全建。
+- 下游消费者必须信任生产者正式提交的上游表：正式提交已经证明上游主键、水位、覆盖和完整表级业务质量。消费者仍须精确检查上游 Schema/metadata 的物理兼容性，但不得重新扫描或复算上游已经保证的主键唯一性、日期连续性、范围覆盖和派生质量；只验证未写入上游契约、但确属自身计算前提的局部边界。消费者对自己的输出继续承担完整契约与质量校验；代码收缩按用户确认逐脚本实施，不自动扩大为批量重构。
+- 正式 silver 写入命令不得用日期区间截断自动生产水位。b01/c01、c02、c04 只有 `--full --write` 可正式维护全历史，且 `--full` 与显式日期互斥；c03 允许成对日期或 `--full` 定义来源质检范围；c07 只有带日期或合约边界的 `--force --write` 可正式定向旁证。其他入口显式日期只允许只读检查或写入不同于正式湖的测试湖。
+- `dim_futures_contract_calendar` 默认只处理可信品种日历相对正式表新增的交易日，不再按历史 `active_contract_count` 与 distinct `contract_code` 数差异触发日常 API；无有效 Session 规则的合约 warning 跳过并推进日常水位。成对日期与 `--full` 分别检查指定范围和当前上游全部水位与本地整表，包含来源拉取和双向比较，排除 `updated_at`；`--write` 只提交发现的差异。c03 信任 c02 已提交语义，仍完整验证自己的 API 响应和 dirty 输出叶。
 - 空正式表和小规模缺口使用同一规则：空表的已完整格点集合为空，差集自然等于上游全量。下游表必须先读取已由上游生产者正式提交的水位，不能生成或提交超过上游的格点。
-- `fact_futures_daily`、`fact_futures_minute` 与 `fact_overseas_futures_daily` 的来源 OHLC 非空值必须有限；有限数之间的 high/low 跨列关系异常属于必须原值保留的来源质量证据，不得修写或丢弃。生产者在事实 staging 与正式路径复读成功后，仍须把对应 1d 格点、1m Session 或外部市场请求日期标为已完成并记录 `warning`；该异常不改变正式事实计数，也不得被缺失审计覆盖为 `passed`。NaN/Inf、负数量及各表其他硬门禁不因本规则放宽。
-- 当前代码已完成 `b01` 的 `c01` 至 `c08`、`b02/c01_exchange_report_calendar` 至 `b02/c03_warehouse_receipt`、`b03/c01_external_market_calendar` 至 `b03/c04_external_index`，以及 `b04/c01_macro_release_calendar` 至 `b04/c03_macro_release` 的迁移；b01/c08 全量重建缺失明细并与触达的行情日历叶分区协调提交、共同回滚，b02/c01 从完整品种日历自动维护三类报告格点、保留未变化的事实采集状态并按完整叶分区提交，b02/c02 从 JQData `finance.FUT_MEMBER_POSITION_RANK` 的一次格点查询同时生成排名与明确参与者类型汇总两张事实，b02/c03 从 JQData `finance.FUT_WAREHOUSE_RECEIPT` 保存逐仓库数量、来源单位和较昨日变化；两类事实入口都在事实正式复读后回写相应日历状态。b03/c01 从完整自然日历与版本化请求实体配置自动维护三类外部市场完整理论格点、继承未变化的下游状态并按完整叶分区提交；b03/c02 只把生意社 `response.content` 与 SHA-256 sidecar 归档到正式 raw，以原文与日历共同完整性自动补缺，并对原文完整但日历陈旧的日期无 API 修复状态；b03/c03 对 `overseas_futures/ALL` required 日期先分流，只有正式事实缺失或不能证明完整的日期才逐日查询 JQData `FUT_GLOBAL_DAILY` 全表；正式事实已经完整但日历状态或原因陈旧的日期必须从正式事实复算行数与 OHLC 质量结论、提交并正式复读日历，不得重拉 API。来源记录 ID、请求日、返回上限和非有限值继续严格校验，有限 OHLC 跨列关系异常原值保留并以 `warning` 留痕；b03/c04 以 `external_index/INDICATOR_ID` required 格点减去正式事实与日历状态共同证明完整的格点，按共享配置逐指标将连续待办段分页请求 Eastmoney `RPT_INDUSTRY_INDEX`，只接纳精确待办日期，严格校验分页计数、来源映射、日期和有限值，并把不再属于当前 required 水位的旧事实无 API 清退；完整指数分类—年月叶分区经 staging 与正式路径逐值复读后才回写日历。b04/c01 从环境统一起点与当前日自动生成 25 个版本化理论系列格点，继承未变化事实状态，并以完整宏观日历叶分区提交和正式复读；b04/c02 自动求差 SHIBOR required 格点，对完整事实执行无 API 日历修复，对事实缺口按月调用 Tushare，只接纳精确待办期限并在完整事实叶复读后回写日历；b04/c03 自动求差宏观 required 格点或从正式事实无 API 修复日历，对事实缺口按 Eastmoney 报告名与年月严格分页，将来源月初编码归一到项目月末/季末，并按共享配置修正 PPI 同比原列和 CPI/PPI 累计同比偏移，完整事实叶复读后才回写日历。至此 18 个正式采集入口均已完成迁移。
+- `fact_futures_daily`、`fact_futures_minute` 与 `fact_overseas_futures_daily` 的来源 OHLC 非空值必须有限；有限数之间的 high/low 跨列关系异常属于必须原值保留的来源质量证据，不得修写或丢弃。生产者仍须把对应格点标为已完成并记录 `warning`；该异常不改变事实计数、不得被日常重拉或缺失审计覆盖为 `passed`，c06 也不得覆盖 schedule 开市证据。日线和分钟线的 NaN/Inf 继续硬失败；境外期货生产者把财务库可空数值列的 `None`、`pd.NA` 和 Pandas `NaN` 缺失标记归一为 Arrow null且不另记 warning，非空非有限数继续硬失败。负数量、重复键、请求范围和 Session 越界仍按各表既有门禁处理。
+- `fact_futures_position_rank_daily` 与 `fact_futures_member_position_daily` 的 b02/c02 生产者串行按 `exchange_code + underlying_code + year + month` 归并 required 待办日，以 JQData `finance.run_query(FUT_MEMBER_POSITION_RANK.day.in_(pending_dates))` 请求月份待办子集。恰好返回 5000 行表示可能截顶，必须丢弃该响应并按排序日期确定性二分；单日仍触顶时硬失败。来源 `rank` 必须是 `1—20` 的整数，且 Top 20 是具体合约每类榜单的边界，不是品种日总行数上限。两张正式事实的格点计数与 `position_rank`、`member_position` 两类报告日历完成状态共同证明格点完整；生产循环只读取、验证和替换目标 `exchange_code/underlying_code/year/month` 事实完整叶及 `dataset_name/exchange_code/year/month` 日历完整叶，不扫描或提交无关表根。该入口不提供 `--full`，不使用 `run_offset_query` 分页、并发或业务自动重试。
+- 交易所报告日历的 `is_fetch_required` 表示当前采集义务，`is_fetch_completed` 是持久完成凭证。政策排除只停止调度并清零当前缺失，不清除完成批次、计数和质量；重新纳入的已完成格点不得重复采集。
+- `fact_futures_position_rank_daily` 与 `fact_futures_member_position_daily` 的生产者遇到同一来源业务键重复行时，只有原始会员标签、排名类别 ID/文字、指标和变化全部一致才允许按权威事实粒度合并；逐会员排名取最小名次，并把对应报告日历永久记为已完成的 `success + warning`。任一来源业务值冲突继续硬失败；已完成 warning 格点不得因质量状态不是 `passed` 而进入日常重拉。
+- `b02/c01a_position_rank_special_case_calibration` 固定先于 c02，且只处理 `config/futures_position_rank_special_cases.py` 显式列出的案例。正式 raw 证据缺失时各请求一次冻结的交易所 URL，只有 HTTP、响应 SHA-256、目标合约和完整 Top 20 同时精确匹配才原子提交；已有证据只复读。c02 只在指定格点的 JQData 成交量榜完整 20 行精确命中冻结坏载荷时，才依据该正式证据整组校准为交易所权威 Top 20；权威载荷原样通过，第三种载荷硬失败，持买仓、持卖仓和其他格点不变。报告日历必须永久保留含案例 ID 和原文摘要的 `success + warning`；该完成凭证不得触发重拉。
+- `fact_futures_warehouse_receipt_daily` 的 `b02/c03` 生产者只以 `warehouse_receipt` 报告日历中 required 且 `is_fetch_completed=false` 的格点作默认待办，信任已完成快照，不扫描 clean 事实历史或在批末复读表根。每个待办日请求一次 API；事实与日历 dirty 叶通过校验和正式安装检查后，才推进日历状态。
 - `b01/c08` 只以 c04 required 且已完成的理论分钟主键减去 c06 正式分钟事实投影的 `contract_code,bar_at` 主键。它信任 c06 正式提交的事实主键、范围、数值与 OHLC 质量，不读取行情值、不调用 c07；只回写实际/缺失计数与检查时间，既有质量结论、旁证及完成状态必须逐值保留。缺失明细与触达的完整日历叶继续协调提交、共同回滚。
+- `b01/c07` 默认只处理 c06 新写入 `fact_futures_minute:formal_empty_session` 且尚无 c07 校对结果的 `suspected_closed` Session；不得计算历史输入指纹探测事实变化。四项比较全部匹配可写 `evidence_level=reconciled`，但分钟缺失的 `quality_status` 必须保持 `warning`。`--force` 只有带日期或合约范围才能写正式湖。
+- 18 阶段默认日常 worker 中 b01 固定为 c01—c07，`--skip-optional-quality` 只删除 c07 且不得恢复未选 `--groups`；c08 不得出现在默认、全量或生产 worker manifest 中，只能由操作员显式执行。
 
 gold 用于下游数据组织、特征探索和复权方法探索，不由本数据库规范统一定义表名、字段、Schema、
 分区或更新方式。某个实验需要落盘时，由所属工作流局部定义并校验其当前输出结构；不得把该实验
 快照加入 `config/data_contracts.py`、本节正式表清单或标准 silver 读取 Demo。
+
+`01_project_collection/china_commodity_futures_intraday_volatility_forecasting_reproduction/data/item09/<run_id>/`
+是该方法复现项目在正式湖仓之外局部定义的版本化、经验证 research artifact，不是 `raw`、`silver`、
+`gold` 或普通缓存。它不得加入稳定 silver Schema、生产水位或标准读取 Demo；其扁平 checkpoint 文件、指纹、原子 Parquet 提交、
+manifest、`_SUCCESS`、不可变提交和下游固定 run 规则只由对应项目 AGENTS 与 README 约束。本数据库规范仍只要求
+该项目对正式 `silver` 保持只读，并对落盘 Parquet 使用明确的局部 Arrow Schema、`float64` 统计值和 Arrow null。
 
 ## 4. 数据湖读取 Demo
 

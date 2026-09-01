@@ -7,6 +7,9 @@
 # Materialized data lake datasets
 /03_Futures_Database/futures_lake/
 
+# Local operations run evidence and control-plane state
+/02_Futures_Lakehouse/a02_Data_Collection_Operations/run_history/
+
 # Python bytecode, caches, and local test output
 __pycache__/
 *.py[cod]

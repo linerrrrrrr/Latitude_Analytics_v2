@@ -1,4 +1,4 @@
-"""在项目 Notebook 中交互浏览 Arrow Schema 与字段 metadata。"""
+"""在项目 Notebook 开篇交互呈现 Arrow Schema 与字段 metadata。"""
 
 from __future__ import annotations
 
