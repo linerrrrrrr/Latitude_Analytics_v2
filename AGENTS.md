@@ -12,6 +12,10 @@
 - [04_Feature_Engineering/README.md](04_Feature_Engineering/README.md)：主力连续合约、log 双向复权、期限结构边界及当前 gold 实验工作流说明；当前仅完成结构迁移，不代表业务入口已经恢复运行。
 - [01_project_collection/china_futures_market_evolution_reproduction/AGENTS.md](01_project_collection/china_futures_market_evolution_reproduction/AGENTS.md)：中国期货市场演变方法复现项目的只读 silver 消费、方法说明路由与局部执行规则。
 - [01_project_collection/china_commodity_futures_intraday_volatility_forecasting_reproduction/AGENTS.md](01_project_collection/china_commodity_futures_intraday_volatility_forecasting_reproduction/AGENTS.md)：中国商品期货日内波动预测方法复现项目的只读 silver 消费、项目专属版本化研究成果、项目内长批次控制、固定研究口径、逐项 Notebook 工作方式与局部执行规则。
+- [01_project_collection/JQ_strategy/volatility_research/README.md](01_project_collection/JQ_strategy/volatility_research/README.md)：JQ_strategy 下波动率研究子项目的通用数学符号、文献映射、周期尺度与方法整理主入口；[READING_TUTORIAL.md](01_project_collection/JQ_strategy/volatility_research/READING_TUTORIAL.md) 按前置知识、逐步符号定义、手算与理解检查组织阅读教程；[supporting_materials/README.md](01_project_collection/JQ_strategy/volatility_research/supporting_materials/README.md) 定义一次 IM 研究支持附件的归档范围与证据定位，不把案例参数提升为通用规范。
+- [01_project_collection/JQ_strategy/financial_futures_data/AGENTS.md](01_project_collection/JQ_strategy/financial_futures_data/AGENTS.md)：JQ_strategy 金融期货人工聚宽取数、本地缺失检测、项目轻量数据库及正式湖只读边界的目录级规则。
+- [01_project_collection/JQ_strategy/financial_futures_data/README.md](01_project_collection/JQ_strategy/financial_futures_data/README.md)：金融期货固定名单文件人工传输闭环、正式文件路由及逐项建设状态。
+- [01_project_collection/JQ_strategy/financial_futures_data/financial_futures_collection_policy.py](01_project_collection/JQ_strategy/financial_futures_data/financial_futures_collection_policy.py)：JQ_strategy 项目局部中金所金融期货白名单、支持频率与当前聚宽数据就绪时点的唯一可执行来源。
 - [config/futures_fact_collection_policy.py](config/futures_fact_collection_policy.py)：日线、分钟线和逐品种交易所报告共用的国内期货事实采集白名单唯一权威来源；白名单只含明确列出的交易所—品种，不得把它解释为品种、合约、日历或研究宇宙。
 - [config/futures_position_rank_special_cases.py](config/futures_position_rank_special_cases.py)：已经人工核实的成交持仓排名来源特殊案例、完整坏载荷指纹、上期所权威原文摘要与校准值唯一配置来源；配置不调用 API、不决定是否写入。
 - [config/external_market_entities.py](config/external_market_entities.py)：外部市场日历与外部指数事实共用的请求实体、Eastmoney 指标映射及有效期唯一权威来源；配置不调用 API、不决定是否写入。

@@ -23,6 +23,9 @@
 - [特征工程 README](../04_Feature_Engineering/README.md)：主力连续合约、log 双向复权、期限结构边界及当前 gold 实验工作流说明；当前结构迁移不代表入口已恢复运行。
 - [中国期货市场演变方法复现项目](../01_project_collection/china_futures_market_evolution_reproduction/AGENTS.md)：正式 silver 的只读研究消费者及固定复现口径路由。
 - [中国商品期货日内波动预测方法复现项目](../01_project_collection/china_commodity_futures_intraday_volatility_forecasting_reproduction/AGENTS.md)：正式 silver 的只读研究消费者，以及项目专属版本化研究成果、项目内长批次控制、固定研究口径与逐项 Notebook 实施规范。
+- [JQ_strategy 金融期货数据规则](../01_project_collection/JQ_strategy/financial_futures_data/AGENTS.md)：正式 silver 日历只读消费、人工聚宽文件传输和项目专属轻量数据库边界。
+- [JQ_strategy 金融期货数据说明](../01_project_collection/JQ_strategy/financial_futures_data/README.md)：人工取数闭环、正式文件路由及逐项建设状态。
+- [JQ_strategy 金融期货范围策略](../01_project_collection/JQ_strategy/financial_futures_data/financial_futures_collection_policy.py)：项目局部中金所金融期货白名单、支持频率与当前聚宽数据就绪时点，不改变正式商品事实生产政策。
 - [国内期货事实采集白名单](../config/futures_fact_collection_policy.py)：日线、分钟线和逐品种交易所报告共用的交易所—品种白名单唯一权威来源。
 - [成交持仓排名特殊案例配置](../config/futures_position_rank_special_cases.py)：已人工核实的特殊案例、完整坏载荷指纹、交易所原文摘要与完整校准值唯一配置来源。
 - [外部市场请求实体配置](../config/external_market_entities.py)：外部市场日历与外部指数事实共用的请求实体、Eastmoney 指标映射及有效期唯一权威来源。
