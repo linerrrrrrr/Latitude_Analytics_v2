@@ -1,5 +1,8 @@
 """生成并检查四个业务目录中 Notebook 的同名 PythonExporter 脚本。"""
 
+# py文件生成：激活 latitude 环境，在本脚本所在目录运行 python b00_sync_notebook_exports.py --write。
+# 仅做检查：运行 python b00_sync_notebook_exports.py --check；不传参数也默认只检查，不修改文件。
+
 from __future__ import annotations
 
 import argparse
