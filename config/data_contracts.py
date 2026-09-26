@@ -9,6 +9,10 @@ silver 事实表，因此不进入本模块；实验性 gold 输出也由所属�
 平行常量；业务模块导入权威 Schema 后，在模块初始化时各读取一次并复用。
 """
 
+# 共享业务配置现位于 config/futures_lakehouse/。
+# 下方 metadata 中的旧配置路径保留为已落盘的来源说明标识；当前导入使用新路径。
+# 仅移动模块不改写 Schema metadata，避免触发既有精确 metadata 检查或历史重写。
+
 from __future__ import annotations
 
 from dataclasses import dataclass

@@ -13,11 +13,11 @@
 ## 0. 规范索引与同步要求
 
 - [根目录 AGENTS.md](../AGENTS.md)：变量命名与最小改动、项目运行环境、根目录定位和规范路由的项目级强制规则。
-- [02_Futures_Lakehouse/AGENTS.md](../02_Futures_Lakehouse/AGENTS.md)：期货湖仓生产与运维目录树的目录级 Agent 规则入口，包含采集双轨、PythonExporter、`b00` 同步入口、operations 及根级旧项目归档路由。
+- [02_Futures_Lakehouse/AGENTS.md](../02_Futures_Lakehouse/AGENTS.md)：期货湖仓生产与运维目录树的目录级 Agent 规则入口，包含采集双轨、PythonExporter、`sync_notebook_exports.py` 同步入口、operations 及根级旧项目归档路由。
 - [.env.template](../.env.template)：项目根目录定位代码、当前稳定采集统一正式起点，以及包含 `raw`、`silver`、`gold` 的正式湖仓根路径环境变量权威模板。
-- [数据采集链路 README](../02_Futures_Lakehouse/a01_Data_Collection/README.md)：19 个正式采集入口（含人工 c08）的来源异常留存与验收语义、双轨同步入口、Notebook 开篇 Schema 契约呈现、表粒度、主键、分区和更新水位规范。
-- [数据采集 operations AGENTS.md](../02_Futures_Lakehouse/a02_Data_Collection_Operations/AGENTS.md)：18 个默认日常阶段的人工启动、detached worker、可见 monitor、状态发布、失败停止、现场保留与人工核查规范。
-- [数据采集 operations README](../02_Futures_Lakehouse/a02_Data_Collection_Operations/README.md)：正式 worker、monitor 与状态证据的操作说明。
+- [数据采集链路 README](../02_Futures_Lakehouse/README.md)：19 个正式采集入口（含人工 b08）的来源异常留存与验收语义、双轨同步入口、Notebook 开篇 Schema 契约呈现、表粒度、主键、分区和更新水位规范。
+- [数据采集 operations AGENTS.md](../02_Futures_Lakehouse/operations/AGENTS.md)：18 个默认日常阶段的人工启动、detached worker、可见 monitor、状态发布、失败停止、现场保留与人工核查规范。
+- [数据采集 operations README](../02_Futures_Lakehouse/operations/README.md)：正式 worker、monitor 与状态证据的操作说明。
 - [旧项目归档规则](../05_Old_Projects/AGENTS.md)：重建前采集实现、更早历史采集项目和旧特征工程项目的只读保护。
 - [特征工程 AGENTS.md](../04_Feature_Engineering/AGENTS.md)：独立特征工程项目的双轨、silver 消费与当前结构迁移阻塞规范。
 - [特征工程 README](../04_Feature_Engineering/README.md)：主力连续合约、log 双向复权、期限结构边界及当前 gold 实验工作流说明；当前结构迁移不代表入口已恢复运行。
@@ -26,12 +26,13 @@
 - [JQ_strategy 金融期货数据规则](../01_project_collection/JQ_strategy/financial_futures_data/AGENTS.md)：正式 silver 日历只读消费、人工聚宽文件传输和项目专属轻量数据库边界。
 - [JQ_strategy 金融期货数据说明](../01_project_collection/JQ_strategy/financial_futures_data/README.md)：人工取数闭环、正式文件路由及逐项建设状态。
 - [JQ_strategy 金融期货范围策略](../01_project_collection/JQ_strategy/financial_futures_data/financial_futures_collection_policy.py)：项目局部中金所金融期货白名单、支持频率与当前聚宽数据就绪时点，不改变正式商品事实生产政策。
-- [国内期货事实采集白名单](../config/futures_fact_collection_policy.py)：日线、分钟线和逐品种交易所报告共用的交易所—品种白名单唯一权威来源。
-- [成交持仓排名特殊案例配置](../config/futures_position_rank_special_cases.py)：已人工核实的特殊案例、完整坏载荷指纹、交易所原文摘要与完整校准值唯一配置来源。
-- [外部市场请求实体配置](../config/external_market_entities.py)：外部市场日历与外部指数事实共用的请求实体、Eastmoney 指标映射及有效期唯一权威来源。
-- [宏观发布系列与可用日配置](../config/macro_release_entities.py)：宏观发布日历、SHIBOR 与宏观事实共用的 25 个系列、来源列、宏观数值偏移、理论频率及版本化可用日规则唯一权威来源。
+- [国内期货事实采集白名单](../config/futures_lakehouse/futures_fact_collection_policy.py)：日线、分钟线和逐品种交易所报告共用的交易所—品种白名单唯一权威来源。
+- [成交持仓排名特殊案例配置](../config/futures_lakehouse/futures_position_rank_special_cases.py)：已人工核实的特殊案例、完整坏载荷指纹、交易所原文摘要与完整校准值唯一配置来源。
+- [外部市场请求实体配置](../config/futures_lakehouse/external_market_entities.py)：外部市场日历与外部指数事实共用的请求实体、Eastmoney 指标映射及有效期唯一权威来源。
+- [宏观发布系列与可用日配置](../config/futures_lakehouse/macro_release_entities.py)：宏观发布日历、SHIBOR 与宏观事实共用的 25 个系列、来源列、宏观数值偏移、理论频率及版本化可用日规则唯一权威来源。
 - [JQData 共享连接边界](../config/jqdata_connection.py)：JQData 认证与 Windows TUN 物理出口绑定的项目级实现；不承载业务采集或写入语义。
 - [config/data_contracts.py](../config/data_contracts.py)：17 张稳定 silver Schema 及 Pandas、Polars、Arrow 转换的可执行契约。
+- [Schema 展示实现](../02_Futures_Lakehouse/notebook_schema_browser.py)：采集与研究 Notebook 共用的 Schema 只读浏览、关键内容选择和完整内容折叠实现。
 - [read_futures_lake_demo.ipynb](read_futures_lake_demo.ipynb)：17 张稳定 silver 表的契约化读取演示，以及不计入 silver 表数的生意社 raw 原文与摘要核对示例。
 - 修改本规范时，必须同步检查以上索引项；数据字段命名、类型、Schema 或转换入口发生变化时，相关文本和代码必须在同一次变更中更新。
 
@@ -123,7 +124,7 @@ calendar_pl_df = read_dataset_polars(
 | `fact_macro_release` | `MACRO_RELEASE_SCHEMA` |
 
 `fact_domestic_spot_basis_daily` 不再属于稳定 silver 契约，也不得继续出现在
-`config/data_contracts.py` 或 silver 读取 Demo 中。旧正式湖若仍有该目录，当前 c02、契约同步和读取 Demo
+`config/data_contracts.py` 或 silver 读取 Demo 中。旧正式湖若仍有该目录，当前 b02、契约同步和读取 Demo
 不得自动删除、迁移、覆盖或把它误认为已完成 raw 归档；其处置必须等待用户另行决定。
 
 生意社国内现货基差链路长期只保存来源原文，不生产结构化 silver 事实。每个 required 日期的 HTTP
@@ -163,8 +164,8 @@ raw 文件不套用 Arrow Schema、Hive Dataset 或 silver metadata；但写入�
 `role_zh` 只能按真实职责填写 `日历维度表` 或 `事实表`，不得恢复含混的“状态表”；日历表的
 `calendar_role_zh` 说明其枚举的预期格点，事实表说明预期格点由哪个直接上游日历规定。
 `dimension_dependencies` 只列直接依赖的 `dim_*` 表，不把 API、库、配置、事实表或质检回写列为维度。
-`update_mode_zh` 必须准确记录所属入口的当前生产水位。b01/c01—c04 默认只推进尾部新增，历史维护由显式
-`--full` 完成；c05/c06 按当前白名单和可信 `is_fetch_completed` 形成待办；其他入口继续服从
+`update_mode_zh` 必须准确记录所属入口的当前生产水位。a01/b01—b04 默认只推进尾部新增，历史维护由显式
+`--full` 完成；b05/b06 按当前白名单和可信 `is_fetch_completed` 形成待办；其他入口继续服从
 “上游当前有效格点 − 下游已经完整落盘的格点”。metadata 必须说明空湖如何自然全建、显式全历史或定向
 维护边界，以及 `--write` 只提交当前计划。`quality_rules_zh` 必须覆盖表级主键、完整性、范围、对账和所属
 提交链路实际执行的复读摘要边界。
@@ -214,20 +215,57 @@ PRIMARY_KEY = FUTURES_VARIETY_CALENDAR_SCHEMA.metadata[
 也不得回写为表级 Schema metadata。不得仅为隐藏三次 metadata 解码而创建 accessor、adapter、数据类或
 其他薄封装；项目级 metadata 完整性验证则可以作为独立的数据契约校验操作集中实现。
 
+正式湖仓的共享业务配置集中在 `config/futures_lakehouse/`，生产者与研究消费者均可直接导入。
+事实采集白名单、外部实体和宏观系列说明当前维护范围及解释口径；已核实特殊案例说明校准依据。
+这些配置不能替代正式数据与日历完成状态对实际可用范围的描述，也不能代替研究项目自己的样本选择。
+例如期货事实白名单缩小时保留既有历史事实，当前白名单不等于湖中全部可用数据。
+配置目录迁移只更新导入与规范链接；`config/data_contracts.py` 的既有 metadata 中旧配置路径保留为
+已经落盘的来源说明标识，对应模块现统一位于 `config/futures_lakehouse/`。不得仅为整理代码路径改写
+Schema metadata 或历史 Parquet，以免影响仍执行精确 metadata 比较的入口。
+湖仓目录扁平化同样不改写既有 Schema metadata 的来源标识：其中旧业务组 b01—b04 对应当前 a01—a04，旧步骤 cNN 对应当前各组的 bNN；实际代码位置与执行顺序以 [湖仓 README](../02_Futures_Lakehouse/README.md) 为准。该映射仅解释历史来源，不定义第二份表契约。
+
 ### 3.3 Notebook 开篇 Schema 契约呈现
 
 直接涉及权威 Arrow Schema 的业务 Notebook，应在开篇呈现当前工作流的 Schema 契约。该呈现是权威
-Schema 的只读投影，不是第二份语义来源。Notebook 使用 `config/notebook_schema_browser.py` 中的同一
-展示实现，只传入当前工作流直接涉及的具名权威 Schema，并按上游依赖在前、当前产出在后的顺序排列。
+Schema 的只读投影，不是第二份语义来源。Notebook 使用 `02_Futures_Lakehouse/notebook_schema_browser.py` 中的同一
+展示实现，传入当前工作流直接涉及的具名权威 Schema，并按上游依赖在前、当前产出在后的顺序排列。
+采集 Notebook 另外显式传入 `lake_root=settings.futures_lake_root` 启用只读数据样例；其他调用方不传路径时仍只浏览契约。
+导入路径在现有项目根定位的命中分支中加入 `candidate_root / "02_Futures_Lakehouse"`，随后直接
+`from notebook_schema_browser import display_schema_metadata`；具体写法见 [湖仓目录规则](../02_Futures_Lakehouse/AGENTS.md#共享配置与-notebook-展示归属)。
 
-界面固定按以下顺序展示：Schema 列表、Schema 下拉框、表级 metadata 表、字段目录表、Field 下拉框、
-单字段完整 metadata 表。Schema 下拉框必须紧邻表级 metadata 表，Field 下拉框必须紧邻单字段完整
-metadata 表；切换 Schema 时必须同步刷新字段目录和字段选项。
+默认界面展示三块表格：Schema 列表、所选表的用途与粒度说明、关键字段目录。宽窗口中后两块并排，窄窗口上下排列。
+Schema 列表保留原有六列横向总览：英文表名、中文表名、字段数、主键、Hive 分区、Schema 版本；
+中英文表名分别成列，不合并或折叠该总览。表选择框紧邻所选表说明；Schema 列表、所选表说明及数据样例三个区块上方使用相同分隔线。
+必须同时考虑这三块表格和按需查看的单字段详情的阅读负担，不得只裁剪 metadata 行数或列数。
+约 2/5 只是减少冗余的参考，不是各表固定配额；不用凑足行数，不要求用户逐表指定取舍。
 
-字段目录表只展示英文字段名、中文字段名、Arrow 类型、结构角色、语义角色和来源系统。结构角色根据当前
-Schema 表级 `primary_key` 和 `partition_columns` metadata 计算，不建立另一份定义；其余字段级 metadata
-保留在单字段完整 metadata 表中。展示代码不得硬编码表名、主键、分区、字段说明或 Schema 版本，不得访问
-API、读取数据湖、产生写入副作用，也不得代替 Schema/metadata 完整性和 Parquet round-trip 校验。展示
+表级默认按职责选择 2—3 项权威 metadata，用“用途”“一行代表”“何时可用”等中文阅读标签呈现，
+保留理解业务必需的 Session、空行情、报告期与可用日期等边界。主键、分区、来源、版本和长质量规则可在完整
+表说明中展开。逐表选择及 Notebook 覆盖关系见
+[采集链路 README](../02_Futures_Lakehouse/README.md#notebook-开篇-schema-契约呈现)。
+选择配置只保存权威 Schema 引用、metadata 键及业务重点字段名，不复制或改写任何契约值，不按字符数截断说明。
+
+默认字段目录只展示主键和逐表选定的业务重点字段，列为“字段”“含义”，并明确显示已展示数与总数。
+主键集合只能从当前 Schema metadata 读取；业务重点选择不是另一份 Schema 或主键定义。完整字段目录点击展开，
+保留所有字段及英文字段名、中文字段名、Arrow 类型、结构角色、语义角色、来源系统，长目录可滚动。
+结构角色仍从当前 Schema 的 `primary_key` 和 `partition_columns` 计算。
+字段详情入口默认折叠，不自动选择第一个字段，也不显示详情表；展开后可从包含所有字段的下拉框中选择查看含义、类型、
+有效单位、取值与空值条件、枚举含义或生成方法，使用中文标签，省略无意义单位和完全重复的补充说明。
+全部原始表级、字段级 metadata 均必须可展开和收起；切换表时清空字段选择与详情，切换字段时完整详情恢复折叠。
+
+数据样例跟随所选 Schema，每次只读一个已有叶分区，默认显示至多 10 行、主键及逐表选定的关键字段（最多 8 列）。
+标题与刷新同排；其下筛选项按网格对齐、标签置于输入框上方；行数与字段开关另排一行，结果提示紧邻样例表。
+“行数”独立选择 10、20、50、100；“显示全部字段”只控制列，保留所选行数。表格在固定高度内滚动，不加载全表。分区候选逐层读取目录，年份和月份默认选择已有的较新值；
+品种、合约、指标候选只来自所选分区的有界窄列读取，并允许手动输入其他值。日期以“全部日期 / 指定日期”切换；指定日期时显示可选取或输入日期的日历控件，全部日期仅取消当前分区内的日期筛选，不扩大读取范围；明细表仍默认聚焦一个已有日期。候选不完整及有界读取未命中时
+必须明确说明，不能把局部样例或未命中解释为全表覆盖或全表无数据。当前筛选的至多 100 行可在内存中复用；缩小行数或切回已有字段不再读盘，刷新和切换分区必须清除缓存并重读；样例内部按主键排序不代表最新记录。
+Schema 和 metadata 始终来自 `config/data_contracts.py`；目标表或分区不存在、没有 Parquet 文件、零行时显示空表头与
+尚未生成数据状态，不创建目录或示例行；筛选无结果与权限、损坏文件、物理 Schema 不兼容等读取错误分别呈现。
+样例读取只核对打开文件的物理兼容性，不重复生产者的完整业务质量验证，不强求历史描述性 metadata 与当前文本一致。
+raw 环节只显示指定归档文件的存在状态、大小及已保存的 SHA-256 文本，不解析响应正文，不把文件存在等同于验收通过。
+
+展示代码不得硬编码 silver 表名、主键、分区、字段说明或 Schema 版本，不得访问 API 或产生写入副作用；
+未显式传入湖仓路径的 Schema 浏览不得读取湖仓。数据样例不得从表根递归扫描完整历史，也不得先全量加载再截取。
+展示不能代替 Schema/metadata 完整性和 Parquet round-trip 校验。展示
 单元格只在交互式 Notebook 内核中运行；深浅色主题、重复执行释放旧 widgets、控件与表格视觉分组均属于
 统一实现的验收要求。
 
@@ -251,7 +289,7 @@ API、读取数据湖、产生写入副作用，也不得代替 Schema/metadata 
 保留在拥有该实验的工作流内，可随研究迭代，不加入本节清单，也不要求同步数据库标准 Demo。
 
 `dim_futures_bar_calendar` 与 `fact_futures_missing_bar` 必须把 `bar_frequency` 作为第一层
-Hive 分区；其他表严格使用各 Schema 的 `partition_columns` metadata 顺序。b01/c01—c07 与 `b02/c03` 的 dirty 完整叶只
+Hive 分区；其他表严格使用各 Schema 的 `partition_columns` metadata 顺序。a01/b01—b07 与 `a02/b03` 的 dirty 完整叶只
 执行一次完整业务 validator，staging 与正式安装只检查物理字段、类型、nullable、表名、主键、分区和
 行数/主键摘要；运行时允许描述性 metadata 与历史文件不同，并以当前 `config/data_contracts.py` 为说明权威。
 其他入口继续按各自既有 staging/正式复读契约执行。分钟线分区增量写入仍必须先通过
@@ -263,23 +301,23 @@ Hive 分区；其他表严格使用各 Schema 的 `partition_columns` metadata �
 
 `dim_futures_variety_calendar` 和 `dim_futures_contract_calendar` 必须来自
 `get_all_securities(["futures"], date=None)` 的完整固定月份合约目录，事实采集白名单不得裁剪维度行。
-`dim_futures_bar_calendar` 与 `dim_futures_exchange_report_calendar` 同样保留完整理论格点。`c04` 不读取或
-解释事实采集白名单，其内容只由 `config/futures_fact_collection_policy.py` 定义。`c05` 和 `c06` 分别在
+`dim_futures_bar_calendar` 与 `dim_futures_exchange_report_calendar` 同样保留完整理论格点。`b04` 不读取或
+解释事实采集白名单，其内容只由 `config/futures_lakehouse/futures_fact_collection_policy.py` 定义。`b05` 和 `b06` 分别在
 完整 `1d`、`1m` 理论格点上窄列向量应用同一政策，通过 `is_fetch_required`、`selection_reason` 回写政策变化，
 且不得删除理论格点。白名单扩大自动回补从未完成历史格点；缩减只停止后续事实采集并清零当前缺失，
-不得删除事实或清除成功批次、实际条数、质量与 c07 证据；再次纳入的已完成格点不得重复拉取。
+不得删除事实或清除成功批次、实际条数、质量与 b07 证据；再次纳入的已完成格点不得重复拉取。
 逐品种交易所报告的同一白名单与覆盖规则由报告日历生产者应用；具体报告还必须同时满足 API 覆盖期及
 交易所—品种支持范围。
 
 `dim_external_market_calendar` 必须保留上游有效自然日与当前请求实体配置形成的完整理论格点：国内现货和
 按日返回整表的 JQData `FUT_GLOBAL_DAILY` 使用 `entity_code=ALL`，Eastmoney 外部指数使用来源
 `INDICATOR_ID`。工作日、交易日和配置有效期只通过 `is_fetch_required` 与中文原因表达，不得删除无需请求日；
-请求实体、指数项目代码、中文名、分类和有效期只由 `config/external_market_entities.py` 定义。
+请求实体、指数项目代码、中文名、分类和有效期只由 `config/futures_lakehouse/external_market_entities.py` 定义。
 
 `domestic_spot_basis/ALL` 的下游完成证据是正式 raw 原文字节、匹配的 SHA-256 sidecar 与外部市场日历状态
 三者共同完整，不再依赖任何结构化事实表。生产待办集合固定为
 `required 日期 −（原文字节与 sidecar 共同完整且日历状态完整的日期）`。原文归档完整但日历状态缺失或陈旧
-时，c02 必须从正式 raw 复读证据并无 API 修复日历；原文缺失或摘要不一致时才重新请求。HTTP 200 的任意
+时，b02 必须从正式 raw 复读证据并无 API 修复日历；原文缺失或摘要不一致时才重新请求。HTTP 200 的任意
 `response.content` 在正式归档和摘要核对成功后，日历统一写为 `fetch_status=success`、`record_count=1`、
 `quality_status=passed`；正文为空、HTML 结构变化和业务内容均不得改变该结论。网络错误或非 200 响应仍不得
 伪装成成功归档。页面结构监测、历史重采、解析、字段提取和结构化事实生产均属于未来另行确认的独立项目。
@@ -290,9 +328,9 @@ required 格点”的无 API 清退范围。清退格点按旧事实自身的 `i
 “期货事实白名单缩减只停止后续采集、不自动删除历史事实”的专门政策。
 
 `dim_macro_release_calendar` 没有直接上游维度表，也不得为了生成理论格点调用 Tushare 或 Eastmoney。
-它必须从 `FUTURES_DATA_START_DATE` 到北京时间当前日，按 `config/macro_release_entities.py` 的 25 个
+它必须从 `FUTURES_DATA_START_DATE` 到北京时间当前日，按 `config/futures_lakehouse/macro_release_entities.py` 的 25 个
 稳定系列、理论频率和版本化可用日规则生成完整水位：SHIBOR 只生成普通工作日，CPI/PPI/PMI 生成月末，
-GDP 生成季末；是否 required 只由项目可用日是否已到决定。政策字段逐值不变时继承 c02/c03 回写状态，
+GDP 生成季末；是否 required 只由项目可用日是否已到决定。政策字段逐值不变时继承 b02/b03 回写状态，
 新增、内部缺口、系列撤销、可用日到达和规则变化都由完整表比较识别。普通写入替换完整
 `dataset_name/year/month` 叶分区，旧 metadata 或旧策略只能在无日期自动模式中整根迁移；staging 与
 正式路径均须通过精确 Schema/metadata、完整叶和完整表逐值复读。该入口本身不得把项目规则可用日描述成
@@ -301,7 +339,7 @@ API 实际发布日期，也不得擅自删除两张下游事实表的历史行�
 `fact_interest_rate_daily` 只消费上述日历中 `dataset_name=interest_rate` 且 required 的系列—日期格点。
 完成集合必须由正式事实和日历状态共同证明；正式事实完整但日历状态陈旧的格点从正式事实无 API 修复，
 事实缺口才按 `year/month` 月度窗口调用 Tushare `pro.shibor`。8 个系列及
-`date,on,1w,2w,1m,3m,6m,9m,1y` 来源映射只从 `config/macro_release_entities.py` 读取；范围响应中只接纳
+`date,on,1w,2w,1m,3m,6m,9m,1y` 来源映射只从 `config/futures_lakehouse/macro_release_entities.py` 读取；范围响应中只接纳
 精确待办期限，不得覆盖已经完整的同月格点。请求日期必须唯一且位于范围内，单次不得超过官方 2000 行；
 非空利率必须为有限数、保留百分比年利率原单位并位于 `[-100, 100]` 硬边界。完整响应中某精确期限没有
 有效值时（Tushare DataFrame 中的 `None`、`pd.NA` 或 `NaN`），事实正式复读 0 行后才可记
@@ -312,7 +350,7 @@ staging 与正式路径通过精确 Schema/metadata 和逐值复读，事实正�
 `fact_macro_release` 只消费上述日历中 `dataset_name=macro_release` 且 required 的系列—报告期格点。
 完成集合必须由正式事实和日历状态共同证明；正式事实完整但日历状态陈旧时从正式事实无 API 修复，
 事实缺口才按 Eastmoney 报告名与 `year/month` 窗口分页请求。17 个系列的报告名、原列、单位和数值偏移
-只从 `config/macro_release_entities.py` 读取；PPI 同比必须使用 `BASE_SAME`，CPI 全国/城市/农村累计与
+只从 `config/futures_lakehouse/macro_release_entities.py` 读取；PPI 同比必须使用 `BASE_SAME`，CPI 全国/城市/农村累计与
 PPI 累计来源是以 100 为基准的累计指数，必须按共享 `source_value_offset=-100.0` 转成累计同比百分比。
 Eastmoney `REPORT_DATE` 使用报告月 1 日编码：CPI/PPI/PMI 归一到该月最后一个自然日，GDP 只允许
 3/6/9/12 月并归一到季末；它不是发布日期。每个报告请求必须冻结首页 `pages/count`，核对后续页元数据、
@@ -331,20 +369,20 @@ Eastmoney `REPORT_DATE` 使用报告月 1 日编码：CPI/PPI/PMI 归一到该�
 - 已取得的响应若不完整或不能无损表达为唯一契约事实，必须先按该生产者的 raw 证据契约留存完整接收载荷、请求坐标、采集时间、摘要和失败原因。只有具有显式且可追溯的归一化或校准规则才可继续提交 silver，否则必须阻断；raw 留存不等于 silver 通过。
 - raw 证据的路径、编码、原子提交、正式复读和保留边界必须在对应生产者迁移时一并确认并同步代码、metadata 与测试。尚未具备该契约的生产者继续执行现有 silver 门禁、失败留痕及已经冻结的显式归一化，不得自行发明通用 raw 路径、新增静默取舍或提前放宽校验。下文的失败、硬失败和拒绝提交均指 silver 验收结果。
 
-- 除 b01 已迁移日常链路和 `b02/c03_warehouse_receipt` 外，每张 silver 表的生产待更新集合仍从契约化格点求差：`上游当前有效格点 − 下游已经完整落盘的格点`。b01/c01—c04 默认只处理可信水位后的尾部新增，历史内部缺口、删除与修订由 `--full` 发现；c05/c06 只以当前白名单和 `is_fetch_completed=false` 形成事实待办。空湖仍由同一默认入口自然全建。
+- 除 a01 已迁移日常链路和 `a02/b03_warehouse_receipt` 外，每张 silver 表的生产待更新集合仍从契约化格点求差：`上游当前有效格点 − 下游已经完整落盘的格点`。a01/b01—b04 默认只处理可信水位后的尾部新增，历史内部缺口、删除与修订由 `--full` 发现；b05/b06 只以当前白名单和 `is_fetch_completed=false` 形成事实待办。空湖仍由同一默认入口自然全建。
 - 下游消费者必须信任生产者正式提交的上游表：正式提交已经证明上游主键、水位、覆盖和完整表级业务质量。消费者仍须精确检查上游 Schema/metadata 的物理兼容性，但不得重新扫描或复算上游已经保证的主键唯一性、日期连续性、范围覆盖和派生质量；只验证未写入上游契约、但确属自身计算前提的局部边界。消费者对自己的输出继续承担完整契约与质量校验；代码收缩按用户确认逐脚本实施，不自动扩大为批量重构。
-- 正式 silver 写入命令不得用日期区间截断自动生产水位。b01/c01、c02、c04 只有 `--full --write` 可正式维护全历史，且 `--full` 与显式日期互斥；c03 允许成对日期或 `--full` 定义来源质检范围；c07 只有带日期或合约边界的 `--force --write` 可正式定向旁证。其他入口显式日期只允许只读检查或写入不同于正式湖的测试湖。
-- `dim_futures_contract_calendar` 默认只处理可信品种日历相对正式表新增的交易日，不再按历史 `active_contract_count` 与 distinct `contract_code` 数差异触发日常 API；无有效 Session 规则的合约 warning 跳过并推进日常水位。成对日期与 `--full` 分别检查指定范围和当前上游全部水位与本地整表，包含来源拉取和双向比较，排除 `updated_at`；`--write` 只提交发现的差异。c03 信任 c02 已提交语义，仍完整验证自己的 API 响应和 dirty 输出叶。
+- 正式 silver 写入命令不得用日期区间截断自动生产水位。a01/b01、b02、b04 只有 `--full --write` 可正式维护全历史，且 `--full` 与显式日期互斥；b03 允许成对日期或 `--full` 定义来源质检范围；b07 只有带日期或合约边界的 `--force --write` 可正式定向旁证。其他入口显式日期只允许只读检查或写入不同于正式湖的测试湖。
+- `dim_futures_contract_calendar` 默认只处理可信品种日历相对正式表新增的交易日，不再按历史 `active_contract_count` 与 distinct `contract_code` 数差异触发日常 API；无有效 Session 规则的合约 warning 跳过并推进日常水位。成对日期与 `--full` 分别检查指定范围和当前上游全部水位与本地整表，包含来源拉取和双向比较，排除 `updated_at`；`--write` 只提交发现的差异。b03 信任 b02 已提交语义，仍完整验证自己的 API 响应和 dirty 输出叶。
 - 空正式表和小规模缺口使用同一规则：空表的已完整格点集合为空，差集自然等于上游全量。下游表必须先读取已由上游生产者正式提交的水位，不能生成或提交超过上游的格点。
-- `fact_futures_daily`、`fact_futures_minute` 与 `fact_overseas_futures_daily` 的来源 OHLC 非空值必须有限；有限数之间的 high/low 跨列关系异常属于必须原值保留的来源质量证据，不得修写或丢弃。生产者仍须把对应格点标为已完成并记录 `warning`；该异常不改变事实计数、不得被日常重拉或缺失审计覆盖为 `passed`，c06 也不得覆盖 schedule 开市证据。日线和分钟线的 NaN/Inf 继续硬失败；境外期货生产者把财务库可空数值列的 `None`、`pd.NA` 和 Pandas `NaN` 缺失标记归一为 Arrow null且不另记 warning，非空非有限数继续硬失败。负数量、重复键、请求范围和 Session 越界仍按各表既有门禁处理。
-- `fact_futures_position_rank_daily` 与 `fact_futures_member_position_daily` 的 b02/c02 生产者串行按 `exchange_code + underlying_code + year + month` 归并 required 待办日，以 JQData `finance.run_query(FUT_MEMBER_POSITION_RANK.day.in_(pending_dates))` 请求月份待办子集。恰好返回 5000 行表示可能截顶，必须丢弃该响应并按排序日期确定性二分；单日仍触顶时硬失败。来源 `rank` 必须是 `1—20` 的整数，且 Top 20 是具体合约每类榜单的边界，不是品种日总行数上限。两张正式事实的格点计数与 `position_rank`、`member_position` 两类报告日历完成状态共同证明格点完整；生产循环只读取、验证和替换目标 `exchange_code/underlying_code/year/month` 事实完整叶及 `dataset_name/exchange_code/year/month` 日历完整叶，不扫描或提交无关表根。该入口不提供 `--full`，不使用 `run_offset_query` 分页、并发或业务自动重试。
+- `fact_futures_daily`、`fact_futures_minute` 与 `fact_overseas_futures_daily` 的来源 OHLC 非空值必须有限；有限数之间的 high/low 跨列关系异常属于必须原值保留的来源质量证据，不得修写或丢弃。生产者仍须把对应格点标为已完成并记录 `warning`；该异常不改变事实计数、不得被日常重拉或缺失审计覆盖为 `passed`，b06 也不得覆盖 schedule 开市证据。日线和分钟线的 NaN/Inf 继续硬失败；境外期货生产者把财务库可空数值列的 `None`、`pd.NA` 和 Pandas `NaN` 缺失标记归一为 Arrow null且不另记 warning，非空非有限数继续硬失败。负数量、重复键、请求范围和 Session 越界仍按各表既有门禁处理。
+- `fact_futures_position_rank_daily` 与 `fact_futures_member_position_daily` 的 a02/b02 生产者串行按 `exchange_code + underlying_code + year + month` 归并 required 待办日，以 JQData `finance.run_query(FUT_MEMBER_POSITION_RANK.day.in_(pending_dates))` 请求月份待办子集。恰好返回 5000 行表示可能截顶，必须丢弃该响应并按排序日期确定性二分；单日仍触顶时硬失败。来源 `rank` 必须是 `1—20` 的整数，且 Top 20 是具体合约每类榜单的边界，不是品种日总行数上限。两张正式事实的格点计数与 `position_rank`、`member_position` 两类报告日历完成状态共同证明格点完整；生产循环只读取、验证和替换目标 `exchange_code/underlying_code/year/month` 事实完整叶及 `dataset_name/exchange_code/year/month` 日历完整叶，不扫描或提交无关表根。该入口不提供 `--full`，不使用 `run_offset_query` 分页、并发或业务自动重试。
 - 交易所报告日历的 `is_fetch_required` 表示当前采集义务，`is_fetch_completed` 是持久完成凭证。政策排除只停止调度并清零当前缺失，不清除完成批次、计数和质量；重新纳入的已完成格点不得重复采集。
 - `fact_futures_position_rank_daily` 与 `fact_futures_member_position_daily` 的生产者遇到同一来源业务键重复行时，只有原始会员标签、排名类别 ID/文字、指标和变化全部一致才允许按权威事实粒度合并；逐会员排名取最小名次，并把对应报告日历永久记为已完成的 `success + warning`。任一来源业务值冲突继续硬失败；已完成 warning 格点不得因质量状态不是 `passed` 而进入日常重拉。
-- `b02/c01a_position_rank_special_case_calibration` 固定先于 c02，且只处理 `config/futures_position_rank_special_cases.py` 显式列出的案例。正式 raw 证据缺失时各请求一次冻结的交易所 URL，只有 HTTP、响应 SHA-256、目标合约和完整 Top 20 同时精确匹配才原子提交；已有证据只复读。c02 只在指定格点的 JQData 成交量榜完整 20 行精确命中冻结坏载荷时，才依据该正式证据整组校准为交易所权威 Top 20；权威载荷原样通过，第三种载荷硬失败，持买仓、持卖仓和其他格点不变。报告日历必须永久保留含案例 ID 和原文摘要的 `success + warning`；该完成凭证不得触发重拉。
-- `fact_futures_warehouse_receipt_daily` 的 `b02/c03` 生产者只以 `warehouse_receipt` 报告日历中 required 且 `is_fetch_completed=false` 的格点作默认待办，信任已完成快照，不扫描 clean 事实历史或在批末复读表根。每个待办日请求一次 API；事实与日历 dirty 叶通过校验和正式安装检查后，才推进日历状态。
-- `b01/c08` 只以 c04 required 且已完成的理论分钟主键减去 c06 正式分钟事实投影的 `contract_code,bar_at` 主键。它信任 c06 正式提交的事实主键、范围、数值与 OHLC 质量，不读取行情值、不调用 c07；只回写实际/缺失计数与检查时间，既有质量结论、旁证及完成状态必须逐值保留。缺失明细与触达的完整日历叶继续协调提交、共同回滚。
-- `b01/c07` 默认只处理 c06 新写入 `fact_futures_minute:formal_empty_session` 且尚无 c07 校对结果的 `suspected_closed` Session；不得计算历史输入指纹探测事实变化。四项比较全部匹配可写 `evidence_level=reconciled`，但分钟缺失的 `quality_status` 必须保持 `warning`。`--force` 只有带日期或合约范围才能写正式湖。
-- 18 阶段默认日常 worker 中 b01 固定为 c01—c07，`--skip-optional-quality` 只删除 c07 且不得恢复未选 `--groups`；c08 不得出现在默认、全量或生产 worker manifest 中，只能由操作员显式执行。
+- `a02/b01a_position_rank_special_case_calibration` 固定先于 b02，且只处理 `config/futures_lakehouse/futures_position_rank_special_cases.py` 显式列出的案例。正式 raw 证据缺失时各请求一次冻结的交易所 URL，只有 HTTP、响应 SHA-256、目标合约和完整 Top 20 同时精确匹配才原子提交；已有证据只复读。b02 只在指定格点的 JQData 成交量榜完整 20 行精确命中冻结坏载荷时，才依据该正式证据整组校准为交易所权威 Top 20；权威载荷原样通过，第三种载荷硬失败，持买仓、持卖仓和其他格点不变。报告日历必须永久保留含案例 ID 和原文摘要的 `success + warning`；该完成凭证不得触发重拉。
+- `fact_futures_warehouse_receipt_daily` 的 `a02/b03` 生产者只以 `warehouse_receipt` 报告日历中 required 且 `is_fetch_completed=false` 的格点作默认待办，信任已完成快照，不扫描 clean 事实历史或在批末复读表根。每个待办日请求一次 API；事实与日历 dirty 叶通过校验和正式安装检查后，才推进日历状态。
+- `a01/b08` 只以 b04 required 且已完成的理论分钟主键减去 b06 正式分钟事实投影的 `contract_code,bar_at` 主键。它信任 b06 正式提交的事实主键、范围、数值与 OHLC 质量，不读取行情值、不调用 b07；只回写实际/缺失计数与检查时间，既有质量结论、旁证及完成状态必须逐值保留。缺失明细与触达的完整日历叶继续协调提交、共同回滚。
+- `a01/b07` 默认只处理 b06 新写入 `fact_futures_minute:formal_empty_session` 且尚无 b07 校对结果的 `suspected_closed` Session；不得计算历史输入指纹探测事实变化。四项比较全部匹配可写 `evidence_level=reconciled`，但分钟缺失的 `quality_status` 必须保持 `warning`。`--force` 只有带日期或合约范围才能写正式湖。
+- 18 阶段默认日常 worker 中 a01 固定为 b01—b07，`--skip-optional-quality` 只删除 b07 且不得恢复未选 `--groups`；b08 不得出现在默认、全量或生产 worker manifest 中，只能由操作员显式执行。
 
 gold 用于下游数据组织、特征探索和复权方法探索，不由本数据库规范统一定义表名、字段、Schema、
 分区或更新方式。某个实验需要落盘时，由所属工作流局部定义并校验其当前输出结构；不得把该实验

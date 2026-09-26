@@ -1,0 +1,36 @@
+{
+  "id": "boudt_2011",
+  "title": "Robust estimation of intraweek periodicity in volatility and jump detection",
+  "authors": [
+    "Kris Boudt",
+    "Christophe Croux",
+    "Sébastien Laurent"
+  ],
+  "year": 2011,
+  "journal": "Journal of Empirical Finance",
+  "volume": "18",
+  "issue": "2",
+  "pages": "353-367",
+  "doi": "10.1016/j.jempfin.2010.11.005",
+  "publisher_url": "https://doi.org/10.1016/j.jempfin.2010.11.005",
+  "author_page_url": "https://sites.google.com/iae-aix.com/slaurent/publications",
+  "pdf_url": "https://www.dropbox.com/scl/fi/xxe28xm1x69yniphjc9q5/Robust_Periodicity.pdf?dl=1&rlkey=r9r2f2ii47860ocubo0rt59ch",
+  "version": "35-page author manuscript linked by Sébastien Laurent; exact manuscript date is not printed; not the 15-page journal pagination",
+  "local_pdf": "literature/papers/boudt_croux_laurent_2011_wp.pdf",
+  "read_scope": "Read complete extracted manuscript, PDF pp.1-35; visually verified title, local bipower scale equation and ShortH/WSD equations on PDF pp.1,8,10. References pp.33-35 reviewed as bibliography, not independently verified.",
+  "main_locators": [
+    "PDF pp.5-8: model and normalization, Eqs.2.1-2.7",
+    "PDF pp.9-10: ShortH and WSD, Eqs.2.8-2.12",
+    "PDF pp.11-13: OLS/ML/TML, Eqs.2.13-2.20",
+    "PDF pp.22-26: filtered jump tests, Eqs.3.3-3.4, Table 2",
+    "PDF p.32: Appendix A specification"
+  ],
+  "access_status": "downloaded_author_linked_manuscript; KU Leuven journal PDF returned HTTP 401; SSRN returned HTTP 403",
+  "access_notes": "Author manuscript conclusion p.31 reverses low/high volatility in one sentence; §3.3 p.24 and Table 2 show the opposite and are used for interpretation.",
+  "pdf_pages": 35,
+  "local_note": "literature/notes/01_boudt_2011.md",
+  "retrieved_on": "2026-09-07",
+  "bytes": 617601,
+  "sha256": "7fb0fe72fa088b1e25e108b5d5084a885a27cf19fa0702bee04e185b2f5405ba",
+  "catalog_role": "core"
+}

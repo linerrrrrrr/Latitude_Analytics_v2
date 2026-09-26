@@ -8,7 +8,57 @@
 /03_Futures_Database/futures_lake/
 
 # Local operations run evidence and control-plane state
-/02_Futures_Lakehouse/a02_Data_Collection_Operations/run_history/
+/02_Futures_Lakehouse/operations/run_history/
+
+# Materialized research data and local backup archives (existing tracked files stay tracked)
+*.parquet
+*.arrow
+*.feather
+*.duckdb
+*.duckdb.wal
+*.sqlite
+*.sqlite3
+*.db
+*.npz
+*.npy
+*.pkl
+*.pickle
+*.zip
+*.gz
+*.xz
+*.pid
+
+# Draft lakes, execution evidence, and one-off local backups
+/00_draft_collection_02/run_status/
+/00_draft_collection_02/test_lakes/
+/00_draft_collection_02/rv1/
+/00_draft_collection_02/t2/
+/00_draft_collection_02/.c08-diag-*/
+/00_draft_collection_02/git_coverage_20260926/
+/00_draft_collection_02/lakehouse_layout_20260926/
+/00_draft_collection_02/migration_reports/
+/00_draft_collection_02/notebook_schema_browser_before_visual_20260926.py
+/00_draft_collection_02/experiment_night_session_attribution/output/
+/00_draft_collection_02/internet_scraper_interface_audit/results/
+/00_draft_collection_02/research_outputs/joinquant_financial_futures_protocol_2026-09-02/
+/00_draft_collection_02/质检交付包/Runoff_inventory.csv
+
+# Keep written experiment analyses; exclude raw execution captures and generated snapshots
+/01_project_collection/JQ_strategy/financial_futures_data/experiment_records/**
+!/01_project_collection/JQ_strategy/financial_futures_data/experiment_records/**/
+!/01_project_collection/JQ_strategy/financial_futures_data/experiment_records/**/*.md
+/01_project_collection/JQ_strategy/volatility_research/supporting_materials/intraday_modeling_research/data/input/
+/01_project_collection/JQ_strategy/volatility_research/supporting_materials/intraday_modeling_research/results/
+/01_project_collection/JQ_strategy/volatility_research/supporting_materials/intraday_modeling_research/runs/
+/01_project_collection/JQ_strategy/volatility_research/supporting_materials/intraday_modeling_research/sources/notebook_snapshot.json
+/05_Old_Projects/futures_lake_pre_rebuild_20260810/
+
+# Read-only legacy files containing embedded credentials; retain locally only
+/05_Old_Projects/old_01_Data_Fetching/b01_Native_Exchange_Data_initial/c00_utils.py
+/05_Old_Projects/old_01_Data_Fetching/b02_Native_Exchange_Data_timeseries/c00_utils.py
+/05_Old_Projects/old_01_Data_Fetching/b03_External_Integrated_Data_initial/c00_utils.py
+/05_Old_Projects/old_01_Data_Fetching/b04_External_Integrated_Data_timeseries/c00_utils.py
+/05_Old_Projects/old_02_Feature_Engineering/utils_00.py
 
 # Python bytecode, caches, and local test output
 __pycache__/

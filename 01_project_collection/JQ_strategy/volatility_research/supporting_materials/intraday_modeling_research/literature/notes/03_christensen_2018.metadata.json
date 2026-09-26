@@ -1,0 +1,36 @@
+{
+  "id": "christensen_hounyo_podolskij_2018",
+  "title": "Is the diurnal pattern sufficient to explain intraday variation in volatility? A nonparametric assessment",
+  "authors": [
+    "Kim Christensen",
+    "Ulrich Hounyo",
+    "Mark Podolskij"
+  ],
+  "year": 2018,
+  "journal": "Journal of Econometrics",
+  "volume": "205",
+  "issue": "2",
+  "pages": "336–362",
+  "doi": "10.1016/j.jeconom.2018.03.016",
+  "publisher_url": "https://doi.org/10.1016/j.jeconom.2018.03.016",
+  "pdf_url": "https://repec.econ.au.dk/repec/creates/rp/17/rp17_30.pdf",
+  "version": "CREATES Research Paper 2017-30, July 2017; working paper rather than the 2018 publisher-typeset version",
+  "local_pdf": "literature/papers/christensen_hounyo_podolskij_2018_working_paper.pdf",
+  "read_scope": "Read sections 1–3; section 4 construction and feasible statistic (printed pp. 14–19); section 5 results discussion (pp. 32–35); sections 6–7 (pp. 35–40). Appendix proofs not checked line by line. PDF pp. 6, 13, 38 inspected visually.",
+  "main_locators": [
+    "Printed p. 4 / PDF p. 6: assumptions D1–D3",
+    "Printed pp. 6–7 / PDF pp. 8–9: equation (6), section 2.3",
+    "Printed pp. 9–11 / PDF pp. 11–13: equations (20), (23), (26)–(27)",
+    "Printed pp. 11–13 / PDF pp. 13–15: equations (31)–(38)",
+    "Printed pp. 14–19 / PDF pp. 16–21: bootstrap; Remark 3",
+    "Printed pp. 35–40 / PDF pp. 37–42: sections 6–7; Table 5; Figures 6–7"
+  ],
+  "access_status": "downloaded_public_university_working_paper",
+  "bytes": 1618004,
+  "sha256": "039e7b0c074f50c6a471ccae673e8238785d1623cd35aacaca6b1ff1b4a616e2",
+  "pdf_page_count": 64,
+  "accessed_on": "2026-09-07",
+  "pdf_pages": 64,
+  "local_note": "literature/notes/03_christensen_2018.md",
+  "catalog_role": "core"
+}

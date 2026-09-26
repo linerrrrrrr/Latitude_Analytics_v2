@@ -1,0 +1,98 @@
+{
+  "artifact": "joinquant-futures-backtest-reference-snapshot",
+  "retrieved_at": "2026-09-02T12:36:54+08:00",
+  "scope": {
+    "asset_class": "futures_only",
+    "commodity_futures_data": "local_database",
+    "financial_futures_data": "manual_joinquant_research_jupyter_export_then_user_download",
+    "project_uses_jqdata_api": false
+  },
+  "jqdata_connection_reference": {
+    "path": "../../../../../config/jqdata_connection.py",
+    "purpose": "reference_only_when_joinquant_refuses_access",
+    "project_runtime_dependency": false,
+    "project_data_path": false
+  },
+  "manual_financial_futures_transfer": {
+    "source_environment": "JoinQuant research Jupyter environment",
+    "steps": [
+      "fetch in the research environment",
+      "save into the research environment directory",
+      "user manually downloads the file",
+      "read or ingest locally after a separate format and schema decision"
+    ],
+    "automated_login_or_download_in_scope": false,
+    "jqdata_api_in_scope": false
+  },
+  "capture": {
+    "canonical_sources": {
+      "api": "https://www.joinquant.com/help/api/help?name=api",
+      "faq": "https://www.joinquant.com/help/api/help?name=faq",
+      "Future": "https://www.joinquant.com/help/api/help?name=Future"
+    },
+    "session_page": "https://test.demo.joinquant.com/help/api/help?name=api",
+    "content_endpoint": "https://test.demo.joinquant.com/help/api/getContent",
+    "content_modules": [
+      "api",
+      "faq",
+      "Future"
+    ],
+    "anonymous_temporary_session": true,
+    "canonical_www_access_was_region_blocked": true
+  },
+  "conversion": {
+    "source": "HTML fragment returned in the content endpoint data field",
+    "reader_format": "GitHub-Flavored Markdown",
+    "tool": "Pandoc",
+    "wrap": "none"
+  },
+  "files": [
+    {
+      "path": "official_snapshot/platform_api.md",
+      "source_module": "api",
+      "size_bytes": 329101,
+      "sha256": "f175f7dc0385e86ea79e64974654dadbcba7edd7c68f4b90f67429abe7d2f30f"
+    },
+    {
+      "path": "official_snapshot/faq.md",
+      "source_module": "faq",
+      "size_bytes": 51949,
+      "sha256": "4ac44d242e626f2da99978b158398c21a1aacbbacf86257b1f1951cd3f9d32b9"
+    },
+    {
+      "path": "official_snapshot/futures_data.md",
+      "source_module": "Future",
+      "size_bytes": 57717,
+      "sha256": "0f7640cb791dc88155ba663995fdffbf1f17327e3e2c20dee5c5582ba622fd65"
+    },
+    {
+      "path": "official_snapshot/source_html/platform_api.html",
+      "source_module": "api",
+      "size_bytes": 357083,
+      "sha256": "d5d507877af1968d503f889a69a10b64fab576f0aad9d2d5f3a1d82fd06d7024"
+    },
+    {
+      "path": "official_snapshot/source_html/faq.html",
+      "source_module": "faq",
+      "size_bytes": 58533,
+      "sha256": "d1000f393afddab43d09d7519152653642fea317b579ef614b398ca44ad4e9f7"
+    },
+    {
+      "path": "official_snapshot/source_html/futures_data.html",
+      "source_module": "Future",
+      "size_bytes": 67256,
+      "sha256": "68e1b07bad52a6759f450d675d25e131cdd19ebf0cb2e2f9cbd1d9b506231659"
+    }
+  ],
+  "retrieval_status": {
+    "official_same_domain_dynamic_content_export_completed": true,
+    "canonical_www_live_export_completed": false,
+    "canonical_www_failure_reason": "JoinQuant returned a region-restriction page through the available network egress.",
+    "content_validation": [
+      "response status and code indicated success",
+      "minimum content length",
+      "required futures heading present",
+      "region-restriction marker absent"
+    ]
+  }
+}

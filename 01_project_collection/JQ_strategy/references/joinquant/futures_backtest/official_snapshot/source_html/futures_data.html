@@ -1,0 +1,2325 @@
+<h2 id="获取期货数据">获取期货数据</h2>
+
+<h3 id="获取期货概况">获取期货概况</h3>
+<p>包含期货的开始时间、结束时间、代码、名称等。</p>
+<p>更多的API可参考<a href="https://www.joinquant.com/api">官方API文档</a></p>
+<h4 id="获取单只期货信息">获取单只期货信息</h4>
+<p>获取单支期货的信息.</p>
+<p><strong>调用方法</strong></p>
+<pre><code class="python language-python">get_security_info(code)
+</code></pre>
+<p><strong>参数</strong></p>
+<ul>
+<li>code: 期货代码</li>
+</ul>
+<p><strong>返回值</strong></p>
+<p>一个对象, 有如下属性:</p>
+<ul>
+<li>display_name # 中文名称</li>
+<li>name # 缩写简称</li>
+<li>start_date # 开始日期, [datetime.date] 类型</li>
+<li>end_date # 结束日期，[datetime.date] 类型</li>
+<li>type # 类型，futures(期货)</li>
+</ul>
+<p><strong>示例</strong></p>
+<pre><code class="python language-python"># 输出沪深300股指期货信息
+get_security_info('IF1605.CCFX')
+</code></pre>
+<h4 id="获取所有期货信息">获取所有期货信息</h4>
+<p>获取平台支持的所有期货数据</p>
+<p><strong>调用方法</strong></p>
+<pre><code>get_all_securities(types=['futures'])
+</code></pre>
+<p>这里请在使用时注意防止未来函数。</p>
+<p>返回</p>
+<ul>
+<li>display_name # 中文名称</li>
+<li>name # 缩写简称</li>
+<li>start_date # 开始日期, [datetime.date] 类型</li>
+<li>end_date # 结束日期，[datetime.date] 类型</li>
+<li>type # 类型，futures(期货)</li>
+</ul>
+<p>一个[pandas.DataFrame]</p>
+<p><strong>示例</strong></p>
+<pre><code class="python language-python">#获取所有期货数据中的前5条
+get_all_securities(['futures']).head()
+
+             display_name   name start_date   end_date     type
+A0501.XDCE       豆一0501  a0501 2003-07-15 2005-01-17  futures
+A0503.XDCE       豆一0503  a0503 2003-09-15 2005-03-14  futures
+A0505.XDCE       豆一0505  a0505 2003-11-17 2005-05-20  futures
+A0507.XDCE       豆一0507  a0507 2004-01-16 2005-07-14  futures
+A0509.XDCE       豆一0509  a0509 2004-03-15 2005-09-14  futures
+</code></pre>
+<h4 id="期货结算价与持仓量">期货结算价与持仓量</h4>
+<p>得到期货在一段时间的的如下的数据:</p>
+<ul>
+<li>futures_sett_price: 期货结算价</li>
+<li>futures_positions: 期货持仓量</li>
+</ul>
+<p><strong>调用方法</strong></p>
+<pre><code class="python language-python">get_extras(info, security_list, start_date=None, end_date=None, df=True):
+</code></pre>
+<p><strong>参数</strong></p>
+<ul>
+<li>info: [‘futures_sett_price’，‘futures_positions’] 中的一个</li>
+<li>security_list: 标的列表</li>
+<li>start_date/end_date: 开始结束日期, 同[get_price]</li>
+<li>df: 返回[pandas.DataFrame]对象还是一个dict, 同[history]</li>
+</ul>
+<p><strong>返回值</strong></p>
+<ul>
+<li>df=True:[pandas.DataFrame]对象, 列索引是期货代号, 行索引是[datetime.datetime]</li>
+</ul>
+<p><strong>示例</strong></p>
+<pre><code class="python language-python">#查询'IF1604.CCFX', 'A9999.XDCE'的期货结算价，dataframe显示
+get_extras('futures_sett_price', ['IF1604.CCFX', 'A9999.XDCE'], start_date='2016-04-06', end_date='2016-04-08',df=True)
+
+            IF1604.CCFX  A9999.XDCE
+2016-04-06       3235.4      3335.0
+2016-04-07       3208.8      3329.0
+2016-04-08       3164.0      3322.0
+</code></pre>
+<p>- df=False
+一个dict, key是基金代号, value是[numpy.ndarray]</p>
+<p><strong>示例</strong></p>
+<pre><code class="python language-python">#查询'IF1604.CCFX', 'A9999.XDCE'的期货结算价，dict显示
+get_extras('futures_sett_price', ['IF1604.CCFX', 'A9999.XDCE'], start_date='2016-04-06', end_date='2016-04-08',df=False)
+
+{'A9999.XDCE': array([ 3335.,  3329.,  3322.]),
+ 'IF1604.CCFX': array([ 3235.4,  3208.8,  3164. ])}
+</code></pre>
+<h3 id="获取期货行情数据">获取期货行情数据</h3>
+
+<h4 id="获取期货行情数据">获取期货行情数据</h4>
+<p>获取期货历史交易数据，<strong>可以通过参数设置获取日k线、分钟k线数据</strong>。获取数据的基本属性如下：</p>
+<ul>
+<li>open: 时间段开始时价格</li>
+<li>close: 时间段结束时价格</li>
+<li>low: 最低价</li>
+<li>high: 最高价</li>
+<li>volume: 成交量</li>
+<li>money: 成交额</li>
+<li>factor: 复权因子,对期货没有意义</li>
+<li>high_limit: 涨停价</li>
+<li>low_limit: 跌停价</li>
+<li>avg: 这段时间的平均价。计算方法（1）天级别：成交额除以成交量再除以合约乘数；（2）分钟级别：用该分钟所有tick的现价乘以该tick的成交量加起来之后，再除以该分钟的成交量。</li>
+<li>pre_close: 前一个单位时间结束时的价格, 按天则是前一天的收盘价（期货中pre_close是前结算价，建议使用- -- get_extras获取结算价）；</li>
+<li>paused: bool值, 这只股票是否停牌, 对期货没有意义</li>
+<li>open_interest 持仓量
+<strong>调用方法</strong></li>
+</ul>
+<pre><code>get_price(security, start_date='2015-01-01', end_date='2015-12-31', frequency='daily', fields=None, skip_paused=False, fq='pre' ,panel=True)
+</code></pre>
+<p><strong>注：设定不同的unit参数，获取日K线或分钟k线，详情见参数。</strong> 这里请在使用时注意防止未来函数.</p>
+<p><strong>参数</strong></p>
+<ul>
+<li><p>security: 一支股票代码或者一个股票代码的list</p></li>
+<li><p>count: <strong>与 start_date 二选一，不可同时使用</strong>. 数量, 返回的结果集的行数, 即表示获取 end_date 之前几个 frequency 的数据</p></li>
+<li><p>start_date: <strong>与 count 二选一，不可同时使用</strong>. 字符串或者 datetime.datetime/datetime.date 对象, 开始时间.</p>
+<ul>
+<li>如果 count 和 start_date 参数都没有, 则 start_date 生效, 值是 '2015-01-01'. 注意:</li>
+<li>当取分钟数据时, 时间可以精确到分钟, 比如: 传入 <code>datetime.datetime(2015, 1, 1, 10, 0, 0)</code> 或者 <code>'2015-01-01 10:00:00'</code>.</li>
+<li>当取分钟数据时, 如果只传入日期, 则日内时间是当日的 00:00:00.</li>
+<li>当取天数据时, 传入的日内时间会被忽略</li></ul></li>
+<li><p>end_date: 格式同上, 结束时间, 默认是'2015-12-31', 包含此日期. <strong>注意: 当取分钟数据时, 如果 end_date 只有日期, 则日内时间等同于 00:00:00, 所以返回的数据是不包括 end_date 这一天的</strong>.</p></li>
+<li><p>frequency: 单位时间长度, 几天或者几分钟, 现在支持'Xd','Xm', 'daily'(等同于'1d'), 'minute'(等同于'1m'), X是一个正整数, 分别表示X天和X分钟(不论是按天还是按分钟回测都能拿到这两种单位的数据), 注意, 当X &gt; 1时, fields只支持['open', 'close', 'high', 'low', 'volume', 'money']这几个标准字段,<strong>合成数据的逻辑见下文</strong>. 默认值是daily</p></li>
+<li><p>fields: 字符串list, 选择要获取的行情数据字段, 默认是None(表示['open', 'close', 'high', 'low', 'volume', 'money']这几个标准字段), 支持的所有字段：['open', 'close', 'low', 'high', 'volume', 'money', 'factor', 'high_limit','low_limit', 'avg', 'pre_close', 'paused','open_interest']。</p></li>
+<li><p>skip_paused: 是否跳过不交易日期(包括停牌, 未上市或者退市后的日期). 如果不跳过, 停牌时会使用停牌前的数据填充(对期货没有停牌的情况), 上市前或者退市后数据都为 nan, 但要注意:</p>
+<ul>
+<li>默认为 False</li>
+<li>当 skip_paused 是 True 时, 获取多个标的时需要将panel参数设置为False(panel结构需要索引对齐)  </li></ul></li>
+<li><p>fq: 复权选项，对期货没有意义</p></li>
+<li><p>panel：在pandas 0.25版后，panel被彻底移除。获取多标的数据时建议设置panel为False，返回等效的dataframe</p></li>
+<li><p>fill_paused：对于停牌股票的价格处理，对期货没有意义  </p></li>
+</ul>
+<p><strong>合成数据的逻辑</strong>  </p>
+<p>当frequency为X天和X分钟时，代表使用以X为长度的滑动窗口进行合并数据。举例：</p>
+<ul>
+<li><p>9:33:00调用get_price获取1个单位的数据，frequency='5min',表示使用上一交易日14:58、14:59、15:00、本交易日9:31、9:32这5根1分钟K线来合成数据；</p></li>
+<li><p>9:37:00调用get_price获取1个单位的数据，frequency='5min',表示使用本交易日9:32、9:33、9:34、9:35、9:36这5根1分钟K线来合成数据；</p></li>
+</ul>
+<p><strong>返回</strong></p>
+<ul>
+<li><strong>请注意, 为了方便比较一只期货的多个属性, 同时也满足对比多只期货的一个属性的需求, 我们在security参数是一只期货和多只期货时返回的结构完全不一样</strong></li>
+<li>如果是一支期货, 则返回[pandas.DataFrame]对象, 行索引是[datetime.datetime]对象, 列索引是行情字段名字, 比如’open’/’close’. 比如: <code>get_price('IC1505.CCFX', start_date='2015-05-06', end_date='2015-05-08')[:2]</code> 返回:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>open</th>
+<th>close</th>
+<th>high</th>
+<th>low</th>
+<th>volume</th>
+<th>money</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-05-06</td>
+<td>8168</td>
+<td>8040.8</td>
+<td>8280.6</td>
+<td>7970</td>
+<td>111973</td>
+</tr>
+<tr>
+<td>2015-05-07</td>
+<td>8020</td>
+<td>7911.4</td>
+<td>8068.0</td>
+<td>7901</td>
+<td>109599</td>
+</tr>
+</tbody>
+</table>
+<p>- 如果是多支期货, 则返回[pandas.Panel]对象(默认panel参数为True), 里面是很多[pandas.DataFrame]对象, 索引是行情字段(open/close/…), 每个[pandas.DataFrame]的行索引是[datetime.datetime]对象, 列索引是期货代号. 比如<code>get_price(['IC1505.CCFX', 'IC1506.CCFX'], start_date='2015-05-06', end_date='2015-05-08')['open'][:2]</code>返回:</p>
+<table>
+<thead>
+<tr>
+<th>IC1505.CCFX</th>
+<th>IC1506.CCFX</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2015-05-06</td>
+<td>8168</td>
+</tr>
+<tr>
+<td>2015-05-07</td>
+<td>8020</td>
+</tr>
+</tbody>
+</table>
+<p><strong>示例</strong></p>
+<pre><code># 获取一支期货
+df = get_price(['IC1505.CCFX', 'IC1506.CCFX'], start_date='2015-05-06', end_date='2015-05-08') # 获取IC1506.CCFX的2015年的按天数据
+df = get_price('IC1506.CCFX', start_date='2015-05-06', end_date='2015-05-08', frequency='minute', fields=['open', 'close']) # 获得IC1506.CCFX的分钟数据, 只获取open+close字段
+
+# 获取多只期货
+panel =  get_price(['IC1505.CCFX', 'IC1506.CCFX'], start_date='2015-05-06', end_date='2015-05-08') # 获取中IC1505和IC1506的天数据, 返回一个[pandas.Panel]
+df_open = panel['open']  # 获取开盘价的[pandas.DataFrame],  行索引是[datetime.datetime]对象, 列索引是期货代号
+df_volume = panel['volume']  # 获取交易量的[pandas.DataFrame]
+df_open['IC1506.CCFX'] # 获取IC1506的开盘价数据
+</code></pre>
+<h4 id="获取期货bar数据">获取期货bar数据</h4>
+<p>获取各种时间周期的 bar 数据， bar 的分割方式与主流股票软件相同， 而且支持返回当前时刻所在 bar 的数据；<br />
+get_bars 开盘时取的bar高开低收都是当天的开盘价，成交量成交额为0；<br />
+get_bars 如果bar个数少于count个，则返回实际个数，并不会填充。<br />
+更详细的get_bars解释，<a href="https://www.joinquant.com/view/community/detail/f05b9cbce3612bb2fad36740551d28be?type=1">【API解析】get_bars 定义和逻辑</a></p>
+<pre><code class="python language-python">get_bars(security, count, unit='1d',fields=['date', 'open','high','low','close'],
+         include_now=False, end_dt=None, fq_ref_date=None, df=False)
+</code></pre>
+<p><strong>参数</strong></p>
+<ul>
+<li>security: 标的代码或包含交易代码的列表,支持一个或多个标的，多个标的用list或tuple。</li>
+<li>count: 大于0的整数，表示获取bar的个数。如果行情数据的bar不足count个，返回的长度则小于count个数。</li>
+<li>unit: bar的时间单位, 支持标准bar和非标准bar<br />
+当unit为'1m', '5m', '15m', '30m', '60m', '120m', '1d', '1w'(一周), '1M'（一月）标准bar时，bar的分割方式与主流股票软件类似，期货的bar各平台也许稍微有差异，我们与文华接近；<br />
+当unit为非上述标准bar时('xm', 例如'3m')，只支持分钟级别的，x需要小于240，以每天的开盘为起始点，每x分钟为一条bar；  </li>
+<li>fields: 获取数据的字段， 支持如下值：'date', 'open', 'close', 'high', 'low', 'volume', 'money', 'open_interest'(持仓量，是期货和期权特有的字段), 'factor'(后复权因子)</li>
+<li>include_now:  取值True 或者False。 表示是否包含当前bar, 比如策略时间是9:33，unit参数为5m， 如果 include_now=True,则返回9:30-9:33这个分钟 bar。</li>
+<li>end_dt：查询的截止时间，支持的类型为datetime.datetime或None或str。默认值为None<br /><ul>
+<li>在回测/模拟环境下默认为context.current_dt</li>
+<li>在投资研究环境下默认为datetime.now()  </li>
+<li>由于bar的最小单位是一分钟，所以end_dt的秒和毫秒没有什么意义，会被替换为0，例如：end_dt=datetime.datetime(2019, 11, 22, 9, 35, 23) 和 end_dt=datetime.datetime(2019, 11, 22, 9, 35, 00) 是一样的  </li></ul></li>
+<li>fq_ref_date：复权基准日期，对期货没有意义</li>
+<li>df:是否返回pandas.DataFrame对象，默认为False，返回的是numpy.ndarray对象</li>
+</ul>
+<p><strong>返回值</strong>  </p>
+<ul>
+<li>df = False<ul>
+<li>若security为字符串格式的标的代码时，返回一个 numpy.ndarry 对象。    </li>
+<li>若security为list或者tuple格式的标的代码时，返回一个dict，key为标的代码，value为numpy.ndarry 对象。   </li></ul></li>
+<li>df = True<br /><ul>
+<li>若security为字符串格式的标的代码时，返回pandas.DataFrame，dataframe 的index是一个整数数组</li>
+<li>若security为list或者tuple格式的标的代码时，返回pandas.DataFrame，dataframe 的index是一个MultiIndex</li></ul></li>
+</ul>
+<p><strong>示例</strong></p>
+<pre><code class="python language-python">get_bars(["ER8888.XZCE", "AP1905.XZCE"], end_dt=datetime.datetime.now(), count=3,include_now=False)
+</code></pre>
+<h4 id="获取期货tick数据">获取期货tick数据</h4>
+<pre><code class="python language-python">get_ticks(security, start_dt, end_dt, count, fields ,skip , df)
+</code></pre>
+<p><strong>支持 2010-01-01 至今的tick数据，提供买一卖一数据。（每0.5秒一次快照）</strong>如果要获取主力合约的tick数据，可以先使用get_dominant_future(underlying_symbol,dt)获取主力合约对应的标的，然后再用get_ticks()获取该合约的tick数据    </p>
+<p><strong>参数</strong>：</p>
+<ul>
+<li><p>security: 股票代码或期货代码</p></li>
+<li><p>start_dt: 开始日期</p></li>
+<li><p>end_dt: 结束日期</p></li>
+<li><p>count: 取出指定时间区间内前多少条的tick数据。</p></li>
+<li><p>fields:  选择要获取的行情数据字段，默认为["time", "current", "high", "low", "volume", "money"]，支持的字段如下：</p></li>
+<li><p>skip:默认为True，过滤掉无成交变化的tick数据；当指定skip=False时，返回的tick数据会保留无成交有盘口变化的tick数据（股票自2019年6月25日以后；期货自2019年8月19日以后）</p></li>
+<li><p>df:默认为False，返回numpy.ndarray格式的tick数据；df=True的时候，返回pandas.Dataframe格式的数据。</p></li>
+<li><p><strong>期货tick返回结果：</strong></p></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>字段名</th>
+<th>说明</th>
+<th>字段类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>datetime</td>
+<td>时间</td>
+<td>datetime</td>
+</tr>
+<tr>
+<td>current</td>
+<td>当前价</td>
+<td>float</td>
+</tr>
+<tr>
+<td>high</td>
+<td>当日最高价</td>
+<td>float</td>
+</tr>
+<tr>
+<td>low</td>
+<td>当日最低价</td>
+<td>float</td>
+</tr>
+<tr>
+<td>volume</td>
+<td>累计成交量（手）</td>
+<td>float</td>
+</tr>
+<tr>
+<td>money</td>
+<td>累计成交额</td>
+<td>float</td>
+</tr>
+<tr>
+<td>position</td>
+<td>持仓量</td>
+<td>float</td>
+</tr>
+<tr>
+<td>a1_v</td>
+<td>一档卖量</td>
+<td>float</td>
+</tr>
+<tr>
+<td>a1_p</td>
+<td>一档卖价</td>
+<td>float</td>
+</tr>
+<tr>
+<td>b1_v</td>
+<td>一档买量</td>
+<td>float</td>
+</tr>
+<tr>
+<td>b1_p</td>
+<td>一档买价</td>
+<td>float</td>
+</tr>
+</tbody>
+</table>
+<p><strong>期货tick数据示例</strong>：</p>
+<pre><code class="python language-python">#获取AU1812期货合约在2018-07-02的tick数据,start_dt和count只能有一个不为None值
+&gt;&gt;&gt;get_ticks('AU1812.XSGE',start_dt='2018-07-02',end_dt='2018-07-03',count=None)
+                        time  current    high     low   volume         money  \
+0    2018-07-02 09:00:00.000   271.90  272.45  271.00  44536.0  1.210032e+10
+1    2018-07-02 09:00:01.000   271.85  272.45  271.00  44664.0  1.213512e+10
+2    2018-07-02 09:00:01.500   271.90  272.45  271.00  44674.0  1.213784e+10
+3    2018-07-02 09:00:02.000   272.00  272.45  271.00  44722.0  1.215089e+10
+4    2018-07-02 09:00:02.500   271.95  272.45  271.00  44748.0  1.215796e+10
+5    2018-07-02 09:00:03.000   271.95  272.45  271.00  44750.0  1.215851e+10
+6    2018-07-02 09:00:03.500   271.90  272.45  271.00  44754.0  1.215960e+10
+7    2018-07-02 09:00:04.000   271.90  272.45  271.00  44778.0  1.216612e+10
+8    2018-07-02 09:00:05.000   271.90  272.45  271.00  44838.0  1.218244e+10
+9    2018-07-02 09:00:05.500   271.90  272.45  271.00  44844.0  1.218407e+10
+10   2018-07-02 09:00:06.000   271.85  272.45  271.00  44886.0  1.219549e+10
+11   2018-07-02 09:00:06.500   271.85  272.45  271.00  44928.0  1.220690e+10
+12   2018-07-02 09:00:07.000   271.85  272.45  271.00  44934.0  1.220854e+10
+13   2018-07-02 09:00:07.500   271.85  272.45  271.00  44970.0  1.221832e+10
+14   2018-07-02 09:00:08.000   271.85  272.45  271.00  44978.0  1.222050e+10
+15   2018-07-02 09:00:08.500   271.85  272.45  271.00  44992.0  1.222431e+10
+16   2018-07-02 09:00:09.000   271.80  272.45  271.00  45042.0  1.223790e+10
+17   2018-07-02 09:00:09.500   271.90  272.45  271.00  45072.0  1.224605e+10
+18   2018-07-02 09:00:10.000   271.85  272.45  271.00  45088.0  1.225040e+10
+19   2018-07-02 09:00:10.500   271.85  272.45  271.00  45114.0  1.225747e+10
+20   2018-07-02 09:00:11.000   271.85  272.45  271.00  45156.0  1.226889e+10
+21   2018-07-02 09:00:11.500   271.80  272.45  271.00  45178.0  1.227487e+10
+22   2018-07-02 09:00:12.000   271.80  272.45  271.00  45190.0  1.227813e+10
+23   2018-07-02 09:00:12.500   271.85  272.45  271.00  45198.0  1.228030e+10
+24   2018-07-02 09:00:13.000   271.80  272.45  271.00  45246.0  1.229335e+10
+25   2018-07-02 09:00:14.000   271.85  272.45  271.00  45256.0  1.229607e+10
+26   2018-07-02 09:00:14.500   271.80  272.45  271.00  45266.0  1.229879e+10
+27   2018-07-02 09:00:15.000   271.80  272.45  271.00  45324.0  1.231455e+10
+28   2018-07-02 09:00:15.500   271.80  272.45  271.00  45328.0  1.231564e+10
+29   2018-07-02 09:00:16.000   271.80  272.45  271.00  45330.0  1.231618e+10
+...                      ...      ...     ...     ...      ...           ...
+5559 2018-07-02 23:57:07.000   272.05  272.95  272.05  42474.0  1.157839e+10
+5560 2018-07-02 23:57:08.000   272.10  272.95  272.05  42480.0  1.158002e+10
+5561 2018-07-02 23:57:15.000   272.10  272.95  272.05  42482.0  1.158057e+10
+5562 2018-07-02 23:57:40.000   272.10  272.95  272.05  42522.0  1.159145e+10
+5563 2018-07-02 23:57:50.000   272.10  272.95  272.05  42536.0  1.159526e+10
+5564 2018-07-02 23:57:54.000   272.10  272.95  272.05  42540.0  1.159635e+10
+5565 2018-07-02 23:58:13.000   272.10  272.95  272.05  42542.0  1.159689e+10
+5566 2018-07-02 23:58:27.000   272.10  272.95  272.05  42544.0  1.159744e+10
+5567 2018-07-02 23:58:29.000   272.10  272.95  272.05  42546.0  1.159798e+10
+5568 2018-07-02 23:58:38.000   272.05  272.95  272.05  42554.0  1.160016e+10
+5569 2018-07-02 23:58:48.000   272.05  272.95  272.05  42562.0  1.160233e+10
+5570 2018-07-02 23:58:49.000   272.05  272.95  272.05  42570.0  1.160451e+10
+5571 2018-07-02 23:58:51.000   272.10  272.95  272.05  42572.0  1.160505e+10
+5572 2018-07-02 23:59:00.000   272.05  272.95  272.05  42576.0  1.160614e+10
+5573 2018-07-02 23:59:15.000   272.10  272.95  272.05  42578.0  1.160669e+10
+5574 2018-07-02 23:59:21.000   272.05  272.95  272.05  42580.0  1.160723e+10
+5575 2018-07-02 23:59:25.000   272.05  272.95  272.05  42708.0  1.164205e+10
+5576 2018-07-02 23:59:26.000   272.05  272.95  272.05  42710.0  1.164260e+10
+5577 2018-07-02 23:59:26.500   272.05  272.95  272.05  42712.0  1.164314e+10
+5578 2018-07-02 23:59:28.000   272.05  272.95  272.05  42714.0  1.164369e+10
+5579 2018-07-02 23:59:30.000   272.10  272.95  272.05  42716.0  1.164423e+10
+5580 2018-07-02 23:59:35.000   272.00  272.95  272.00  42786.0  1.166327e+10
+5581 2018-07-02 23:59:35.500   272.00  272.95  272.00  42922.0  1.170027e+10
+5582 2018-07-02 23:59:37.000   272.05  272.95  272.00  42942.0  1.170571e+10
+5583 2018-07-02 23:59:37.500   272.05  272.95  272.00  42966.0  1.171224e+10
+5584 2018-07-02 23:59:38.000   272.05  272.95  272.00  42974.0  1.171442e+10
+5585 2018-07-02 23:59:43.000   272.05  272.95  272.00  42978.0  1.171550e+10
+5586 2018-07-02 23:59:45.000   272.05  272.95  272.00  42986.0  1.171768e+10
+5587 2018-07-02 23:59:46.000   272.05  272.95  272.00  42994.0  1.171986e+10
+5588 2018-07-02 23:59:59.000   272.05  272.95  272.00  42998.0  1.172094e+10
+
+      position    a1_p   a1_v    b1_p   b1_v
+0     365404.0  271.90    1.0  271.85    5.0
+1     365338.0  271.90    2.0  271.85   10.0
+2     365336.0  271.90    3.0  271.85   10.0
+3     365300.0  272.00  191.0  271.95    4.0
+4     365300.0  272.00  193.0  271.90    4.0
+5     365302.0  271.95    4.0  271.90   14.0
+6     365298.0  271.95   16.0  271.90   20.0
+7     365310.0  271.95   31.0  271.90   18.0
+8     365296.0  271.90    2.0  271.85   26.0
+9     365292.0  271.90    7.0  271.85   26.0
+10    365270.0  271.90    2.0  271.85   16.0
+11    365258.0  271.90   21.0  271.80   46.0
+12    365256.0  271.90   30.0  271.85    3.0
+13    365258.0  271.90   14.0  271.85    9.0
+14    365256.0  271.90   14.0  271.85    7.0
+15    365250.0  271.90   17.0  271.85   14.0
+16    365232.0  271.85    6.0  271.80   32.0
+17    365212.0  271.90   20.0  271.85   12.0
+18    365204.0  271.90   26.0  271.85    8.0
+19    365202.0  271.90   28.0  271.85   20.0
+20    365208.0  271.85    6.0  271.80   28.0
+21    365220.0  271.90   25.0  271.80   26.0
+22    365214.0  271.85    3.0  271.80   26.0
+23    365212.0  271.85    7.0  271.80   27.0
+24    365184.0  271.85   14.0  271.80   26.0
+25    365190.0  271.85   16.0  271.80   31.0
+26    365180.0  271.85   30.0  271.80   29.0
+27    365160.0  271.85   29.0  271.80    1.0
+28    365156.0  271.85   33.0  271.80    5.0
+29    365154.0  271.85   33.0  271.80   13.0
+...        ...     ...    ...     ...    ...
+5559  361640.0  272.10    4.0  272.05   95.0
+5560  361636.0  272.10   21.0  272.05   95.0
+5561  361636.0  272.10   21.0  272.05   98.0
+5562  361666.0  272.10   13.0  272.05   98.0
+5563  361666.0  272.10    9.0  272.05  103.0
+5564  361666.0  272.10   15.0  272.05  102.0
+5565  361666.0  272.10   39.0  272.05   96.0
+5566  361666.0  272.10   61.0  272.05   84.0
+5567  361664.0  272.10   61.0  272.05   84.0
+5568  361662.0  272.10   70.0  272.05   81.0
+5569  361662.0  272.10   66.0  272.05   77.0
+5570  361662.0  272.10   62.0  272.05   72.0
+5571  361662.0  272.10   76.0  272.05   72.0
+5572  361662.0  272.10   67.0  272.05   70.0
+5573  361662.0  272.10   80.0  272.05   76.0
+5574  361664.0  272.10   72.0  272.05   75.0
+5575  361630.0  272.10   82.0  272.05   11.0
+5576  361632.0  272.10   92.0  272.05   10.0
+5577  361634.0  272.10   92.0  272.05    9.0
+5578  361634.0  272.10   92.0  272.05   23.0
+5579  361634.0  272.10   91.0  272.05   23.0
+5580  361634.0  272.05   69.0  272.00  295.0
+5581  361578.0  272.05   57.0  272.00  281.0
+5582  361570.0  272.05   12.0  272.00  289.0
+5583  361562.0  272.10   96.0  272.05   14.0
+5584  361554.0  272.10   97.0  272.05   25.0
+5585  361554.0  272.10   97.0  272.05   24.0
+5586  361546.0  272.10   95.0  272.05   20.0
+5587  361538.0  272.10   91.0  272.05   16.0
+5588  361534.0  272.10   85.0  272.05   17.0
+
+[5589 rows x 11 columns]
+</code></pre>
+<h3 id="获取期货交易统计数据">获取期货交易统计数据</h3>
+
+<h4 id="获取期货龙虎榜数据">获取期货龙虎榜数据</h4>
+<pre><code class="python language-python">from jqdata import finance
+finance.run_query(query(finance.FUT_MEMBER_POSITION_RANK).filter(finance.FUT_MEMBER_POSITION_RANK.code==code).limit(n))
+</code></pre>
+<p>描述：记录各个期货交易所对不同商品下的期货合约，记录该交易所会员持仓排名前20的信息。（每天更新）</p>
+<p>获取期货交易所会员持仓（龙虎榜）</p>
+<p><strong>参数：</strong></p>
+<ul>
+<li><strong>query(finance.FUT_MEMBER_POSITION_RANK)</strong>：表示从finance.FUT_MEMBER_POSITION_RANK这张表中查询期货龙虎榜数据，还可以指定所要查询的字段名，格式如下：query(库名.表名.字段名1，库名.表名.字段名2），多个字段用逗号分隔进行提取；query函数的更多用法详见：<a href="http://docs.sqlalchemy.org/en/rel_1_0/orm/query.html">sqlalchemy.orm.query.Query对象</a></li>
+<li><strong>finance.FUT_MEMBER_POSITION_RANK</strong>：收录了期货龙虎榜数据，表结构和字段信息如下：</li>
+</ul>
+<p><strong>字段设计</strong> </p>
+<table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>中文名称</th>
+<th>字段类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>day</td>
+<td>交易日</td>
+<td>date</td>
+<td></td>
+</tr>
+<tr>
+<td>code</td>
+<td>合约编码</td>
+<td>varchar(12)</td>
+<td>同一商品根据交割日的不同对应不同的期货合约，比如：'CU1807.XSGE'</td>
+</tr>
+<tr>
+<td>exchange</td>
+<td>交易所编码</td>
+<td>varchar(10)</td>
+<td>英文编码 XSGE：上海期货交易所， XDCE：大连商品交易所， XZCE：郑州商品交易所， CCFX：中国金融期货交易所， XINE:上海能源中心 , GFEX : 广期所</td>
+</tr>
+<tr>
+<td>exchange_name</td>
+<td>交易所名称</td>
+<td>varchar(30)</td>
+<td></td>
+</tr>
+<tr>
+<td>underlying_code</td>
+<td>标的编码</td>
+<td>varchar(10)</td>
+<td></td>
+</tr>
+<tr>
+<td>underlying_name</td>
+<td>标的名称</td>
+<td>varchar(50)</td>
+<td></td>
+</tr>
+<tr>
+<td>rank_type_ID</td>
+<td>排名类别编码</td>
+<td>int</td>
+<td>501001-成交量排名, 501002-持买单量排名， 501003-持卖单量排名</td>
+</tr>
+<tr>
+<td>rank_type</td>
+<td>排名类别</td>
+<td>varchar(50)</td>
+<td>包含:成交量排名，持买单量排名，持卖单量排名</td>
+</tr>
+<tr>
+<td>rank</td>
+<td>排名</td>
+<td>int</td>
+<td></td>
+</tr>
+<tr>
+<td>member_name</td>
+<td>会员简称</td>
+<td>varchar(50)</td>
+<td></td>
+</tr>
+<tr>
+<td>indicator</td>
+<td>统计指标</td>
+<td>int</td>
+<td>统计指标根据排名类别确定，分别代表：成交量，持买单量，持卖单量。单位：手</td>
+</tr>
+<tr>
+<td>indicator_increase</td>
+<td>统计指标比上交易日增减</td>
+<td>int</td>
+<td>单位：手</td>
+</tr>
+</tbody>
+</table>
+<p>一手：是指交易单位,也就是一张合约所代表的单位数量的标的物，一般根据品种有所不同,比如：大豆一手是10吨，铜一手是5吨，国债期货交易单位是钱，一手几万元。</p>
+<p><strong>交易所编码</strong></p>
+<table>
+<thead>
+<tr>
+<th>交易所名称</th>
+<th>编码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>上海期货交易所</td>
+<td>XSGE</td>
+</tr>
+<tr>
+<td>大连商品交易所</td>
+<td>XDCE</td>
+</tr>
+<tr>
+<td>郑州商品交易所</td>
+<td>XZCE</td>
+</tr>
+<tr>
+<td>中国金融期货交易所</td>
+<td>CCFX</td>
+</tr>
+</tbody>
+</table>
+<p><strong>排名类别编码</strong></p>
+<table>
+<thead>
+<tr>
+<th>交易所名称</th>
+<th>编码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>成交量排名</td>
+<td>501001</td>
+</tr>
+<tr>
+<td>持买单量排名</td>
+<td>501002</td>
+</tr>
+<tr>
+<td>持卖单量排名</td>
+<td>501003</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>filter(finance.FUT_MEMBER_POSITION_RANK.code==code)</strong>：指定筛选条件，通过finance.FUT_MEMBER_POSITION_RANK.code==code可以指定你想要查询的合约编码；除此之外，还可以对表中其他字段指定筛选条件，如finance.FUT_MEMBER_POSITION_RANK.rank_type_ID=="501001"，表示按成交量排名查询龙虎榜数据；多个筛选条件用英文逗号分隔。</li>
+<li><strong>limit(n)</strong>：限制返回的数据条数，n指定返回条数。</li>
+</ul>
+<p><strong>返回结果：</strong></p>
+<ul>
+<li>返回一个 dataframe，每一行对应数据表中的一条数据， 列索引是您所查询的字段名称</li>
+</ul>
+<p><strong>注意：</strong></p>
+<ol>
+<li><strong>为了防止返回数据量过大, 我们每次最多返回4000行</strong></li>
+<li>不能进行连表查询，即同时查询多张表的数据</li>
+</ol>
+<p><strong>示例：</strong></p>
+<pre><code class="python language-python">#查询A1905.XDCE最新一个交易日的持仓量龙虎榜数据
+q=query(finance.FUT_MEMBER_POSITION_RANK.day,
+        finance.FUT_MEMBER_POSITION_RANK.code,
+        finance.FUT_MEMBER_POSITION_RANK.rank_type,
+        finance.FUT_MEMBER_POSITION_RANK.rank,
+        finance.FUT_MEMBER_POSITION_RANK.member_name,
+finance.FUT_MEMBER_POSITION_RANK.indicator,).filter(finance.FUT_MEMBER_POSITION_RANK.code=='A1905.XDCE',finance.FUT_MEMBER_POSITION_RANK.rank_type_ID==501002).order_by(finance.FUT_MEMBER_POSITION_RANK.day.desc()).limit(20)
+df=finance.run_query(q)
+print(df)
+
+           day        code rank_type  rank member_name  indicator
+0   2018-12-05  A1905.XDCE    持买单量排名     7        兴证期货       1753
+1   2018-12-05  A1905.XDCE    持买单量排名     8        广发期货       1575
+2   2018-12-05  A1905.XDCE    持买单量排名     6        华泰期货       1792
+3   2018-12-05  A1905.XDCE    持买单量排名     5        永安期货       1977
+4   2018-12-05  A1905.XDCE    持买单量排名     4        一德期货       2072
+5   2018-12-05  A1905.XDCE    持买单量排名     3        五矿经易       2424
+6   2018-12-05  A1905.XDCE    持买单量排名     2        国投安信       2959
+7   2018-12-05  A1905.XDCE    持买单量排名     1        华安期货       4525
+8   2018-12-05  A1905.XDCE    持买单量排名    20        宏源期货        621
+9   2018-12-05  A1905.XDCE    持买单量排名     9        广州金控       1271
+10  2018-12-05  A1905.XDCE    持买单量排名    10        国泰君安       1184
+11  2018-12-05  A1905.XDCE    持买单量排名    11        浙商期货       1121
+12  2018-12-05  A1905.XDCE    持买单量排名    18        中国国际        681
+13  2018-12-05  A1905.XDCE    持买单量排名    17        南华期货        746
+14  2018-12-05  A1905.XDCE    持买单量排名    16        申银万国        772
+15  2018-12-05  A1905.XDCE    持买单量排名    15        北京首创        921
+16  2018-12-05  A1905.XDCE    持买单量排名    14        中信期货       1013
+17  2018-12-05  A1905.XDCE    持买单量排名    13        东证期货       1067
+18  2018-12-05  A1905.XDCE    持买单量排名    12        信达期货       1079
+19  2018-12-05  A1905.XDCE    持买单量排名    19        徽商期货        625
+</code></pre>
+<h4 id="获取期货仓单数据">获取期货仓单数据</h4>
+<pre><code class="python language-python">from jqdata import finance
+finance.run_query(query(finance.FUT_WAREHOUSE_RECEIPT).filter(finance.FUT_WAREHOUSE_RECEIPT.underlying_code==underlying_code).limit(n))
+</code></pre>
+<p>描述：期货仓单是指由期货交易所指定交割仓库，按照期货交易所指定的程序，签发的符合合约规定质量的<strong>实物提货凭证</strong>。记录了交易所所有期货实物的库存情况以及变更情况。</p>
+<p><strong>参数：</strong></p>
+<ul>
+<li><strong>query(finance.FUT_WAREHOUSE_RECEIPT)</strong>：表示从finance.FUT_WAREHOUSE_RECEIPT这张表中查询期货仓单数据，还可以指定所要查询的字段名，格式如下：query(库名.表名.字段名1，库名.表名.字段名2），多个字段用逗号分隔进行提取；query函数的更多用法详见：<a href="http://docs.sqlalchemy.org/en/rel_1_0/orm/query.html">sqlalchemy.orm.query.Query对象</a></li>
+<li><strong>finance.FUT_WAREHOUSE_RECEIPT</strong>：收录了期货仓单数据，表结构和字段信息如下：</li>
+</ul>
+<p><strong>字段设计</strong></p>
+<table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>中文名称</th>
+<th>字段类型</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>day</td>
+<td>日期</td>
+<td>date</td>
+<td></td>
+</tr>
+<tr>
+<td>exchange</td>
+<td>交易所编码</td>
+<td>varchar(10)</td>
+<td>英文编码</td>
+</tr>
+<tr>
+<td>exchange_name</td>
+<td>交易所名称</td>
+<td>varchar(30)</td>
+<td>上海期货交易所，大连商品交易所，郑州商商品交易所，中国金融期货交易所, 上海能源中心 , 广期所</td>
+</tr>
+<tr>
+<td>underlying_code</td>
+<td>品种编码</td>
+<td>varchar(10)</td>
+<td></td>
+</tr>
+<tr>
+<td>product_name</td>
+<td>品种名称</td>
+<td>varchar(20)</td>
+<td></td>
+</tr>
+<tr>
+<td>warehouse_name</td>
+<td>仓库名称</td>
+<td>varchar(20)</td>
+<td>上期所：将地区和仓库数据合并成一条，仓库名称=“地区”+“仓库”。大商所：仓库名称存在多个不同的名字的，取第一个字体加粗的仓库名称。郑商所：不区分品牌，对每个仓库取仓库小计值</td>
+</tr>
+<tr>
+<td>warehouse_receipt_number</td>
+<td>今日期货仓单</td>
+<td>int</td>
+<td></td>
+</tr>
+<tr>
+<td>unit</td>
+<td>单位</td>
+<td>varchar(10)</td>
+<td></td>
+</tr>
+<tr>
+<td>warehouse_receipt_number_increase</td>
+<td>比昨日增减</td>
+<td>int</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>交易所名称编码</strong></p>
+<table>
+<thead>
+<tr>
+<th>交易所名称</th>
+<th>编码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>上海期货交易所</td>
+<td>XSGE</td>
+</tr>
+<tr>
+<td>大连商品交易所</td>
+<td>XDCE</td>
+</tr>
+<tr>
+<td>郑州商商品交易所</td>
+<td>XZCE</td>
+</tr>
+<tr>
+<td>中国金融期货交易所</td>
+<td>CCFX</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>filter(finance.FUT_WAREHOUSE_RECEIPT.underlying_code==underlying_code)</strong>：指定筛选条件，通过finance.FUT_WAREHOUSE_RECEIPT.underlying_code==underlying_code可以指定你想要查询的品种；除此之外，还可以对表中其他字段指定筛选条件；多个筛选条件用英文逗号分隔。</li>
+<li><strong>limit(n)</strong>：限制返回的数据条数，n指定返回条数。</li>
+</ul>
+<p><strong>返回结果：</strong></p>
+<ul>
+<li>返回一个 dataframe，每一行对应数据表中的一条数据， 列索引是您所查询的字段名称</li>
+</ul>
+<p><strong>注意：</strong></p>
+<ol>
+<li><strong>为了防止返回数据量过大, 我们每次最多返回4000行</strong></li>
+<li>不能进行连表查询，即同时查询多张表的数据</li>
+</ol>
+<p><strong>示例：</strong></p>
+<pre><code class="python language-python">#查询品种为铜（'CU')的2018年12月05日的仓单数据
+q=query(finance.FUT_WAREHOUSE_RECEIPT.day,
+        finance.FUT_WAREHOUSE_RECEIPT.underlying_code,
+        finance.FUT_WAREHOUSE_RECEIPT.warehouse_name,
+finance.FUT_WAREHOUSE_RECEIPT.warehouse_receipt_number).filter(finance.FUT_WAREHOUSE_RECEIPT.underlying_code=='CU',finance.FUT_WAREHOUSE_RECEIPT.day=='2018-12-05').order_by(finance.FUT_WAREHOUSE_RECEIPT.day.desc())
+df=finance.run_query(q)
+print(df)
+
+           day underlying_code warehouse_name  warehouse_receipt_number
+0   2018-12-05              CU        上海-上海裕强                         0
+1   2018-12-05              CU        上海-上港物流                      3524
+2   2018-12-05              CU       上海-世天威洋山                         0
+3   2018-12-05              CU    上海-中储临港(保税)                         0
+4   2018-12-05              CU        上海-中储吴淞                      5238
+5   2018-12-05              CU        上海-中储大场                       224
+6   2018-12-05              CU      上海-中海华东宝山                      2804
+7   2018-12-05              CU        上海-同盛松江                       177
+8   2018-12-05              CU    上海-同盛洋山(保税)                         0
+9   2018-12-05              CU       上海-国储外高桥                         0
+10  2018-12-05              CU        上海-国储天威                       199
+11  2018-12-05              CU     上海-外运华东张华浜                        25
+12  2018-12-05              CU        上海-期晟公司                       200
+13  2018-12-05              CU        上海-裕强闵行                      2111
+14  2018-12-05              CU       广东-八三O黄浦                      9141
+15  2018-12-05              CU        广东-南储仓储                      5025
+16  2018-12-05              CU      江苏-上港物流苏州                         0
+17  2018-12-05              CU        江苏-中储无锡                     10517
+18  2018-12-05              CU        江苏-常州融达                      6787
+19  2018-12-05              CU        江苏-无锡国联                      1349
+20  2018-12-05              CU       江苏-添马行物流                       202
+21  2018-12-05              CU        江西-江西国储                      1238
+22  2018-12-05              CU      浙江-国储837处                      4205
+23  2018-12-05              CU       浙江-宁波九龙仓                         0
+</code></pre>
+<h3 id="期货手续费及保证金">期货手续费及保证金</h3>
+
+<h4 id="获取期货手续费">获取期货手续费</h4>
+<pre><code class="python language-python">from jqdata import finance
+finance.run_query(query(finance.FUT_CHARGE).filter(finance.FUT_CHARGE.day==date).limit(n))
+</code></pre>
+<p>描述：获取期货手续费。注意这是结算参数，正常是盘后更新，但是盘前也可以根据公告推导,因此盘前(含夜盘)是推算得到的，准确的结算参数需要在盘后 17:00 之后获取</p>
+<p><strong>参数：</strong></p>
+<ul>
+<li><strong>query(finance.FUT_CHARGE)</strong>：表示从finance.FUT_CHARGE这张表中查询期货手续费数据，还可以指定所要查询的字段名，格式如下：query(库名.表名.字段名1，库名.表名.字段名2），多个字段用逗号分隔进行提取；query函数的更多用法详见：<a href="http://docs.sqlalchemy.org/en/rel_1_0/orm/query.html">sqlalchemy.orm.query.Query对象</a></li>
+<li><strong>finance.FUT_CHARGE</strong>：收录了期货手续费数据，表结构和字段信息如下：</li>
+</ul>
+<p><strong>字段设计</strong></p>
+<table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>中文名称</th>
+<th>字段类型</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>day</td>
+<td>日期</td>
+<td>date</td>
+<td></td>
+</tr>
+<tr>
+<td>code</td>
+<td>标的代码</td>
+<td>varchar(12)</td>
+<td></td>
+</tr>
+<tr>
+<td>exchange</td>
+<td>交易所编码</td>
+<td>varchar(10)</td>
+<td>英文编码</td>
+</tr>
+<tr>
+<td>exchange_name</td>
+<td>交易所名称</td>
+<td>varchar(30)</td>
+<td></td>
+</tr>
+<tr>
+<td>unit</td>
+<td>计量单位</td>
+<td>varchar(10)</td>
+<td>'元/手' 或者 '‱'</td>
+</tr>
+<tr>
+<td>clearance_charge</td>
+<td>平仓手续费</td>
+<td>DECIMAL(19, 4)</td>
+<td>上期所/能源中心,郑商所,中金所为交易手续费</td>
+</tr>
+<tr>
+<td>opening_charge</td>
+<td>开仓手续费</td>
+<td>DECIMAL(19, 4)</td>
+<td>上期所//能源中心,郑商所,中金所不支持 , (大商所和广期所一般等于平仓手续费)</td>
+</tr>
+<tr>
+<td>short_clearance_charge</td>
+<td>短平手续费</td>
+<td>DECIMAL(19, 4)</td>
+<td>大商所和广期所是短平手续费,郑商所为平今,上期货//能源中心和中金所根据折扣率换算</td>
+</tr>
+<tr>
+<td>short_opening_charge</td>
+<td>短开手续费</td>
+<td>DECIMAL(19, 4)</td>
+<td>仅大商所(一般等于短平)和广期所支持</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>filter(finance.FUT_CHARGE.code==code)</strong>：指定筛选条件，通过finance.FUT_CHARGE.code==code可以指定你想要查询的标的；除此之外，还可以对表中其他字段指定筛选条件；多个筛选条件用英文逗号分隔。</li>
+<li><strong>limit(n)</strong>：限制返回的数据条数，n指定返回条数。</li>
+</ul>
+<p><strong>返回结果：</strong></p>
+<ul>
+<li>返回一个 dataframe，每一行对应数据表中的一条数据， 列索引是您所查询的字段名称</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="python language-python">#查询SI2312的2022年12月22日的手续费数据
+from jqdata import finance
+df = finance.run_query(query(finance.FUT_CHARGE).filter(finance.FUT_CHARGE.day == '2022-12-22',
+                                                  finance.FUT_CHARGE.code == "SI2312.GFEX"
+                                                  ))
+print(df)
+
+        id        date  ... short_clearance_charge short_opening_charge
+0  1389520  2022-12-22  ...                    1.0                  1.0
+
+[1 rows x 10 columns]
+</code></pre>
+<h4 id="获取期货保证金">获取期货保证金</h4>
+<pre><code class="python language-python">from jqdata import finance
+finance.run_query(query(finance.FUT_MARGIN).filter(finance.FUT_MARGIN.day==date).limit(n))
+</code></pre>
+<p>描述：获取期货保证金(结算参数)。</p>
+<p><strong>参数：</strong></p>
+<ul>
+<li><strong>query(finance.FUT_MARGIN)</strong>：表示从finance.FUT_MARGIN这张表中查询期货保证金数据，还可以指定所要查询的字段名，格式如下：query(库名.表名.字段名1，库名.表名.字段名2），多个字段用逗号分隔进行提取；query函数的更多用法详见：<a href="http://docs.sqlalchemy.org/en/rel_1_0/orm/query.html">sqlalchemy.orm.query.Query对象</a></li>
+<li><strong>finance.FUT_MARGIN</strong>：收录了期货保证金数据，表结构和字段信息如下：</li>
+</ul>
+<p><strong>字段设计</strong></p>
+<table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>中文名称</th>
+<th>字段类型</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>day</td>
+<td>日期</td>
+<td>date</td>
+<td></td>
+</tr>
+<tr>
+<td>code</td>
+<td>标的代码</td>
+<td>varchar(12)</td>
+<td></td>
+</tr>
+<tr>
+<td>exchange</td>
+<td>交易所编码</td>
+<td>varchar(10)</td>
+<td>英文编码</td>
+</tr>
+<tr>
+<td>exchange_name</td>
+<td>交易所名称</td>
+<td>varchar(30)</td>
+<td></td>
+</tr>
+<tr>
+<td>specul_buy_margin_rate</td>
+<td>投机买保证金率</td>
+<td>DECIMAL(19, 4)</td>
+<td>上期所,大商所,广期所为交易保证金(投机),中金所为多头保证金, 郑商所为交易保证金</td>
+</tr>
+<tr>
+<td>specul_sell_margin_rate</td>
+<td>投机卖保证金率</td>
+<td>DECIMAL(19, 4)</td>
+<td>上期所/能源中心,大商所,广期所为交易保证金(投机),中金所为空头保证金, 郑商所为交易保证金</td>
+</tr>
+<tr>
+<td>hedg_buy_margin_rate</td>
+<td>套保买保证金率</td>
+<td>DECIMAL(19, 4)</td>
+<td>上期所/能源中心,大商所,广期所为交易保证金(套保)</td>
+</tr>
+<tr>
+<td>hedg_sell_margin_rate</td>
+<td>套保卖保证金率</td>
+<td>DECIMAL(19, 4)</td>
+<td>上期所/能源中心,大商所,广期所为交易保证金(套保)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>filter(finance.FUT_MARGIN.code==code)</strong>：指定筛选条件，通过finance.FUT_MARGIN.code==code可以指定你想要查询的标的；除此之外，还可以对表中其他字段指定筛选条件；多个筛选条件用英文逗号分隔。</li>
+<li><strong>limit(n)</strong>：限制返回的数据条数，n指定返回条数。</li>
+</ul>
+<p><strong>返回结果：</strong></p>
+<ul>
+<li>返回一个 dataframe，每一行对应数据表中的一条数据， 列索引是您所查询的字段名称</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="python language-python">#查询SI2312的2022年12月22日的保证金数据
+from jqdata import finance
+df = finance.run_query(query(finance.FUT_MARGIN).filter(finance.FUT_MARGIN.day == '2022-12-22',
+                                                  finance.FUT_MARGIN.code == "SI2312.GFEX"
+                                                  ))
+print(df)
+
+     id        date  ... hedg_buy_margin_rate hedg_sell_margin_rate
+0  637002  2022-12-22  ...                 10.0                  10.0
+
+[1 rows x 9 columns]
+</code></pre>
+<h2 id="期货列表">期货列表</h2>
+
+<h3 id="金融期货列表">金融期货列表</h3>
+<p>提供当前时间段内有效的金融期货合约数据（如行情数据等），具体调用方法可以参考<a href="https://www.joinquant.com/api#api%E6%96%87%E6%A1%A3">API文档</a>.(温馨提示：鉴于内容太多, 可使用<code>Ctrl + F</code>进行搜索)可使用<code>get_all_securities(['futures'])</code>获取当前阶段的金融期货列表包含期货代码、名称，起止日期等信息。或登录<a href="http://www.cffex.com.cn/">中金所官网</a>进行查询。</p>
+<h3>支持的金融期货种类</h3>
+<h4>1. 沪深300指数期货合约表</h4>
+<table>
+<thead>
+<tr>
+<th>信息</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>合约标的</td>
+<td>沪深300指数</td>
+</tr>
+<tr>
+<td>合约乘数</td>
+<td>每点300元</td>
+</tr>
+<tr>
+<td>报价单位</td>
+<td>指数点</td>
+</tr>
+<tr>
+<td>最小变动价位</td>
+<td>0.2点</td>
+</tr>
+<tr>
+<td>合约月份</td>
+<td>当月、下月及随后两个季月</td>
+</tr>
+<tr>
+<td>交易时间</td>
+<td>上午：9:30-11:30，下午：13:00-15:00</td>
+</tr>
+<tr>
+<td>每日价格最大波动限制</td>
+<td>上一个交易日结算价的±10%</td>
+</tr>
+<tr>
+<td>最低交易保证金</td>
+<td>合约价值的8%</td>
+</tr>
+<tr>
+<td>最后交易日</td>
+<td>合约到期月份的第三个周五，遇国家法定假日顺延</td>
+</tr>
+<tr>
+<td>交割日期</td>
+<td>同最后交易日</td>
+</tr>
+<tr>
+<td>交割方式</td>
+<td>现金交割</td>
+</tr>
+<tr>
+<td>交易代码</td>
+<td>IF</td>
+</tr>
+<tr>
+<td>上市交易所</td>
+<td>中国金融期货交易所</td>
+</tr>
+</tbody>
+</table>
+<h4>2. 上证50股指期货合约表</h4>
+<table>
+<thead>
+<tr>
+<th>信息</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>合约标的</td>
+<td>上证50指数</td>
+</tr>
+<tr>
+<td>合约乘数</td>
+<td>每点300元</td>
+</tr>
+<tr>
+<td>报价单位</td>
+<td>指数点</td>
+</tr>
+<tr>
+<td>最小变动价位</td>
+<td>0.2点</td>
+</tr>
+<tr>
+<td>合约月份</td>
+<td>当月、下月及随后两个季月</td>
+</tr>
+<tr>
+<td>交易时间</td>
+<td>上午： 9:30-11:30，下午：13:00-15:00</td>
+</tr>
+<tr>
+<td>每日价格最大波动限制</td>
+<td>上一个交易日结算价的±10%</td>
+</tr>
+<tr>
+<td>最低交易保证金</td>
+<td>合约价值的8%</td>
+</tr>
+<tr>
+<td>最后交易日</td>
+<td>合约到期月份的第三个周五，遇国家法定假日顺延</td>
+</tr>
+<tr>
+<td>交割日期</td>
+<td>同最后交易日</td>
+</tr>
+<tr>
+<td>交割方式</td>
+<td>现金交割</td>
+</tr>
+<tr>
+<td>交易代码</td>
+<td>IH</td>
+</tr>
+<tr>
+<td>上市交易所</td>
+<td>中国金融期货交易所</td>
+</tr>
+</tbody>
+</table>
+<h4>3. 中证500股指期货合约表</h4>
+<table>
+<thead>
+<tr>
+<th>信息</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>合约标的</td>
+<td>中证500指数</td>
+</tr>
+<tr>
+<td>合约乘数</td>
+<td>每点200元</td>
+</tr>
+<tr>
+<td>报价单位</td>
+<td>指数点</td>
+</tr>
+<tr>
+<td>最小变动价位</td>
+<td>0.2点</td>
+</tr>
+<tr>
+<td>合约月份</td>
+<td>当月、下月及随后两个季月</td>
+</tr>
+<tr>
+<td>交易时间</td>
+<td>上午： 9:30-11:30, 下午：13:00-15:00</td>
+</tr>
+<tr>
+<td>每日价格最大波动限制</td>
+<td>上一个交易日结算价的±10%</td>
+</tr>
+<tr>
+<td>最低交易保证金</td>
+<td>合约价值的8%</td>
+</tr>
+<tr>
+<td>最后交易日</td>
+<td>合约到期月份的第三个周五，遇国家法定假日顺延</td>
+</tr>
+<tr>
+<td>交割日期</td>
+<td>同最后交易日</td>
+</tr>
+<tr>
+<td>交割方式</td>
+<td>现金交割</td>
+</tr>
+<tr>
+<td>交易代码</td>
+<td>IC</td>
+</tr>
+<tr>
+<td>上市交易所</td>
+<td>中国金融期货交易所</td>
+</tr>
+</tbody>
+</table>
+<h4>4. 中证1000股指期货合约表</h4>
+<table>
+<thead>
+<tr>
+<th>信息</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>合约标的</td>
+<td>中证1000指数</td>
+</tr>
+<tr>
+<td>合约乘数</td>
+<td>每点200元</td>
+</tr>
+<tr>
+<td>报价单位</td>
+<td>指数点</td>
+</tr>
+<tr>
+<td>最小变动价位</td>
+<td>0.2点</td>
+</tr>
+<tr>
+<td>合约月份</td>
+<td>当月、下月及随后两个季月</td>
+</tr>
+<tr>
+<td>交易时间</td>
+<td>上午： 9:30-11:30, 下午：13:00-15:00</td>
+</tr>
+<tr>
+<td>每日价格最大波动限制</td>
+<td>上一个交易日结算价的±10%</td>
+</tr>
+<tr>
+<td>最低交易保证金</td>
+<td>合约价值的8%</td>
+</tr>
+<tr>
+<td>最后交易日</td>
+<td>合约到期月份的第三个周五，遇国家法定假日顺延</td>
+</tr>
+<tr>
+<td>交割日期</td>
+<td>同最后交易日</td>
+</tr>
+<tr>
+<td>交割方式</td>
+<td>现金交割</td>
+</tr>
+<tr>
+<td>交易代码</td>
+<td>IM</td>
+</tr>
+<tr>
+<td>上市交易所</td>
+<td>中国金融期货交易所</td>
+</tr>
+</tbody>
+</table>
+<h4>5. 2年期国债期货合约表</h4>
+<table>
+<thead>
+<tr>
+<th>信息</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>合约标的</td>
+<td>面值为200万元人民币、票面利率为3%的名义中短期国债</td>
+</tr>
+<tr>
+<td>可交割国债</td>
+<td>发行期限不高于5年，合约到期月份首日剩余期限为1.5-2.25年的记账式附息国债</td>
+</tr>
+<tr>
+<td>报价方式</td>
+<td>百元净价报价</td>
+</tr>
+<tr>
+<td>最小变动价位</td>
+<td>0.005元</td>
+</tr>
+<tr>
+<td>合约月份</td>
+<td>最近的三个季月（3月、6月、9月、12月中的最近三个月循环）</td>
+</tr>
+<tr>
+<td>交易时间</td>
+<td>9:15 - 11:30, 13:00 - 15:15</td>
+</tr>
+<tr>
+<td>最后交易日交易时间</td>
+<td>9:15 - 11:30</td>
+</tr>
+<tr>
+<td>每日价格最大波动限制</td>
+<td>上一交易日结算价的±0.5%</td>
+</tr>
+<tr>
+<td>最低交易保证金</td>
+<td>合约价值的0.5%</td>
+</tr>
+<tr>
+<td>最后交易日</td>
+<td>合约到期月份的第二个星期五</td>
+</tr>
+<tr>
+<td>最后交割日</td>
+<td>最后交易日后的第三个交易日</td>
+</tr>
+<tr>
+<td>交割方式</td>
+<td>实物交割</td>
+</tr>
+<tr>
+<td>交易代码</td>
+<td>TS</td>
+</tr>
+<tr>
+<td>上市交易所</td>
+<td>中国金融期货交易所</td>
+</tr>
+</tbody>
+</table>
+<h4>6. 5年期国债期货合约表</h4>
+<table>
+<thead>
+<tr>
+<th>信息</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>合约标的</td>
+<td>面值为100万元人民币、票面利率为3%的名义中期国债</td>
+</tr>
+<tr>
+<td>可交割国债</td>
+<td>合约到期月份首日剩余期限为4-5.25年的记账式附息国债</td>
+</tr>
+<tr>
+<td>报价方式</td>
+<td>百元净价报价</td>
+</tr>
+<tr>
+<td>最小变动价位</td>
+<td>0.005元</td>
+</tr>
+<tr>
+<td>合约月份</td>
+<td>最近的三个季月（3月、6月、9月、12月中的最近三个月循环）</td>
+</tr>
+<tr>
+<td>交易时间</td>
+<td>09:15—11:30， 13:00—15:15</td>
+</tr>
+<tr>
+<td>最后交易日交易时间</td>
+<td>09:15—11:30</td>
+</tr>
+<tr>
+<td>每日价格最大波动限制</td>
+<td>上一交易日结算价的±1.2%</td>
+</tr>
+<tr>
+<td>最低交易保证金</td>
+<td>合约价值的1%</td>
+</tr>
+<tr>
+<td>最后交易日</td>
+<td>合约到期月份的第二个星期五</td>
+</tr>
+<tr>
+<td>最后交割日</td>
+<td>最后交易日后的第三个交易日</td>
+</tr>
+<tr>
+<td>交割方式</td>
+<td>实物交割</td>
+</tr>
+<tr>
+<td>交易代码</td>
+<td>TF</td>
+</tr>
+<tr>
+<td>上市交易所</td>
+<td>中国金融期货交易所</td>
+</tr>
+</tbody>
+</table>
+<h4>7. 10年期国债期货合约表</h4>
+<table>
+<thead>
+<tr>
+<th>信息</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>合约标的</td>
+<td>面值为100万元人民币、票面利率为3%的名义长期国债</td>
+</tr>
+<tr>
+<td>可交割国债</td>
+<td>合约到期月份首日剩余期限为6.5-10.25年的记账式附息国债</td>
+</tr>
+<tr>
+<td>报价方式</td>
+<td>百元净价报价</td>
+</tr>
+<tr>
+<td>最小变动价位</td>
+<td>0.005元</td>
+</tr>
+<tr>
+<td>合约月份</td>
+<td>最近的三个季月（3月、6月、9月、12月中的最近三个月循环）</td>
+</tr>
+<tr>
+<td>交易时间</td>
+<td>9:15 - 11:30，13:00 - 15:15</td>
+</tr>
+<tr>
+<td>最后交易日交易时间</td>
+<td>9:15 - 11:30</td>
+</tr>
+<tr>
+<td>每日价格最大波动限制</td>
+<td>上一交易日结算价的±2%</td>
+</tr>
+<tr>
+<td>最低交易保证金</td>
+<td>合约价值的2%</td>
+</tr>
+<tr>
+<td>最后交易日</td>
+<td>合约到期月份的第二个星期五</td>
+</tr>
+<tr>
+<td>最后交割日</td>
+<td>最后交易日后的第三个交易日</td>
+</tr>
+<tr>
+<td>交割方式</td>
+<td>实物交割</td>
+</tr>
+<tr>
+<td>交易代码</td>
+<td>T</td>
+</tr>
+<tr>
+<td>上市交易所</td>
+<td>中国金融期货交易所</td>
+</tr>
+</tbody>
+</table>
+<h4>8. 30年国指期货合约表</h4>
+<table>
+<thead>
+<tr>
+<th>信息</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>合约标的</td>
+<td>面值为100万元人民币、票面利率为3%的名义超长期国债</td>
+</tr>
+<tr>
+<td>可交割国债</td>
+<td>发行期限不高于30年，合约到期月份首日剩余期限不低于25年的记账式附息国债</td>
+</tr>
+<tr>
+<td>报价方式</td>
+<td>百元净价报价</td>
+</tr>
+<tr>
+<td>最小变动价位</td>
+<td>0.01元</td>
+</tr>
+<tr>
+<td>合约月份</td>
+<td>最近的三个季月（3月、6月、9月、12月中的最近三个月循环）</td>
+</tr>
+<tr>
+<td>交易时间</td>
+<td>9:30 - 11:30, 13:00 - 15:15</td>
+</tr>
+<tr>
+<td>最后交易日交易时间</td>
+<td>9:30 - 11:30</td>
+</tr>
+<tr>
+<td>每日价格最大波动限制</td>
+<td>上一交易日结算价的±3.5%</td>
+</tr>
+<tr>
+<td>最低交易保证金</td>
+<td>合约价值的3.5%</td>
+</tr>
+<tr>
+<td>最后交易日</td>
+<td>合约到期月份的第二个星期五</td>
+</tr>
+<tr>
+<td>最后交割日</td>
+<td>最后交易日后的第三个交易日</td>
+</tr>
+<tr>
+<td>交割方式</td>
+<td>实物交割</td>
+</tr>
+<tr>
+<td>交易代码</td>
+<td>TL</td>
+</tr>
+<tr>
+<td>上市交易所</td>
+<td>中国金融期货交易所</td>
+</tr>
+</tbody>
+</table>
+<h3 id="商品期货列表">商品期货列表</h3>
+<p>提供当前时间段内有效的商品期货期货合约数据（如行情数据等），具体调用方法可以参考API文档。</p>
+<p>指数合约的合成规则：使用该品种内所有正在交易的合约， 按照持仓量加权计算。</p>
+<p>具体的合约代码请查看下面的：主力合约及品种指数</p>
+<h3 id="主力连续合约及品种指数">主力连续合约及品种指数</h3>
+<h3>中金所</h3>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>主力合约代码</th>
+<th>指数合约代码</th>
+<th>开始时间</th>
+<th>退市时间</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>沪深300合约</td>
+<td>IF9999.CCFX</td>
+<td>IF8888.CCFX</td>
+<td>2010-04-16</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>5年期国债合约</td>
+<td>TF9999.CCFX</td>
+<td>TF8888.CCFX</td>
+<td>2013-09-06</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>10年期国债合约</td>
+<td>T9999.CCFX</td>
+<td>T8888.CCFX</td>
+<td>2015-03-20</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>中证500合约</td>
+<td>IC9999.CCFX</td>
+<td>IC8888.CCFX</td>
+<td>2015-04-16</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>上证50合约</td>
+<td>IH9999.CCFX</td>
+<td>IH8888.CCFX</td>
+<td>2015-04-16</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2年期国债合约</td>
+<td>TS9999.CCFX</td>
+<td>TS8888.CCFX</td>
+<td>2018-08-17</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>中证1000合约</td>
+<td>IM9999.CCFX</td>
+<td>IM8888.CCFX</td>
+<td>2022-07-22</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>30年期国债合约</td>
+<td>TL9999.CCFX</td>
+<td>TL8888.CCFX</td>
+<td>2023-04-21</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3>广期所</h3>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>主力合约代码</th>
+<th>指数合约代码</th>
+<th>开始时间</th>
+<th>退市时间</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>工业硅合约</td>
+<td>SI9999.GFEX</td>
+<td>SI8888.GFEX</td>
+<td>2022-12-22</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>碳酸锂合约</td>
+<td>LC9999.GFEX</td>
+<td>LC8888.GFEX</td>
+<td>2023-07-21</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>多晶硅合约</td>
+<td>PS9999.GFEX</td>
+<td>PS8888.GFEX</td>
+<td>2024-12-26</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3>大商所</h3>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>主力合约代码</th>
+<th>指数合约代码</th>
+<th>开始时间</th>
+<th>退市时间</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>豆一合约</td>
+<td>A9999.XDCE</td>
+<td>A8888.XDCE</td>
+<td>2005-01-03</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>豆二合约</td>
+<td>B9999.XDCE</td>
+<td>B8888.XDCE</td>
+<td>2005-01-03</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>豆粕合约</td>
+<td>M9999.XDCE</td>
+<td>M8888.XDCE</td>
+<td>2005-01-03</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>玉米合约</td>
+<td>C9999.XDCE</td>
+<td>C8888.XDCE</td>
+<td>2005-01-03</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>豆油合约</td>
+<td>Y9999.XDCE</td>
+<td>Y8888.XDCE</td>
+<td>2006-01-09</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>聚乙烯合约</td>
+<td>L9999.XDCE</td>
+<td>L8888.XDCE</td>
+<td>2007-07-31</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>棕榈油合约</td>
+<td>P9999.XDCE</td>
+<td>P8888.XDCE</td>
+<td>2007-10-29</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>聚氯乙烯合约</td>
+<td>V9999.XDCE</td>
+<td>V8888.XDCE</td>
+<td>2009-05-25</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>焦炭合约</td>
+<td>J9999.XDCE</td>
+<td>J8888.XDCE</td>
+<td>2011-04-15</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>焦煤合约</td>
+<td>JM9999.XDCE</td>
+<td>JM8888.XDCE</td>
+<td>2013-03-22</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>铁矿石合约</td>
+<td>I9999.XDCE</td>
+<td>I8888.XDCE</td>
+<td>2013-10-18</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>鸡蛋合约</td>
+<td>JD9999.XDCE</td>
+<td>JD8888.XDCE</td>
+<td>2013-11-08</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>胶合板合约</td>
+<td>BB9999.XDCE</td>
+<td>BB8888.XDCE</td>
+<td>2013-12-06</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>纤维板合约</td>
+<td>FB9999.XDCE</td>
+<td>FB8888.XDCE</td>
+<td>2013-12-06</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>聚丙烯合约</td>
+<td>PP9999.XDCE</td>
+<td>PP8888.XDCE</td>
+<td>2014-02-28</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>玉米淀粉合约</td>
+<td>CS9999.XDCE</td>
+<td>CS8888.XDCE</td>
+<td>2014-12-19</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>乙二醇合约</td>
+<td>EG9999.XDCE</td>
+<td>EG8888.XDCE</td>
+<td>2018-12-10</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>粳米合约</td>
+<td>RR9999.XDCE</td>
+<td>RR8888.XDCE</td>
+<td>2019-08-16</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>苯乙烯合约</td>
+<td>EB9999.XDCE</td>
+<td>EB8888.XDCE</td>
+<td>2019-09-26</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>液化石油气合约</td>
+<td>PG9999.XDCE</td>
+<td>PG8888.XDCE</td>
+<td>2020-03-30</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>生猪合约</td>
+<td>LH9999.XDCE</td>
+<td>LH8888.XDCE</td>
+<td>2021-01-08</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>原木合约</td>
+<td>LG9999.XDCE</td>
+<td>LG8888.XDCE</td>
+<td>2024-11-18</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3>上海国际能源交易中心</h3>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>主力合约代码</th>
+<th>指数合约代码</th>
+<th>开始时间</th>
+<th>退市时间</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原油合约</td>
+<td>SC9999.XINE</td>
+<td>SC8888.XINE</td>
+<td>2018-03-26</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>20号胶合约</td>
+<td>NR9999.XINE</td>
+<td>NR8888.XINE</td>
+<td>2019-08-12</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>低硫燃料油合约</td>
+<td>LU9999.XINE</td>
+<td>LU8888.XINE</td>
+<td>2020-06-22</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>阴极铜合约</td>
+<td>BC9999.XINE</td>
+<td>BC8888.XINE</td>
+<td>2020-11-19</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>集运指数（欧线）合约</td>
+<td>EC9999.XINE</td>
+<td>EC8888.XINE</td>
+<td>2023-08-18</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3>上期所</h3>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>主力合约代码</th>
+<th>指数合约代码</th>
+<th>开始时间</th>
+<th>退市时间</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>铝合约</td>
+<td>AL9999.XSGE</td>
+<td>AL8888.XSGE</td>
+<td>2005-01-03</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>天然橡胶合约</td>
+<td>RU9999.XSGE</td>
+<td>RU8888.XSGE</td>
+<td>2005-01-03</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>燃料油合约</td>
+<td>FU9999.XSGE</td>
+<td>FU8888.XSGE</td>
+<td>2005-01-03</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>铜合约</td>
+<td>CU9999.XSGE</td>
+<td>CU8888.XSGE</td>
+<td>2005-01-03</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>锌合约</td>
+<td>ZN9999.XSGE</td>
+<td>ZN8888.XSGE</td>
+<td>2007-03-26</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>黄金合约</td>
+<td>AU9999.XSGE</td>
+<td>AU8888.XSGE</td>
+<td>2008-01-09</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>线材合约</td>
+<td>WR9999.XSGE</td>
+<td>WR8888.XSGE</td>
+<td>2009-03-27</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>螺纹钢合约</td>
+<td>RB9999.XSGE</td>
+<td>RB8888.XSGE</td>
+<td>2009-03-27</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>铅合约</td>
+<td>PB9999.XSGE</td>
+<td>PB8888.XSGE</td>
+<td>2011-03-24</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>白银合约</td>
+<td>AG9999.XSGE</td>
+<td>AG8888.XSGE</td>
+<td>2012-05-10</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>石油沥青合约</td>
+<td>BU9999.XSGE</td>
+<td>BU8888.XSGE</td>
+<td>2013-10-09</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>热轧卷板合约</td>
+<td>HC9999.XSGE</td>
+<td>HC8888.XSGE</td>
+<td>2014-03-21</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>锡合约</td>
+<td>SN9999.XSGE</td>
+<td>SN8888.XSGE</td>
+<td>2015-03-27</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>镍合约</td>
+<td>NI9999.XSGE</td>
+<td>NI8888.XSGE</td>
+<td>2015-03-27</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>纸浆合约</td>
+<td>SP9999.XSGE</td>
+<td>SP8888.XSGE</td>
+<td>2018-11-27</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>不锈钢合约</td>
+<td>SS9999.XSGE</td>
+<td>SS8888.XSGE</td>
+<td>2019-09-25</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>氧化铝合约</td>
+<td>AO9999.XSGE</td>
+<td>AO8888.XSGE</td>
+<td>2023-06-19</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>丁二烯橡胶合约</td>
+<td>BR9999.XSGE</td>
+<td>BR8888.XSGE</td>
+<td>2023-07-28</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3>郑商所</h3>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>主力合约代码</th>
+<th>指数合约代码</th>
+<th>开始时间</th>
+<th>退市时间</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>硬白小麦合约</td>
+<td>WT9999.XZCE</td>
+<td>WT8888.XZCE</td>
+<td>2005-01-03</td>
+<td>2012-11-22</td>
+<td></td>
+</tr>
+<tr>
+<td>强麦合约</td>
+<td>WS9999.XZCE</td>
+<td>WS8888.XZCE</td>
+<td>2005-01-03</td>
+<td>2013-05-23</td>
+<td>WS为旧的强麦合约代码，自WS1305停止执行</td>
+</tr>
+<tr>
+<td>绿豆合约</td>
+<td>GN9999.XZCE</td>
+<td>GN8888.XZCE</td>
+<td>2005-01-03</td>
+<td>2010-03-23</td>
+<td></td>
+</tr>
+<tr>
+<td>棉花合约</td>
+<td>CF9999.XZCE</td>
+<td>CF8888.XZCE</td>
+<td>2005-01-03</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>白糖合约</td>
+<td>SR9999.XZCE</td>
+<td>SR8888.XZCE</td>
+<td>2006-01-06</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>PTA合约</td>
+<td>TA9999.XZCE</td>
+<td>TA8888.XZCE</td>
+<td>2006-12-18</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>菜籽油合约</td>
+<td>RO9999.XZCE</td>
+<td>RO8888.XZCE</td>
+<td>2007-06-08</td>
+<td>2013-05-15</td>
+<td>RO为旧的菜籽油合约,自RO1305停止执行</td>
+</tr>
+<tr>
+<td>早籼稻合约</td>
+<td>ER9999.XZCE</td>
+<td>ER8888.XZCE</td>
+<td>2009-04-20</td>
+<td>2013-05-23</td>
+<td>ER为旧的早籼稻合约,自ER1305停止执行</td>
+</tr>
+<tr>
+<td>甲醇合约</td>
+<td>ME9999.XZCE</td>
+<td>ME8888.XZCE</td>
+<td>2011-10-28</td>
+<td>2015-05-15</td>
+<td>ME为旧的甲醇合约代码，自ME1505停止执行</td>
+</tr>
+<tr>
+<td>普麦合约</td>
+<td>PM9999.XZCE</td>
+<td>PM8888.XZCE</td>
+<td>2012-01-17</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>菜籽油合约</td>
+<td>OI9999.XZCE</td>
+<td>OI8888.XZCE</td>
+<td>2012-07-16</td>
+<td></td>
+<td>OI为新的菜籽油合约,自OI1307开始执行</td>
+</tr>
+<tr>
+<td>早籼稻合约</td>
+<td>RI9999.XZCE</td>
+<td>RI8888.XZCE</td>
+<td>2012-07-24</td>
+<td></td>
+<td>RI为新的早籼稻合约,自RI1307开始执行</td>
+</tr>
+<tr>
+<td>强麦合约</td>
+<td>WH9999.XZCE</td>
+<td>WH8888.XZCE</td>
+<td>2012-07-24</td>
+<td></td>
+<td>WH为新的强麦合约代码，自WH1307开始执行</td>
+</tr>
+<tr>
+<td>玻璃合约</td>
+<td>FG9999.XZCE</td>
+<td>FG8888.XZCE</td>
+<td>2012-12-03</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>油菜籽合约</td>
+<td>RS9999.XZCE</td>
+<td>RS8888.XZCE</td>
+<td>2012-12-28</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>菜籽粕合约</td>
+<td>RM9999.XZCE</td>
+<td>RM8888.XZCE</td>
+<td>2012-12-28</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>动力煤合约</td>
+<td>TC9999.XZCE</td>
+<td>TC8888.XZCE</td>
+<td>2013-09-26</td>
+<td>2016-04-08</td>
+<td>TC为旧的动力煤合约，自TC1605停止执行</td>
+</tr>
+<tr>
+<td>粳稻谷合约</td>
+<td>JR9999.XZCE</td>
+<td>JR8888.XZCE</td>
+<td>2013-11-18</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>甲醇合约</td>
+<td>MA9999.XZCE</td>
+<td>MA8888.XZCE</td>
+<td>2014-06-17</td>
+<td></td>
+<td>MA为新的甲醇合约代码，自MA1506开始执行</td>
+</tr>
+<tr>
+<td>晚籼稻合约</td>
+<td>LR9999.XZCE</td>
+<td>LR8888.XZCE</td>
+<td>2014-07-08</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>硅铁合约</td>
+<td>SF9999.XZCE</td>
+<td>SF8888.XZCE</td>
+<td>2014-08-08</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>锰硅合约</td>
+<td>SM9999.XZCE</td>
+<td>SM8888.XZCE</td>
+<td>2014-08-08</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>动力煤合约</td>
+<td>ZC9999.XZCE</td>
+<td>ZC8888.XZCE</td>
+<td>2015-05-18</td>
+<td></td>
+<td>ZC为新的动力煤合约，自ZC1605开始执行</td>
+</tr>
+<tr>
+<td>棉纱合约</td>
+<td>CY9999.XZCE</td>
+<td>CY8888.XZCE</td>
+<td>2017-08-18</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>苹果合约</td>
+<td>AP9999.XZCE</td>
+<td>AP8888.XZCE</td>
+<td>2017-12-22</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>红枣合约</td>
+<td>CJ9999.XZCE</td>
+<td>CJ8888.XZCE</td>
+<td>2019-04-30</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>尿素合约</td>
+<td>UR9999.XZCE</td>
+<td>UR8888.XZCE</td>
+<td>2019-08-09</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>纯碱合约</td>
+<td>SA9999.XZCE</td>
+<td>SA8888.XZCE</td>
+<td>2019-12-06</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>短纤合约</td>
+<td>PF9999.XZCE</td>
+<td>PF8888.XZCE</td>
+<td>2020-10-12</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>花生合约</td>
+<td>PK9999.XZCE</td>
+<td>PK8888.XZCE</td>
+<td>2021-02-01</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>烧碱合约</td>
+<td>SH9999.XZCE</td>
+<td>SH8888.XZCE</td>
+<td>2023-09-15</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>对二甲苯合约</td>
+<td>PX9999.XZCE</td>
+<td>PX8888.XZCE</td>
+<td>2023-09-15</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>瓶级聚酯切片合约</td>
+<td>PR9999.XZCE</td>
+<td>PR8888.XZCE</td>
+<td>2024-08-30</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>

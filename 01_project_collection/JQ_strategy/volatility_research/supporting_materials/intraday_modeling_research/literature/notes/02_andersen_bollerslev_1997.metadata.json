@@ -1,0 +1,33 @@
+{
+  "id": "andersen_bollerslev_1997",
+  "title": "Intraday periodicity and volatility persistence in financial markets",
+  "authors": [
+    "Torben G. Andersen",
+    "Tim Bollerslev"
+  ],
+  "year": 1997,
+  "journal": "Journal of Empirical Finance",
+  "volume": "4",
+  "issue": "2-3",
+  "pages": "115-158",
+  "doi": "10.1016/S0927-5398(97)00004-2",
+  "publisher_url": "https://doi.org/10.1016/S0927-5398(97)00004-2",
+  "author_page_url": "https://public.econ.duke.edu/~boller/research.html",
+  "pdf_url": "https://public.econ.duke.edu/~boller/Published_Papers/joef_97.pdf",
+  "version": "Published journal version, scanned PDF, 44 pages, journal pp.115-158",
+  "local_pdf": "literature/papers/andersen_bollerslev_1997.pdf",
+  "read_scope": "Visually read PDF pp.1-41 (journal pp.115-155), covering full main text, Tables 1-5, Figures 1-7 and Appendices A-B; reference-only PDF pp.42-44 not read. Native extraction returned no text; method claims verified on rendered page images.",
+  "main_locators": [
+    "Journal pp.125-128: model and periodic correlations, Eqs.1-4",
+    "Journal p.141: generalized daily-state-dependent factor, Eq.7",
+    "Journal pp.142-150: filtering results and conclusions",
+    "Journal pp.152-155: Appendix B FFF, Eqs.A.1-A.4"
+  ],
+  "access_status": "downloaded_author_hosted_published_pdf",
+  "pdf_pages": 44,
+  "local_note": "literature/notes/02_andersen_bollerslev_1997.md",
+  "retrieved_on": "2026-09-07",
+  "bytes": 2001671,
+  "sha256": "d9e7f09e5ff1ec88afc389ad86c84919940336c163adc296e15197deed1381d1",
+  "catalog_role": "core"
+}

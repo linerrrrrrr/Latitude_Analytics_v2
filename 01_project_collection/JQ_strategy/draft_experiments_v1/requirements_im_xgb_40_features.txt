@@ -1,0 +1,6 @@
+numpy==2.4.3
+pandas==3.0.1
+pyarrow==24.0.0
+scipy==1.17.1
+arch==8.0.0
+duckdb==1.5.4

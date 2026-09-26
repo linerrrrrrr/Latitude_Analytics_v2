@@ -1,0 +1,33 @@
+{
+  "id": "dette_golosnoy_kellermann_2022",
+  "title": "Correcting Intraday Periodicity Bias in Realized Volatility Measures",
+  "authors": [
+    "Holger Dette",
+    "Vasyl Golosnoy",
+    "Janosch Kellermann"
+  ],
+  "year": 2022,
+  "journal": "Econometrics and Statistics",
+  "doi": "10.1016/j.ecosta.2021.03.002",
+  "publisher_url": "https://www.sciencedirect.com/science/article/pii/S2452306221000320",
+  "pdf_url": "https://eldorado.tu-dortmund.de/bitstreams/3bb981af-a2a4-440c-827f-4e59f5c94ad4/download",
+  "version": "SFB823 21/2020 working paper, 2020-07-13; not publisher final",
+  "local_pdf": "literature/papers/Dette_Golosnoy_Kellermann_2020_Correcting_IP_Bias_working_paper.pdf",
+  "read_scope": "Working-paper body, proof and Tables 1-7, printed pp.1-29/PDF pp.3-31; final publication metadata only; visually checked BV definition and equation 14",
+  "main_locators": [
+    "WP printed p.6 eq.3",
+    "WP printed p.8 eq.12",
+    "WP printed p.10 eq.14; normalization inconsistency recorded",
+    "WP section 3.3 pp.11-12",
+    "WP sections 4-5 pp.12-18"
+  ],
+  "access_status": "open_repository_pdf_downloaded",
+  "bytes": 583597,
+  "sha256": "a1fc753accc5af398b4ac6e0006f1007c28387100f8e12021a850e475493ed67",
+  "checked_date": "2026-09-07",
+  "volume": "23",
+  "pages": "36-52",
+  "pdf_pages": 34,
+  "local_note": "literature/notes/05_dette_2022.md",
+  "catalog_role": "core"
+}

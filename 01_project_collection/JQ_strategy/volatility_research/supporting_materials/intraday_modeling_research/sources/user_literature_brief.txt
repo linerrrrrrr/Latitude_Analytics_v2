@@ -1,0 +1,174 @@
+有，而且与你现在这个问题真正对应的关键词不是泛泛的“seasonality”，而是 **intraday periodicity / diurnal volatility filtering / periodicity adjustment**。我筛下来，下面几篇最值得读。
+
+1. **Boudt, Croux & Laurent (2011), *Robust Estimation of Intraweek Periodicity in Volatility and Jump Detection***
+   这是我认为你**现在最该先读**的一篇。它直接指出：开盘、午间、收盘形成周期性波动，而极端收益/跳跃会严重污染普通的周期因子估计，因此专门提出 robust periodicity estimator。([科学直通车][1])
+   它和你现在遇到的问题高度一致：你的 \(z\) 强右偏、95% 分位和 IQR 还有明显时段结构，单纯逐 slot 取 median 是一种稳健处理，但不是这篇文献系统讨论的 robust **scale estimation**。
+
+一篇沿用 Boudt 方法的文章附录把算法写得很清楚：先用日波动把每个日内收益标准化，再在固定时段横跨多日估计 scale，并使用 **Shortest Half Scale (SHS) + weighted standard deviation (WSD)** 来降低异常值影响。([AMSE][2])
+[Boudt et al. SSRN 全文/PDF](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1297371&utm_source=chatgpt.com)
+
+2. **Andersen & Bollerslev (1997), *Intraday Periodicity and Volatility Persistence in Financial Markets***
+   这是整个领域的经典起点。核心思想就是把高频波动拆成一个**日内确定性周期成分**和剩余波动成分，并用 **Flexible Fourier Form, FFF** 去拟合日内周期，而不是每一分钟各估一个彼此独立的值。作者明确认为，不先去掉强烈的 intraday periodicity，会污染对高频波动动态的判断。([Kellogg School of Management][3])
+
+对你尤其有用的是，它代表另一条路线：
+
+$$
+\text{你现在：每个 minute slot 独立估计}
+$$
+
+对比
+
+$$
+\text{FFF：用一个平滑周期函数 }f(m)\text{ 表示整条日内曲线}.
+$$
+
+如果你最后发现目前那些分钟级锯齿大部分是估计噪声，FFF/样条一类方法就值得试。
+
+[Andersen & Bollerslev 论文页面](https://www.kellogg.northwestern.edu/academics-research/research/detail/1997/intraday-periodicity-and-volatility-persistence-in-financial-markets/?utm_source=chatgpt.com)
+
+3. **Christensen, Hounyo & Podolskij (2018), *Is the Diurnal Pattern Sufficient to Explain Intraday Variation in Volatility?***
+   这篇与你**刚刚画出来的那四张图几乎是同一个问题**。
+
+他们设：
+
+$$
+\sigma_t=\sigma_{sv,t}\sigma_{u,t},
+$$
+
+其中：
+
+* \(\sigma_{u,t}\)：确定性的日内季节成分；
+* \(\sigma_{sv,t}\)：真正的 stochastic volatility。
+
+然后用
+
+$$
+r_t/\hat\sigma_{u,t}
+$$
+
+去季节，并问：
+
+> 去掉 diurnal component 后，剩余收益是否已经 homoskedastic？
+
+
+
+结论也非常值得你注意：**日内周期能解释很大一部分波动，但无法解释全部日内异方差。**
+
+也就是说，你现在看到：
+
+* median 已经很平；
+* IQR 仍变化；
+* \(Q_{95}\) 仍变化；
+
+并不自动意味着“去季节算法失败”。这篇论文专门研究的就是这种“去掉 deterministic periodicity 后还剩 stochastic intraday heteroskedasticity”的情况。
+
+而且它本身还使用 **pre-averaged bipower variation** 构造 jump/noise-robust 检验，所以和你的 BPV 路线有直接交集。
+
+[Christensen et al. 完整 Working Paper PDF](https://repec.econ.au.dk/repec/creates/rp/17/rp17_30.pdf?utm_source=chatgpt.com)
+
+4. **Andersen, Thyrsgaard & Todorov (2019), *Time-Varying Periodicity in Intraday Volatility***
+   这篇可能是**解释你目前结果最重要的一篇**。
+
+传统方法假设：
+
+$$
+f_{d,m}=f_m,
+$$
+
+也就是每天共享同一条固定日内季节曲线。
+
+他们直接质疑这个假设。如果固定周期模型正确，那么用估计的 time-of-day factor 标准化以后：
+
+$$
+\frac{r_{d,m}}{\hat f_m}
+$$
+
+在不同分钟的**整个分布应该相同**。
+
+这正好对应你刚才画的“09:31、10:00、13:01、14:55 各自残差分布 vs 全样本”。
+
+而他们实际发现日内周期会随着市场状态变化；特别是高波动状态下，临近收盘的波动占全天的比例更高。固定平均周期在低波动状态下甚至会明显高估收盘附近的周期成分。
+
+这对你现在：
+
+> 360 日窗口尾盘残留明显比 30 日严重
+
+是一个非常强的研究方向提示：**可能不是窗口估得不准，而是 \(f_m\) 本来就在漂移。**
+
+[Andersen–Thyrsgaard–Todorov 全文 PDF](https://www.kellogg.northwestern.edu/faculty/todorov/htm/papers/tod.pdf?utm_source=chatgpt.com)
+
+5. **Dette, Golosnoy & Kellermann (2022), *Correcting Intraday Periodicity Bias in Realized Volatility Measures***
+   如果你的最终对象明确是 **BPV**，这篇必须看。
+
+它不是单纯讨论“画一条 U 型曲线”，而是研究：
+
+$$
+RV,\quad BV,\quad \text{其他 realized measures}
+$$
+
+在存在 intraday periodicity 时究竟会发生什么。
+
+特别重要的是，作者指出：基于**相邻收益乘积**的 realized estimator 会在有限 \(M\) 下受到日内周期影响，并给出相应 correction factors。([科学直通车][4])
+
+这与你的
+
+$$
+b_{d,m}=\frac{\pi}{2}|r_{d,m}||r_{d,m-1}|
+$$
+
+完全相关。
+
+另一篇同一组作者的研究把 periodic factor 写成
+
+$$
+s_m^2=
+\frac{g(m/M)}
+{\frac1M\sum_{k=1}^M g(k/M)},
+$$
+
+也就是说，文献里标准的 identification 就是把**variance-scale 日内季节曲线归一到日内平均为 1**。([Springer][5])
+
+[Dette et al. 完整 PDF](https://eldorado.tu-dortmund.de/bitstream/2003/39209/1/DP_2120_SFB823_Dette_Golosnoy_Kellermann.pdf?utm_source=chatgpt.com)
+
+6. **Dumitru, Hizmeri & Izzeldin (2025), *Forecasting the Realized Variance in the Presence of Intraday Periodicity***
+   这篇适合你解决完 estimator 后继续往**预测**走。作者构造了 periodicity-adjusted HAR（HARP），直接使用 periodicity-filtered data 建 predictor，并发现不处理日内周期会增加 realized volatility 方差、影响 jump estimator，并损害预测。([科学直通车][6])
+
+[2025 HARP 论文及开放全文](https://livrepository.liverpool.ac.uk/3188055/?utm_source=chatgpt.com)
+
+---
+
+### 对你现在这个项目，我建议按这个顺序读
+
+**先不要一口气读六篇。**
+
+$$
+\boxed{
+\text{Boudt 2011}
+\rightarrow
+\text{Andersen–Thyrsgaard–Todorov 2019}
+\rightarrow
+\text{Christensen et al. 2018}
+\rightarrow
+\text{Dette et al. 2022}
+}
+$$
+
+因为它们分别回答你现在的四个问题：
+
+| 你现在的问题                              | 对应论文                        |
+| ----------------------------------- | --------------------------- |
+| 极端值这么多，周期因子应该怎么稳健估？                 | **Boudt 2011**              |
+| 30/60/120/360 都去不干净，是不是周期本身会变？      | **Andersen et al. 2019**    |
+| 去季节以后 IQR、Q95 还不平，算失败吗？             | **Christensen et al. 2018** |
+| 我用的是 BPV contribution，这种量应该怎么处理周期性？ | **Dette et al. 2022**       |
+
+还有一个比较重要的判断：**我暂时没有看到主流文献把“每天先 BPV 归一化 → 每个 minute slot 滚动取中位数 → 再归一化”作为标准 BPV 去季节方案。**你的实现是有逻辑的稳健非参数方案，但文献中更成熟的路线主要是 **FFF、robust scale estimator、非参数 volatility periodic factor、以及 time-varying periodicity**。
+
+因此，下一步最好不是继续拍一个新的 estimator。我可以直接把上面 **Boudt 2011 + Andersen 2019 + Dette 2022** 的具体公式读出来，和你 notebook 目前每一步逐项对照，最后给你定一版**有论文出处、无未来泄露、适用于分钟 BPV clock 的去季节方案**。
+
+[1]: https://www.sciencedirect.com/science/article/abs/pii/S0927539810000836?utm_source=chatgpt.com "Robust estimation of intraweek periodicity in volatility and jump detection - ScienceDirect"
+[2]: https://www.amse-aixmarseille.fr/sites/default/files/events/2014-034.pdf?utm_source=chatgpt.com "The Role of Jumps in Volatility Spillovers in Foreign Exchange Markets: Meteor Shower and Heat Waves Revisited"
+[3]: https://www.kellogg.northwestern.edu/academics-research/research/detail/1997/intraday-periodicity-and-volatility-persistence-in-financial-markets/?utm_source=chatgpt.com "Intraday Periodicity and Volatility Persistence in Financial Markets | Kellogg School of Management"
+[4]: https://www.sciencedirect.com/science/article/pii/S2452306221000320?utm_source=chatgpt.com "Correcting Intraday Periodicity Bias in Realized Volatility Measures - ScienceDirect"
+[5]: https://link.springer.com/article/10.1007/s00184-022-00875-0 "The effect of intraday periodicity on realized volatility measures | Metrika | Springer Nature Link"
+[6]: https://www.sciencedirect.com/science/article/pii/S0378426624002565?utm_source=chatgpt.com "Forecasting the realized variance in the presence of intraday periodicity - ScienceDirect"
