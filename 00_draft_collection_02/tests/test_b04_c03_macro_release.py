@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import importlib.util
+import hashlib
 import pathlib
+import sys
 import shutil
 import tempfile
 import unittest
@@ -39,6 +41,27 @@ def load_module(name: str, path: pathlib.Path):
 
 C01 = load_module("test_b04_c01_for_c03", C01_PATH)
 C03 = load_module("test_b04_c03", C03_PATH)
+TRANSACTION = sys.modules[C03.StagedPathTransaction.__module__]
+
+
+def frame_digest(
+    frame: pd.DataFrame,
+    schema: pa.Schema,
+    primary_key: list[str],
+) -> str:
+    ordered_df = frame.sort_values(primary_key).reset_index(drop=True)
+    source_table = C03.pandas_to_arrow(
+        ordered_df.loc[:, schema.names],
+        schema,
+    )
+    stable_table = pa.Table.from_pylist(
+        source_table.to_pylist(),
+        schema=schema,
+    )
+    sink = pa.BufferOutputStream()
+    with pa.ipc.new_stream(sink, schema) as writer:
+        writer.write_table(stable_table)
+    return hashlib.sha256(sink.getvalue().to_pybytes()).hexdigest()
 
 
 class FakeResponse:
@@ -479,14 +502,14 @@ class MacroReleaseNotebookTests(unittest.TestCase):
                 changed_df["series_code"].eq("PPI_YOY"),
                 "value",
             ] = 99.0
-            original_move = shutil.move
+            original_move = TRANSACTION.os.replace
 
             def fail_staging_install(source, destination, *args, **kwargs):
                 if ".staging-" in str(source) and str(destination).endswith("month=7"):
                     raise OSError("injected second move failure")
                 return original_move(source, destination, *args, **kwargs)
 
-            with mock.patch.object(C03.shutil, "move", side_effect=fail_staging_install):
+            with mock.patch.object(TRANSACTION.os, "replace", side_effect=fail_staging_install):
                 with self.assertRaisesRegex(OSError, "injected"):
                     C03.commit_complete_fact_partition(
                         changed_df,
@@ -497,8 +520,8 @@ class MacroReleaseNotebookTests(unittest.TestCase):
             after_df, exact = C03.read_optional_fact(fact_path)
             self.assertTrue(exact)
             self.assertEqual(
-                C03.table_digest(before_df, C03.MACRO_RELEASE_SCHEMA, C03.PRIMARY_KEY),
-                C03.table_digest(after_df, C03.MACRO_RELEASE_SCHEMA, C03.PRIMARY_KEY),
+                frame_digest(before_df, C03.MACRO_RELEASE_SCHEMA, C03.PRIMARY_KEY),
+                frame_digest(after_df, C03.MACRO_RELEASE_SCHEMA, C03.PRIMARY_KEY),
             )
             residues = [
                 path

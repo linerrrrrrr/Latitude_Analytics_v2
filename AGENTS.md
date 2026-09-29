@@ -3,12 +3,12 @@
 - [AGENTS.md](AGENTS.md)：变量命名与最小改动、项目运行环境、根目录定位与规范路由的项目级强制规则。
 - [.gitignore](.gitignore) 与 [.gitattributes](.gitattributes)：代码和文档的 Git 收纳边界；排除本地数据、运行产物、备份及含凭据的只读旧文件，并固定 Notebook/Python 导出的 LF 与历史快照原始字节。已被 Git 跟踪的数据不会因新增忽略规则自动移除。
 - [.env.template](.env.template)：项目根目录定位代码、当前稳定采集统一正式起点，以及包含 `raw`、`silver`、`gold` 的正式湖仓根路径环境变量权威模板。
-- [02_Futures_Lakehouse/AGENTS.md](02_Futures_Lakehouse/AGENTS.md)：`E:\Latitude_Analytics_v2\02_Futures_Lakehouse` 整棵生产与运维目录树的目录级 Agent 规则入口，包含采集双轨、PythonExporter、`sync_notebook_exports.py` 同步入口、正式 operations 路由及根级旧项目归档路由。
+- [02_Futures_Lakehouse/AGENTS.md](02_Futures_Lakehouse/AGENTS.md)：`E:\Latitude_Analytics_v2\02_Futures_Lakehouse` 整棵生产与运维目录树的目录级 Agent 规则入口，包含根级 `a00_01`—`a00_04` 支撑脚本编号、采集双轨、PythonExporter、`a00_02_sync_notebook_exports.py` 同步入口、正式 operations 路由及根级旧项目归档路由。
 - [03_Futures_Database/AGENTS.md](03_Futures_Database/AGENTS.md)：`E:\Latitude_Analytics_v2\03_Futures_Database` 整棵目录树的目录级 Agent 规则入口，以及来源异常 raw/silver 边界、正式湖与项目专属研究成果边界、数据字段命名、跨引擎类型、Schema metadata 单一来源与 Notebook 开篇 Schema 契约呈现的永久文本规范。
 - [03_Futures_Database/read_futures_lake_demo.ipynb](03_Futures_Database/read_futures_lake_demo.ipynb)：17 张稳定 silver 表的契约化读取示例；每张表必须由独立代码单元格演示；另含不计入 silver 表数的生意社 raw 原文与摘要核对示例。
 - [02_Futures_Lakehouse/README.md](02_Futures_Lakehouse/README.md)：19 个正式采集入口（含人工 b08）的数据采集链路、来源异常留存与验收的运行语义、双轨同步入口、Schema metadata 运行时读取、Notebook 开篇 Schema 契约呈现、表粒度、主键、分区与更新水位规范。
-- [02_Futures_Lakehouse/operations/AGENTS.md](02_Futures_Lakehouse/operations/AGENTS.md)：18 个默认日常阶段的人工启动、detached worker、可见 monitor、状态发布、失败停止、现场保留与人工核查边界的正式运维规范。
-- [02_Futures_Lakehouse/operations/README.md](02_Futures_Lakehouse/operations/README.md)：正式 worker、monitor 与有界单批运行的操作入口和状态证据说明。
+- [02_Futures_Lakehouse/operations/AGENTS.md](02_Futures_Lakehouse/operations/AGENTS.md)：19 个正式环节的单项/批量人工启动、18 项日常快捷配置、维护工具白名单、detached worker、可见总控台、状态发布、失败停止、现场保留与人工核查边界的正式运维规范。
+- [02_Futures_Lakehouse/operations/README.md](02_Futures_Lakehouse/operations/README.md)：PySide6 采集工作台、a00 检查看板、a01/b01 日历结果表及 b02—b04 专属看板、原参数透传、运行前代码检查与完整导出同步、实时日志、只读参考快照及有界单批运行说明。
 - [04_Feature_Engineering/AGENTS.md](04_Feature_Engineering/AGENTS.md)：独立特征工程项目的双轨、silver 消费与当前结构迁移阻塞规范。
 - [04_Feature_Engineering/README.md](04_Feature_Engineering/README.md)：主力连续合约、log 双向复权、期限结构边界及当前 gold 实验工作流说明；当前仅完成结构迁移，不代表业务入口已经恢复运行。
 - [01_project_collection/china_futures_market_evolution_reproduction/AGENTS.md](01_project_collection/china_futures_market_evolution_reproduction/AGENTS.md)：中国期货市场演变方法复现项目的只读 silver 消费、方法说明路由与局部执行规则。
@@ -23,7 +23,9 @@
 - [config/futures_lakehouse/macro_release_entities.py](config/futures_lakehouse/macro_release_entities.py)：宏观发布日历、SHIBOR 与宏观事实共用的 25 个系列、来源列、宏观数值偏移、理论频率及版本化可用日规则唯一权威来源；配置不调用 API、不决定是否写入。
 - [config/jqdata_connection.py](config/jqdata_connection.py)：JQData 认证以及 Windows TUN 物理出口绑定的项目级共享连接边界；业务采集与是否写入仍由各业务入口负责。
 - [config/data_contracts.py](config/data_contracts.py)：17 张稳定 silver 数据湖 Schema（7 张日历维度表、10 张事实表）、表名/主键/分区 metadata 单一来源及 Pandas、Polars、Arrow 转换的可执行契约。
-- [02_Futures_Lakehouse/notebook_schema_browser.py](02_Futures_Lakehouse/notebook_schema_browser.py)：采集与研究 Notebook 共用的 Schema 只读展示实现，包含关键内容选择、完整内容折叠及显式启用的有界数据/raw 文件样例；Schema 来自 `config/data_contracts.py`，不定义第二份数据契约、不调用 API 或写入数据。
+- [02_Futures_Lakehouse/a00_03_notebook_schema_browser.py](02_Futures_Lakehouse/a00_03_notebook_schema_browser.py)：采集与研究 Notebook 共用的 Schema 只读展示实现，包含关键内容选择、完整内容折叠及显式启用的有界数据/raw 文件样例；Schema 来自 `config/data_contracts.py`，不定义第二份数据契约、不调用 API 或写入数据。
+- [02_Futures_Lakehouse/a00_04_staged_path_transaction.py](02_Futures_Lakehouse/a00_04_staged_path_transaction.py)：湖仓级 staging 路径安装与失败恢复实现；当前由 a01/b01、b02、b03、b04、b05、b06、b07、b08、a02/b01、b01a、b02、b03、a03/b01、b02、b03、b04 与 a04/b01、b02、b03 共用，业务合并、数据验收和共同回滚范围仍由环节决定。
+- [02_Futures_Lakehouse/operations/referance/snapshot_manifest.json](02_Futures_Lakehouse/operations/referance/snapshot_manifest.json)：本次 operations 重构前全目录只读 ZIP 的逐文件摘要清单；冻结证据，不是新的运行规范。
 - [00_draft_collection_02](00_draft_collection_02)：尚未经用户确认接纳为正式项目代码的脚本、测试、审计与验证工具的统一暂存目录。
 - [05_Old_Projects/AGENTS.md](05_Old_Projects/AGENTS.md)：根级旧项目只读归档规则；包含重建前采集实现、更早历史采集项目和旧特征工程项目。
 - 修改以上任一规范、模板或可执行契约前，必须检查其余索引项，并在同一次变更中同步所有受影响的描述、示例与代码。
@@ -335,15 +337,15 @@ Do not move down this list without a concrete reason.
 - 不要根据裸 `python` 或裸 `pip` 的结果判断依赖缺失；它们可能指向 Conda 的 `base` 环境。
 - 报告环境或依赖问题前，先输出 `sys.executable`，并使用标准解释器检查相关包。
 - 使用标准解释器执行 `python -m pip`，不要使用裸 `pip`。
-- 运行 `E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse\verify_runtime.py`，验证当前运行环境及核心 DataFrame 依赖。
+- 运行 `E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse\a00_01_verify_runtime.py`，验证当前运行环境及核心 DataFrame 依赖。
 
 # 长时间任务的人工启动、后台执行与可见监控
 
 - 预计运行超过 10 分钟的任务，只能由用户在当前交互中明确授权为一个边界清楚的批次。允许把该批次交给与 Codex 回合解耦的 detached/background worker，但不得据此创建定时任务、常驻守护服务、自动恢复或未来批次授权。
 - 预计运行时长、正式湖写入或采用 detached/background worker，均不自动触发非正式小样本、测试湖演练或仅因运行时长追加的 dry-run。此类步骤属于可选检查，只有用户在当前交互中明确要求时才执行；用户要求“可选时不要检查”时必须跳过，不得把未执行样本作为阻塞正式批次的理由。
-- 后台 worker 必须同时配有独立、用户可见且不依赖 LLM 的 Terminal 窗口或 pane，持续显示当前阶段、可量化进度、累计耗时、心跳新鲜度和失败信息；仅写日志文件不构成可见监控。
+- 后台 worker 必须同时配有独立、用户可见且不依赖 LLM 的 Terminal 窗口、pane，或由所属工作流规范明确规定的独立总控台窗口，持续显示当前阶段、可量化进度、累计耗时、心跳新鲜度和失败信息；仅写日志文件不构成可见监控。
 - worker 和 monitor 都不得要求 Codex 回合保持活动。Codex 只做一次有界健康检查；确认 worker、业务子进程、心跳和可见 monitor 均正常后，必须立即结束回合，不得用 sleep、进程轮询或 tail 日志维持 Agent 存活。
-- worker 不得自动重试。普通失败、配额停止或监控异常都必须停止后续阶段，保留状态、日志和事务证据，等待用户再次调用 Codex 后再决定如何继续。
+- worker 不得自动重试。普通失败、配额停止或监控异常都必须停止后续阶段，保留状态、日志和事务证据，等待操作者核查后显式决定是否启动新的有界批次。
 - Windows monitor 读取原子状态文件时，必须使用允许 `ReadWrite` 与 `Delete` 的文件共享方式，读取后立即释放句柄；禁止用会阻塞 `os.replace` 的默认独占/非删除共享读取持续轮询状态文件。2026-08-21 的样本运行曾因 monitor 与 worker 对 `status.json` 发生共享冲突，导致业务仍正常时控制面报 `WinError 5` 并停止，此项是据此冻结的强制边界。
 - worker 的状态发布必须采用同目录临时文件、flush/fsync、原子替换；只允许对状态文件替换时的 Windows `WinError 5/32` 做短时有界重试。该控制面重试不属于业务重试，不得据此重试 API、阶段或事务。状态发布最终失败时，worker 必须终止当前业务子进程并保留现场，不能留下失去监控的孤儿任务。
 
@@ -391,7 +393,7 @@ from config.settings import settings
 - a01/b05—b06 每次仍按当前白名单窄列向量评估全部理论格点，但日常 API 待办只由 `is_fetch_required=true AND is_fetch_completed=false` 形成；正式成功提交后的 `is_fetch_completed`、成功批次、条数和质量是可信快照，不从全历史事实重新证明或修复。白名单扩大自动回补从未完成格点；缩小保留既有事实与完成/质量/b07 证据，只停止未来采集并清零当前缺失；再次纳入的已完成格点不重复拉取。
 - 每张 silver 表的生产者仍对转换结果和自己的 dirty 完整叶承担完整业务质量验证。正式提交成功即证明该表的主键、水位、覆盖和其他权威业务约束已经成立；clean 历史和下游消费者必须信任这项证明，不得在日常重新扫描或复算。a01/b01—b07 与 `a02/b03` 已采用 dirty 叶单次业务校验，staging 和正式安装只复读物理字段、类型、nullable、表名、主键、分区及行数/主键摘要；描述性 metadata 差异以当前 `config/data_contracts.py` 为权威，不触发历史 Parquet 重写。尚未采用这一提交策略的入口继续遵守各自现有完整复读契约。
 - 写入正式 silver 时，原则上禁止操作者用日期、月份等截断生产水位。a01/b01、b02、b04 的 `--full` 与显式日期互斥，且只有 `--full --write` 允许正式全历史维护；a01/b03 的成对日期或 `--full` 只定义来源双向质检范围，`--write` 仅提交发现的差异；a01/b07 的 `--force --write` 必须带日期范围或合约范围；a01/b08 只能显式 `--confirm-full-quality --write` 人工运行。其他入口的显式范围仍仅可用于只读检查，或写入明确不同于正式湖的临时/测试湖。
-- 当前正式采集拓扑固定为 17 张稳定 silver 表、19 个正式采集入口（包含只能人工显式运行的 a01/b08）和 18 个默认日常阶段。默认 worker 中 a01 只执行 b01—b07；`--skip-optional-quality` 只跳过 b07。b08 永远不在任何默认 worker manifest 中。
+- 当前正式采集拓扑固定为 17 张稳定 silver 表、19 个正式采集入口（包含只能人工显式运行的 a01/b08）和 18 个默认日常阶段。operations 总控台的日常快捷选择包含这 18 个阶段，a01 为 b01—b07；允许操作者单独选择任意正式环节并配置其原 CLI 参数。b08 不进入日常快捷选择，必须人工单独选择并显式设置 `--confirm-full-quality`，提交时另选 `--write`；单项直接启动与批量预览启动的授权边界见 operations 规范。
 - 本规则是 silver 数据采集的全项目目标契约；后续生产契约调整按用户确认的入口范围进行。发现个别脚本仍保留与本规则不一致的旧参数语义时，不得据此弱化本规则，也不得未经授权顺带批量修改其他业务脚本。gold 的实验输出契约和更新方式由所属下游工作流局部说明，不得提升为数据库级统一规则。
 
 # 目录级规范路由

@@ -223,14 +223,11 @@ class OverseasStateRepairTests(unittest.TestCase):
                 module.EXTERNAL_MARKET_CALENDAR_SCHEMA,
                 "隔离测试修复后日历",
             )
-            repaired_calendar_df = module.validate_calendar_frame(
-                module.arrow_to_pandas(
-                    repaired_calendar_dataset.to_table(
-                        columns=module.EXTERNAL_MARKET_CALENDAR_SCHEMA.names
-                    ),
-                    module.EXTERNAL_MARKET_CALENDAR_SCHEMA,
+            repaired_calendar_df = module.arrow_to_pandas(
+                repaired_calendar_dataset.to_table(
+                    columns=module.EXTERNAL_MARKET_CALENDAR_SCHEMA.names
                 ),
-                "隔离测试修复后",
+                module.EXTERNAL_MARKET_CALENDAR_SCHEMA,
             ).set_index("observation_date")
 
             normal_row = repaired_calendar_df.loc[NORMAL_DATE]

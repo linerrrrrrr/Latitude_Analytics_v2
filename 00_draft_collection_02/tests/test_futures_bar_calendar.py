@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pathlib
+import sys
 import tempfile
 import types
 import unittest
@@ -41,6 +42,7 @@ class FuturesBarCalendarTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.module = load_notebook_module()
+        cls.transaction_module = sys.modules[cls.module.StagedPathTransaction.__module__]
 
     def setUp(self) -> None:
         self.updated_at = datetime(2026, 8, 23, 1, 2, tzinfo=timezone.utc)
@@ -1749,7 +1751,7 @@ class FuturesBarCalendarTests(unittest.TestCase):
                 format="parquet",
                 partitioning=self.module.HIVE_PARTITIONING,
             )
-            original_move = self.module.shutil.move
+            original_move = self.transaction_module.os.replace
             move_call_count = 0
 
             def fail_first_move(source, destination):
@@ -1768,8 +1770,8 @@ class FuturesBarCalendarTests(unittest.TestCase):
                     ),
                 ),
                 mock.patch.object(
-                    self.module.shutil,
-                    "move",
+                    self.transaction_module.os,
+                    "replace",
                     side_effect=fail_first_move,
                 ),
             ):
@@ -1823,7 +1825,7 @@ class FuturesBarCalendarTests(unittest.TestCase):
                 format="parquet",
                 partitioning=self.module.HIVE_PARTITIONING,
             )
-            original_move = self.module.shutil.move
+            original_move = self.transaction_module.os.replace
             move_call_count = 0
 
             def fail_second_move(source, destination):
@@ -1842,8 +1844,8 @@ class FuturesBarCalendarTests(unittest.TestCase):
                     ),
                 ),
                 mock.patch.object(
-                    self.module.shutil,
-                    "move",
+                    self.transaction_module.os,
+                    "replace",
                     side_effect=fail_second_move,
                 ),
             ):

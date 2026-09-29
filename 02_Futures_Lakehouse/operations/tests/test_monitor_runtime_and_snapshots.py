@@ -13,122 +13,62 @@ from datetime import datetime, timezone
 
 OPERATIONS_ROOT = pathlib.Path(__file__).resolve().parents[1]
 PROJECT_ROOT = OPERATIONS_ROOT.parents[1]
-MONITOR_PATH = OPERATIONS_ROOT / "watch_batch.ps1"
-RUNTIME_PROBE_PATH = OPERATIONS_ROOT / "verify_operations_runtime.py"
+sys.path.insert(0, str(OPERATIONS_ROOT / "runtime"))
+import background_worker as worker
+RUNTIME_PROBE_PATH = OPERATIONS_ROOT / "runtime" / "verify_operations_runtime.py"
 ARCHIVE_ROOT = OPERATIONS_ROOT / "archived_batches"
 MANIFEST_PATH = ARCHIVE_ROOT / "snapshot_manifest.json"
 
 
 class MonitorRuntimeAndSnapshotTests(unittest.TestCase):
-    def run_monitor_once(self, run_root: pathlib.Path) -> subprocess.CompletedProcess[str]:
-        return subprocess.run(
-            [
-                "pwsh.exe",
-                "-NoLogo",
-                "-NoProfile",
-                "-NonInteractive",
-                "-ExecutionPolicy",
-                "Bypass",
-                "-File",
-                str(MONITOR_PATH),
-                "-RunRoot",
-                str(run_root),
-                "-Once",
-            ],
-            cwd=PROJECT_ROOT,
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            timeout=20,
-            check=False,
-        )
+    def test_shared_reader_allows_repeated_atomic_replace(self) -> None:
+        import threading
+        with tempfile.TemporaryDirectory() as directory:
+            path = pathlib.Path(directory) / "status.json"
+            worker.atomic_write_json(path, {"counter": 0})
+            failures = []
+            finished = threading.Event()
 
-    def directory_fingerprint(
-        self,
-        directory: pathlib.Path,
-    ) -> dict[str, tuple[bytes, int]]:
-        return {
-            str(path.relative_to(directory)): (
-                path.read_bytes(),
-                path.stat().st_mtime_ns,
-            )
-            for path in directory.rglob("*")
-            if path.is_file()
-        }
+            def read_loop():
+                try:
+                    while not finished.is_set():
+                        self.assertIsInstance(worker.read_json_shared(path)["counter"], int)
+                except BaseException as error:
+                    failures.append(error)
 
-    def base_status(self) -> dict[str, object]:
-        now = datetime.now(timezone.utc).isoformat()
-        return {
-            "mode": "formal",
-            "state": "succeeded",
-            "started_at": now,
-            "finished_at": now,
-            "heartbeat_at": now,
-            "worker_pid": os.getpid(),
-            "child_pid": None,
-            "monitor_pid": None,
-            "stage_index": 18,
-            "stage_total": 18,
-            "stage_name": "全部阶段完成",
-            "stage_started_at": now,
-            "stage_exit_code": 0,
-            "progress": "stage=18/18",
-            "last_line": "done",
-            "recent_lines": ["done"],
-            "error": None,
-        }
+            thread = threading.Thread(target=read_loop)
+            thread.start()
+            try:
+                for counter in range(1, 101):
+                    worker.atomic_write_json(path, {"counter": counter})
+            finally:
+                finished.set()
+                thread.join(timeout=5)
+            self.assertFalse(thread.is_alive())
+            self.assertEqual(failures, [])
+            self.assertEqual(worker.read_json_shared(path), {"counter": 100})
 
-    def test_monitor_once_does_not_create_missing_run_root(self) -> None:
-        with tempfile.TemporaryDirectory() as temporary_directory:
-            missing_run_root = pathlib.Path(temporary_directory) / "missing"
-            result = self.run_monitor_once(missing_run_root)
-            self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertFalse(missing_run_root.exists())
-
-    def test_monitor_once_renders_new_and_legacy_protocol_without_writes(self) -> None:
-        status_cases = []
-        new_status = {
-            **self.base_status(),
-            "protocol_version": 1,
-            "operation_name": "daily_collection_update",
-            "phase": "terminal",
-        }
-        status_cases.append(
-            (new_status, ("daily_collection_update", "terminal", "1"))
-        )
-        status_cases.append(
-            (
-                self.base_status(),
-                ("legacy_formal_collection_batch", "legacy", "succeeded"),
-            )
-        )
-
-        for status, expected_texts in status_cases:
-            with self.subTest(expected_texts=expected_texts):
-                with tempfile.TemporaryDirectory() as temporary_directory:
-                    run_root = pathlib.Path(temporary_directory) / "run"
-                    run_root.mkdir()
-                    (run_root / "status.json").write_text(
-                        json.dumps(status, ensure_ascii=False, indent=2),
-                        encoding="utf-8",
-                    )
-                    (run_root / "monitor.pid").write_text(
-                        "24680\n",
-                        encoding="utf-8",
-                    )
-                    before = self.directory_fingerprint(run_root)
-                    result = self.run_monitor_once(run_root)
-                    after = self.directory_fingerprint(run_root)
-
-                    self.assertEqual(result.returncode, 0, result.stderr)
-                    for expected_text in expected_texts:
-                        self.assertIn(expected_text, result.stdout)
-                    self.assertEqual(after, before)
-                    self.assertEqual(
-                        (run_root / "monitor.pid").read_text(encoding="utf-8"),
-                        "24680\n",
-                    )
+    def test_complete_reference_archive_and_preserved_history(self) -> None:
+        import stat
+        import zipfile
+        reference = OPERATIONS_ROOT / "referance"
+        manifest = json.loads((reference / "snapshot_manifest.json").read_text(encoding="utf-8"))
+        archive_path = reference / manifest["archive"]
+        if not archive_path.exists():
+            self.skipTest("Local reference ZIP is intentionally not tracked by Git.")
+        self.assertEqual(hashlib.sha256(archive_path.read_bytes()).hexdigest(), manifest["archive_sha256"])
+        if os.name == "nt":
+            for path in (archive_path, reference / "snapshot_manifest.json"):
+                self.assertTrue(path.stat().st_file_attributes & stat.FILE_ATTRIBUTE_READONLY)
+        self.assertEqual(len(manifest["files"]), 154)
+        with zipfile.ZipFile(archive_path) as archive:
+            self.assertIsNone(archive.testzip())
+            for entry in manifest["files"]:
+                payload = archive.read("operations/" + entry["path"])
+                self.assertEqual(len(payload), entry["byte_size"])
+                self.assertEqual(hashlib.sha256(payload).hexdigest(), entry["sha256"])
+                if entry["path"].startswith(("run_history/", "archived_batches/")):
+                    self.assertEqual((OPERATIONS_ROOT / entry["path"]).read_bytes(), payload)
 
     def test_operations_runtime_probe_passes_all_three_io_boundaries(self) -> None:
         result = subprocess.run(

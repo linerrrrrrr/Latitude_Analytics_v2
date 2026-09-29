@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import pathlib
+import sys
 import shutil
 import tempfile
 import unittest
@@ -39,6 +41,17 @@ def load_module(name: str, path: pathlib.Path):
 
 C01 = load_module("test_b04_c01_for_c02", C01_PATH)
 C02 = load_module("test_b04_c02", C02_PATH)
+TRANSACTION = sys.modules[C02.StagedPathTransaction.__module__]
+
+
+def frame_digest(frame, schema, primary_key):
+    ordered_df = frame.sort_values(primary_key).reset_index(drop=True)
+    table = C02.pandas_to_arrow(ordered_df.loc[:, schema.names], schema)
+    stable_table = pa.Table.from_pylist(table.to_pylist(), schema=schema)
+    sink = pa.BufferOutputStream()
+    with pa.ipc.new_stream(sink, schema) as writer:
+        writer.write_table(stable_table)
+    return hashlib.sha256(sink.getvalue().to_pybytes()).hexdigest()
 
 
 class FakeTushareClient:
@@ -451,7 +464,7 @@ class InterestRateNotebookTests(unittest.TestCase):
                 changed_df["series_code"].eq("SHIBOR_ON"),
                 "rate",
             ] = 99.0
-            original_move = shutil.move
+            original_move = TRANSACTION.os.replace
 
             def fail_staging_install(source, destination, *args, **kwargs):
                 source_text = str(source)
@@ -460,7 +473,7 @@ class InterestRateNotebookTests(unittest.TestCase):
                     raise OSError("injected second move failure")
                 return original_move(source, destination, *args, **kwargs)
 
-            with mock.patch.object(C02.shutil, "move", side_effect=fail_staging_install):
+            with mock.patch.object(TRANSACTION.os, "replace", side_effect=fail_staging_install):
                 with self.assertRaisesRegex(OSError, "injected"):
                     C02.commit_complete_fact_partition(
                         changed_df,
@@ -471,8 +484,8 @@ class InterestRateNotebookTests(unittest.TestCase):
             after_df, exact = C02.read_optional_fact(fact_path)
             self.assertTrue(exact)
             self.assertEqual(
-                C02.table_digest(before_df, C02.INTEREST_RATE_DAILY_SCHEMA, C02.PRIMARY_KEY),
-                C02.table_digest(after_df, C02.INTEREST_RATE_DAILY_SCHEMA, C02.PRIMARY_KEY),
+                frame_digest(before_df, C02.INTEREST_RATE_DAILY_SCHEMA, C02.PRIMARY_KEY),
+                frame_digest(after_df, C02.INTEREST_RATE_DAILY_SCHEMA, C02.PRIMARY_KEY),
             )
             residues = [
                 path
@@ -496,14 +509,14 @@ class InterestRateNotebookTests(unittest.TestCase):
 
             fact_path = lake_root / "silver" / C02.TABLE_NAME
             before_df, _ = C02.read_optional_fact(fact_path)
-            original_move = shutil.move
+            original_move = TRANSACTION.os.replace
 
             def fail_old_partition_move(source, destination, *args, **kwargs):
                 if ".backup-" in str(destination) and str(source).endswith("month=7"):
                     raise OSError("injected first move failure")
                 return original_move(source, destination, *args, **kwargs)
 
-            with mock.patch.object(C02.shutil, "move", side_effect=fail_old_partition_move):
+            with mock.patch.object(TRANSACTION.os, "replace", side_effect=fail_old_partition_move):
                 with self.assertRaisesRegex(OSError, "injected"):
                     C02.commit_complete_fact_partition(
                         before_df,
@@ -514,8 +527,8 @@ class InterestRateNotebookTests(unittest.TestCase):
             after_df, exact = C02.read_optional_fact(fact_path)
             self.assertTrue(exact)
             self.assertEqual(
-                C02.table_digest(before_df, C02.INTEREST_RATE_DAILY_SCHEMA, C02.PRIMARY_KEY),
-                C02.table_digest(after_df, C02.INTEREST_RATE_DAILY_SCHEMA, C02.PRIMARY_KEY),
+                frame_digest(before_df, C02.INTEREST_RATE_DAILY_SCHEMA, C02.PRIMARY_KEY),
+                frame_digest(after_df, C02.INTEREST_RATE_DAILY_SCHEMA, C02.PRIMARY_KEY),
             )
 
     def test_calendar_leaf_second_move_failure_restores_old_partition(self) -> None:
@@ -528,14 +541,14 @@ class InterestRateNotebookTests(unittest.TestCase):
             changed_df = before_df.copy()
             changed_df.loc[:, "quality_reason"] = "事务回滚注入测试。"
             changed_df.loc[:, "updated_at"] = datetime.now(timezone.utc)
-            original_move = shutil.move
+            original_move = TRANSACTION.os.replace
 
             def fail_staging_install(source, destination, *args, **kwargs):
                 if ".staging-" in str(source) and str(destination).endswith("month=7"):
                     raise OSError("injected calendar second move failure")
                 return original_move(source, destination, *args, **kwargs)
 
-            with mock.patch.object(C02.shutil, "move", side_effect=fail_staging_install):
+            with mock.patch.object(TRANSACTION.os, "replace", side_effect=fail_staging_install):
                 with self.assertRaisesRegex(OSError, "injected"):
                     C02.commit_calendar_partition(
                         changed_df,
@@ -545,8 +558,8 @@ class InterestRateNotebookTests(unittest.TestCase):
 
             after_df = C02.read_interest_calendar(calendar_path)
             self.assertEqual(
-                C02.table_digest(before_df, C02.MACRO_RELEASE_CALENDAR_SCHEMA, C02.CALENDAR_PRIMARY_KEY),
-                C02.table_digest(after_df, C02.MACRO_RELEASE_CALENDAR_SCHEMA, C02.CALENDAR_PRIMARY_KEY),
+                frame_digest(before_df, C02.MACRO_RELEASE_CALENDAR_SCHEMA, C02.CALENDAR_PRIMARY_KEY),
+                frame_digest(after_df, C02.MACRO_RELEASE_CALENDAR_SCHEMA, C02.CALENDAR_PRIMARY_KEY),
             )
             residues = [
                 path

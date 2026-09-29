@@ -1114,7 +1114,7 @@ class B01OHLCRetentionTest(unittest.TestCase):
                     self.assertNotEqual(result.exit_code, 0)
                     self.assertIsInstance(result.exception, RuntimeError)
                     self.assertEqual(
-                        list(silver_root.glob(".c08-*-s-*")),
+                        list(silver_root.glob(".b08-s-*")),
                         [],
                     )
 
@@ -1160,8 +1160,9 @@ class B01OHLCRetentionTest(unittest.TestCase):
             )
 
             run_id = "rollbacktest1234567890"
-            missing_staging = silver_root / f".c08-m-s-{run_id[:12]}"
-            calendar_staging = silver_root / f".c08-c-s-{run_id[:12]}"
+            staging_path = silver_root / f".b08-s-{run_id[:12]}"
+            missing_staging = staging_path / full_quality.MISSING_TABLE_NAME
+            calendar_staging = staging_path / full_quality.CALENDAR_TABLE_NAME
             audit_result = full_quality.build_full_audit_staging(
                 lake_root,
                 missing_staging,
@@ -1184,17 +1185,14 @@ class B01OHLCRetentionTest(unittest.TestCase):
                 "open_exact_dataset",
                 side_effect=fail_formal_calendar,
             ):
-                with self.assertRaisesRegex(
-                    RuntimeError,
-                    "injected formal reread failure",
-                ):
+                with self.assertRaisesRegex(RuntimeError, "旧目标已恢复") as caught:
                     full_quality.commit_full_audit(
                         lake_root,
-                        missing_staging,
-                        calendar_staging,
+                        staging_path,
                         audit_result,
                         run_id,
                     )
+                self.assertIn("injected formal reread failure", str(caught.exception.__cause__))
 
             restored_calendar_table = ds.dataset(
                 silver_root / full_quality.CALENDAR_TABLE_NAME,
@@ -1212,7 +1210,9 @@ class B01OHLCRetentionTest(unittest.TestCase):
             self.assertFalse(
                 (silver_root / full_quality.MISSING_TABLE_NAME).exists()
             )
-            self.assertEqual(list(silver_root.glob(".c08-*-*")), [])
+            self.assertEqual(list(silver_root.glob(".b08-s-*")), [])
+            self.assertEqual(list(silver_root.glob(".b08-b-*")), [])
+            self.assertTrue(list(silver_root.glob(".b08-f-*")))
 
 
 if __name__ == "__main__":

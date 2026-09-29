@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import pathlib
+import sys
+from dataclasses import replace
 import tempfile
 import types
 import unittest
@@ -401,50 +403,42 @@ class MacroReleaseCalendarTests(unittest.TestCase):
                 recovery_paths(lake_root / "silver", self.module.TABLE_NAME)
             )
 
-    def test_current_metadata_policy_damage_is_not_silently_migrated(self) -> None:
+    def test_current_contract_configuration_change_resets_only_changed_policy(self) -> None:
         current = self.build_frame()
-        damaged = current.loc[
-            current["series_code"].eq("CPI_NATIONAL_YOY")
-            & current["report_date"].eq(date(2026, 7, 31))
-        ].copy()
-        damaged.loc[:, "requirement_reason"] = "当前 metadata 下的损坏策略。"
-
-        with tempfile.TemporaryDirectory(prefix="b04-c01-damaged-") as directory:
+        completed_at = datetime.now(timezone.utc) - timedelta(seconds=5)
+        observation_date = date(2026, 8, 17)
+        completed = current["report_date"].eq(observation_date) & current["series_code"].isin(["SHIBOR_ON", "SHIBOR_1W"])
+        self.assertEqual(int(completed.sum()), 2)
+        for column, value in {
+            "is_fetch_completed": True, "fetch_result_status": "success", "actual_record_count": 1,
+            "quality_status": "passed", "quality_reason": "既有正式事实已复读。", "fetch_run_id": "existing-complete",
+            "fetch_completed_at": completed_at, "quality_checked_at": completed_at, "updated_at": completed_at,
+        }.items():
+            current.loc[completed, column] = value
+        revised_series = tuple(
+            replace(series, series_name_zh=series.series_name_zh + "（配置修订）")
+            if series.series_code == "SHIBOR_ON" else series
+            for series in self.module.MACRO_RELEASE_SERIES
+        )
+        with tempfile.TemporaryDirectory(prefix="macro-policy-revision-") as directory:
             lake_root = pathlib.Path(directory)
             target_path = lake_root / "silver" / self.module.TABLE_NAME
-            write_partitioned_calendar(
-                self.module,
-                damaged,
-                target_path,
-            )
-            fake_settings = types.SimpleNamespace(
-                futures_lake_root=lake_root,
-                futures_data_start_date=date(2026, 7, 17),
-            )
-            with mock.patch.object(self.module, "settings", fake_settings):
+            write_partitioned_calendar(self.module, current, target_path)
+            with (
+                mock.patch.object(self.module, "settings", types.SimpleNamespace(futures_lake_root=lake_root, futures_data_start_date=date(2026, 7, 17))),
+                mock.patch.object(self.module, "MACRO_RELEASE_SERIES", revised_series),
+                mock.patch.object(self.module, "MACRO_RELEASE_SERIES_BY_KEY", {(series.dataset_name, series.series_code): series for series in revised_series}),
+            ):
                 result = CliRunner().invoke(self.module.main, ("--write",))
-
-            self.assertEqual(result.exit_code, 1)
-            self.assertIsInstance(result.exception, ValueError)
-            self.assertIn("不得把正式数据损坏静默当作旧契约迁移", str(result.exception))
-            persisted_dataset = self.module.open_exact_dataset(
-                target_path,
-                "损坏策略拒绝后的原正式表",
-            )
-            persisted_df = self.module.validate_macro_calendar_table(
-                persisted_dataset.to_table(
-                    columns=self.module.MACRO_RELEASE_CALENDAR_SCHEMA.names
-                ),
-                "损坏策略拒绝后的原正式表",
-                allow_legacy_policy=True,
-            )
-            self.assertEqual(
-                persisted_df.iloc[0]["requirement_reason"],
-                "当前 metadata 下的损坏策略。",
-            )
-            self.assertFalse(
-                recovery_paths(lake_root / "silver", self.module.TABLE_NAME)
-            )
+                self.assertEqual(result.exit_code, 0, msg=str(result.exception))
+                dataset = self.module.open_exact_dataset(target_path, "配置变化后日历")
+                frame = self.module.validate_macro_calendar_table(dataset.to_table(columns=self.module.MACRO_RELEASE_CALENDAR_SCHEMA.names), "配置变化后")
+            rows = frame.loc[frame["report_date"].eq(observation_date)].set_index("series_code")
+            self.assertEqual(rows.loc["SHIBOR_ON", "fetch_result_status"], "pending")
+            self.assertTrue(pd.isna(rows.loc["SHIBOR_ON", "fetch_run_id"]))
+            self.assertEqual(rows.loc["SHIBOR_1W", "fetch_result_status"], "success")
+            self.assertEqual(rows.loc["SHIBOR_1W", "fetch_run_id"], "existing-complete")
+            self.assertFalse(recovery_paths(lake_root / "silver", self.module.TABLE_NAME))
 
     def test_full_swap_first_move_failure_keeps_old_root(self) -> None:
         old_frame = self.build_frame()
@@ -462,8 +456,9 @@ class MacroReleaseCalendarTests(unittest.TestCase):
                 old_frame,
                 target_path,
             )
-            old_digest = self.module.table_digest(old_frame)
-            real_move = self.module.shutil.move
+            old_digest = self.module.table_digest(self.module.pandas_to_arrow(old_frame, self.module.MACRO_RELEASE_CALENDAR_SCHEMA))
+            transaction_module = sys.modules[self.module.StagedPathTransaction.__module__]
+            real_move = transaction_module.os.replace
 
             def fail_old_root_move(source: str, destination: str) -> str:
                 if pathlib.Path(source) == target_path:
@@ -471,8 +466,8 @@ class MacroReleaseCalendarTests(unittest.TestCase):
                 return real_move(source, destination)
 
             with mock.patch.object(
-                self.module.shutil,
-                "move",
+                transaction_module.os,
+                "replace",
                 side_effect=fail_old_root_move,
             ):
                 with self.assertRaisesRegex(OSError, "injected"):
@@ -496,7 +491,7 @@ class MacroReleaseCalendarTests(unittest.TestCase):
                 ),
                 "首步失败后的旧正式根",
             )
-            self.assertEqual(self.module.table_digest(restored_df), old_digest)
+            self.assertEqual(self.module.table_digest(self.module.pandas_to_arrow(restored_df, self.module.MACRO_RELEASE_CALENDAR_SCHEMA)), old_digest)
             self.assertFalse(recovery_paths(silver_root, self.module.TABLE_NAME))
 
     def test_partial_leaf_second_move_failure_restores_old_leaf(self) -> None:
@@ -520,8 +515,9 @@ class MacroReleaseCalendarTests(unittest.TestCase):
                 old_frame,
                 target_path,
             )
-            old_digest = self.module.table_digest(old_frame)
-            real_move = self.module.shutil.move
+            old_digest = self.module.table_digest(self.module.pandas_to_arrow(old_frame, self.module.MACRO_RELEASE_CALENDAR_SCHEMA))
+            transaction_module = sys.modules[self.module.StagedPathTransaction.__module__]
+            real_move = transaction_module.os.replace
             injected = False
 
             def fail_staging_leaf_move(source: str, destination: str) -> str:
@@ -538,8 +534,8 @@ class MacroReleaseCalendarTests(unittest.TestCase):
                 return real_move(source, destination)
 
             with mock.patch.object(
-                self.module.shutil,
-                "move",
+                transaction_module.os,
+                "replace",
                 side_effect=fail_staging_leaf_move,
             ):
                 with self.assertRaisesRegex(OSError, "injected"):
@@ -559,7 +555,7 @@ class MacroReleaseCalendarTests(unittest.TestCase):
                 ),
                 "第二步失败后的旧正式叶",
             )
-            self.assertEqual(self.module.table_digest(restored_df), old_digest)
+            self.assertEqual(self.module.table_digest(self.module.pandas_to_arrow(restored_df, self.module.MACRO_RELEASE_CALENDAR_SCHEMA)), old_digest)
             self.assertFalse(recovery_paths(silver_root, self.module.TABLE_NAME))
 
 

@@ -274,7 +274,7 @@ open, high, low, close, volume, money, open_interest
 
 # 第 07 项冻结的 Notebook 与聚宽代码生成
 
-- `plan_financial_futures_fetch.ipynb` 是唯一正式本地规划 Notebook，使用 `latitude` 内核，按标记文件定位仓库根并直接导入第 06 项规划器。开篇通过 `02_Futures_Lakehouse/notebook_schema_browser.py` 的 `display_schema_metadata()` 展示 `TRADE_CALENDAR_SCHEMA` 与 `FUTURES_BAR_CALENDAR_SCHEMA`，项目 DuckDB 四表则只读展示 `financial_futures_local_contract.py` 的列定义；不得伪造新的 Arrow silver 契约或为了展示创建数据库。
+- `plan_financial_futures_fetch.ipynb` 是唯一正式本地规划 Notebook，使用 `latitude` 内核，按标记文件定位仓库根并直接导入第 06 项规划器。开篇通过 `02_Futures_Lakehouse/a00_03_notebook_schema_browser.py` 的 `display_schema_metadata()` 展示 `TRADE_CALENDAR_SCHEMA` 与 `FUTURES_BAR_CALENDAR_SCHEMA`，项目 DuckDB 四表则只读展示 `financial_futures_local_contract.py` 的列定义；不得伪造新的 Arrow silver 契约或为了展示创建数据库。
 - Notebook 采用单次 Run All 的线性流程：开篇环境与第 1—2 节契约，第 3 节自动消化 ZIP，第 4—8 节全白名单缺失、覆盖与分批预估，第 9 节定义远端模板，最后第 10 节输出结论或完整聚宽代码。默认 as_of=None、acceptance_contract_dates=None；首次没有 ZIP、历史回补和日常增量共用此入口。合约首尾日期只是包围范围，预览过滤不改变规划范围。
 - 聚宽导出模板直接保存在 Notebook 文本单元格，不为交付再生成独立 `.py`。最后第 10 节重新核对内存计划 SHA-256，内嵌压缩计划与协议常量，只在本地编译、不执行远端代码；非空计划提供可全选文本框及纯文本 MIME，空计划不调用 API 或覆盖文件。
 - 第 3 节只调用正式导入函数并展示带时间结果，不复制解包、事务或缺失算法；每轮开篇重载模块并清空旧计划、代码、报告及规划就绪标志。导入失败或未经过规划时最后一格拒绝生成；成功后同一次 Run All 自动继续规划。修改流程前归档原 Notebook 及用户输出，交付 Notebook 清除过期输出但保留用户空单元格，最后代码格始终位于末尾。

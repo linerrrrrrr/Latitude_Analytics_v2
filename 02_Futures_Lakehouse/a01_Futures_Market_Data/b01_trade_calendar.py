@@ -3,17 +3,61 @@
 
 # # b01_trade_calendar
 # 
-# 目标表：dim_trade_calendar。自然日与 JQData 交易日集合。
-
-# ## 自动更新与正式湖写入边界
+# 生成 `dim_trade_calendar`：每个自然日保留一行，`is_trading_day` 来自 JQData 交易日集合。Notebook 用于分步阅读和执行，同名 `.py` 由默认 PythonExporter 生成。
 # 
-# 默认模式信任已经正式提交的历史，只从正式表最大自然日的下一天采集到当前有效日；没有尾部新增时在认证和 API 调用之前结束。空湖的最大日期为空，因此同一默认入口自然完成首次全建。显式 `--full` 保留全历史来源比较，用于人工发现历史缺口和上游修订。
+# 阅读顺序：初始化与契约 → 业务校验 → 分区提交 → 来源采集 → 运行模式与执行。函数定义单元格不发起采集，最后的入口单元格才按参数运行。
+
+# ## 总流程：从运行入口到日历提交
 # 
-# 正式湖根目录由 `.env` 的 `FUTURES_LAKE_ROOT` 唯一指定。默认尾部模式和显式 `--full` 都可通过 `--write` 更新正式湖；显式日期与 `--full` 互斥，日期范围只允许检查，或者写入另行指定的非正式测试湖。
+# 下图按实际调用顺序阅读。后面的函数定义单元格只注册函数；采集与提交由执行入口触发。矩形表示操作，菱形表示分支，箭头表示控制流；局部图中未展开的校验异常会向调用方抛出。
+# 
+# 默认模式无新增日期时，在 collect 前直接结束；全历史无差异时不提交。细分分支见 main 局部图。
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart TD
+#     A["初始化与定义 → 执行入口 main"] --> B["检查参数、写入边界与当前有效日"]
+#     B --> C["确定采集范围：尾部 / 全历史 / 显式日期"]
+#     C --> D["collect：一次请求交易日，生成完整自然日历"]
+#     D --> E["转换与业务校验；返回日历 DataFrame"]
+#     E --> F["形成待提交行；全历史模式先比较缺失或修订"]
+#     F --> W{"有待提交行且启用 --write？"}
+#     W -->|否| R["只读或无需更新，结束"]
+#     W -->|是| G["commit_partitions：合并完整年份并校验"]
+#     G --> H["staging 写入复读 → 共享事务逐年安装与正式复读"]
+#     H --> I["成功清理；事务失败则回滚并抛出异常"]
+# ```
 
-# ## 初始化与表配置
+# ## 更新范围与正式湖写入边界
+# 
+# | 模式 | 处理范围 | 写入边界 |
+# | --- | --- | --- |
+# | 默认尾部更新 | 从已提交最大自然日的下一天推进到当前有效日；空湖从配置起点开始 | 可用 `--write` 写正式湖；无新增时在认证和 API 调用前结束 |
+# | `--full` | 比较配置起点至当前有效日的完整来源日历，找出缺失或修订日期 | 可用 `--write` 写正式湖，只提交差异；与显式日期互斥 |
+# | 成对显式日期 | 采集并校验指定闭区间 | 可只读检查；写入时必须指定非正式湖 |
+# 
+# 当前有效日以北京时间 20:00 为界：此前取前一自然日，此后取当日。正式湖根目录由 `.env` 的 `FUTURES_LAKE_ROOT` 唯一指定，正式起点从 `settings.futures_data_start_date` 读取。
+# 
+# 默认路径信任已经正式提交的历史；历史内部缺口与来源修订由显式 `--full` 检查。数据契约来自 [`config/data_contracts.py`](../../config/data_contracts.py)，采集规则见[湖仓 README](../README.md)。
 
-# ## Schema 契约呈现
+# ## 初始化与依赖
+# 
+# 先按项目标记定位仓库根目录，再导入配置、表格库和权威 Schema。这里不认证 JQData，也不执行写入。
+
+# ### 局部流程：初始化
+# 
+# 只准备运行依赖；不认证、不请求来源、不写湖。
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart TD
+#     A["执行初始化单元格"] --> B["从当前目录逐级查找项目标记"]
+#     B --> C{"找到仓库根目录？"}
+#     C -->|否| X["抛出异常，停止初始化"]
+#     C -->|是| D["加入项目与湖仓导入路径"]
+#     D --> E["导入 settings、表格库与权威 Schema"]
+#     E --> F["后续定义单元格可执行"]
+# ```
 
 # In[1]:
 
@@ -22,11 +66,11 @@ from __future__ import annotations
 
 # Python 标准库：路径定位、合约代码解析、目录替换、导入路径和提交批次标识。
 import pathlib
-import shutil
 import sys
 import uuid
 from datetime import date, datetime, time, timedelta
 from zoneinfo import ZoneInfo
+from time import perf_counter
 
 # 按项目统一标记从任意工作目录定位仓库根目录。
 project_markers = ['.git', '.env', 'config/settings.py']
@@ -54,15 +98,54 @@ from config.data_contracts import (
     pandas_to_arrow,    # 将列及顺序匹配的 Pandas DataFrame 安全转换为契约化 Arrow 表
     validate_arrow_table    # 按权威 Schema 安全转换 Arrow 表，并校验列顺序和非空约束
 )
+from a00_04_staged_path_transaction import StagedPathTransaction
 
+
+# ## Schema 契约浏览
+# 
+# 下面的展示单元格只在 Notebook 中启用，读取权威 Schema 和所选分区的有界样例；脚本运行时跳过交互展示。
+
+# ### 局部流程：Schema 与样例浏览
+# 
+# 只读展示 `dim_trade_calendar` 的权威契约与有界样例。
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart LR
+#     A{"Notebook 交互环境？"} -->|是| B["展示权威 Schema"]
+#     B --> C["按交互选择读取有界样例"]
+#     A -->|否| D["跳过展示"]
+# ```
 
 # In[2]:
 
 
 if "ipykernel" in sys.modules and "__file__" not in globals():
-    from notebook_schema_browser import display_schema_metadata
+    from a00_03_notebook_schema_browser import display_schema_metadata
     display_schema_metadata([TRADE_CALENDAR_SCHEMA], lake_root=settings.futures_lake_root)
 
+
+# ## 表配置与物理契约检查
+# 
+# 表名、主键和分区字段从 Schema metadata 读取一次。逻辑 Schema 检查固定字段、类型、nullable 与身份 metadata；逐 fragment 检查用于发现其他 Parquet 文件的物理漂移。描述性 metadata 允许随代码更新。
+
+# ### 局部流程：表配置与物理契约检查
+# 
+# 执行本单元格时，从 metadata 读取一次表名、主键、分区，并设置 20:00 生效时点。下面两条路径描述检查函数被调用时的行为；任何契约不匹配直接抛出异常。
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart TD
+#     A{"调用哪个检查函数？"} -->|单 Schema 检查| B["比较字段及顺序、类型、nullable"]
+#     B --> C["比较表名、主键、分区 metadata"]
+#     C --> D["返回；描述性 metadata 不阻断"]
+#     A -->|逐文件检查| E["从权威 Schema 排除 Hive 分区列"]
+#     E --> F["遍历 fragment，读取物理 Schema"]
+#     F --> G["调用单 Schema 检查"]
+#     G --> H{"还有 fragment？"}
+#     H -->|是| F
+#     H -->|否| I["全部文件检查完成，返回"]
+# ```
 
 # In[3]:
 
@@ -121,6 +204,28 @@ def validate_dataset_fragment_schemas(
 
 
 # ## 表级业务规则校验
+# 
+# `validate_calendar_table()` 只检查主键、自然日连续性、派生字段、固定来源值和审计时间。调用方先通过 `pandas_to_arrow()` 或 `validate_arrow_table()` 完成一次 Arrow 类型与非空校验，本函数直接使用其结果，不再执行相同转换。来源生成的完整区间要求连续；局部修订与分散年份的提交使用 `require_contiguous=False`，其余规则仍执行。
+# 
+# 校验分别服务于来源结果、独立提交输入和合并后的完整年份分区。全历史分支只从已校验结果筛选待提交行，不再对该子集重复执行完整业务校验。
+
+# ### 局部流程：交易日历业务校验
+# 
+# 输入已经完成 Arrow 类型与非空校验。本函数只验证业务规则并返回原 Arrow 表；图中任一检查失败均抛出异常。
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart TD
+#     A["已契约化的 calendar_table"] --> B["转 Pandas 并按日期排序"]
+#     B --> C["检查非空、主键唯一"]
+#     C --> D{"require_contiguous？"}
+#     D -->|是| E["检查完整自然日连续性"]
+#     D -->|否| F["检查日期键、星期、周末标记、年份"]
+#     E --> F
+#     F --> G["检查日历名称、时区、来源与生效时点"]
+#     G --> H["检查 updated_at 不晚于当前 UTC 时间"]
+#     H --> I["返回通过业务校验的原 Arrow 表"]
+# ```
 
 # In[4]:
 
@@ -131,13 +236,12 @@ def validate_calendar_table(
     require_contiguous: bool = True,
 ) -> pa.Table:
     """
-    按权威 Schema 和交易日历业务规则校验 Arrow 表
-    上游为 JQData get_trade_days() 返回区间或全量内交易日 calendar_table
+    校验已经通过权威 Arrow 契约转换的交易日历业务规则。
 
     Parameters
     ----------
     calendar_table : pa.Table
-        待校验的中国期货交易日历逻辑表。
+        已由 pandas_to_arrow() 或 validate_arrow_table() 完成类型与非空校验的日历表。
     require_contiguous : bool, default True
         是否要求 `calendar_date` 从最小日到最大日逐自然日连续。
         离散年份的局部提交批次可设为 `False`。
@@ -145,12 +249,11 @@ def validate_calendar_table(
     Returns
     -------
     pa.Table
-        已安全转换为 `TRADE_CALENDAR_SCHEMA` 并通过业务校验的表。
+        通过业务校验的原 Arrow 表；本函数不重复类型转换。
     """
 
-    # 先按权威 Schema 安全转换，再检查本表独有的业务不变量。
-    validated_calendar_table = validate_arrow_table(calendar_table, TRADE_CALENDAR_SCHEMA)
-    calendar_df = validated_calendar_table.to_pandas().sort_values('calendar_date').reset_index(drop=True)
+    # Arrow 契约由调用方统一转换入口保证；这里只检查本表独有的业务不变量。
+    calendar_df = calendar_table.to_pandas().sort_values('calendar_date').reset_index(drop=True)
 
     # 交易日历至少应包含一条有效日期记录。
     if calendar_df.empty:
@@ -210,10 +313,47 @@ def validate_calendar_table(
     if (calendar_df.updated_at > pd.Timestamp.now(tz='UTC')).any():
         raise ValueError('updated_at 不得晚于当前校验时间。')
 
-    return validated_calendar_table
+    return calendar_table
 
 
 # ## 分区合并、提交与失败回滚
+# 
+# `commit_partitions()` 接收新增或修订行，并保留同一年份中其他正式行。执行顺序为：输入校验 → 触达年份合并与业务校验 → staging 写入与复读 → 逐年份替换及正式复读 → 清理临时目录；提交异常沿现有回滚路径处理。
+# 
+# 日志由函数自身输出：先报告输入行数，再报告完整替换行数和年份数；每个年份正式复读通过后推进分区计数。`rows` 在最终提交日志和返回值中均指本批输入行数，`replacement_rows` 表示包含保留旧行的替换总行数。
+# 
+# 预期物理 Schema、物理主键列和分区总数在安装循环前计算一次。staging 与正式安装逐文件检查物理契约，并检查主键唯一性和行数，不重复执行完整业务规则。正式叶复用循环外的预期物理 Schema，每个文件只检查一次，不再额外检查覆盖相同内容的叶 Dataset Schema。每个 staging 叶的行数在移动旧分区前读取；旧分区成功移入备份后立即登记回滚信息，再安装新分区。
+# 
+# 安装与失败恢复共用 `StagedPathTransaction`：环节仍按顺序合并、写入并验收 staging，在事务 `with` 中逐分区安装并正式复读；整组退出成功才完成提交。正式复读抛出异常时，共享事务恢复本次实际移动的目标。
+
+# ### 局部流程：按完整年份提交
+# 
+# 输入是本批新增或修订行；同一年未触达日期保留。完整替换年份在写入前校验业务规则，写入后的复读检查物理契约、主键与行数。提交日志由本函数负责。
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart TD
+#     A["记录提交开始"] --> B{"输入为空？"}
+#     B -->|是| Z["记录 skipped，返回 0"]
+#     B -->|否| C["转换并校验输入；确定触达年份与事务路径"]
+#     C --> D["读取触达年份旧行；按主键以新行覆盖旧行"]
+#     D --> E["校验完整替换年份；无旧数据时复用输入"]
+#     E --> F["写 staging；复读契约、主键、行数"]
+#     F --> G["循环前准备物理 Schema、主键列、分区总数"]
+#     G --> H["逐年：确认 staging 并读取预期行数"]
+#     H --> I["共享事务：备份旧年份；登记实际移动；安装新年份"]
+#     I --> J["逐文件物理检查；主键与行数核对；记录进度"]
+#     J --> K{"还有触达年份？"}
+#     K -->|是| H
+#     K -->|否| L["清理备份与 staging；记录成功；返回输入行数"]
+#     F -.->|事务内失败| R["共享事务：按实际移动倒序删除新分区、恢复旧分区"]
+#     H -.->|事务内失败| R
+#     I -.->|事务内失败| R
+#     J -.->|事务内失败| R
+#     R --> S["清理 staging；回滚不完整则保留备份；抛出异常"]
+# ```
+# 
+# 共享事务负责安装状态记录、失败恢复与清理；逐分区正式验收和进度仍由本环节负责。
 
 # In[5]:
 
@@ -236,11 +376,24 @@ def commit_partitions(new_calendar_df: pd.DataFrame, lake_root: pathlib.Path) ->
         本批输入 `new_calendar_df` 的行数，不是合并后完整年份分区的总行数。
     """
 
+    commit_started_at = perf_counter()
+    click.echo(
+        f'partition_plan: table={TABLE_NAME}; phase=commit; status=started; '
+        f'rows={len(new_calendar_df)}; lake_root={lake_root}'
+    )
     if new_calendar_df.empty:
+        click.echo(
+            f'committed: table={TABLE_NAME}; status=skipped; rows=0; partitions=0; '
+            f'elapsed_s={perf_counter() - commit_started_at:.3f}'
+        )
         return 0
+
+    click.echo(f'planning_progress: table={TABLE_NAME}; phase=merge_validate; status=started')
 
     # 本批数据先过契约校验，并为 staging、备份目录生成独立批次标识。
     # 把新数据转换成 Arrow，并做契约校验
+    # 待提交日期可能分散在多个年份，不一定组成一段连续自然日，因此关闭连续性检查
+    # 主键、派生字段、固定值等其他规则仍然执行
     new_calendar_table = validate_calendar_table(
         pandas_to_arrow(new_calendar_df.loc[:, TRADE_CALENDAR_SCHEMA.names], TRADE_CALENDAR_SCHEMA), # 只保留 Schema 中规定的列
         require_contiguous=False,
@@ -317,16 +470,19 @@ def commit_partitions(new_calendar_df: pd.DataFrame, lake_root: pathlib.Path) ->
 
 
     # 接下来整个逻辑块会先完整写入并复读 staging，任何检查失败都不会触碰正式分区
-    # moved_partitions 记录已经开始替换的叶分区，用于提交失败时倒序回滚。
-    moved_partitions = []
-    # 每一项保存：
-    #     正式目标路径 formal_partition_path,
-    #     旧分区备份路径 backup_partition_path,
-    #     提交前是否存在旧分区 has_existing_partition
-
-    try:
+    # 共享事务记录实际移动；安装或正式验收失败时倒序回滚。
+    click.echo(
+        f'partition_plan: table={TABLE_NAME}; phase=merge_validate; status=completed; '
+        f'rows={len(new_calendar_table)}; replacement_rows={len(replacement_calendar_table)}; '
+        f'partitions={len(touched_partitions_df)}; years={touched_years}; run_id={run_id}'
+    )
+    with StagedPathTransaction(
+        root_path=calendar_path, staging_dir=staging_dir, backup_dir=backup_dir,
+        log_context=f'table={TABLE_NAME}; run_id={run_id}',
+    ) as transaction:
 
         # 第一阶段：只向本批独立 staging 目录写入 Parquet。
+        click.echo(f'planning_progress: table={TABLE_NAME}; phase=staging_write; status=started; run_id={run_id}')
         ds.write_dataset(
             replacement_calendar_table, staging_dir, format='parquet', partitioning=calendar_partitioning,
             existing_data_behavior='delete_matching', # 如果写入过程中遇到相同的分区目录，使用当前待写数据替换 staging 中对应内容。
@@ -334,6 +490,7 @@ def commit_partitions(new_calendar_df: pd.DataFrame, lake_root: pathlib.Path) ->
         )
 
         # 把刚写出的 staging 重新打开为 PyArrow Dataset
+        click.echo(f'planning_progress: table={TABLE_NAME}; phase=staging_readback; status=started; run_id={run_id}')
         staged_calendar_dataset = ds.dataset(staging_dir, format='parquet', partitioning=calendar_partitioning)
         staged_calendar_schema = pa.schema([staged_calendar_dataset.schema.field(field_name) for field_name in TRADE_CALENDAR_SCHEMA.names], metadata=staged_calendar_dataset.schema.metadata)
         # 从 staging Dataset 重建完整逻辑 Schema：
@@ -341,6 +498,9 @@ def commit_partitions(new_calendar_df: pd.DataFrame, lake_root: pathlib.Path) ->
 
         validate_compatible_dataset_schema(
             staged_calendar_schema, TRADE_CALENDAR_SCHEMA, 'staging '
+        )
+        validate_dataset_fragment_schemas(
+            staged_calendar_dataset, TRADE_CALENDAR_SCHEMA, PARTITION_COLUMNS, 'staging '
         )
 
         # staging 只复读物理契约、主键和行数；业务规则已经在构造完整替换分区时校验。
@@ -352,111 +512,107 @@ def commit_partitions(new_calendar_df: pd.DataFrame, lake_root: pathlib.Path) ->
             raise ValueError('staging 主键不唯一。')
         if len(staged_calendar_table) != len(replacement_calendar_table): # 确认写入和复读过程没有丢行或额外产生行
             raise ValueError('staging 行数检查失败。')
+        click.echo(
+            f'planning_progress: table={TABLE_NAME}; phase=staging_readback; status=completed; '
+            f'rows={len(staged_calendar_table)}; run_id={run_id}'
+        )
 
         # staging 已经通过复读检查，开始进入正式分区替换阶段
-        backup_dir.mkdir(parents=True, exist_ok=False) # 建立本批独立备份目录
         calendar_path.mkdir(parents=True, exist_ok=True) # 确保正式数据集根目录存在
 
 
+        expected_partition_schema = pa.schema(
+            [
+                TRADE_CALENDAR_SCHEMA.field(name)
+                for name in TRADE_CALENDAR_SCHEMA.names
+                if name not in PARTITION_COLUMNS
+            ],
+            metadata=TRADE_CALENDAR_SCHEMA.metadata,
+        )
+        physical_primary_key_columns = [name for name in PRIMARY_KEY if name not in PARTITION_COLUMNS]
+        partition_count = len(touched_partitions_df)
+
         # touched_partitions_df 的每一行是一个完整分区键组合。
-        for partition_values in touched_partitions_df.itertuples(index=False, name=None):
+        for partition_index, partition_values in enumerate(touched_partitions_df.itertuples(index=False, name=None), start=1):
+            partition_started_at = perf_counter()
 
             # 将分区字段名和值组合成 Hive 相对目录
             partition_relative_path = pathlib.Path(*[f'{partition_column}={partition_value}' for partition_column, partition_value in zip(PARTITION_COLUMNS, partition_values, strict=True)])  # 分区列和值必须等长
 
             staged_partition_path = staging_dir / partition_relative_path
             formal_partition_path = calendar_path / partition_relative_path
-            backup_partition_path = backup_dir / partition_relative_path
+            click.echo(
+                f'partition_start: table={TABLE_NAME}; partition={partition_relative_path}; '
+                f'completed={partition_index - 1}; total={partition_count}; run_id={run_id}'
+            )
 
             if not staged_partition_path.is_dir(): # staging 中必须存在本次计划提交的分区目录
                 raise FileNotFoundError(f'staging 缺少 {partition_relative_path}。')
 
-            # 确保正式分区和备份分区的父目录存在
-            formal_partition_path.parent.mkdir(parents=True, exist_ok=True)
-            backup_partition_path.parent.mkdir(parents=True, exist_ok=True)
-
-            has_existing_partition = formal_partition_path.exists()
-            # 记录提交前正式分区是否已经存在
-            # 回滚时据此判断是否需要恢复旧分区
-
-            # 如果正式分区已经存在，先把旧分区整体移动到 backup
-            if formal_partition_path.exists():
-                shutil.move(str(formal_partition_path), str(backup_partition_path))
-
             staged_partition_row_count = ds.dataset(
                 staged_partition_path, format='parquet'
             ).count_rows()
-            moved_partitions.append((formal_partition_path, backup_partition_path, has_existing_partition)) # 在移动新分区前记录回滚信息
-            shutil.move(str(staged_partition_path), str(formal_partition_path)) # 将已经验证过的 staging 分区移动到正式位置
+
+            # 如果正式分区已经存在，先把旧分区整体移动到 backup。
+            # 共享事务登记实际移动，再将已验证的 staging 分区安装到正式位置。
+            transaction.replace(target_path=formal_partition_path, staged_path=staged_partition_path)
             # 正式安装后只复读刚触达的叶：物理契约、身份 metadata、主键和行数。
             committed_partition_dataset = ds.dataset(
                 formal_partition_path, format='parquet'
             )
-            committed_partition_schema = pa.schema(
-                [committed_partition_dataset.schema.field(name) for name in committed_partition_dataset.schema.names],
-                metadata=committed_partition_dataset.schema.metadata,
-            )
-            expected_partition_schema = pa.schema(
-                [
-                    TRADE_CALENDAR_SCHEMA.field(name)
-                    for name in TRADE_CALENDAR_SCHEMA.names
-                    if name not in PARTITION_COLUMNS
-                ],
-                metadata=TRADE_CALENDAR_SCHEMA.metadata,
-            )
-            validate_compatible_dataset_schema(
-                committed_partition_schema, expected_partition_schema,
-                f'正式分区 {partition_relative_path} ',
-            )
+            for fragment in committed_partition_dataset.get_fragments():
+                validate_compatible_dataset_schema(
+                    fragment.physical_schema, expected_partition_schema,
+                    f'正式分区 {partition_relative_path} fragment {fragment.path} ',
+                )
             committed_primary_key_table = committed_partition_dataset.to_table(
-                columns=[name for name in PRIMARY_KEY if name not in PARTITION_COLUMNS]
+                columns=physical_primary_key_columns
             )
             if committed_primary_key_table.to_pandas().duplicated(
-                [name for name in PRIMARY_KEY if name not in PARTITION_COLUMNS]
+                physical_primary_key_columns
             ).any():
                 raise ValueError(f'正式分区 {partition_relative_path} 主键不唯一。')
             committed_partition_row_count = len(committed_primary_key_table)
             if committed_partition_row_count != staged_partition_row_count:
                 raise ValueError(f'正式分区 {partition_relative_path} 行数检查失败。')
+            click.echo(
+                f'partition_committed: table={TABLE_NAME}; partition={partition_relative_path}; '
+                f'completed={partition_index}; total={partition_count}; rows={committed_partition_row_count}; '
+                f'elapsed_s={perf_counter() - partition_started_at:.3f}; run_id={run_id}'
+            )
 
 
-    # try 内任何步骤失败都会进入回滚，commit_error 保存最初导致提交失败的异常
-    except Exception as commit_error:
-
-        rollback_errors = []  # 只回滚本批已经移动的分区；回滚异常时保留备份供人工恢复。
-        for formal_partition_path, backup_partition_path, has_existing_partition in reversed(moved_partitions):
-        # 必须按提交的相反顺序回滚，后移动的分区先恢复，避免嵌套路径或中间状态互相干扰
-
-            try:
-                if formal_partition_path.exists(): # 如果正式位置存在本批移入的新分区，先删除它
-                    shutil.rmtree(formal_partition_path)
-
-                if has_existing_partition and backup_partition_path.exists(): # 如果提交前存在旧正式分区，并且其备份仍然存在，
-                # 将旧分区从 backup 恢复到原正式位置
-                    formal_partition_path.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.move(str(backup_partition_path), str(formal_partition_path))
-
-            except Exception as rollback_error:
-                rollback_errors.append(f'{formal_partition_path}: {rollback_error}')
-
-        if rollback_errors:
-            raise RuntimeError('提交失败且回滚不完整；备份保留在 ' + str(backup_dir) + '；' + '; '.join(rollback_errors)) from commit_error
-
-        shutil.rmtree(backup_dir, ignore_errors=True) # 回滚完整成功后不再需要 backup
-        raise # 重新抛出最初的提交异常，而不是将错误吞掉
-
-    else: # try 整体成功时执行
-        shutil.rmtree(backup_dir, ignore_errors=True)
-        # 正式数据已经复读并通过检查，旧分区备份可以删除
-
-    finally: # 无论提交成功、提交失败还是回滚失败，都会执行 finally
-        shutil.rmtree(staging_dir, ignore_errors=True)
-        # staging 只是临时写入目录，最后统一清理
-
+    click.echo(
+        f'committed: table={TABLE_NAME}; status=completed; rows={len(new_calendar_table)}; '
+        f'partitions={partition_count}; elapsed_s={perf_counter() - commit_started_at:.3f}; run_id={run_id}'
+    )
     return len(new_calendar_table)# 返回本次调用传入并通过校验的新数据行数
 
 
 # ## JQData 交易日采集与标准化
+# 
+# `collect()` 在指定自然日闭区间内执行认证、请求交易日集合、生成全部自然日字段并完成业务校验；休市日也保留一行。只读运行同样校验转换结果。
+# 
+# 认证、API 请求、构建校验及采集完成日志直接写在函数中，直接调用和 CLI 调用具有相同的进度输出。请求是一次同步调用，期间只报告当前环节；完成后报告自然日数、交易日数和耗时。
+# 
+# 总控台启动时，已验收的生成结果另存为本批 `run_history/.../artifacts/b01_generated.parquet`，供界面直接展示。该文件属于运行证据，不是 silver 提交；只读模式也可生成预览，预览失败只记录 warning。独立 CLI / Notebook 未设置控制面预览路径时不增加文件。
+
+# ### 局部流程：请求交易日并生成完整自然日历
+# 
+# 日志随认证、请求、构建校验和完成阶段推进。`get_trade_days` 只请求一次；同步请求期间没有逐行进度。
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart
+#     A["校验起止日期；记录采集开始"] --> B["认证 JQData"]
+#     B --> C["get_trade_days：请求闭区间交易日集合"]
+#     C --> D["确认来源交易日位于请求范围内"]
+#     D --> E["生成全部自然日；按集合标记交易日"]
+#     E --> F["补充日期派生列、固定值与批次时间"]
+#     F --> G["pandas_to_arrow：类型与非空校验"]
+#     G --> H["validate_calendar_table：完整区间业务校验"]
+#     H --> I["记录自然日数、交易日数与耗时；返回 DataFrame"]
+# ```
 
 # In[6]:
 
@@ -477,6 +633,11 @@ def collect(start: date, end: date) -> pd.DataFrame:
         按权威 Schema 生成并通过完整业务校验的逐自然日结果。
     """
 
+    collection_started_at = perf_counter()
+    click.echo(
+        f'planning_progress: table={TABLE_NAME}; phase=collect; status=started; '
+        f'start_date={start}; end_date={end}'
+    )
     if start > end:
         raise ValueError('起始日期不得晚于结束日期。')
 
@@ -485,10 +646,25 @@ def collect(start: date, end: date) -> pd.DataFrame:
     from config.jqdata_connection import authenticate_jqdata
 
     # JQData 只提供交易日集合，全部自然日仍由本工作流生成。
+    click.echo(f'planning_progress: table={TABLE_NAME}; phase=authenticate; status=started')
     jqdata_client = authenticate_jqdata(settings.jqdata_id, settings.jqdata_secret)
+    click.echo(
+        f'planning_progress: table={TABLE_NAME}; phase=authenticate; status=completed; '
+        f'elapsed_s={perf_counter() - collection_started_at:.3f}'
+    )
+    request_started_at = perf_counter()
+    click.echo(
+        f'request_batch: table={TABLE_NAME}; phase=trade_days; status=started; '
+        f'start_date={start}; end_date={end}'
+    )
     trading_dates = {pd.Timestamp(calendar_date).date() for calendar_date in jqdata_client.get_trade_days(start_date=start, end_date=end)}
     if any(calendar_date < start or calendar_date > end for calendar_date in trading_dates):
         raise ValueError('JQData 返回了请求范围之外的交易日。')
+    click.echo(
+        f'api_result: table={TABLE_NAME}; phase=trade_days; status=completed; '
+        f'trading_day_count={len(trading_dates)}; elapsed_s={perf_counter() - request_started_at:.3f}'
+    )
+    click.echo(f'planning_progress: table={TABLE_NAME}; phase=build_validate; status=started')
 
     # 逐自然日生成 11 个契约字段，休市日也必须保留一行。
     calendar_df = pd.DataFrame({'calendar_date': pd.date_range(start, end, freq='D').date})
@@ -505,11 +681,65 @@ def collect(start: date, end: date) -> pd.DataFrame:
     calendar_df = calendar_df[TRADE_CALENDAR_SCHEMA.names]
 
     # 即使本次不写湖，也先验证 API 响应转换后的完整业务契约。
-    validate_calendar_table(pandas_to_arrow(calendar_df, TRADE_CALENDAR_SCHEMA))
+    validated_calendar_table = validate_calendar_table(pandas_to_arrow(calendar_df, TRADE_CALENDAR_SCHEMA))
+    # 总控台只在本批 run_history 中指定此路径；结果预览不等于正式提交。
+    # 独立运行 / Notebook 未设置该变量时不产生额外文件。
+    import os
+    preview_path_text = os.environ.get('LATITUDE_B01_PREVIEW_PATH')
+    if preview_path_text:
+        import pyarrow.parquet as pq
+        preview_path = pathlib.Path(preview_path_text)
+        temporary_preview_path = preview_path.with_suffix('.parquet.tmp')
+        try:
+            preview_path.parent.mkdir(parents=True, exist_ok=True)
+            with temporary_preview_path.open('wb') as preview_stream:
+                pq.write_table(validated_calendar_table, preview_stream)
+                preview_stream.flush()
+                os.fsync(preview_stream.fileno())
+            os.replace(temporary_preview_path, preview_path)
+        except OSError as preview_error:
+            # 展示失败不能改变采集和正式事务的结果；日志保留可核查原因。
+            click.echo(f'WARNING: 日历结果预览未保存；{type(preview_error).__name__}: {preview_error}')
+    click.echo(
+        f'planning_progress: table={TABLE_NAME}; phase=collect; status=completed; '
+        f'rows={len(calendar_df)}; trading_day_count={int(calendar_df["is_trading_day"].sum())}; '
+        f'elapsed_s={perf_counter() - collection_started_at:.3f}'
+    )
     return calendar_df
 
 
 # ## 命令行入口与更新水位
+# 
+# `main()` 负责参数门禁、模式选择、水位和全历史差异计划，随后调用采集与提交函数。全历史比较排除 `updated_at`，因此业务值未变化的行保留原更新时间；只读模式生成计划和校验结果，不提交分区。
+# 
+# 采集与提交的起止日志由对应函数负责，入口不重复打印。环节日志使用现有 worker 识别的行首前缀，既能在 Notebook 阅读，也能进入阶段日志和监控面板；状态文件与心跳仍由 operations 管理。
+
+# ### 局部流程：运行模式与待提交范围
+# 
+# 日期必须成对，`--full` 与显式日期互斥；显式日期不能配合 `--write` 写正式湖。当前有效日：北京时间 20:00 前取昨日，之后取当日。`--full` 比较时忽略 `updated_at`。
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart TD
+#     A["校验 CLI；解析目标湖、配置起点与有效截止日"] --> M{"运行模式"}
+#     M -->|默认| D["确认现有物理契约；读取最大自然日"]
+#     D --> E["空湖从配置起点；否则从最大日加一天开始"]
+#     E --> F{"起点不晚于有效截止日？"}
+#     F -->|否| Z["up_to_date；无 API；返回"]
+#     F -->|是| G["collect：尾部日期"]
+#     M -->|显式日期| H["确认起止顺序且不超有效截止日；collect"]
+#     M -->|全历史| I["collect：配置起点到有效截止日"]
+#     I --> J["读取并校验现有日历；越出有效范围则报错"]
+#     J --> K["按日期比较除 updated_at 外的完整行签名"]
+#     K --> L{"存在缺失或修订日期？"}
+#     L -->|否| N["up_to_date；返回"]
+#     L -->|是| P["从已校验来源结果选出差异行"]
+#     G --> W{"--write？"}
+#     H --> W
+#     P --> W
+#     W -->|否| Q["只读检查结束"]
+#     W -->|是| T["commit_partitions；结束"]
+# ```
 
 # In[7]:
 
@@ -584,7 +814,7 @@ def main(
     click.echo(
         f'{log_boundary}\n'
         '运行入口开始 / Run entry started\n'
-        f'function=main(); table={TABLE_NAME}; mode={run_mode}; '
+        f'planning_progress: function=main(); table={TABLE_NAME}; phase=run; status=started; mode={run_mode}; '
         f'write={str(write).lower()}; lake_root={resolved_lake_root}; '
         f'valid_start={configured_start_date}; valid_end={valid_end_date}\n'
         f'{log_boundary}\n'
@@ -610,42 +840,14 @@ def main(
             )
 
         # 调用 JQData 获取请求区间内的交易日，同时生成完整自然日日历并执行契约校验
-        click.echo(
-            f'{log_boundary}\n'
-            '开始采集交易日历 / Trade-calendar collection started\n'
-            f'function=main() -> collect(); start_date={requested_start_date}; '
-            f'end_date={requested_end_date}\n'
-            f'{log_boundary}'
-        )
         requested_calendar_df = collect(requested_start_date, requested_end_date)
-        click.echo(
-            f'{log_boundary}\n'
-            '交易日历采集完成 / Trade-calendar collection completed\n'
-            f'function=collect() -> main(); rows={len(requested_calendar_df)}; '
-            f'trading_day_count={int(requested_calendar_df["is_trading_day"].sum())}\n'
-            f'{log_boundary}'
-        )
         if write:
-            click.echo(
-                f'{log_boundary}\n'
-                '开始提交交易日历分区 / Partition commit started\n'
-                f'function=main() -> commit_partitions(); rows={len(requested_calendar_df)}; '
-                f'lake_root={resolved_lake_root}\n'
-                f'{log_boundary}'
-            )
-            committed_row_count = commit_partitions(requested_calendar_df, resolved_lake_root)
-            click.echo(
-                f'{log_boundary}\n'
-                '交易日历分区提交完成 / Partition commit completed\n'
-                f'function=commit_partitions() -> main(); mode=explicit_non_formal; '
-                f'committed_rows={committed_row_count}\n'
-                f'{log_boundary}'
-            )
+            commit_partitions(requested_calendar_df, resolved_lake_root)
         else:
             click.echo(
                 f'{log_boundary}\n'
                 '显式日期只读运行完成 / Explicit-date dry run completed\n'
-                f'function=main(); write=false; validated_rows={len(requested_calendar_df)}\n'
+                f'planning_progress: function=main(); table={TABLE_NAME}; phase=run; status=completed; write=false; validated_rows={len(requested_calendar_df)}\n'
                 f'{log_boundary}'
             )
         # 前面的写入禁令已经确保：显式日期不能写入正式湖，
@@ -706,33 +908,15 @@ def main(
             f'trading_day_count={int(pending_calendar_df["is_trading_day"].sum())}'
         )
         if write:
-            committed_row_count = commit_partitions(
+            commit_partitions(
                 pending_calendar_df,
                 resolved_lake_root,
-            )
-            click.echo(
-                f'committed: table={TABLE_NAME}; mode=automatic_tail; '
-                f'rows={committed_row_count}'
             )
         return
 
     # --full 显式重新获取完整有效区间的当前交易日状态
     # 以实现不止发现尾部新增日期，同时发现历史交易状态被上游修订的日期
-    click.echo(
-        f'{log_boundary}\n'
-        '开始采集完整有效交易日历 / Full valid-calendar collection started\n'
-        f'function=main() -> collect(); start_date={configured_start_date}; '
-        f'end_date={valid_end_date}\n'
-        f'{log_boundary}'
-    )
     expected_calendar_df = collect(configured_start_date, valid_end_date)
-    click.echo(
-        f'{log_boundary}\n'
-        '完整有效交易日历采集完成 / Full valid-calendar collection completed\n'
-        f'function=collect() -> main(); rows={len(expected_calendar_df)}; '
-        f'trading_day_count={int(expected_calendar_df["is_trading_day"].sum())}\n'
-        f'{log_boundary}'
-    )
     # Pandas 类型系统不知道单列元素来自 Arrow date32；显式标注为 datetime.date，供后续集合和字典键复用。
     valid_calendar_dates: list[date] = expected_calendar_df['calendar_date'].tolist()
 
@@ -761,7 +945,10 @@ def main(
 
         # 将现有 Dataset 读取为 Arrow Table (.to_table)，并执行主键、派生字段、固定值和审计时间检查
         existing_calendar_table = validate_calendar_table(
-            existing_calendar_dataset.to_table(columns=TRADE_CALENDAR_SCHEMA.names),
+            validate_arrow_table(
+                existing_calendar_dataset.to_table(columns=TRADE_CALENDAR_SCHEMA.names),
+                TRADE_CALENDAR_SCHEMA,
+            ),
             require_contiguous=False,
         )
         existing_calendar_df = existing_calendar_table.to_pandas(types_mapper=pd.ArrowDtype)
@@ -778,7 +965,8 @@ def main(
     click.echo(
         f'{log_boundary}\n'
         '现有正式数据检查完成 / Existing formal dataset inspection completed\n'
-        f'function=main() -> ds.dataset() -> validate_calendar_table(); '
+        f'planning_progress: function=main() -> ds.dataset() -> validate_calendar_table(); '
+        f'table={TABLE_NAME}; phase=existing_dataset; status=completed; '
         f'dataset_exists={str(calendar_path.is_dir()).lower()}; existing_rows={len(existing_calendar_df)}\n'
         f'{log_boundary}'
     )
@@ -810,7 +998,7 @@ def main(
         click.echo(
             f'{log_boundary}\n'
             '正式交易日历已是最新 / Formal trade calendar is up to date\n'
-            f'function=main(); table={TABLE_NAME}; valid_end_date={valid_end_date}; '
+            f'up_to_date: function=main(); table={TABLE_NAME}; mode=full; valid_end_date={valid_end_date}; '
             f'valid_grid_count={len(valid_calendar_dates)}\n'
             f'{log_boundary}'
         )
@@ -822,45 +1010,46 @@ def main(
         TRADE_CALENDAR_SCHEMA.names,
     ].reset_index(drop=True)
 
-    # 待提交日期可能分散在多个年份，不一定组成一段连续自然日，因此关闭连续性检查
-    # 主键、派生字段、固定值等其他规则仍然执行
-    validate_calendar_table(
-        pandas_to_arrow(pending_calendar_df, TRADE_CALENDAR_SCHEMA),
-        require_contiguous=False,
-    )
     click.echo(
         f'{log_boundary}\n'
         '全历史差异计划已生成 / Full-history reconciliation plan created\n'
-        f'function=main(); table={TABLE_NAME}; valid_grid_count={len(valid_calendar_dates)}; '
+        f'reconciliation_plan: function=main(); table={TABLE_NAME}; valid_grid_count={len(valid_calendar_dates)}; '
         f'complete_grid_count={len(valid_calendar_dates) - len(incomplete_calendar_dates)}; '
         f'missing_or_revised_grid_count={len(pending_calendar_df)}\n'
         f'{log_boundary}'
     )
 
     if write:
-        click.echo(
-            f'{log_boundary}\n'
-            '开始提交全历史差异分区 / Full-history reconciliation commit started\n'
-            f'function=main() -> commit_partitions(); rows={len(pending_calendar_df)}; '
-            f'lake_root={resolved_lake_root}\n'
-            f'{log_boundary}'
-        )
-        committed_row_count = commit_partitions(pending_calendar_df, resolved_lake_root)
-        click.echo(
-            f'{log_boundary}\n'
-            '全历史差异分区提交完成 / Full-history reconciliation commit completed\n'
-            f'function=commit_partitions() -> main(); mode=full_reconciliation; '
-            f'committed_rows={committed_row_count}\n'
-            f'{log_boundary}'
-        )
+        commit_partitions(pending_calendar_df, resolved_lake_root)
     else:
         click.echo(
             f'{log_boundary}\n'
             '全历史差异只读运行完成 / Full-history reconciliation dry run completed\n'
-            f'function=main(); write=false; validated_rows={len(pending_calendar_df)}\n'
+            f'planning_progress: function=main(); table={TABLE_NAME}; phase=run; status=completed; write=false; validated_rows={len(pending_calendar_df)}\n'
             f'{log_boundary}'
         )
 
+
+# ## 执行入口
+# 
+# Notebook 通过 `notebook_args` 显式传入 Click 参数，避免读取内核的 `-f` 参数。当前单元格保留原有显式日期只读示例；执行会发起来源请求。脚本运行时使用命令行参数，模式与写入限制见开篇表格。在 Notebook 中导入同名 Python 模块不会触发入口。
+
+# ### 局部流程：Notebook 与脚本执行入口
+# 
+# 当前 Notebook 参数是成对日期只读示例；运行这个代码单元格会进入采集流程。流程图本身不执行代码。
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart TD
+#     A["执行入口单元格或运行脚本"] --> B{"Notebook 交互环境？"}
+#     B -->|是| C["显式 notebook_args；不读取内核参数"]
+#     C --> D["main.main：standalone_mode=False"]
+#     B -->|否| E{"直接运行 Python 脚本？"}
+#     E -->|是| F["main：读取命令行参数"]
+#     E -->|否| G["模块导入：不触发采集"]
+#     D --> H["进入运行模式分支"]
+#     F --> H
+# ```
 
 # In[8]:
 
@@ -879,10 +1068,10 @@ def main(
 #         └── Command.invoke(...)
 #             └── 调用 main(...) 函数体
 
-if "ipykernel" in sys.modules:
+if "ipykernel" in sys.modules and "__file__" not in globals():
 
     # Notebook：显式传入 Click 参数，不读取 ipykernel 的 -f 参数。
-    notebook_args = ["--start-date", "2026-08-01", "--end-date", "2026-08-15",]
+    notebook_args = ["--start-date", "2026-08-01", "--end-date", "2026-08-15",] # 单元格内不写 --write
     main.main(
         args=notebook_args,
         prog_name="b01_trade_calendar",
@@ -894,7 +1083,19 @@ elif __name__ == "__main__":
     main()
 
 
-# In[26]:
+# ### 局部流程：终端手动运行
+# 
+# 下面的代码单元格仅保存命令注释；实际启动需在终端执行对应命令。
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart LR
+#     A["在终端激活 latitude"] --> B["切换到项目根目录"]
+#     B --> C["手动运行对应 .py --write"]
+#     C --> D["默认尾部更新并提交"]
+# ```
+
+# In[9]:
 
 
 # conda env list

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import pathlib
+import sys
 import tempfile
 import types
 import unittest
@@ -38,6 +39,7 @@ def load_notebook_module() -> tuple[types.ModuleType, str]:
 
 
 MODULE, EXPORTED_SOURCE = load_notebook_module()
+TRANSACTION_MODULE = sys.modules[MODULE.StagedPathTransaction.__module__]
 
 
 def pending_calendar_frame(observation_date: date) -> pd.DataFrame:
@@ -173,7 +175,7 @@ class RawArchiveLifecycleTests(unittest.TestCase):
             observation_date = date(2026, 8, 14)
             MODULE.commit_raw_response(raw_root, observation_date, b"old-source")
             leaf_path = MODULE.raw_leaf_path(raw_root, observation_date)
-            original_move = MODULE.shutil.move
+            original_move = TRANSACTION_MODULE.os.replace
 
             def fail_old_target_move(source: str, destination: str):
                 if pathlib.Path(source) == leaf_path:
@@ -181,8 +183,8 @@ class RawArchiveLifecycleTests(unittest.TestCase):
                 return original_move(source, destination)
 
             with mock.patch.object(
-                MODULE.shutil,
-                "move",
+                TRANSACTION_MODULE.os,
+                "replace",
                 side_effect=fail_old_target_move,
             ):
                 with self.assertRaisesRegex(OSError, "first move failure"):
@@ -257,14 +259,11 @@ class RawArchiveLifecycleTests(unittest.TestCase):
                 MODULE.EXTERNAL_MARKET_CALENDAR_SCHEMA,
                 "状态修复测试日历",
             )
-            repaired_df = MODULE.validate_calendar_frame(
-                MODULE.arrow_to_pandas(
-                    calendar_dataset.to_table(
-                        columns=MODULE.EXTERNAL_MARKET_CALENDAR_SCHEMA.names
-                    ),
-                    MODULE.EXTERNAL_MARKET_CALENDAR_SCHEMA,
+            repaired_df = MODULE.arrow_to_pandas(
+                calendar_dataset.to_table(
+                    columns=MODULE.EXTERNAL_MARKET_CALENDAR_SCHEMA.names
                 ),
-                "状态修复测试",
+                MODULE.EXTERNAL_MARKET_CALENDAR_SCHEMA,
             )
             self.assertTrue(repaired_df.iloc[0]["is_fetch_completed"])
             self.assertEqual(repaired_df.iloc[0]["actual_record_count"], 1)
@@ -321,14 +320,11 @@ class RawArchiveLifecycleTests(unittest.TestCase):
                 MODULE.EXTERNAL_MARKET_CALENDAR_SCHEMA,
                 "测试日历",
             )
-            calendar_df = MODULE.validate_calendar_frame(
-                MODULE.arrow_to_pandas(
-                    calendar_dataset.to_table(
-                        columns=MODULE.EXTERNAL_MARKET_CALENDAR_SCHEMA.names
-                    ),
-                    MODULE.EXTERNAL_MARKET_CALENDAR_SCHEMA,
+            calendar_df = MODULE.arrow_to_pandas(
+                calendar_dataset.to_table(
+                    columns=MODULE.EXTERNAL_MARKET_CALENDAR_SCHEMA.names
                 ),
-                "测试",
+                MODULE.EXTERNAL_MARKET_CALENDAR_SCHEMA,
             )
             row = calendar_df.iloc[0]
             self.assertTrue(row["is_fetch_completed"])

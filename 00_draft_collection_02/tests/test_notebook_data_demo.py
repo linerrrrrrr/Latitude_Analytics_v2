@@ -17,7 +17,7 @@ import ipykernel
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "02_Futures_Lakehouse"))
-import notebook_schema_browser as browser
+import a00_03_notebook_schema_browser as browser
 from config import data_contracts
 from config.futures_lakehouse.futures_position_rank_special_cases import POSITION_RANK_SPECIAL_CASES
 
@@ -148,6 +148,34 @@ class NotebookDataDemoTest(unittest.TestCase):
         self.assertEqual(widget.date_picker.value, date(2026, 9, 24))
         table, _ = browser.read_table_demo(schema, path, values, schema.names, {}, max_rows=5)
         self.assertLessEqual(table.num_rows, 5)
+
+    def test_variety_and_contract_dropdowns_cascade_and_allow_manual_input(self):
+        schema = data_contracts.FUTURES_BAR_CALENDAR_SCHEMA
+        rows = [
+            sample_row(schema, underlying_code=variety, contract_code=f"{variety}{month}.XSGE")
+            for variety in ("CU", "RB") for month in ("2610", "2611")
+        ]
+        write_partition(self.root, schema, rows)
+        widget = self.demo(schema)
+        variety_dropdown, contract_dropdown = widget.filter_dropdowns[:2]
+        self.assertEqual([value for _, value in variety_dropdown.options], ["CU", "RB", None])
+        variety_dropdown.value = "RB"
+        self.assertEqual([value for _, value in contract_dropdown.options], ["RB2610.XSGE", "RB2611.XSGE", None])
+        contract_dropdown.value = "RB2611.XSGE"
+        self.assertIn("RB2611.XSGE", widget.output.value)
+        self.assertNotIn("RB2610.XSGE", widget.output.value)
+        self.assertNotIn("CU2610.XSGE", widget.output.value)
+        contract_dropdown.value = None
+        self.assertEqual(widget.filter_selectors[1].layout.display, "")
+        widget.filter_selectors[1].value = "RB2699.XSGE"
+        self.assertIn("当前选择没有记录", widget.output.value)
+        widget.refresh.click()
+        self.assertEqual(widget.filter_selectors[1].value, "RB2699.XSGE")
+        self.assertIsNone(contract_dropdown.value)
+        variety_dropdown.value = "CU"
+        self.assertEqual(contract_dropdown.value, "CU2610.XSGE")
+        self.assertEqual(widget.filter_selectors[1].layout.display, "none")
+        self.assertIn("CU2610.XSGE", widget.output.value)
 
     def test_column_toggle_reuses_rows_and_refresh_invalidates_cache(self):
         schema = data_contracts.FUTURES_DAILY_SCHEMA

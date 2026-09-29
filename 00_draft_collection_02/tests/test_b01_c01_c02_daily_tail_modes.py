@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import importlib.util
+import io
 import pathlib
 import tempfile
 import unittest
+from contextlib import redirect_stdout
 from datetime import date, datetime, time, timezone
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import pandas as pd
 import pyarrow as pa
@@ -107,6 +109,82 @@ def write_variety_calendar(lake_root: pathlib.Path, frame: pd.DataFrame) -> None
 
 
 class DailyTailModeTest(unittest.TestCase):
+    def test_c01_collect_reports_progress_without_main_and_propagates_source_failure(self) -> None:
+        for source_fails in (False, True):
+            with self.subTest(source_fails=source_fails):
+                jqdata_client = Mock()
+                if source_fails:
+                    jqdata_client.get_trade_days.side_effect = RuntimeError("source unavailable")
+                else:
+                    jqdata_client.get_trade_days.return_value = [date(2024, 1, 2)]
+                output = io.StringIO()
+                with (
+                    patch.object(c01, "settings", SimpleNamespace(jqdata_id="test", jqdata_secret="test")),
+                    patch("config.jqdata_connection.authenticate_jqdata", return_value=jqdata_client),
+                    redirect_stdout(output),
+                ):
+                    if source_fails:
+                        with self.assertRaisesRegex(RuntimeError, "source unavailable"):
+                            c01.collect(date(2023, 12, 31), date(2024, 1, 2))
+                    else:
+                        calendar_df = c01.collect(date(2023, 12, 31), date(2024, 1, 2))
+                        self.assertEqual(calendar_df.calendar_date.tolist(), [
+                            date(2023, 12, 31), date(2024, 1, 1), date(2024, 1, 2),
+                        ])
+                        self.assertEqual(calendar_df.is_trading_day.tolist(), [False, False, True])
+                jqdata_client.get_trade_days.assert_called_once_with(
+                    start_date=date(2023, 12, 31), end_date=date(2024, 1, 2),
+                )
+                self.assertEqual(output.getvalue().count("phase=collect; status=started"), 1)
+                self.assertEqual(
+                    output.getvalue().count("phase=collect; status=completed"),
+                    0 if source_fails else 1,
+                )
+                self.assertIn("request_batch:", output.getvalue())
+
+    def test_c01_full_commits_only_differences_across_years_without_revalidating_subset(self) -> None:
+        expected_calendar_df = trade_calendar_df(date(2023, 12, 31), date(2024, 1, 3))
+        existing_calendar_df = expected_calendar_df.iloc[[0, 1, 3]].copy()
+        existing_calendar_df.loc[0, "is_trading_day"] = False
+        expected_calendar_df["updated_at"] = pd.Timestamp("2024-01-03T12:00:00Z")
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            lake_root = pathlib.Path(temporary_directory)
+            write_trade_calendar(lake_root, existing_calendar_df)
+            with (
+                patch.object(c01, "settings", SimpleNamespace(
+                    futures_lake_root=lake_root, futures_data_start_date=date(2023, 12, 31),
+                )),
+                patch.object(c01, "datetime", FixedDateTime),
+                patch.object(c01, "collect", return_value=expected_calendar_df),
+                patch.object(c01, "validate_calendar_table", wraps=c01.validate_calendar_table) as validate,
+            ):
+                result = CliRunner().invoke(c01.main, ["--full", "--write"])
+            self.assertEqual(result.exit_code, 0, result.output)
+            self.assertEqual(validate.call_count, 3)
+            calendar_dataset = ds.dataset(
+                lake_root / "silver" / c01.TABLE_NAME,
+                format="parquet",
+                partitioning=ds.partitioning(pa.schema([c01.TRADE_CALENDAR_SCHEMA.field("year")]), flavor="hive"),
+            )
+            committed_calendar_df = calendar_dataset.to_table(
+                columns=c01.TRADE_CALENDAR_SCHEMA.names,
+            ).to_pandas().sort_values("calendar_date").reset_index(drop=True)
+        unchanged_dates = [date(2024, 1, 1), date(2024, 1, 3)]
+        expected_calendar_df.loc[
+            expected_calendar_df.calendar_date.isin(unchanged_dates), "updated_at",
+        ] = pd.Timestamp("2024-01-03T00:00:00Z")
+        expected_calendar_df = c01.pandas_to_arrow(
+            expected_calendar_df, c01.TRADE_CALENDAR_SCHEMA,
+        ).to_pandas()
+        pd.testing.assert_frame_equal(committed_calendar_df, expected_calendar_df)
+        partition_logs = [line for line in result.output.splitlines() if line.startswith("partition_committed:")]
+        self.assertEqual(len(partition_logs), 2)
+        self.assertIn("completed=1; total=2", partition_logs[0])
+        self.assertIn("completed=2; total=2", partition_logs[1])
+        commit_logs = [line for line in result.output.splitlines() if line.startswith("committed:")]
+        self.assertEqual(len(commit_logs), 1)
+        self.assertIn("rows=2; partitions=2", commit_logs[0])
+
     def test_descriptive_metadata_changes_are_compatible(self) -> None:
         schema_cases = (
             (c01, c01.TRADE_CALENDAR_SCHEMA),
@@ -307,7 +385,10 @@ class DailyTailModeTest(unittest.TestCase):
                 )
 
         self.assertEqual(result.exit_code, 0, f"{result.output}\n{result.exception!r}")
-        collect.assert_called_once_with(lake_root.resolve(), date(2024, 1, 3), date(2024, 1, 3))
+        collect.assert_called_once_with(
+            lake_root.resolve(), date(2024, 1, 3), date(2024, 1, 3),
+            selected_trading_dates=[date(2024, 1, 3)],
+        )
         commit.assert_called_once()
         self.assertIn("new_trading_date_count=1", result.output)
 

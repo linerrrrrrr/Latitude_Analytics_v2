@@ -1,7 +1,7 @@
-# 期货湖仓生产与运维
+﻿# 期货湖仓生产与运维
 
 本目录维护正式数据采集入口。正式 silver 当前为 7 张日历维度表和 10 张事实表，共 17 张；
-当前采集拓扑共有 19 个正式入口，其中 a01/b08 只允许人工显式运行，默认日常 worker 编排其余 18 个阶段。
+当前采集拓扑共有 19 个正式入口，其中 a01/b08 只允许人工显式运行，总控台的日常快捷选择包含其余 18 个阶段。
 所有 Arrow Schema 与中文 metadata 由 `config/data_contracts.py` 统一约束。生意社来源原文进入 raw 层，
 不计入 silver 表数。
 
@@ -9,35 +9,45 @@
 
 ```text
 02_Futures_Lakehouse/
+├─ a00_01_verify_runtime.py          # 环境检查
+├─ a00_02_sync_notebook_exports.py   # Notebook/Python 导出同步
+├─ a00_03_notebook_schema_browser.py # Schema 与数据样例浏览
+├─ a00_04_staged_path_transaction.py # staging 路径安装与失败恢复
 ├─ a01_Futures_Market_Data/          # b01—b08：国内期货日历与行情
 ├─ a02_Futures_Exchange_Reports/     # b01、b01a、b02、b03：交易所报告
 ├─ a03_External_Market_Data/         # b01—b04：外部市场
 ├─ a04_Macro_And_Interest_Rates/     # b01—b03：宏观与利率
-├─ operations/                     # 跨业务组的人工控制面
-│  ├─ run_daily_update.py
-│  ├─ manual_maintenance/
-│  │  └─ run_contract_calendar_full_update.py
-│  ├─ background_worker.py
-│  ├─ invoke_exported_click_entrypoint.py
-│  ├─ watch_batch.ps1
-│  ├─ verify_operations_runtime.py
-│  ├─ tests/
-│  ├─ archived_batches/
-│  └─ run_history/
-├─ sync_notebook_exports.py
-├─ notebook_schema_browser.py
-└─ verify_runtime.py
+└─ operations/                     # 跨业务组的人工控制面
+   ├─ console.py                         # PySide6 交互入口；单项/批量运行、监控、历史、维护
+   ├─ runtime/                           # worker、原 CLI 读取/调用、Windows I/O 检查
+   ├─ tests/                             # 纯控制面测试
+   ├─ run_history/                       # 新旧批次现场；原有历史原位保留
+   ├─ archived_batches/                  # 已有不可执行历史快照
+   └─ referance/                         # 重构前全目录只读 ZIP 与摘要清单
 ```
+
+根级 `a00_01`—`a00_04` 按环境检查、导出同步、契约浏览、路径安装与恢复排列，是共用支撑脚本/模块；业务组从 `a01` 开始。
+
+总控台“采集工作台”的 a00 分组左侧仅列 `a00_01`—`a00_04` 四项。`a00_01` 页内提供运行环境检查与 Windows 控制面辅助检查，后者标明实际归属 `operations/runtime/verify_operations_runtime.py`；`a00_02` 页内切换代码检查、完整检查或导出同步。`a00_03` 提供 Notebook 内的 Schema/raw/数据样例交互，`a00_04` 提供由业务调用者划定范围的事务上下文；两者没有独立运行入口，各自的工作页只解释流程与职责并打开源码。四个文件保持原位和原编号，具体启动、确认与监控边界见 [operations README](operations/README.md)。
+
+`a01/b01` 默认打开“日历结果”，直接展示日历日期、交易日标记等原字段，区分“本批生成结果”和“已落盘日历”；无需更新明确显示 0 行新增及已覆盖日期。表格按当前目标只读加载，独立线程、50,000 行上限、100 行分页，不逐秒重读；b01 在总控台批次中将已验收生成表另存为运行证据，独立 CLI/Notebook 默认不产生此预览。b02—b04 分别呈现品种日历展开、合约信息与时段核对、行情频率结构规划，其计数仍只读控制面证据。原参数和完整说明保留，单项启动留在对应页面；各页不调用额外业务 API，详见 [日历看板说明](operations/README.md#a01-的四个日历看板)。
+
+a01/b01、b02、b03、b04、b05、b06、b07、b08、a02/b01、b01a、b02、b03、a03/b01、b02、b03、b04 与 a04/b01、b02 已共用 [StagedPathTransaction](a00_04_staged_path_transaction.py)：环节在事务内逐项安装并直接执行正式复读，全部通过后完成当前事务；安装或验收失败时倒序恢复实际移动的目标。合并方式、业务校验、更新范围、事务分组和返回值仍由各环节决定。a01/b01 清理失败的新分区，a01/b02、b03、b04、b05、b06、b07、b08 保留隔离的新目标；恢复不完整时保留旧备份。b03 保持逐叶事务，必要的新建空表标记与当前叶共同恢复，此前成功叶保留；本批分区全部成功后再单独原子更新自动水位。b04 每次将当前叶与本次新建或替换的零行契约标记纳入同一事务；新标记先暂存再安装并验收，已匹配标记保持原样，b04 不另写日期水位文件。b05 将一个 `1d—交易所—年月` 日历叶、本次触达的全部对应事实叶及必要的新建零行标记纳入同一事务；新标记先暂存再安装并验收，已有兼容标记保持原样。整组成功后才报告完成凭证已落盘，此前成功组保留，b05 没有独立日期水位文件。b06 保持事实叶逐个提交、之后集中回写日历的顺序，每次事务仅包含当前事实或日历叶及必要的新建零行标记；新标记先暂存再安装并验收，已有兼容标记保持原样，空事实结果仍写零行叶。当前事务失败不撤销此前成功叶，日历完成凭证只在对应日历叶成功后生效，b06 没有独立日期水位文件。b07 在一个事务内安装并验收本次调用的全部日历叶，后一个叶失败时共同恢复前面已经安装的叶；恢复完整仍保留失败新叶的隔离目录，恢复不完整保留旧备份并继续尝试恢复其余叶。全部叶成功后才报告旁证已落盘；b07 不修改根级契约标记，也没有独立日期水位文件。b08 在一个事务内安装整个缺失明细表根和全部触达日历叶，正式复读仍由 b08 执行；任一安装或验收失败共同恢复，一处恢复失败仍尝试其余目标。恢复完整保留失败新数据的隔离目录，恢复不完整另保留旧备份，staging 均清理。两表全部验收并成功退出事务后才报告审计状态落盘；日历根级标记保持原样，b08 不写独立日期水位。a02/b01 将全部变更报告日历叶纳入同一事务；完整期望为空时改为整根安装可读零行表，非空时只替换或显式删除变更叶，已有根级标记保持原样。正式整表物理契约、行数和完整内容摘要复读仍由环节在事务内执行。共享模块倒序逐项恢复，恢复完整保留失败新数据，恢复不完整另保留旧备份，staging 均清理。全部验收并成功退出事务后才报告日历状态落盘；没有独立日期水位，也不改变全量比较与显式日期写入边界。a02/b01a 以一个案例的完整三文件目录为事务范围，已有证据只复读，不进入覆盖事务。新案例在事务内安装并完整正式复读，成功退出后才报告已落盘；安装或验收失败恢复此前的目录缺失状态，已安装的新目录隔离留存，恢复不完整保留现场并停止，staging 清理。此前成功案例保留，不自动重试，不写独立日期水位；整批 ready 只统计已有正式证据与本次成功提交。a02/b02 保持单叶事务：当前事实或日历完整叶与本次新建的零行标记共同恢复，已有标记保持原样；空事实以显式删除旧叶表达。staging 和正式叶的完整校验及逐值复读仍由环节承担，正式复读在事务内执行，成功退出后才报告当前叶提交。安装或验收失败按实际移动恢复，已安装的新叶隔离留存，新标记回退时移除；恢复不完整保留旧备份，staging 清理。两张事实及各日历叶依次提交，此前成功叶保留；完成凭证仍由两张事实计数和两类日历状态共同证明，不写独立日期水位。a02/b03 保持事实叶先提交、日历叶随后逐个提交的顺序，每个当前叶使用独立事务；事实侧必要的新建零行标记与当前叶共同恢复，已有事实标记及日历根标记保持原样。空事实以显式删除旧叶表达。dirty 叶业务校验仍只执行一次，staging 与正式安装仍只复读物理契约、行数和主键摘要，正式验收在事务内完成，成功退出后才报告当前叶提交。安装或验收失败按实际移动恢复，已安装的新叶隔离留存；恢复不完整保留旧备份，staging 清理，不递归清理表根。此前成功事实和日历叶保留，日历失败不撤销事实；失败状态写入成功不等于采集完成，没有独立日期水位。a03/b01 将本次全部变化外部市场日历叶纳入同一事务；普通路径替换或显式删除变化叶，未触达叶与已有根级标记保持原样；metadata 迁移或完整期望为空时整根替换。生成结果执行一次完整业务校验；期望按分区分组和转换后复用，staging 只物化一次并在内存逐叶核对，正式整表物理契约、总行数和完整内容摘要在事务内复读一次；成功退出后才报告本批落盘。共享模块倒序逐项恢复，完整恢复仍保留失败新数据，恢复不完整另保留旧备份，staging 均清理。没有独立日期水位，不改变理论格点、状态继承及显式日期写入边界。a03/b02 将每个 raw 日期目录和每个日历完整叶分别放入独立共享事务，保持 raw 先提交、日历随后回写的顺序；raw staging 与正式路径仍复读字节及 SHA-256。日历信任上游正式业务证明，每个 dirty 完整叶只在提交前执行一次业务校验；staging 与正式安装仅复读当前叶物理契约及完整内容，正式验收在事务内。启动只求差一次，日期循环只更新所属日历叶，成功修复后与批末不重扫全历史 raw 或日历；描述性 metadata 以当前契约为准。安装或验收失败只恢复当前目标，此前成功 raw 与日历叶保留；日历失败后再次运行可从已提交 raw 无 API 修复。已安装的失败新目标隔离留存，恢复不完整另保留旧备份，staging 清理；已有日历根标记保持原样，没有独立日期水位。a03/b03 对每个事实完整叶及本批新增零行标记使用同一个共享事务；每个日历完整叶独立使用共享事务，事实先提交、日历随后回写，日历失败不撤销已提交事实，下次从正式证据无 API 修复。dirty 完整叶业务验收一次，staging 与正式路径继续物理契约检查和逐值比较；正式验收在事务内，逐叶直读不扫描正式表根。启动时保留契约要求的事实计数和 OHLC 状态核对，一次规划复用证据；修复后与批末不再全表复验，描述性 metadata 差异不重写历史。首次备份失败保留原目标，失败新叶隔离留存，恢复不完整另保留旧备份，staging 清理；无独立日期水位。a03/b04 对每个完整指数分类—年月事实叶与本次必要的新建零行标记使用一个共享事务；每个日历完整叶随后独立提交，已有根标记保持原样，空事实以显式删除旧叶表达。来源输出及 dirty 完整叶分别承担一次业务验收，staging 与正式路径只检查物理契约并逐值比较，正式验收在事务内直读当前叶。启动保留一次事实计数与日历状态共同对账，主循环复用事实及日历叶映射，多个分类继承同月已提交状态；不逐分区重建整表或批末全表复验。描述性 metadata 以当前契约为准，不触发历史重写。首次备份失败保留原目标；安装或验收失败按实际移动恢复，失败新叶隔离留存，新增标记回退时移除，恢复不完整另保留旧备份，staging 清理且不递归删除正式表根。此前成功事实与日历叶保留；日历失败不撤销事实，下次仍按事实计数与日历状态共同判定待办，可能重新请求 API。没有独立日期水位，不改变分页、精确待办、无 API 清退及显式日期写入边界。该模块使用同一文件系统内的路径替换，不提供跨目录原子可见性、进程终止后的自动恢复或并发写入协调。其余入口尚未接入，按 [湖仓目录规则](AGENTS.md) 逐项迁移。
+
+a04/b01 将本次全部变化宏观日历叶纳入一个共享事务；普通路径替换或显式删除变化叶，未触达叶与已有根标记保持原样；首次建表、完整期望为空或旧契约版本迁移使用整根替换。staging 一次物化及内存逐叶核对保持不变，正式整表的物理契约、行数和完整内容摘要在事务内复读一次；成功退出后才报告日历状态落盘。首次备份失败保留原目标，倒序恢复时一处失败仍尝试其余目标；失败新数据隔离留存，恢复不完整另保留旧备份，staging 均清理。没有独立日期水位，不改变完整理论比较、状态继承或显式日期写入边界。
+
+a04/b02 保持三个独立事务边界：兼容旧 metadata 迁移替换整个事实表根，每个事实完整月叶及本次必要的新建零行标记共同提交，每个 interest_rate 日历完整月叶随后独立提交。已有根标记和未触达叶保持原样，空事实以 staged_path=None 显式删除旧叶。保留本环节现有 staging 和正式复读验收；正式验收在共享事务内，成功退出才报告已提交。首次备份失败保留原目标，安装或验收失败按实际移动倒序恢复；失败新数据隔离留存，恢复不完整另保留旧备份，staging 清理且不递归删除正式表根。此前成功事实和日历叶保留，日历失败不撤销事实，下次人工运行可无 API 修复状态；失败状态落盘不等于采集完成，没有独立日期水位。共享模块只负责路径安装和恢复。a04/b02 启动时只做一次事实格点计数与日历完成状态对账；当前版本正式历史信任生产者业务证明，只确认物理结构、表名、主键、分区及契约版本。纯描述性 metadata 差异不触发重写；兼容旧事实版本仍只在无日期写入模式执行一次完整业务验收并整根迁移。来源转换结果与待提交 dirty 完整叶各做一次业务验收，staging 和正式路径仅物理及逐值复读，正式验收仍在共享事务内。主循环复用预先分组的事实/日历叶、列序、排序键、文件 Schema 和请求字段；每月只合并和更新当前叶，日历修复与本月采集继承同一叶映射，不重新校验累计整表。提交直接复读当前叶，不逐分区扫描正式表根；修复后和批末复用已验收证据，不再整表重读重算。来源门禁、精确待办、事实先提交与日历后回写、确认空和失败状态语义不变。
 
 各业务步骤仍由同名 `.ipynb/.py` 双轨组成；业务组与组内步骤按编号保持既定依赖顺序。
 日常批次、人工维护、控制面测试和运行历史的职责见 [operations README](operations/README.md)。
 目录迁移不改写历史 manifest、日志、快照和已落盘 Schema metadata 中的来源标识；旧组编号 b01—b04 对应当前 a01—a04，旧步骤 cNN 对应当前组内 bNN，详细兼容边界见 [数据库规范](../03_Futures_Database/AGENTS.md#32-schema-metadata-的单一来源与运行时读取)。
 质检证据中的 `c07-v3` 与 `c07:daily_vs_other_sessions:` 是持久规则标识，目录改名时继续保留；当前执行入口为 `a01/b07_suspected_session_reconciliation`。
 
+
 ## 强制执行边界
 
 - 业务 Notebook 是唯一直接编辑的源文件；同名 `.py` 仅由默认 PythonExporter 生成。
-- 所有命令都要求操作员显式启动；当前不提供根级 BAT 编排，不创建定时任务或后台恢复。预计超过 10 分钟的当前授权批次可以由边界明确且不自动重试的 detached worker 执行；运行时须另开不依赖 LLM 的用户可见 Terminal，持续显示阶段、进度、耗时、心跳和失败。运行时长、正式湖写入和 detached 执行均不要求先跑非正式小样本；样本、测试湖演练及仅因运行时长追加的 dry-run 属于只有用户明确要求才执行的可选检查。确认 worker 与 monitor 健康后，Codex 必须结束回合，不得靠轮询保持活动。
+- 所有命令都要求操作员显式启动；当前不提供根级 BAT 编排，不创建定时任务或后台恢复。预计超过 10 分钟的当前授权批次可以由边界明确且不自动重试的 detached worker 执行；运行时须开启不依赖 LLM 的用户可见监控窗口：operations 使用独立总控台，其他工作流沿用所属规范的 Terminal monitor，持续显示阶段、进度、耗时、心跳和失败。运行时长、正式湖写入和 detached 执行均不要求先跑非正式小样本；样本、测试湖演练及仅因运行时长追加的 dry-run 属于只有用户明确要求才执行的可选检查。确认 worker 与 monitor 健康后，Codex 必须结束回合，不得靠轮询保持活动。
 - 正式 worker、monitor、状态文件、单批运行、失败停止、现场保留和人工处置统一由 [operations 规范](operations/AGENTS.md) 与 [operations 操作说明](operations/README.md) 管理；本 README 不另建第二套启动命令或控制面契约。
 - Windows 下 monitor 必须用允许 `ReadWrite/Delete` 的共享句柄读取原子 `status.json` 并立即释放；worker 以临时文件、fsync 和原子替换发布状态，只可对替换控制面的 `WinError 5/32` 做短时有界重试。2026-08-21 的 a01-a04 样本曾因 monitor 读取锁与 `os.replace` 冲突而误停 b06，因此禁止用默认 `Get-Content` 持续读取恢复旧实现；状态发布最终失败时必须终止 child 并保留现场，不能把控制面重试扩展成 API 或阶段自动重试。
 - 业务入口不设置独立的 API 调用开关：命令启动后直接执行数据采集与契约校验；`--write` 是唯一的
@@ -46,7 +56,7 @@
   `settings.futures_lake_root` 引用，`--lake-root` 只作为非正式临时湖覆盖。
 - `.env` 的 `FUTURES_DATA_START_DATE` 是当前稳定采集统一正式起点；变量名为兼容既有期货入口而保留，
   `a04/b01` 也从该日期生成宏观理论历史水位，不另设生产日期范围。
-- 运行任何业务入口前必须先验证 `latitude` 环境和 Notebook/Python 双轨同步状态；预检失败时不调用 API。
+- 运行任何业务入口前必须先验证 `latitude` 环境和 Notebook/Python 代码正文一致性；预检失败时不调用 API。operations 业务启动采用 `--check --check-level code`，完整导出逐字节一致仍是正式同步和交付要求。
 - API 成功、确认空、可重试错误、永久错误、Schema 错误和质量错误分别处理；结构化事实正式路径
   复读成功前不得回写日历完成状态。生意社 b02 不生成结构化事实，必须在 raw 原文字节及 SHA-256 sidecar
   正式复读并核对一致后才回写日历。
@@ -93,7 +103,7 @@ b06 的零行和部分缺失 Session 均写成完成并保留 warning；有限 O
 
 b07 默认只处理本次由 b06 新形成、尚无 b07 旁证的 `suspected_closed` Session，不把规则版本或证据指纹作为日常历史变化探测器；
 四项比较全部匹配可写 `evidence_level=reconciled`，但缺失 Session 的 `quality_status` 仍为 warning。b08 只保留为人工全历史审计，
-不进入任何默认 worker，必须显式 `--confirm-full-quality --write`。
+不进入日常快捷选择；总控台可人工勾选并显式确认 `--confirm-full-quality`，提交时另选 `--write`。
 
 a02/b01 不调用外部 API，从完整品种日历展开三类报告格点；a02/b01a 只维护已配置成交量榜特殊案例的上期所权威原文、摘要和校准 manifest；a02/b02 串行按交易所—品种—年月批量请求月份待办日，
 只读写当前事实和日历完整叶，并由两张正式事实格点计数与两类报告日历状态共同证明完成；a02/b03 只以 `warehouse_receipt` required 且 `is_fetch_completed=false` 的日历快照形成待办，
@@ -106,7 +116,9 @@ b04 信任 b03 正式提交对上游结构的证明；默认按交易所—频�
 全部状态，新增或结构变化行采用安全初始状态，退出结构行删除。历史缺口、孤儿叶和 Session 修订发现均属于 `--full`；描述性 metadata
 变化不再触发全叶重写，物理字段、类型、nullable、表名、主键或分区不兼容仍在写入前失败。
 
-a04/b01 不调用 API，从环境统一起点到北京时间当前日按共享配置生成 8 个 SHIBOR 普通工作日格点和 17 个宏观月末/季末格点，计算版本化可用日，继承政策未变化的事实状态，并以完整 `dataset_name/year/month` 叶分区提交和正式复读。a04/b02 以 `interest_rate` required 系列—日期格点减去正式 SHIBOR 事实与日历状态共同证明完整的格点；正式事实完整但日历陈旧时无 API 修复状态，事实缺口按年月窗口调用 Tushare `pro.shibor`，只接纳精确待办期限，完整事实叶正式复读后才回写成功或确认空。a04/b03 以 `macro_release` required 系列—报告期格点自动求差或无 API 修复日历；事实缺口按报告名和年月严格分页请求 Eastmoney，将来源报告月 1 日归一到项目月末/季末，按共享配置读取 PPI `BASE_SAME` 并把 CPI/PPI 累计指数减 100 转成累计同比百分比，完整事实叶正式复读后才回写日历。至此 19 个正式采集入口均已迁移完成。
+a04/b01 不调用 API，从环境统一起点到北京时间当前日按共享配置生成 8 个 SHIBOR 普通工作日格点和 17 个宏观月末/季末格点，计算版本化可用日，继承政策未变化的事实状态，并以完整 `dataset_name/year/month` 叶分区提交和正式复读。当前版本信任正式旧状态，生成结果完整业务验收一次；先分组复用 Arrow，staging 物化一次后在内存逐叶核对，正式整表只复读一次。仅旧契约版本进入兼容识别与自动迁移，纯描述性 metadata 差异不重写历史；b02/b03 的日历读取同步采用物理结构、表身份及契约版本边界。a04/b02 以 `interest_rate` required 系列—日期格点减去正式 SHIBOR 事实与日历状态共同证明完整的格点；正式事实完整但日历陈旧时无 API 修复状态，事实缺口按年月窗口调用 Tushare `pro.shibor`，只接纳精确待办期限，完整事实叶正式复读后才回写成功或确认空。a04/b03 以 `macro_release` required 系列—报告期格点自动求差或无 API 修复日历；事实缺口按报告名和年月严格分页请求 Eastmoney，将来源报告月 1 日归一到项目月末/季末，按共享配置读取 PPI `BASE_SAME` 并把 CPI/PPI 累计指数减 100 转成累计同比百分比，完整事实叶正式复读后才回写日历。至此 19 个正式采集入口均已迁移完成。
+
+a04/b03 启动只进行一次事实计数、日历完成状态及可用日对账。当前版本正式历史信任生产者业务证明，读取只检查物理结构、表身份及契约版本；描述性 metadata 差异不重写历史，兼容旧事实版本仍限无日期写入时经一次业务验收后整根迁移。来源输出和每次待提交 dirty 完整叶各验收一次，staging 与正式路径仅物理及逐值复读。循环前分组事实与日历，逐报告只合并、更新和复读当前完整叶，同月后续报告及无 API 修复共用已提交叶映射；修复后和批末不再全表复验。严格分页、原列和数值偏移、月末/季末归一、上游可用日、确认空、失败分类和事实先于日历的独立提交保持不变。a04/b03 使用三个独立共享事务边界：兼容旧版本迁移替换整个事实表根，当前事实完整月叶与必要的新建零行标记共同提交，当前 macro_release 日历完整月叶随后独立提交。dirty 叶业务验收一次，staging 与正式路径物理及逐值复读；正式验收在事务内部，成功退出才报告提交。已有标记和未触达叶保持原样，空事实以 staged_path=None 显式删除旧叶。首次备份失败保留原目标，安装或验收失败按实际移动倒序恢复；失败新数据隔离留存，新标记回退时移除，恢复不完整另保留旧备份，staging 清理且不递归删除正式表根。日历失败不撤销已提交事实，下次人工运行可无 API 修复；失败状态保存不等于采集完成，没有独立日期水位。
 
 ## 目录和目标表
 
@@ -122,10 +134,10 @@ a04/b01 不调用 API，从环境统一起点到北京时间当前日按共享�
 
 ## Notebook 开篇 Schema 契约呈现
 
-直接涉及权威 Arrow Schema 的业务 Notebook，应在开篇使用 `02_Futures_Lakehouse/notebook_schema_browser.py` 统一呈现
+直接涉及权威 Arrow Schema 的业务 Notebook，应在开篇使用 `02_Futures_Lakehouse/a00_03_notebook_schema_browser.py` 统一呈现
 当前工作流的 Schema 契约。
 采集与研究 Notebook 共用这一实现；导入时沿用项目根定位，在命中分支执行
-`sys.path.insert(0, str(candidate_root / "02_Futures_Lakehouse"))`，随后从 `notebook_schema_browser`
+`sys.path.insert(0, str(candidate_root / "02_Futures_Lakehouse"))`，随后从 `a00_03_notebook_schema_browser`
 导入 `display_schema_metadata`。共享业务配置统一从 `config.futures_lakehouse` 下对应模块导入，
 具体归属与导入规则见 [湖仓目录规则](AGENTS.md#共享配置与-notebook-展示归属)。
 默认界面保留三块契约表格，并在其下增加当前所选表的数据样例：
@@ -198,11 +210,14 @@ raw 概览只读取文件状态、大小和最多 128 字节的摘要文本，�
 ## 双轨同步
 
 ```powershell
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/sync_notebook_exports.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/sync_notebook_exports.py --check
+E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_exports.py --write
+E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_exports.py --check
+E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_exports.py --check --check-level code
 ```
 
 同步入口只递归扫描四个正式 `a` 目录中的 `bNN_*.ipynb` 及 `bNNa_*.ipynb` 等带字母步骤，不扫描 operations、草稿或归档项目。
+
+`--check-level full` 是默认值，完整比较默认 PythonExporter 输出与 `.py` 字节；`code` 比较完整 Python AST，保留 docstring、字符串、参数和代码结构，仅忽略注释、格式及单元格编号/位置。代码检查用于运行前门禁，Markdown 或 Mermaid 注释变化不会单独阻断启动；代码差异、Notebook 结构或语法错误仍失败。`--write` 始终完整导出并做完整复核；修改 Notebook 后和正式交付前仍执行完整同步/检查，不能用代码检查替代。
 
 ## 当前运行边界
 
@@ -210,8 +225,8 @@ E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/sync_notebook_exports
 已按用户要求删除。当前业务命令入口位于四个业务目录内，使用 `bNN_*.py` 及 `bNNa_*.py` 等带字母步骤名称，执行前先运行：
 
 ```powershell
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/verify_runtime.py
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/sync_notebook_exports.py --check
+E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a00_01_verify_runtime.py
+E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_exports.py --check --check-level code
 ```
 
 默认日常执行的 18 个阶段写入正式湖时不传湖路径和日期；其中 a01 默认只执行 b01—b07：
@@ -259,14 +274,14 @@ E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Da
 E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b08_full_minute_quality.py --confirm-full-quality --write
 ```
 
-统一生产 worker 的 18 阶段 manifest 中，a01 固定为 b01—b07，`--skip-optional-quality` 只移除 b07，
-不恢复或增加其他 `--groups` 阶段；b08 永不进入 worker。正式启动命令、运行目录和 monitor 用法只在
+总控台的“日常更新配置”选中 18 个阶段并开启各环节的 `--write`，a01 为 b01—b07；其他已编辑参数保留，操作者可逐项取消选择或写入，
+也可在当前参数页直接“运行此环节”，与批量勾选无关；多选仍先预览再启动。b08 需人工单独选择并显式确认原参数，不进入日常快捷选择。正式启动、运行目录和监控用法只在
 [operations README](operations/README.md) 维护。
 
 空湖搭建可以按上列顺序由操作员逐个调用业务入口。a01 的空湖默认运行会从统一起点自然完成首次建立；已有正式湖则只做尾部、pending 和白名单变化，
 历史修订与损坏检查由显式全历史入口承担。a02/b01 已从上游品种日历自动维护完整报告格点并保留事实采集状态；
 a02/b01a 先保证已配置特殊案例的正式 raw 证据可复读，a02/b02、a02/b03 再按各自报告日历待办补事实并回写状态。a03、a04 继续按各自完整理论水位自动补缺或无 API 修复状态。
-19 个正式入口仍各自负责自身 raw 或 silver 提交；默认 worker 只编排其中 18 个日常阶段，不把 b08 变成日常前置条件。
+19 个正式入口仍各自负责自身 raw 或 silver 提交；日常快捷选择只包含其中 18 个阶段，不把 b08 变成日常前置条件。
 
 这里的 b08 “独立全量审计”特指分钟主键投影求差；不是对 b06 行情值质量或 b07 旁证的第二次全表复核。
 
@@ -307,8 +322,12 @@ Arrow null且不另记 warning，非空非有限数、负数量及其他原有�
 
 `b02_futures_variety_calendar` 信任 b01 已正式提交的交易日历业务语义；消费上游时只确认 Dataset 存在且
 Schema/metadata 物理兼容，并只投影 `calendar_date`、`is_trading_day`。b02 不再重复检查上游日期主键、
-逐自然日连续性或 b01 派生字段；这些失败必须由 b01 自身的提交与复读门禁负责。b02 仍对自己的理论结果、
-现有正式表、完整叶分区以及 staging/正式路径逐值一致性承担责任。
+逐自然日连续性或 b01 派生字段；这些业务约束由 b01 的来源结果与 dirty 完整叶校验负责。b02 对自己的
+来源转换结果和本批 dirty 完整叶承担完整业务校验，日常信任 clean 历史；现有全历史业务审计与来源比较
+仅在显式 `--full` 路径执行。staging 和正式安装逐文件检查物理字段、类型、nullable 与表名/主键/分区
+身份 metadata，并检查主键唯一性与行数；零行 `schema.parquet` 也须从正式路径复读物理契约及零行数。
+描述性 metadata 差异以当前 `config/data_contracts.py` 为权威，不要求逐值业务复读或历史 Parquet 重写；
+验证边界与[数据库规范](../03_Futures_Database/AGENTS.md)保持一致。
 
 `b03_futures_contract_calendar` 同样信任 b02 的正式证明，只检查 Dataset 存在及 Schema/metadata 物理兼容，
 不重复校验 b02 主键、空表、`active_contract_count` 或 JQData 交易日成员关系。默认模式只读取可信自动尾部水位之后的 b02 品种日；水位取正式行最大交易日与根 `schema.parquet` 中 `automatic_tail_processed_through` 的较大值，因此整日候选均无有效 `trade_time` 时也会在成功 `--write` 后推进，下次日常 no-op 且不认证。日期参数质检完整日期区间，`--full` 质检当前 b02 全部水位与本地整表；两者均不写自动水位。b03 仍严格校验 JQData 原始响应及自身 dirty 输出，staging 和正式叶只复读物理契约与主键/行数摘要。
@@ -343,9 +362,10 @@ Windows TUN 环境下的物理出口绑定，不负责决定采集范围、API �
   选中格点批量调用 JQData `get_price(frequency="daily")` 与
   `get_extras("futures_sett_price"/"futures_positions")`；未选中格点保留并标为无需采集。
 - `1m` 分钟格点由 `b04` 全部保留，`b04` 不判断白名单。`b06_futures_minute` 读取完整 1m 格点后统一应用
-  共享白名单，把选择结果写回 `is_fetch_required` 和 `selection_reason`，再调用 JQData `get_price(1m)`；
+  共享白名单形成待办，再调用 JQData `get_price(1m)`；选择结果在下述日历提交阶段回写 `is_fetch_required` 和 `selection_reason`。
   白名单由实际分钟采集器控制请求数和分钟额度。被选择 Session 只有在正式分钟事实复读计数与日历完成状态
-  共同一致时才属于完整下游格点；每个品种月分区成功后立即回写状态，遇配额边界正常停止。
+  共同一致时才属于完整下游格点。当前先逐个提交事实叶并汇集完成摘要，采集循环结束或配额停止后，
+  再按日历叶集中回写政策与成功事实的完成状态；普通异常直接停止，此前成功叶保留，尚未回写的完成状态不提前生效。
 - 排名、会员类型持仓和仓单的报告格点全部保留；`is_fetch_required` 同时要求品种在白名单内、日期位于
   API 覆盖期且交易所—品种受支持，并且只表示当前采集义务。`is_fetch_completed` 保存已正式提交的持久完成凭证。
   当前政策排除但从未完成的格点写为 `not_required`；
@@ -398,7 +418,7 @@ Windows TUN 环境下的物理出口绑定，不负责决定采集范围、API �
   按日期返回整表的 `FUT_GLOBAL_DAILY` 使用请求实体 `ALL`；19 个 Eastmoney 指数使用来源
   `INDICATOR_ID`。请求实体、指数项目代码、中文名、分类和有效期只由
   [`config/futures_lakehouse/external_market_entities.py`](../config/futures_lakehouse/external_market_entities.py) 定义。
-- 生意社国内现货基差原文：b02 每个 API 待办日期只请求一次 `day-{YYYY-MM-DD}.html`，把 HTTP
+- 生意社国内现货基差原文：b02 每个 API 待办日期调用一次采集函数获取 `day-{YYYY-MM-DD}.html`；HTTP 适配器沿用 `Retry(total=4)`，因此日期数不等于实际请求尝试数。业务循环不重跑失败格点或事务。将 HTTP
   `response.content` 原始字节和 SHA-256 sidecar 原样提交到
   `raw/100ppi/domestic_spot_basis/year=YYYY/month=MM/observation_date=YYYY-MM-DD/{response.html,response.sha256}`。
   当前入口不解码、解析或提取正文，也不生产 `fact_domestic_spot_basis_daily`。完整日期必须同时具有原文字节、
@@ -425,7 +445,7 @@ Windows TUN 环境下的物理出口绑定，不负责决定采集范围、API �
   [`config/futures_lakehouse/macro_release_entities.py`](../config/futures_lakehouse/macro_release_entities.py) 定义。理论水位从
   `FUTURES_DATA_START_DATE` 到北京时间当前日；CPI/PPI 使用次月 9 日并向后顺延周末，PMI 使用月末且
   2 月保守使用 3 月 4 日，GDP 使用季末后第 16 日。这些日期是项目可见性规则，不是 API 实际发布日期。
-  规则未变时继承事实状态；变更叶分区经 staging 和正式路径逐值复读后提交，旧策略必须无日期整表迁移。
+  规则未变时继承事实状态，规则变化逐格点重置；变更叶在同一共享事务内安装并经正式整表复读后提交。旧契约版本写入迁移必须使用无日期自动模式；纯描述性 metadata 不触发历史重写。
 - SHIBOR：b02 只消费宏观发布日历中的 `interest_rate` required 格点；8 个稳定系列与
   `date,on,1w,2w,1m,3m,6m,9m,1y` 来源映射复用同一共享配置。事实存在但日历陈旧时从正式事实
   无 API 修复；事实缺口按 `year/month` 月度窗口调用 Tushare `pro.shibor`，显式选择上述字段，校验

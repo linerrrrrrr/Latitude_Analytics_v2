@@ -1,68 +1,67 @@
 # Operations 控制面强制规则
 
-本文件适用于 `operations` 整棵目录树。上级规则见
-[02_Futures_Lakehouse/AGENTS.md](../AGENTS.md)，操作者入口与双命令启动方法见
-[README.md](README.md)。若规则冲突，必须先消除冲突，不得选择性执行。
+本文件适用于 operations 整棵目录树。上级规则见 [湖仓 AGENTS](../AGENTS.md) 与 [根规则](../../AGENTS.md)，操作与目录说明见 [README.md](README.md)。
+总控台使用 PySide6 / Qt Widgets，允许人工选择任意正式环节并使用其原 CLI 参数。
 
-## 正式职责边界
+## 职责与唯一参数来源
 
-- 本目录只承载已经确认的采集控制面、人工维护入口、不可执行历史快照、运行证据和纯控制面测试；业务转换、API 调用和正式湖提交仍由
-  湖仓根部 `a01`—`a04` 四个业务目录的入口负责；operations invoker 仅接受这些目录中具有同名 Notebook 的直接子级导出脚本，不得扩大到湖仓根部或 operations 脚本。
-- 根级 `run_daily_update.py` 是唯一日常正式入口。它的默认 manifest 固定为 a01—a04 的 18 个阶段，按既定全局顺序运行；`--groups` 只筛选组，
-  `--skip-optional-quality` 只允许跳过 a01/b07。a01/b08 永远不得进入任何 operations batch。
-- 日常 CLI 必须显式提供全新的 `--run-root`。不得恢复 `--mode`、sample、测试湖、日期截断、`--start-stage` 或 `--require-monitor` 等草稿控制项。
-- 仓单性能窗口和中位耗时上限必须成对提供，只转发给 a02/b03，不得改变其他阶段。
-- `manual_maintenance` 目前只有 b03 合约日历 `--full --write` 这一项正式人工维护。不得把其他历史脚本自行提升为可执行维护入口。
-- `archived_batches` 只保存用户确认的逐字节历史快照。快照使用 `.snapshot` 扩展名，默认不可执行；完整性只以
-  `snapshot_manifest.json` 中的字节数和 SHA-256 为准。
+- `console.py` 是唯一人工交互入口；`runtime/` 只负责源码 CLI 读取/调用、后台监督和运行环境检查。采集、转换、Schema、日期/湖路径写入规则和数据提交仍归 a01—a04 原入口。
+- Qt 界面、布局和样式保持在 `console.py` 中，不拆出普通步骤的组件、适配或样式层。源码解析和历史扫描使用后台读取线程，结果由 Qt 主线程呈现；参数页按需创建，切换不重建或丢失输入。依赖固定在根级 requirements.txt。
+- 亮色和暗色使用同一处主题色定义；必须同时覆盖 QPalette 的 Active/Inactive/Disabled 组及控件样式，避免继承系统主题后出现文字与背景不匹配。弹窗、富文本、占位提示、选中行和状态色随主题同步。QSettings 只保存当前用户的 appearance/theme，不能扩展成业务参数或未来批次授权存储。
+- 主题切换使用单个太阳／月亮按钮，图标表示点击后的目标主题，并提供提示及无障碍名称；应用与主题图标直接在 console.py 内绘制，不增加独立素材目录。界面导航、参数／说明页签和环节搜索只改变展示；搜索隐藏的已选项仍计入全批选择和命令预览，不能隐式取消或追加环节。
+- “采集工作台”统一展示 a00 准备与检查和 a01—a04 业务分组。a00 只能单项运行白名单工具或浏览共用模块，不进入批量勾选与日常配置。业务列表只列出 a01—a04 直接子级、具有同名 Notebook 的 b*.py 正式入口；19 个入口均可人工单独选择，多选按业务编号顺序。参数页“运行此环节”仅使用当前显示环节及其原参数，不读取或修改批量勾选集合，不自动补选上游。维护工具使用下述固定白名单，不得运行任意外部脚本。
+- 表单直接从原文件的 Click 声明读取名称、类型、默认值、required 与 multiple；只静态解析常量及允许的 Click 类型构造，不导入业务模块。动态声明必须明确拒绝，禁止浏览界面时调用业务 API。
+- 参数页外始终显示当前环节原文开篇简介，完整开篇说明保留在独立页签；简介从同一份只读原文提取，不另外维护业务描述。
+- 总控台不再定义 `--groups`、`--skip-optional-quality`、`--warehouse-*`、业务日期或湖路径转发参数。初始表单沿用原始 `--write` 默认值；点击下述“日常更新配置”是用户确认的写入快捷配置，不能将其扩展成其他入口或 worker 的隐式默认写入。所有原业务约束继续生效。
+- “日常更新配置”勾选原 18 个日常阶段，并将它们的原 `--write` 参数开启；同步已创建表单和待创建表单的参数值，保留其他已编辑参数。操作者可再逐项关闭写入，多选批次仍须预览并明确启动。b08 永远不被该按钮选中或修改参数；由操作者单独选择并显式启用 `--confirm-full-quality`，写入需另选 `--write`，允许作为单项或本次明确选择的后台批次执行。
+- `--full`、`--force` 以及其他原 CLI 参数均在各自环节表单中选择。不得复制业务数据规则到控制面或默认创建全量维护批次。
 
-## 人工授权、worker 与 monitor
+## 人工启动、后台执行和可见监控
 
-- 每个预计超过 10 分钟或写正式湖的批次，都必须获得用户在当前交互中对边界清楚的单批授权。这里的代码不构成未来批次、定时任务、常驻服务或自动恢复授权。
-- 正式批次必须按 [README.md](README.md) 的双命令方式启动：一个独立、持续可见的 Terminal 运行 `watch_batch.ps1`，另一个 hidden detached 进程运行正式 Python CLI。
-- worker 启动前和运行中都以 `monitor.pid` 门禁存活的可见 monitor。monitor 缺失或退出时，worker 必须停止当前递归业务子进程树、停止后续阶段并保留证据。
-- 正式人工中断只通过当前 run root 下的 `interrupt.request` 文件提出。worker 在等待 monitor、阶段启动前、运行循环、阶段之间和成功发布前都必须检查；发现请求后递归停树、停止后续、保留 request，并发布 `interrupted/130` 后正常释放锁。关闭 monitor 仍是监控故障，只能得到 `failed/1`，不得冒充人工中断。
-- Codex 只允许在启动后做一次有界健康检查，确认 worker、业务 child、心跳和可见 monitor 正常后必须结束回合；不得以 sleep、tail 或持续轮询维持 Agent 回合。
-- `watch_batch.ps1 -Once` 是严格只读渲染：不得创建 run root、不得新建或覆盖 `monitor.pid`、不得改写任何现场。它必须兼容缺少新协议字段的 legacy status。
+- 操作者点击参数页“运行此环节”即明确授权当前屏幕显示的环节与原参数，不再增加预览或确认弹窗；按钮附近须明确当前环节及写入意图，原业务参数门禁仍由入口执行。多选批次仍在命令预览中点击“启动本批次”后执行。两种入口都生成同样的有界批次，使用相同 worker、三个业务 preflight、锁、历史、监控和中断机制。Agent 仍须获得当前交互中的具体批次授权，不能因实现或测试请求启动采集；没有未来批次、计划任务、常驻守护、自动恢复或业务重试授权。
+- 每批使用 run_history 下全新唯一目录。request 固定原始参数、有效参数和脚本摘要，worker 核对后构造 immutable StageSpec tuple；子进程执行前再核对源码摘要。运行中表单修改仅影响未来新批次。
+- 可见 Qt 总控台与 hidden detached worker 分离。Qt 主线程每秒读取并呈现状态，只有成功后才刷新 monitor.json；后台读取线程不得代替界面刷新监控心跳。worker 核对 PID、进程创建时间和 12 秒心跳新鲜度。缺失、退出或心跳失效必须递归停止 child，停止后续并保留现场。
+- 点击中断只创建当前批次 interrupt.request，不覆盖原请求。worker 在等待监控、阶段前后、运行循环和成功发布前检查，停止后发布 interrupted/130。主动关闭窗口先请求中断并等待后台停止；强行退出或冻结是 failed/1 监控故障。
+- Codex 对实际授权的长批次只做一次有界健康检查，随后结束回合；不得 sleep、tail 或轮询维持 Agent。GUI 自身事件循环与状态刷新不依赖 LLM。
+- 历史查看严格只读，不覆盖 monitor.pid、不改写 status、不附着接管旧 worker。未知旧字段可降级显示，禁止根据阶段序号编造完成记录。
+- 历史时间仅在展示时转换为北京时间，不改写原 UTC 证据；刷新应显示条数、刷新时间和最新启动时间。已有 request、启动失败证据或启动日志而尚无 status 的目录也应列出，缺失状态不能推断成功；切换此类记录必须清除此前记录的指标和阶段残影。
+- “返回本窗口批次”只导航到本窗口最近启动的批次；没有目标或已在目标时禁用，不自动附着旧任务。查看其他历史时，仍须呈现本窗口活跃批次的阶段、进度、耗时和心跳后才续租，且中断始终只作用于本窗口活跃批次。
 
-## 固定执行语义
+## 执行与 Windows I/O
 
-- `background_worker.py` 的 `StageSpec` 必须保持 immutable；`run_batch` 只接受调用者显式构造的不可变业务阶段 tuple。不得在 worker 内引入隐式业务 manifest、阶段跳转或业务重试。
-- 每个批次在业务阶段前自动且只执行一次以下三个 preflight，顺序不可更改：
+- worker 无隐式业务 manifest。单项与多选业务批次开始前按顺序各运行一次：a00_01_verify_runtime.py、runtime/verify_operations_runtime.py、a00_02_sync_notebook_exports.py --check --check-level code。标准解释器为 latitude。代码检查保留完整 Python AST 中的 docstring、字符串、参数和结构，忽略注释、格式及单元格编号/位置；它不替代默认 `--check-level full` 的完整字节检查和 Notebook 修改后的完整同步，详见 [湖仓规范](../AGENTS.md)。
+- 保留 LongPathsEnabled=1、core.longpaths=true 和超过 260 字符路径 probe。preflight 不通过则不能执行业务。
+- worker 对每个 preflight 和业务阶段仅启动一次；非零、配额、中断、监控或发布故障不得由控制面重试 API、阶段或事务。业务入口已有 HTTP 有界重试、逐窗口失败汇总或配额后保存已有成果的策略仍由原入口定义，不得把 worker 停止后续环节宣传为任何一次请求失败都会立即退出整个脚本。psutil 跟踪全部 descendants，在非成功路径递归 terminate/kill，避免父进程退出后遗漏后代。
+- 状态保留 protocol_version、operation_name、mode、phase 与既有字段；mode=formal 仅表示兼容旧控制协议，实际是否提交和目标湖来自原业务参数。终态固定 succeeded/0、failed/1、quota_stopped/3、interrupted/130。
+- status 和 monitor 状态使用同目录临时文件、flush/fsync、原子替换；仅对替换 WinError 5/32 短时有界重试，发布最终失败必须停止业务并保留锁。读取采用 FileShare.ReadWrite | FileShare.Delete（数值 7），立即释放句柄，禁止独占轮询读取。
+- 状态记录阶段结果、最近输出及最近进度时间，并按作用域保留步骤、当前对象和明确单位的局部计数。worker 心跳与业务推进分别呈现，不用阶段数量冒充时间百分比。终态耗时固定使用结束时间。
+- 原始 stdout/stderr 完整保存到阶段日志；Qt 按当前选中阶段增量读取真实日志，不用反复替换少量尾行代替日志跟随。默认跟随当前阶段；人工选择其他阶段后保留选择并提供恢复跟随入口。未开始、无日志、读取失败和无结构化进度须分别提示；preflight 失败摘要保留全部失败项，不受日志可见行数裁剪影响。
+- 进度接收支持带版本和作用域的 JSON 事件；旧日志只解析白名单中的既有函数、步骤、对象及局部计数，不以任意 `N/M`、含义不明的 complete 或日志文字猜完成比例。现有入口尚未全部接入统一事件，未提供的合约/日期总量与剩余量保持未知，不为监控额外扫描业务湖。请求响应、转换验收、持久提交及日历闭环分开；事务成功退出前不宣称正式完成，失败状态保存不计为采集成功。历史无事件时保留原文与旧摘要，不补造过去的步骤或百分比。
 
-  1. `02_Futures_Lakehouse/verify_runtime.py`
-  2. `operations/verify_operations_runtime.py`
-  3. `02_Futures_Lakehouse/sync_notebook_exports.py --check`
+## 维护工具与共用模块
 
-- 正式主机必须启用 Windows `LongPathsEnabled=1`，且仓库必须配置
-  `core.longpaths=true`。operations runtime 的超过 260 字符路径 probe 未通过时，preflight 必须在任何业务阶段前终止批次。
+- 左侧 a00 分组只保留 a00_01— a00_04 四项。a00_01 页内切换运行环境与 Windows 控制面辅助检查，辅助检查必须标明实际脚本归属 `operations/runtime/verify_operations_runtime.py`；a00_02 页内切换“代码检查／完整检查／导出同步”；a00_03/a00_04 各自呈现共用模块的流程与职责。启动 a00 单项后留在所属页面和对应模式。a01/b01—b04 默认打开各自运行看板，保留原参数和完整说明页签；单项启动留在本环节看板，多项启动进入通用监控。其余业务入口继续使用原参数与通用监控。不得因页面导航或模式切换、测试请求执行采集或正式同步。
+- a01/b01—b04 的运行计数从已审计白名单日志读取，不为推算执行进度额外扫描湖或请求 API。b01 的“日历结果”以表格为主，明确呈现无需更新、生成、提交和失败结果；b02 区分交易日展开及当前日期范围事务，b03 区分信息请求批次、分区核对、当前分区品种日、正式叶提交和水位确认，b04 区分已有水位读取、基础分区规划、当前分区两种频率和含 clean 跳过的提交计划处理数。b01/b02 的 partition_committed 位于共同事务内部，只有事务退出后的 committed 才确认该事务；新事务不能继承旧事务完成量。每页绑定本窗口对应批次，preflight 和其他环节不得填充该页业务计数；无事件保持未知。
+- 用户已确认直接展示 b01 维度表结果。此页面可只读加载本次固定目标湖（未运行时为当前表单目标）中的交易日历或本批生成预览，使用权威 Schema metadata 定位与读取，不另建契约；来源、读取时间和提交状态须明确区分。表格限 50,000 行，每页 100 行，独立读取线程不影响日志和 UI 心跳；进入页面、来源/批次变化、结束或人工刷新时读取，禁止逐秒重读或将快照行数当作本批完成量。写入期间等待结束再重读已落盘数据；无更新显示 0 行新增和已覆盖水位，不能仍显示“停在第 1 步”。
+- b01 子进程可接收 worker 指定的本批 `LATITUDE_B01_PREVIEW_PATH`，仅将已验收的生成表原子保存到 `run_history/.../artifacts/b01_generated.parquet`；预览失败只 warning，其他阶段不得继承该变量。预览不是 silver 提交；只读运行、全历史期望结果和已落盘表分别标注。独立 CLI/Notebook 默认不产生附加预览，业务 API、范围和事务规则保持原入口所有。
+- a00 执行看板同时显示流程位置、各步骤独立进度条、本步总量/已处理/剩余、异常项目、逐依赖/逐文件结果、耗时、心跳与增量日志。计数只来自脚本的结构化事件；已处理包含失败项，不等于成功量，步骤完成数不代表耗时百分比。无事件与旧历史保持未知；中断或失败保留最后位置。
+- 环境检查按解释器与依赖展示；控制面检查按原子长路径、共享读取、Arrow 往返展示；a00_02 分别展示生成、可选写入、复核，逐文件结果独立留存。a00 页面在本窗口内保留已选模式，切换和重读采集参数不重置模式；每种模式仍按工具绑定本窗口运行目录，不混用其他工具的计数或异步日志。界面顶部在所有页面持续显示本窗口活跃批次的阶段、计数、耗时、心跳和监控故障。
 
-- 每个 preflight 和业务阶段都只启动一次子进程。普通非零、配额停止、中断、monitor 消失或状态发布失败均不得重试业务 API、阶段或事务。
-- worker 必须在运行中用 psutil 跟踪完整 descendants，并在任何非成功路径递归 terminate/kill；已退出的直接父进程不得导致遗留 child 被漏掉。
-- 状态协议固定包含 `protocol_version`、`operation_name`、`mode: "formal"`、`phase` 以及既有运行字段。正常终态只有
-  `succeeded`、`failed`、`quota_stopped`、`interrupted`，对应进程退出码固定为 0、1、3、130。
-- `status.json` 使用同目录临时文件、flush/fsync、`os.replace` 原子发布；只允许对替换时的 Windows WinError 5/32 做短时有界重试。发布最终失败必须停止 child 并保留全局锁。
-- PowerShell monitor 读取 `status.json` 必须用 `FileShare.ReadWrite | FileShare.Delete`，读取后立即释放句柄。
+- 工作台 a00 分组只允许运行固定命令：`a00_01_verify_runtime.py`、`runtime/verify_operations_runtime.py`、`a00_02_sync_notebook_exports.py --check --check-level code`、`a00_02_sync_notebook_exports.py --check --check-level full`、`a00_02_sync_notebook_exports.py --write`。工具命令不可由自由输入扩展；仍使用标准 latitude 解释器。
+- 维护任务复用 worker、全局锁、唯一历史目录、可见监控、失败证据和中断边界，但不再串行附加三个业务 preflight，避免检查自身形成循环。维护不会隐式启动采集；代码或完整检查不会修复文件。
+- 完整同步会按默认 PythonExporter 重新生成四个业务目录下 19 个正式 Notebook 的同名 `.py` 并完整复核；启动前必须预览具体目标范围和写入意图，再由操作者点击同步确认。它不执行 Notebook 代码、不调用业务 API、不写湖；不得因新增按钮或测试本功能而由 Agent 自动触发实际同步。
+- `a00_03_notebook_schema_browser.py` 的 Schema、raw 和有界数据展示由 Notebook 调用，`a00_04_staged_path_transaction.py` 的事务目标和验收由业务调用者决定；两者没有独立 CLI，各自独立工作页只说明流程与职责并打开源码，不设置执行或通用恢复按钮。所有 a00 文件保持湖仓根目录原位和原编号。
 
-## 全局锁与运行历史
+## 锁与证据
 
-- 全部正式 operations 共享唯一锁目录
-  `run_history/.active_formal_run`。只有目录本身的原子 `mkdir` 获取锁，owner 固定写入
-  `run_history/.active_formal_run/owner.json`。
-- 不得自动判断或清理“陈旧锁”。只有 worker 成功发布正常终态且确认递归 child 树全部停止后，才允许删除自己持有的锁。异常崩溃、状态最终发布失败、owner 不匹配或 child 未停必须保留锁等待人工核查。
-- 期望终态发布后若锁释放失败，必须先原子留下 `control_failure.json`（原终态、owner 与释放错误），再把可见 status/failure 降级为 `failed/1`。二次 status 发布失败也不得删除 control failure 或锁。
-- 崩溃锁只能在核对 owner、确认 worker/全部 child 已死亡，并检查 status、failure、阶段日志与事务现场后，由用户在当前人工处置中明确决定是否清除；任何实现不得自动判 stale。
-- 未取得锁的并发 loser 只能在自己的全新 run root 发布可见的 `failed` 终态和 failure 证据；不得修改、删除或释放 active lock 及其 owner。
-- 每个新批次使用 `run_history` 下唯一且全新的目录；禁止覆盖、续跑或复用既有 status。`legacy_imports` 是已迁入的旧现场，只读保留；不得作为新 `--run-root`，也不得移动或改写。
-- manifest、status、failure 和阶段日志都是单批证据。失败或配额停止后只报告并等待下一次用户决定，不得自动续跑。
+- 全部控制批次（包括只读业务运行及维护任务）共享 run_history/.active_formal_run，以目录原子 mkdir 获取锁，owner.json 记录拥有者；禁止自动判定或清除 stale 锁。
+- 只有成功发布正常终态且确认全部 child 已停止，才释放自己的锁。崩溃、状态发布失败、owner 不匹配或 child 未停必须留锁。清锁需操作者核对 owner、进程、status、failure、日志和事务现场后明确决定。
+- 终态后释放锁失败先写 control_failure.json，再降级 failed/1；二次发布失败也不得删锁和证据。并发 loser 只可写自己的新目录失败证据，不得触碰 active owner。
+- request、manifest、status、failure、控制故障和日志均为单批证据，不覆盖复用、不自动续跑。legacy_imports 和原历史索引不可改写或迁移。
+- referance 是本次用户要求的完整只读参考；ZIP 和 snapshot_manifest.json 已核验并设置只读属性。不得修改、覆盖、删除或运行其中内容；ZIP 沿用 Git 本地备份忽略规则。archived_batches 原六项快照及摘要保持原字节。
 
-## 验证边界
+## 验证范围
 
-- `verify_operations_runtime.py` 只能在本目录临时路径测试超过 260 字符且包含中文/空格的 Python 原子替换、PowerShell 共享读取和 PyArrow Parquet round-trip；不得读写业务湖。
-- `tests` 只能运行纯控制面、临时脚本、临时路径、只读 manifest 和 runtime probe；禁止调用业务 API或写正式湖。
-- 使用项目标准解释器执行：
-
-  ```powershell
-  E:\anaconda3\envs\latitude\python.exe -m unittest discover -s E:\Latitude_Analytics_v2\02_Futures_Lakehouse\operations\tests -v
-  E:\anaconda3\envs\latitude\python.exe E:\Latitude_Analytics_v2\02_Futures_Lakehouse\operations\verify_operations_runtime.py
-  ```
+- runtime/verify_operations_runtime.py 仅在 operations 临时路径测试 Windows 原子替换、共享读取和 PyArrow round-trip，不触及业务湖。
+- tests 仅运行临时控制面脚本、参数静态解析、Qt offscreen 控件和临时路径测试；主题偏好测试使用临时 INI，不修改用户实际偏好。明暗主题需验证深色宿主调色板覆盖、弹窗可读性、参数不变和正文对比度；原生视觉验证只能打开空闲测试窗口。禁止业务 API 和正式湖写入。命令见 README。
+- 改变这些规则时，同步检查根目录规范索引、湖仓 AGENTS/README、数据库 AGENTS 与受影响 Notebook 说明；Notebook 文本变化仍需用默认 PythonExporter 导出，不直接改写导出的 .py。

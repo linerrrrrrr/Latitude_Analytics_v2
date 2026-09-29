@@ -13,10 +13,10 @@
 ## 0. 规范索引与同步要求
 
 - [根目录 AGENTS.md](../AGENTS.md)：变量命名与最小改动、项目运行环境、根目录定位和规范路由的项目级强制规则。
-- [02_Futures_Lakehouse/AGENTS.md](../02_Futures_Lakehouse/AGENTS.md)：期货湖仓生产与运维目录树的目录级 Agent 规则入口，包含采集双轨、PythonExporter、`sync_notebook_exports.py` 同步入口、operations 及根级旧项目归档路由。
+- [02_Futures_Lakehouse/AGENTS.md](../02_Futures_Lakehouse/AGENTS.md)：期货湖仓生产与运维目录树的目录级 Agent 规则入口，包含采集双轨、PythonExporter、`a00_02_sync_notebook_exports.py` 同步入口、operations 及根级旧项目归档路由。
 - [.env.template](../.env.template)：项目根目录定位代码、当前稳定采集统一正式起点，以及包含 `raw`、`silver`、`gold` 的正式湖仓根路径环境变量权威模板。
 - [数据采集链路 README](../02_Futures_Lakehouse/README.md)：19 个正式采集入口（含人工 b08）的来源异常留存与验收语义、双轨同步入口、Notebook 开篇 Schema 契约呈现、表粒度、主键、分区和更新水位规范。
-- [数据采集 operations AGENTS.md](../02_Futures_Lakehouse/operations/AGENTS.md)：18 个默认日常阶段的人工启动、detached worker、可见 monitor、状态发布、失败停止、现场保留与人工核查规范。
+- [数据采集 operations AGENTS.md](../02_Futures_Lakehouse/operations/AGENTS.md)：19 个正式环节的人工选择、18 项日常快捷选择、detached worker、可见总控台、状态发布、失败停止、现场保留与人工核查规范。
 - [数据采集 operations README](../02_Futures_Lakehouse/operations/README.md)：正式 worker、monitor 与状态证据的操作说明。
 - [旧项目归档规则](../05_Old_Projects/AGENTS.md)：重建前采集实现、更早历史采集项目和旧特征工程项目的只读保护。
 - [特征工程 AGENTS.md](../04_Feature_Engineering/AGENTS.md)：独立特征工程项目的双轨、silver 消费与当前结构迁移阻塞规范。
@@ -32,7 +32,7 @@
 - [宏观发布系列与可用日配置](../config/futures_lakehouse/macro_release_entities.py)：宏观发布日历、SHIBOR 与宏观事实共用的 25 个系列、来源列、宏观数值偏移、理论频率及版本化可用日规则唯一权威来源。
 - [JQData 共享连接边界](../config/jqdata_connection.py)：JQData 认证与 Windows TUN 物理出口绑定的项目级实现；不承载业务采集或写入语义。
 - [config/data_contracts.py](../config/data_contracts.py)：17 张稳定 silver Schema 及 Pandas、Polars、Arrow 转换的可执行契约。
-- [Schema 展示实现](../02_Futures_Lakehouse/notebook_schema_browser.py)：采集与研究 Notebook 共用的 Schema 只读浏览、关键内容选择和完整内容折叠实现。
+- [Schema 展示实现](../02_Futures_Lakehouse/a00_03_notebook_schema_browser.py)：采集与研究 Notebook 共用的 Schema 只读浏览、关键内容选择和完整内容折叠实现。
 - [read_futures_lake_demo.ipynb](read_futures_lake_demo.ipynb)：17 张稳定 silver 表的契约化读取演示，以及不计入 silver 表数的生意社 raw 原文与摘要核对示例。
 - 修改本规范时，必须同步检查以上索引项；数据字段命名、类型、Schema 或转换入口发生变化时，相关文本和代码必须在同一次变更中更新。
 
@@ -227,11 +227,11 @@ Schema metadata 或历史 Parquet，以免影响仍执行精确 metadata 比较�
 ### 3.3 Notebook 开篇 Schema 契约呈现
 
 直接涉及权威 Arrow Schema 的业务 Notebook，应在开篇呈现当前工作流的 Schema 契约。该呈现是权威
-Schema 的只读投影，不是第二份语义来源。Notebook 使用 `02_Futures_Lakehouse/notebook_schema_browser.py` 中的同一
+Schema 的只读投影，不是第二份语义来源。Notebook 使用 `02_Futures_Lakehouse/a00_03_notebook_schema_browser.py` 中的同一
 展示实现，传入当前工作流直接涉及的具名权威 Schema，并按上游依赖在前、当前产出在后的顺序排列。
 采集 Notebook 另外显式传入 `lake_root=settings.futures_lake_root` 启用只读数据样例；其他调用方不传路径时仍只浏览契约。
 导入路径在现有项目根定位的命中分支中加入 `candidate_root / "02_Futures_Lakehouse"`，随后直接
-`from notebook_schema_browser import display_schema_metadata`；具体写法见 [湖仓目录规则](../02_Futures_Lakehouse/AGENTS.md#共享配置与-notebook-展示归属)。
+`from a00_03_notebook_schema_browser import display_schema_metadata`；具体写法见 [湖仓目录规则](../02_Futures_Lakehouse/AGENTS.md#共享配置与-notebook-展示归属)。
 
 默认界面展示三块表格：Schema 列表、所选表的用途与粒度说明、关键字段目录。宽窗口中后两块并排，窄窗口上下排列。
 Schema 列表保留原有六列横向总览：英文表名、中文表名、字段数、主键、Hive 分区、Schema 版本；
@@ -332,8 +332,11 @@ required 格点”的无 API 清退范围。清退格点按旧事实自身的 `i
 稳定系列、理论频率和版本化可用日规则生成完整水位：SHIBOR 只生成普通工作日，CPI/PPI/PMI 生成月末，
 GDP 生成季末；是否 required 只由项目可用日是否已到决定。政策字段逐值不变时继承 b02/b03 回写状态，
 新增、内部缺口、系列撤销、可用日到达和规则变化都由完整表比较识别。普通写入替换完整
-`dataset_name/year/month` 叶分区，旧 metadata 或旧策略只能在无日期自动模式中整根迁移；staging 与
-正式路径均须通过精确 Schema/metadata、完整叶和完整表逐值复读。该入口本身不得把项目规则可用日描述成
+`dataset_name/year/month` 叶分区。当前契约版本的既有状态信任正式提交证明，配置政策变化由生成时逐格点比较处理；
+只有物理兼容但 `schema_version` 不同的历史才执行一次当前规则兼容识别，旧版本写入迁移必须使用无日期自动模式，
+不能通过当前规则时不继承旧状态。生成结果执行一次完整业务验收；staging 一次物化后在内存逐叶核对，正式整表复读一次，
+均保留物理结构、表身份、契约版本、行数和完整内容摘要验收。纯描述性 metadata 差异不形成迁移或历史重写，
+b02/b03 消费本日历时采用同一兼容边界，新写文件仍携带当前完整 metadata。该入口本身不得把项目规则可用日描述成
 API 实际发布日期，也不得擅自删除两张下游事实表的历史行。
 
 `fact_interest_rate_daily` 只消费上述日历中 `dataset_name=interest_rate` 且 required 的系列—日期格点。
@@ -345,7 +348,11 @@ API 实际发布日期，也不得擅自删除两张下游事实表的历史行�
 有效值时（Tushare DataFrame 中的 `None`、`pd.NA` 或 `NaN`），事实正式复读 0 行后才可记
 `empty_confirmed + warning`；缺列、重复、越界、布尔值、无穷值、其他非数值或越界利率必须失败。每个
 `year/month` 完整事实叶和对应 `interest_rate/year/month` 完整日历叶均须在
-staging 与正式路径通过精确 Schema/metadata 和逐值复读，事实正式复读成功后才能推进日历完成状态。
+staging 与正式路径通过物理字段、类型、nullable、表名、主键、分区、契约版本及逐值复读，事实正式复读成功后才能推进日历完成状态。
+当前版本正式历史信任生产者业务证明；来源转换结果和待提交的 dirty 完整叶分别执行业务验收一次。
+纯描述性 metadata 差异使用当前契约，不触发历史重写；物理和身份兼容的旧事实版本仍须在无日期写入模式中
+按当前规则完整验收后迁移。启动只进行一次事实计数与日历完成状态对账，主循环复用事实和日历分区映射，
+每月只合并、更新和正式复读当前叶；修复后及批末复用已验收的提交证据，不再重读和复验全历史。
 
 `fact_macro_release` 只消费上述日历中 `dataset_name=macro_release` 且 required 的系列—报告期格点。
 完成集合必须由正式事实和日历状态共同证明；正式事实完整但日历状态陈旧时从正式事实无 API 修复，
@@ -357,7 +364,9 @@ Eastmoney `REPORT_DATE` 使用报告月 1 日编码：CPI/PPI/PMI 归一到该�
 页长、累计行数、日期范围和跨页来源日期唯一性，只接纳精确待办格点。当前生产事实值不得为空、为布尔值
 或非有限数；完整分页中某个精确系列缺值时，事实正式复读 0 行后才可写
 `empty_confirmed + warning`。每个 `year/month` 完整事实叶和对应 `macro_release/year/month` 日历叶均须
-在 staging 与正式路径通过精确 Schema/metadata 和逐值复读，事实正式复读成功后才能推进日历完成状态。
+在 staging 与正式路径通过物理字段、类型、nullable、表名、主键、分区、契约版本及逐值复读，事实正式复读成功后才能推进日历完成状态。
+当前版本历史信任生产者业务证明；来源输出与每次 dirty 完整叶分别执行业务验收一次。描述性 metadata 差异不重写历史，
+兼容旧事实版本仍限无日期写入时验收并迁移。启动一次共同对账后，只处理当前叶并继承同月已提交结果，修复后和批末不重读全历史。
 
 ### 正式湖根路径、raw 归档与 silver 写入水位
 
@@ -382,7 +391,7 @@ Eastmoney `REPORT_DATE` 使用报告月 1 日编码：CPI/PPI/PMI 归一到该�
 - `fact_futures_warehouse_receipt_daily` 的 `a02/b03` 生产者只以 `warehouse_receipt` 报告日历中 required 且 `is_fetch_completed=false` 的格点作默认待办，信任已完成快照，不扫描 clean 事实历史或在批末复读表根。每个待办日请求一次 API；事实与日历 dirty 叶通过校验和正式安装检查后，才推进日历状态。
 - `a01/b08` 只以 b04 required 且已完成的理论分钟主键减去 b06 正式分钟事实投影的 `contract_code,bar_at` 主键。它信任 b06 正式提交的事实主键、范围、数值与 OHLC 质量，不读取行情值、不调用 b07；只回写实际/缺失计数与检查时间，既有质量结论、旁证及完成状态必须逐值保留。缺失明细与触达的完整日历叶继续协调提交、共同回滚。
 - `a01/b07` 默认只处理 b06 新写入 `fact_futures_minute:formal_empty_session` 且尚无 b07 校对结果的 `suspected_closed` Session；不得计算历史输入指纹探测事实变化。四项比较全部匹配可写 `evidence_level=reconciled`，但分钟缺失的 `quality_status` 必须保持 `warning`。`--force` 只有带日期或合约范围才能写正式湖。
-- 18 阶段默认日常 worker 中 a01 固定为 b01—b07，`--skip-optional-quality` 只删除 b07 且不得恢复未选 `--groups`；b08 不得出现在默认、全量或生产 worker manifest 中，只能由操作员显式执行。
+- operations 总控台的日常快捷选择为 18 个阶段，其中 a01 为 b01—b07；操作者可以单独选择任意正式环节并配置其原 CLI 参数。b08 不进入日常快捷选择，必须人工单独选择并显式设置 `--confirm-full-quality`，提交时另选 `--write`；允许这个经人工确认的显式批次交给 detached worker。总控台不改变各业务入口的写入范围和数据契约。
 
 gold 用于下游数据组织、特征探索和复权方法探索，不由本数据库规范统一定义表名、字段、Schema、
 分区或更新方式。某个实验需要落盘时，由所属工作流局部定义并校验其当前输出结构；不得把该实验

@@ -1,10 +1,11 @@
-"""隔离验证 b03 外部市场日历与境外期货事实的 metadata 原子升级。"""
+"""隔离验证外部日历 metadata 兼容与境外期货描述差异不重写历史。"""
 
 from __future__ import annotations
 
 import hashlib
 import json
 import pathlib
+import sys
 import tempfile
 import types
 import unittest
@@ -138,12 +139,12 @@ def build_trade_calendar_frame(module: types.ModuleType) -> pd.DataFrame:
             "updated_at": updated_at,
             "year": calendar_date.year,
         })
-    return module.validate_upstream_table(
+    return module.arrow_to_pandas(
         module.pandas_to_arrow(
             pd.DataFrame(rows).loc[:, module.TRADE_CALENDAR_SCHEMA.names],
             module.TRADE_CALENDAR_SCHEMA,
         ),
-        "隔离测试",
+        module.TRADE_CALENDAR_SCHEMA,
     )
 
 
@@ -198,12 +199,12 @@ def build_legacy_domestic_migration_frames(
             "month": observation_date.month,
         })
 
-    upstream_df = module.validate_upstream_table(
+    upstream_df = module.arrow_to_pandas(
         module.pandas_to_arrow(
             pd.DataFrame(upstream_rows).loc[:, module.TRADE_CALENDAR_SCHEMA.names],
             module.TRADE_CALENDAR_SCHEMA,
         ),
-        "旧状态迁移隔离测试",
+        module.TRADE_CALENDAR_SCHEMA,
     )
     legacy_df = module.arrow_to_pandas(
         module.pandas_to_arrow(
@@ -279,7 +280,10 @@ def build_completed_overseas_calendar(
             "year": snapshot_date.year,
             "month": snapshot_date.month,
         })
-    return module.validate_calendar_frame(pd.DataFrame(rows), "隔离测试")
+    return module.arrow_to_pandas(
+        module.pandas_to_arrow(pd.DataFrame(rows), module.EXTERNAL_MARKET_CALENDAR_SCHEMA),
+        module.EXTERNAL_MARKET_CALENDAR_SCHEMA,
+    )
 
 
 class ExternalCalendarMetadataUpgradeTests(unittest.TestCase):
@@ -358,11 +362,11 @@ class ExternalCalendarMetadataUpgradeTests(unittest.TestCase):
                 "升级后的隔离",
             )
             self.assertEqual(
-                self.module.table_digest(upgraded_df),
-                self.module.table_digest(self.expected_df),
+                self.module.table_digest(self.module.pandas_to_arrow(upgraded_df, self.module.EXTERNAL_MARKET_CALENDAR_SCHEMA)),
+                self.module.table_digest(self.module.pandas_to_arrow(self.expected_df, self.module.EXTERNAL_MARKET_CALENDAR_SCHEMA)),
             )
             self.assertGreaterEqual(len(list(target_path.glob("*/*/*"))), 2)
-            assert_no_recovery_paths(self, silver_root, self.module.TABLE_NAME)
+            self.assertFalse(list(silver_root.glob(".a03-b01-*")))
 
     def test_cli_migrates_legacy_domestic_states_then_enforces_raw_contract(self) -> None:
         upstream_df, legacy_df = build_legacy_domestic_migration_frames(self.module)
@@ -444,7 +448,7 @@ class ExternalCalendarMetadataUpgradeTests(unittest.TestCase):
             self.assertTrue(
                 domestic_df["requirement_reason"].str.contains("原样归档").all()
             )
-            assert_no_recovery_paths(self, silver_root, self.module.TABLE_NAME)
+            self.assertFalse(list(silver_root.glob(".a03-b01-*")))
 
     def test_full_root_swap_failure_restores_old_tree_byte_for_byte(self) -> None:
         with tempfile.TemporaryDirectory(prefix="b03-c01-rollback-") as directory:
@@ -457,16 +461,17 @@ class ExternalCalendarMetadataUpgradeTests(unittest.TestCase):
                     name=None,
                 )
             ))
-            real_move = self.module.shutil.move
+            transaction_module = sys.modules[self.module.StagedPathTransaction.__module__]
+            real_move = transaction_module.os.replace
 
             def fail_new_root_move(source: str, destination: str) -> str:
-                if ".staging-" in pathlib.Path(source).name and pathlib.Path(destination) == target_path:
+                if pathlib.Path(source).name.startswith(".a03-b01-s-") and pathlib.Path(destination) == target_path:
                     raise RuntimeError("injected full-root swap failure")
                 return real_move(source, destination)
 
             with mock.patch.object(
-                self.module.shutil,
-                "move",
+                transaction_module.os,
+                "replace",
                 side_effect=fail_new_root_move,
             ):
                 with self.assertRaisesRegex(RuntimeError, "injected"):
@@ -486,7 +491,7 @@ class ExternalCalendarMetadataUpgradeTests(unittest.TestCase):
                 "回滚后的隔离日历",
             )
             self.assertFalse(is_exact)
-            assert_no_recovery_paths(self, silver_root, self.module.TABLE_NAME)
+            self.assertFalse(list(silver_root.glob(".a03-b01-*")))
 
     def test_first_old_root_move_failure_never_touches_formal_target(self) -> None:
         with tempfile.TemporaryDirectory(prefix="b03-c01-first-move-") as directory:
@@ -499,19 +504,20 @@ class ExternalCalendarMetadataUpgradeTests(unittest.TestCase):
                     name=None,
                 )
             ))
-            real_move = self.module.shutil.move
+            transaction_module = sys.modules[self.module.StagedPathTransaction.__module__]
+            real_move = transaction_module.os.replace
 
             def fail_old_root_move(source: str, destination: str) -> str:
                 if (
                     pathlib.Path(source) == target_path
-                    and ".backup-" in pathlib.Path(destination).name
+                    and pathlib.Path(destination).parent.name.startswith(".a03-b01-b-")
                 ):
                     raise RuntimeError("injected first old-root move failure")
                 return real_move(source, destination)
 
             with mock.patch.object(
-                self.module.shutil,
-                "move",
+                transaction_module.os,
+                "replace",
                 side_effect=fail_old_root_move,
             ):
                 with self.assertRaisesRegex(RuntimeError, "injected first"):
@@ -532,7 +538,7 @@ class ExternalCalendarMetadataUpgradeTests(unittest.TestCase):
                 "首次移动失败后的隔离日历",
             )
             self.assertFalse(is_exact)
-            assert_no_recovery_paths(self, silver_root, self.module.TABLE_NAME)
+            self.assertFalse(list(silver_root.glob(".a03-b01-*")))
 
 
 class OverseasFactMetadataUpgradeTests(unittest.TestCase):
@@ -569,112 +575,43 @@ class OverseasFactMetadataUpgradeTests(unittest.TestCase):
         )
         return silver_root, fact_path
 
-    def test_cli_upgrades_multiple_partitions_without_api(self) -> None:
-        with tempfile.TemporaryDirectory(prefix="b03-c03-metadata-") as directory:
+    def test_description_drift_is_read_without_api_or_any_rewrite(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="overseas-description-") as directory:
             lake_root = pathlib.Path(directory)
             silver_root, fact_path = self.prepare_lake(lake_root)
-            api_calls = 0
-
-            def forbidden_authentication(*args: object, **kwargs: object) -> None:
-                nonlocal api_calls
-                del args, kwargs
-                api_calls += 1
-                raise AssertionError("metadata 升级不得认证 JQData")
-
-            self.module.authenticate_jqdata = forbidden_authentication
-            result = CliRunner().invoke(
-                self.module.main,
-                ("--lake-root", str(lake_root), "--write"),
-            )
-
-            self.assertEqual(
-                result.exit_code,
-                0,
-                msg=f"output={result.output!r}; exception={result.exception!r}",
-            )
-            self.assertEqual(api_calls, 0)
-            self.assertIn("metadata_upgraded: rows=2", result.output)
-            self.assertIn("api_requests=0", result.output)
-            upgraded_df = self.module.read_optional_fact(fact_path)
-            self.assertTrue(
-                self.module.pandas_to_arrow(
-                    upgraded_df,
-                    self.module.OVERSEAS_FUTURES_DAILY_SCHEMA,
-                ).equals(
-                    self.module.pandas_to_arrow(
-                        self.fact_df,
-                        self.module.OVERSEAS_FUTURES_DAILY_SCHEMA,
-                    )
-                )
-            )
-            self.assertGreaterEqual(len(list(fact_path.glob("*/*"))), 2)
+            before = parquet_hashes(silver_root)
+            with mock.patch.object(self.module, "authenticate_jqdata", side_effect=AssertionError("no API")) as authentication:
+                result = CliRunner().invoke(self.module.main, ["--lake-root", str(lake_root), "--write"])
+            self.assertEqual(result.exit_code, 0, result.output)
+            authentication.assert_not_called()
+            self.assertIn("outcome=up_to_date", result.output)
+            self.assertEqual(before, parquet_hashes(silver_root))
+            self.assertEqual(len(self.module.read_optional_fact(fact_path)), 2)
             assert_no_recovery_paths(self, silver_root, self.module.TABLE_NAME)
 
-    def test_full_root_swap_failure_restores_old_tree_byte_for_byte(self) -> None:
-        with tempfile.TemporaryDirectory(prefix="b03-c03-rollback-") as directory:
+    def test_identity_metadata_mismatch_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="overseas-identity-") as directory:
             lake_root = pathlib.Path(directory)
-            silver_root, fact_path = self.prepare_lake(lake_root)
-            before_hashes = parquet_hashes(fact_path)
-            real_move = self.module.shutil.move
+            _, fact_path = self.prepare_lake(lake_root)
+            leaf_file = next(fact_path.glob("year=*/month=*/*.parquet"))
+            table = pq.ParquetFile(leaf_file).read()
+            metadata = dict(table.schema.metadata)
+            metadata[b"table_name"] = b"wrong_table"
+            pq.write_table(table.replace_schema_metadata(metadata), leaf_file)
+            with self.assertRaisesRegex(TypeError, "表身份 metadata"):
+                self.module.read_optional_fact(fact_path)
 
-            def fail_new_root_move(source: str, destination: str) -> str:
-                if ".staging-" in pathlib.Path(source).name and pathlib.Path(destination) == fact_path:
-                    raise RuntimeError("injected fact full-root swap failure")
-                return real_move(source, destination)
-
-            with mock.patch.object(
-                self.module.shutil,
-                "move",
-                side_effect=fail_new_root_move,
-            ):
-                with self.assertRaisesRegex(RuntimeError, "injected"):
-                    self.module.upgrade_fact_metadata(self.fact_df, lake_root)
-
-            self.assertEqual(parquet_hashes(fact_path), before_hashes)
-            _, is_exact = self.module.open_compatible_dataset(
-                fact_path,
-                self.module.FACT_PARTITIONING,
-                self.module.OVERSEAS_FUTURES_DAILY_SCHEMA,
-                self.module.PARTITION_COLUMNS,
-                "回滚后的隔离事实",
-            )
-            self.assertFalse(is_exact)
-            assert_no_recovery_paths(self, silver_root, self.module.TABLE_NAME)
-
-    def test_first_old_root_move_failure_never_touches_formal_target(self) -> None:
-        with tempfile.TemporaryDirectory(prefix="b03-c03-first-move-") as directory:
+    def test_physical_nullability_mismatch_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="overseas-nullability-") as directory:
             lake_root = pathlib.Path(directory)
-            silver_root, fact_path = self.prepare_lake(lake_root)
-            before_hashes = parquet_hashes(fact_path)
-            real_move = self.module.shutil.move
-
-            def fail_old_root_move(source: str, destination: str) -> str:
-                if (
-                    pathlib.Path(source) == fact_path
-                    and ".backup-" in pathlib.Path(destination).name
-                ):
-                    raise RuntimeError("injected first fact old-root move failure")
-                return real_move(source, destination)
-
-            with mock.patch.object(
-                self.module.shutil,
-                "move",
-                side_effect=fail_old_root_move,
-            ):
-                with self.assertRaisesRegex(RuntimeError, "injected first"):
-                    self.module.upgrade_fact_metadata(self.fact_df, lake_root)
-
-            self.assertTrue(fact_path.is_dir())
-            self.assertEqual(parquet_hashes(fact_path), before_hashes)
-            _, is_exact = self.module.open_compatible_dataset(
-                fact_path,
-                self.module.FACT_PARTITIONING,
-                self.module.OVERSEAS_FUTURES_DAILY_SCHEMA,
-                self.module.PARTITION_COLUMNS,
-                "首次移动失败后的隔离事实",
-            )
-            self.assertFalse(is_exact)
-            assert_no_recovery_paths(self, silver_root, self.module.TABLE_NAME)
+            _, fact_path = self.prepare_lake(lake_root)
+            leaf_file = next(fact_path.glob("year=*/month=*/*.parquet"))
+            table = pq.ParquetFile(leaf_file).read()
+            fields = [pa.field(field.name, field.type, nullable=True, metadata=field.metadata)
+                      if field.name == "instrument_code" else field for field in table.schema]
+            pq.write_table(table.cast(pa.schema(fields, metadata=table.schema.metadata)), leaf_file)
+            with self.assertRaisesRegex(TypeError, "物理字段、类型或 nullable"):
+                self.module.read_optional_fact(fact_path)
 
 
 if __name__ == "__main__":

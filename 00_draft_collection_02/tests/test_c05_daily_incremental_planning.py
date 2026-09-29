@@ -744,7 +744,8 @@ def test_coordinated_leaf_install_rolls_back_both_tables() -> None:
             lake_root,
         )
 
-        original_move = c05.shutil.move
+        transaction_module = sys.modules[c05.StagedPathTransaction.__module__]
+        original_move = transaction_module.os.replace
 
         def failing_move(source, destination, *args, **kwargs):
             if (
@@ -754,7 +755,7 @@ def test_coordinated_leaf_install_rolls_back_both_tables() -> None:
                 raise OSError("injected calendar install failure")
             return original_move(source, destination, *args, **kwargs)
 
-        c05.shutil.move = failing_move
+        transaction_module.os.replace = failing_move
         try:
             try:
                 c05.commit_validated_leaf_group(
@@ -762,11 +763,12 @@ def test_coordinated_leaf_install_rolls_back_both_tables() -> None:
                     lake_root,
                 )
             except RuntimeError as error:
-                assert "旧事实与日历叶均已恢复" in str(error)
+                assert "旧目标已恢复" in str(error)
+                assert isinstance(error.__cause__, OSError)
             else:
                 raise AssertionError("注入的协调安装失败未触发。")
         finally:
-            c05.shutil.move = original_move
+            transaction_module.os.replace = original_move
 
         fact_path = lake_root / "silver" / c05.TABLE_NAME
         restored_fact_df = c05.read_partition_leaf(
@@ -819,7 +821,8 @@ def test_formal_leaf_reread_failure_rolls_back_both_tables() -> None:
                     lake_root,
                 )
             except RuntimeError as error:
-                assert "旧事实与日历叶均已恢复" in str(error)
+                assert "旧目标已恢复" in str(error)
+                assert isinstance(error.__cause__, OSError)
             else:
                 raise AssertionError("注入的正式叶复读失败未触发。")
         finally:

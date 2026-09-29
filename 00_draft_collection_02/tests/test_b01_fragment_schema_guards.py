@@ -218,16 +218,16 @@ class FragmentSchemaGuardTests(unittest.TestCase):
                 C07.validate_read_fragments(
                     dataset,
                     selected_filter,
-                    CALENDAR_SCHEMA,
-                    PARTITION_COLUMNS,
+                    C07.CALENDAR_FILE_SCHEMA,
+                    C07.CALENDAR_TABLE_NAME,
                     "选中行情日历叶",
                 )
                 with self.assertRaisesRegex(TypeError, "fragment"):
                     C07.validate_read_fragments(
                         dataset,
                         other_filter,
-                        CALENDAR_SCHEMA,
-                        PARTITION_COLUMNS,
+                        C07.CALENDAR_FILE_SCHEMA,
+                        C07.CALENDAR_TABLE_NAME,
                         "另一行情日历叶",
                     )
 

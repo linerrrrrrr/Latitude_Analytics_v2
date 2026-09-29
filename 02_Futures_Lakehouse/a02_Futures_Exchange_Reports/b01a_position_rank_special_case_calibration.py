@@ -1,11 +1,73 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # 期货成交持仓排名特殊案例校准证据
+# # b01a 成交持仓排名特殊案例校准证据
 # 
-# 该正式环节位于报告日历之后、通用持仓采集之前。它只处理已人工核实并冻结在共享配置中的特殊案例：下载上期所官方历史文件，验证完整响应 SHA-256 和目标 Top 20 逐值内容，再把原始响应、摘要和校准清单原子归档到正式 raw。
+# 本环节按 `config/futures_lakehouse/futures_position_rank_special_cases.py` 中的冻结案例，准备上期所官方原文、SHA-256 sidecar 和校准清单，供 a02/b02 判断是否可以应用已确认的成交量榜校准。
 # 
-# 本环节不读取 JQData、不写 silver，也不把未知异常自动归入特殊情况。通用持仓入口只有在 JQData 坏数据指纹和本环节证据同时精确匹配时才应用校准。
+# | 上下游 | 与本环节的关系 |
+# | --- | --- |
+# | a02/b01 报告日历 | 运行顺序上的前置阶段；本环节不读取或回写报告日历。 |
+# | 特殊案例共享配置 | 唯一的案例名单、URL、目标合约、响应摘要和完整 Top 20 校准值来源；配置同时供 b02 使用。 |
+# | 上期所官方历史文件 | 证据缺失时每个配置案例请求一次；不查询 JQData、不重试。 |
+# | a02/b02 成交持仓报告 | 只有指定格点的完整 JQData 坏载荷指纹精确匹配，且正式 raw 证据通过核对，才替换该榜；官方值原样通过，第三种载荷仍失败。 |
+# 
+# 输出固定为 `raw/shfe/position_rank_special_cases/<case_id>/` 下的 `response.dat`、`response.sha256`、`calibration.json`。本环节没有 silver Schema、分区日历或独立日期水位，也不自动发现未知特殊案例。
+# 
+# raw 证据验收与下游 silver 校准是两个环节；本环节完成不代表报告事实已采集。文本权威见湖仓根目录 `README.md` 和 `03_Futures_Database/AGENTS.md`，冻结内容以共享配置为准。
+
+# ## 运行分支与写入边界
+# 
+# | 当前案例目录 | 不带 `--write` | 带 `--write` |
+# | --- | --- | --- |
+# | 已存在 | 复读三个文件；通过则继续，不联网。 | 同样只复读，不覆盖已有证据。 |
+# | 不存在 | 请求一次官方 URL，核对响应与冻结值，不落盘。 | 请求并核对后暂存三个文件，复读通过再整目录安装，随后正式复读。 |
+# | 已存在但验收不通过 | 直接失败。 | 直接失败；不自动重新请求或替换。 |
+# 
+# `--lake-root` 默认使用 `settings.futures_lake_root`；本入口没有日期、`--full` 或单案例筛选参数，依次处理配置中的所有案例。每个案例单独归档，此前成功案例不会因后一个案例失败而撤销。
+# 
+# 每个案例的完整三文件目录使用 `StagedPathTransaction` 单独安装，并在事务内正式复读。安装或验收失败时恢复提交前的目录缺失状态；已经安装的新目录移入隔离目录留存，staging 清理。恢复不完整时保留现场并停止，不自动重试。该机制使用同一文件系统内的目录替换，不提供进程终止后的自动恢复或并发写入协调。
+
+# ## 总流程：冻结案例证据归档
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart TD
+#     A["读取配置案例；定位 raw 根"] --> B["依次定位案例目录；检查路径边界"]
+#     B --> C{"案例目录已存在？"}
+#     C -->|是| D["复读三个文件与冻结配置；不联网"]
+#     C -->|否| E["请求一次官方 URL；要求 HTTP 200"]
+#     E --> F["核对完整摘要、目标合约和 Top 20；生成清单"]
+#     F --> G{"启用 --write？"}
+#     G -->|否| H["仅来源验证通过；不落盘"]
+#     G -->|是| I["暂存三个文件并复读；确认正式目录仍不存在"]
+#     I --> J["单案例事务：整目录安装并正式复读"]
+#     D -->|通过| K["报告当前案例完成；继续下一案例"]
+#     H --> K
+#     J -->|通过| K
+#     K --> L["汇总正式证据就绪状态；只读来源不算落盘"]
+#     D -. 失败 .-> X["抛错并停止后续案例；已成功案例保留"]
+#     E -. 失败 .-> X
+#     F -. 失败 .-> X
+#     I -. 失败 .-> Y["按实际安装记录恢复；隔离已安装新目录；清理 staging"]
+#     J -. 失败 .-> Y
+#     Y --> X
+# ```
+
+# ## 初始化与冻结配置
+# 
+# 按项目标记文件定位根目录，导入 Click、Requests、项目设置、唯一案例配置及共享安装与恢复模块。`ARTIFACT_FILENAMES` 定义每个案例必须具备的三个文件名；此格只加载定义，不请求来源或写入数据。
+
+# ### 局部流程：初始化
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart TD
+#     A["当前目录及父目录"] --> B{"包含三个项目标记？"}
+#     B -->|是| C["加入项目根与湖仓模块路径"]
+#     B -->|否| D["抛出未找到项目根目录"]
+#     C --> E["导入依赖与冻结配置；定义三个文件名"]
+# ```
 
 # In[ ]:
 
@@ -14,10 +76,10 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import pathlib
 import shutil
 import sys
+import time
 import uuid
 
 # Notebook 可以从项目任意子目录启动；根目录定位方法由 .env.template 统一规定。
@@ -39,6 +101,7 @@ from config.futures_lakehouse.futures_position_rank_special_cases import (
     POSITION_RANK_SPECIAL_CASES,
 )
 from config.settings import settings
+from a00_04_staged_path_transaction import StagedPathTransaction
 
 ARTIFACT_FILENAMES = {
     "response.dat",
@@ -48,13 +111,26 @@ ARTIFACT_FILENAMES = {
 
 
 # ## raw 归档样例
-# 只查看已有文件的状态、大小和已保存摘要；空库显示尚未归档。
+# 
+# 仅在交互内核且没有 `__file__` 时调用共享 raw 浏览器。按配置案例展示文件是否存在、大小和已保存摘要；空库显示尚未归档。浏览器不读取响应正文、不校准数据、不请求来源或创建证据文件。
+# 
+# 此处的文件概览不替代后面的完整证据验收。普通脚本运行或模块导入跳过展示。
+
+# ### 局部流程：raw 文件概览
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart TD
+#     A{"交互内核且没有文件路径变量？"} -->|是| B["按配置案例展示文件状态、大小与摘要"]
+#     B --> C["不读正文、不联网、不写入"]
+#     A -->|否| D["跳过展示"]
+# ```
 
 # In[ ]:
 
 
 if "ipykernel" in sys.modules and "__file__" not in globals():
-    from notebook_schema_browser import display_raw_archive_demo
+    from a00_03_notebook_schema_browser import display_raw_archive_demo
 
     display_raw_archive_demo(
         settings.futures_lake_root / "raw",
@@ -66,9 +142,38 @@ if "ipykernel" in sys.modules and "__file__" not in globals():
     )
 
 
-# ## 官方响应解析与冻结清单
+# ## 官方原文验收与冻结清单
 # 
-# 完整响应必须与配置中的 SHA-256 一致；目标合约成交量排名必须恰好覆盖 1—20 名、按指标非递增，并与冻结的官方校准值逐项一致。
+# `validate_response()` 先计算完整响应字节的 SHA-256，与配置精确比较；随后由 `parse_official_volume_rows()` 解析 UTF-8 JSON 的 `o_cursor` 列表，筛选目标合约的成交量榜。
+# 
+# | 检查 | 当前处理 |
+# | --- | --- |
+# | 目标合约与名次 | 合约代码去空白、转大写后匹配；其他合约跳过。非整数、布尔或不在 1—20 的名次跳过，随后要求最终结果恰好覆盖 1—20。 |
+# | 成员与指标 | 会员名非空；成交量为非负整数，增减量为整数；布尔值不能作为整数。 |
+# | 完整 Top 20 | 按名次排序后检查完整覆盖、成交量非递增，并逐项等于冻结官方值。 |
+# | 校准清单 | `calibration_manifest()` 汇集案例身份、交易日、来源 URL、实际摘要和已验证的全部官方行；不写文件。 |
+# 
+# 完整响应摘要与目标 Top 20 是 raw 证据的核心验收条件。网络响应、staging 原文及正式原文均通过同一套函数验收；全部检查继续保留。
+# 
+# `validate_response()` 自行报告验收及清单生成起止、输出行数、摘要和失败阶段；清单在内存中生成，记 `persisted=false`。`calibration_manifest()` 只组装字段，不另外重复同一生成阶段日志。解析函数沿已有记录循环，每处理 1000 行检查一次 2 秒进度间隔，报告已扫描记录和已匹配官方行；不为日志再遍历响应。
+# 
+# 固定目标合约与响应记录总数在原文行循环前读取一次。每行的合约清理、类型检查、筛选，以及最终名次覆盖、非递增和冻结值比较继续保留。响应摘要不能替代这些显式内容约束；JSON 解码、官方行排序和清单行转为 JSON 列表各有不同用途，本轮没有确认可删除的重复转换。
+
+# ### 局部流程：原文验收与清单生成
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart TD
+#     A["完整响应字节与冻结案例配置"] --> B["核对完整 SHA-256"]
+#     B --> C["解析 UTF-8 JSON；检查 o_cursor 列表及记录类型"]
+#     C --> D["循环前固定目标合约及记录数；逐行筛选、核对并报告进度"]
+#     D --> E["排序；核对完整名次、非递增及冻结值"]
+#     E --> F["生成清单；函数报告完成、persisted=false"]
+#     B -. 不匹配 .-> X["抛出异常"]
+#     C -. 不合法 .-> X
+#     D -. 字段不合法 .-> X
+#     E -. 不匹配 .-> X
+# ```
 
 # In[ ]:
 
@@ -77,49 +182,85 @@ def parse_official_volume_rows(
     response_content: bytes,
     special_case: dict[str, object],
 ) -> tuple[tuple[int, str, int, int], ...]:
+    log_started_at = time.perf_counter()
+    log_last_progress_at = log_started_at
+    log_phase = "decode"
+    log_scanned_rows = 0
+    click.echo(
+        "planning_progress: artifact=position_rank_special_cases; function=parse_official_volume_rows; phase=parse; status=started; "
+        f"case_id={special_case['case_id']}; response_bytes={len(response_content)}; elapsed_s=0.000"
+    )
     try:
-        payload = json.loads(response_content.decode("utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError) as error:
-        raise ValueError("上期所特殊案例响应不是有效 UTF-8 JSON。") from error
+        try:
+            payload = json.loads(response_content.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as error:
+            raise ValueError("上期所特殊案例响应不是有效 UTF-8 JSON。") from error
 
-    source_rows = payload.get("o_cursor")
-    if not isinstance(source_rows, list):
-        raise ValueError("上期所特殊案例响应缺少 o_cursor 列表。")
+        log_phase = "source_rows"
+        source_rows = payload.get("o_cursor")
+        if not isinstance(source_rows, list):
+            raise ValueError("上期所特殊案例响应缺少 o_cursor 列表。")
 
-    official_rows = []
-    for source_row in source_rows:
-        if not isinstance(source_row, dict):
-            raise ValueError("上期所特殊案例响应包含非对象记录。")
-        instrument_id = str(source_row.get("INSTRUMENTID", "")).strip().upper()
-        if instrument_id != special_case["official_instrument_id"]:
-            continue
-        rank = source_row.get("RANK")
-        if isinstance(rank, bool) or not isinstance(rank, int) or not 1 <= rank <= 20:
-            continue
-        member_name = str(source_row.get("PARTICIPANTABBR1", "")).strip()
-        indicator = source_row.get("CJ1")
-        indicator_increase = source_row.get("CJ1_CHG")
-        if (
-            not member_name
-            or isinstance(indicator, bool)
-            or not isinstance(indicator, int)
-            or indicator < 0
-            or isinstance(indicator_increase, bool)
-            or not isinstance(indicator_increase, int)
-        ):
-            raise ValueError("上期所特殊案例 Top 20 字段或类型不合法。")
-        official_rows.append((rank, member_name, indicator, indicator_increase))
+        log_phase = "row_scan"
+        official_instrument_id = special_case["official_instrument_id"]
+        log_source_row_count = len(source_rows)
+        official_rows = []
+        for source_row in source_rows:
+            if log_scanned_rows and log_scanned_rows % 1000 == 0:
+                log_now = time.perf_counter()
+                if log_now - log_last_progress_at >= 2.0:
+                    click.echo(
+                        "planning_progress: artifact=position_rank_special_cases; function=parse_official_volume_rows; phase=parse; status=running; "
+                        f"case_id={special_case['case_id']}; scanned_source_rows={log_scanned_rows}/{log_source_row_count}; "
+                        f"matched_rows={len(official_rows)}; elapsed_s={log_now - log_started_at:.3f}"
+                    )
+                    log_last_progress_at = log_now
+            log_scanned_rows += 1
+            if not isinstance(source_row, dict):
+                raise ValueError("上期所特殊案例响应包含非对象记录。")
+            instrument_id = str(source_row.get("INSTRUMENTID", "")).strip().upper()
+            if instrument_id != official_instrument_id:
+                continue
+            rank = source_row.get("RANK")
+            if isinstance(rank, bool) or not isinstance(rank, int) or not 1 <= rank <= 20:
+                continue
+            member_name = str(source_row.get("PARTICIPANTABBR1", "")).strip()
+            indicator = source_row.get("CJ1")
+            indicator_increase = source_row.get("CJ1_CHG")
+            if (
+                not member_name
+                or isinstance(indicator, bool)
+                or not isinstance(indicator, int)
+                or indicator < 0
+                or isinstance(indicator_increase, bool)
+                or not isinstance(indicator_increase, int)
+            ):
+                raise ValueError("上期所特殊案例 Top 20 字段或类型不合法。")
+            official_rows.append((rank, member_name, indicator, indicator_increase))
 
-    official_rows = tuple(sorted(official_rows))
-    if tuple(row[0] for row in official_rows) != tuple(range(1, 21)):
-        raise ValueError("上期所特殊案例未精确覆盖成交量第 1—20 名。")
-    indicators = [row[2] for row in official_rows]
-    if any(left < right for left, right in zip(indicators, indicators[1:])):
-        raise ValueError("上期所特殊案例成交量没有按名次非递增。")
-    if official_rows != special_case["official_rows"]:
-        raise ValueError("上期所特殊案例 Top 20 与冻结校准值不一致。")
-    return official_rows
+        log_phase = "top_twenty"
+        official_rows = tuple(sorted(official_rows))
+        if tuple(row[0] for row in official_rows) != tuple(range(1, 21)):
+            raise ValueError("上期所特殊案例未精确覆盖成交量第 1—20 名。")
+        indicators = [row[2] for row in official_rows]
+        if any(left < right for left, right in zip(indicators, indicators[1:])):
+            raise ValueError("上期所特殊案例成交量没有按名次非递增。")
+        if official_rows != special_case["official_rows"]:
+            raise ValueError("上期所特殊案例 Top 20 与冻结校准值不一致。")
+        click.echo(
+            "planning_progress: artifact=position_rank_special_cases; function=parse_official_volume_rows; phase=parse; status=completed; "
+            f"case_id={special_case['case_id']}; scanned_source_rows={log_scanned_rows}/{log_source_row_count}; "
+            f"matched_rows={len(official_rows)}; elapsed_s={time.perf_counter() - log_started_at:.3f}"
+        )
+        return official_rows
 
+    except Exception as log_error:
+        click.echo(
+            "planning_progress: artifact=position_rank_special_cases; function=parse_official_volume_rows; phase=parse; status=failed; "
+            f"case_id={special_case['case_id']}; failed_phase={log_phase}; scanned_source_rows={log_scanned_rows}; "
+            f"error={type(log_error).__name__}; elapsed_s={time.perf_counter() - log_started_at:.3f}"
+        )
+        raise
 
 def calibration_manifest(
     special_case: dict[str, object],
@@ -144,43 +285,360 @@ def validate_response(
     response_content: bytes,
     special_case: dict[str, object],
 ) -> dict[str, object]:
-    response_sha256 = hashlib.sha256(response_content).hexdigest()
-    if response_sha256 != special_case["official_response_sha256"]:
-        raise ValueError(
-            "上期所特殊案例完整响应 SHA-256 与冻结值不一致；"
-            f"actual={response_sha256}。"
+    log_started_at = time.perf_counter()
+    log_phase = "response_digest"
+    click.echo(
+        "验收原文并生成校准清单 / Validate response and build manifest\n"
+        "planning_progress: artifact=position_rank_special_cases; function=validate_response; phase=generate_manifest; status=started; "
+        f"case_id={special_case['case_id']}; response_bytes={len(response_content)}; persisted=false; elapsed_s=0.000"
+    )
+    try:
+        response_sha256 = hashlib.sha256(response_content).hexdigest()
+        if response_sha256 != special_case["official_response_sha256"]:
+            raise ValueError(
+                "上期所特殊案例完整响应 SHA-256 与冻结值不一致；"
+                f"actual={response_sha256}。"
+            )
+        log_phase = "parse_official_rows"
+        official_rows = parse_official_volume_rows(response_content, special_case)
+        log_phase = "manifest"
+        manifest = calibration_manifest(special_case, response_sha256, official_rows)
+        click.echo(
+            "planning_progress: artifact=position_rank_special_cases; function=validate_response; phase=generate_manifest; status=completed; "
+            f"case_id={special_case['case_id']}; rows={len(official_rows)}; sha256={response_sha256}; persisted=false; "
+            f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
         )
-    official_rows = parse_official_volume_rows(response_content, special_case)
-    return calibration_manifest(special_case, response_sha256, official_rows)
+        return manifest
+
+    except Exception as log_error:
+        click.echo(
+            "planning_progress: artifact=position_rank_special_cases; function=validate_response; phase=generate_manifest; status=failed; "
+            f"case_id={special_case['case_id']}; failed_phase={log_phase}; error={type(log_error).__name__}; "
+            f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
+        )
+        raise
+
+
+# ## 三文件证据复读
+# 
+# `verify_artifacts()` 用于已有案例、staging 和正式安装后的验收。目录内容必须恰好为三个约定文件；先读取 `response.dat` 并重新执行原文验收，再核对 `response.sha256` 与实际摘要，最后比较 `calibration.json` 与从原文及配置生成的完整清单。
+# 
+# 每次调用均直接读取当前路径的文件，验收通过才返回清单。文件概览、曾经下载成功或仅有文件名都不能替代这里的核对；任何异常继续向调用方抛出。函数自行报告开始、已验收文件数 `0/3` 至 `3/3`、当前路径、累计耗时和失败阶段；单个文件只有核对通过才增加计数。复读完成不新增写入，也不自行宣布整批案例已就绪。
+# 
+# 这里没有“逐分区重复全表检查”：本环节不使用 DataFrame、Arrow Dataset 或 Hive 分区。每个案例只读取自己的三个证据文件；已有证据执行一次完整复读，新归档则分别验收网络字节、staging 和正式目录。三个验收位置承担不同责任，继续保留；不从 raw 契约套用 silver 的上游信任规则。
+
+# ### 局部流程：三文件完整复读
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart TD
+#     A["函数报告开始；核对三个文件集合"] --> B["读取 response.dat；重新验收完整原文"]
+#     B --> C["读取 sidecar；核对实际摘要"]
+#     C --> D["读取 calibration.json；核对完整清单"]
+#     D --> E["报告 verified_files=3/3；返回已验收清单"]
+#     A -. 失败 .-> X["抛错；不请求来源或修复文件"]
+#     B -. 失败 .-> X
+#     C -. 失败 .-> X
+#     D -. 失败 .-> X
+# ```
+
+# In[ ]:
 
 
 def verify_artifacts(
     artifact_path: pathlib.Path,
     special_case: dict[str, object],
 ) -> dict[str, object]:
-    actual_filenames = {path.name for path in artifact_path.iterdir()}
-    if actual_filenames != ARTIFACT_FILENAMES:
-        raise ValueError(
-            f"特殊案例证据文件集合不一致：{sorted(actual_filenames)}。"
-        )
-    response_content = (artifact_path / "response.dat").read_bytes()
-    expected_manifest = validate_response(response_content, special_case)
-    sidecar_sha256 = (artifact_path / "response.sha256").read_text(
-        encoding="ascii"
-    ).strip()
-    if sidecar_sha256 != expected_manifest["official_response_sha256"]:
-        raise ValueError("特殊案例响应摘要 sidecar 不一致。")
-    actual_manifest = json.loads(
-        (artifact_path / "calibration.json").read_text(encoding="utf-8")
+    log_started_at = time.perf_counter()
+    log_phase = "file_set"
+    log_verified_files = 0
+    click.echo(
+        "复读案例证据 / Verify case artifacts\n"
+        "planning_progress: artifact=position_rank_special_cases; function=verify_artifacts; phase=verify; status=started; "
+        f"case_id={special_case['case_id']}; path={artifact_path}; verified_files=0/3; elapsed_s=0.000"
     )
-    if actual_manifest != expected_manifest:
-        raise ValueError("特殊案例校准清单与正式原文或冻结配置不一致。")
-    return actual_manifest
+    try:
+        actual_filenames = {path.name for path in artifact_path.iterdir()}
+        if actual_filenames != ARTIFACT_FILENAMES:
+            raise ValueError(
+                f"特殊案例证据文件集合不一致：{sorted(actual_filenames)}。"
+            )
+        log_phase = "response_read"
+        response_content = (artifact_path / "response.dat").read_bytes()
+        log_phase = "response_validate"
+        expected_manifest = validate_response(response_content, special_case)
+        log_verified_files = 1
+        click.echo(
+            "planning_progress: artifact=position_rank_special_cases; function=verify_artifacts; phase=verify; status=running; "
+            f"case_id={special_case['case_id']}; path={artifact_path}; verified_files=1/3; file=response.dat; "
+            f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
+        )
+        log_phase = "sidecar"
+        sidecar_sha256 = (artifact_path / "response.sha256").read_text(
+            encoding="ascii"
+        ).strip()
+        if sidecar_sha256 != expected_manifest["official_response_sha256"]:
+            raise ValueError("特殊案例响应摘要 sidecar 不一致。")
+        log_verified_files = 2
+        click.echo(
+            "planning_progress: artifact=position_rank_special_cases; function=verify_artifacts; phase=verify; status=running; "
+            f"case_id={special_case['case_id']}; path={artifact_path}; verified_files=2/3; file=response.sha256; "
+            f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
+        )
+        log_phase = "manifest"
+        actual_manifest = json.loads(
+            (artifact_path / "calibration.json").read_text(encoding="utf-8")
+        )
+        if actual_manifest != expected_manifest:
+            raise ValueError("特殊案例校准清单与正式原文或冻结配置不一致。")
+        log_verified_files = 3
+        click.echo(
+            "planning_progress: artifact=position_rank_special_cases; function=verify_artifacts; phase=verify; status=completed; "
+            f"case_id={special_case['case_id']}; path={artifact_path}; verified_files=3/3; file=calibration.json; "
+            f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
+        )
+        return actual_manifest
+    except Exception as log_error:
+        click.echo(
+            "planning_progress: artifact=position_rank_special_cases; function=verify_artifacts; phase=verify; status=failed; "
+            f"case_id={special_case['case_id']}; path={artifact_path}; failed_phase={log_phase}; verified_files={log_verified_files}/3; "
+            f"error={type(log_error).__name__}; elapsed_s={time.perf_counter() - log_started_at:.3f}"
+        )
+        raise
 
 
-# ## CLI：验证并原子归档正式 raw 证据
+# ## 单案例来源请求
 # 
-# 不带 `--write` 时下载并验证但不落盘；带 `--write` 时先构造完整 candidate、复读成功后再安装整个案例目录。已有正式证据必须原样复读，任何不一致都停止，不覆盖。
+# `fetch_official_response()` 承担完整的“请求一次官方 URL、检查 HTTP 200、验收原文并返回响应及清单”操作。自行报告请求开始、响应字节数、来源验收完成和失败阶段；等待 HTTP 响应期间不虚构下载百分比，不新增请求、重试或心跳线程。
+# 
+# `special_case_source_valid:` 只在来源验收通过后发出，标记 `persisted=false`。它证明本次响应匹配冻结配置，不代表三个 raw 文件已经归档。
+
+# ### 局部流程：请求与来源验收
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart TD
+#     A["函数报告 fetch 开始"] --> B["单次 GET；timeout=60；检查 HTTP 200"]
+#     B --> C["报告收到响应与字节数"]
+#     C --> D["validate_response 自行报告原文验收和清单生成"]
+#     D --> E["报告 source_valid、persisted=false；返回响应和清单"]
+#     B -. 失败 .-> X["函数报告失败阶段；原异常继续抛出"]
+#     D -. 失败 .-> X
+# ```
+
+# In[ ]:
+
+
+def fetch_official_response(
+    special_case: dict[str, object],
+) -> tuple[requests.Response, dict[str, object]]:
+    log_started_at = time.perf_counter()
+    log_phase = "request"
+    click.echo(
+        "请求官方冻结来源 / Request official source\n"
+        "planning_progress: artifact=position_rank_special_cases; function=fetch_official_response; phase=fetch; status=started; "
+        f"case_id={special_case['case_id']}; timeout_s=60; elapsed_s=0.000"
+    )
+    try:
+        response = requests.get(special_case["official_url"], timeout=60)
+        if response.status_code != 200:
+            raise RuntimeError(
+                "上期所特殊案例请求失败；"
+                f"case_id={special_case['case_id']}, status={response.status_code}。"
+            )
+        click.echo(
+            "planning_progress: artifact=position_rank_special_cases; function=fetch_official_response; phase=response_received; status=completed; "
+            f"case_id={special_case['case_id']}; http_status=200; response_bytes={len(response.content)}; "
+            f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
+        )
+        log_phase = "source_validate"
+        manifest = validate_response(response.content, special_case)
+        click.echo(
+            "special_case_source_valid: artifact=position_rank_special_cases; function=fetch_official_response; phase=fetch; status=completed; "
+            f"case_id={special_case['case_id']}; rows=20; sha256={manifest['official_response_sha256']}; persisted=false; "
+            f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
+        )
+        return response, manifest
+    except Exception as log_error:
+        click.echo(
+            "planning_progress: artifact=position_rank_special_cases; function=fetch_official_response; phase=fetch; status=failed; "
+            f"case_id={special_case['case_id']}; failed_phase={log_phase}; error={type(log_error).__name__}; "
+            f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
+        )
+        raise
+
+
+# ## 单案例归档与提交状态
+# 
+# `commit_artifacts()` 接收已经验收的响应字节及清单，负责 staging 写入、复读、整目录安装和正式复读。三次文件写入后分别报告 `written_files=1/3`、`2/3`、`3/3`；复读由 `verify_artifacts()` 自行报告，不增加额外读取。安装及正式复读期间记 `batch_state=pending`。
+# 
+# 只有正式复读通过并成功退出事务，才由本函数输出 `special_case_committed:` 和 `phase=artifact_state; persisted=true; date_watermark=none`。本环节没有日期水位，落盘状态指向当前案例的三个证据文件。
+# 
+# 在目标旁使用短运行标识创建 staging、备份和隔离路径；三个文件的格式与正式目录不变。staging 验收后进入 `StagedPathTransaction`，保留“正式目录仍不存在”的原有检查，再安装整个案例目录并完成正式复读。失败时共享模块恢复当前案例提交前的缺失状态，隔离已安装的新目录；恢复不完整则保留现场并抛错。staging 清理，后续案例停止，此前成功案例保留。已有证据始终只复读，不进入覆盖事务。
+
+# ### 局部流程：单案例事务与落盘状态
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart TD
+#     A["准备 staging；逐个写三个文件；报告进度"] --> B["完整复读 staging"]
+#     B --> C["进入共享事务；确认正式目录仍不存在"]
+#     C --> D["整目录安装；仍 pending"]
+#     D --> E["事务内完整复读正式目录"]
+#     E --> F["成功退出事务；报告 committed 和已落盘状态"]
+#     A -. 失败 .-> X["清理 staging；抛错并停止后续案例"]
+#     B -. 失败 .-> X
+#     C -. 失败 .-> R["按实际移动记录恢复当前案例"]
+#     D -. 失败 .-> R
+#     E -. 失败 .-> R
+#     R --> Q{"恢复完整？"}
+#     Q -->|是| S["隔离已安装新目录；未移动的目标保持原样"]
+#     Q -->|否| T["保留备份与现场；报告恢复失败"]
+#     S --> X
+#     T --> X
+#     X --> U["此前成功案例保留；不自动重试"]
+# ```
+# 
+
+# In[ ]:
+
+
+def commit_artifacts(
+    artifact_path: pathlib.Path,
+    response_content: bytes,
+    manifest: dict[str, object],
+    special_case: dict[str, object],
+) -> None:
+    log_started_at = time.perf_counter()
+    log_phase = "staging_prepare"
+    log_written_files = 0
+    click.echo(
+        "归档案例证据 / Commit case artifacts\n"
+        "planning_progress: artifact=position_rank_special_cases; function=commit_artifacts; phase=commit; status=started; "
+        f"case_id={special_case['case_id']}; path={artifact_path}; written_files=0/3; elapsed_s=0.000"
+    )
+    try:
+        artifact_path.parent.mkdir(parents=True, exist_ok=True)
+        run_id = uuid.uuid4().hex[:12]
+        staging_path = artifact_path.parent / f".b01a-s-{run_id}"
+        backup_path = artifact_path.parent / f".b01a-b-{run_id}"
+        quarantine_path = artifact_path.parent / f".b01a-f-{run_id}"
+        try:
+            staging_path.mkdir(parents=False, exist_ok=False)
+            log_phase = "staging_write"
+            (staging_path / "response.dat").write_bytes(response_content)
+            log_written_files = 1
+            click.echo(
+                "planning_progress: artifact=position_rank_special_cases; function=commit_artifacts; phase=staging_write; status=running; "
+                f"case_id={special_case['case_id']}; written_files=1/3; file=response.dat; persisted=false; "
+                f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
+            )
+            (staging_path / "response.sha256").write_text(
+                manifest["official_response_sha256"] + "\n",
+                encoding="ascii",
+                newline="\n",
+            )
+            log_written_files = 2
+            click.echo(
+                "planning_progress: artifact=position_rank_special_cases; function=commit_artifacts; phase=staging_write; status=running; "
+                f"case_id={special_case['case_id']}; written_files=2/3; file=response.sha256; persisted=false; "
+                f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
+            )
+            (staging_path / "calibration.json").write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+                newline="\n",
+            )
+            log_written_files = 3
+            click.echo(
+                "planning_progress: artifact=position_rank_special_cases; function=commit_artifacts; phase=staging_write; status=completed; "
+                f"case_id={special_case['case_id']}; written_files=3/3; file=calibration.json; persisted=false; "
+                f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
+            )
+            log_phase = "staging_verify"
+            verify_artifacts(staging_path, special_case)
+            log_phase = "install"
+            click.echo(
+                "安装案例目录 / Install case directory\n"
+                "planning_progress: artifact=position_rank_special_cases; function=commit_artifacts; phase=install; status=started; "
+                f"case_id={special_case['case_id']}; path={artifact_path}; batch_state=pending; "
+                f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
+            )
+            with StagedPathTransaction(
+                root_path=artifact_path.parent,
+                staging_dir=staging_path,
+                backup_dir=backup_path,
+                quarantine_dir=quarantine_path,
+                log_context=(
+                    "artifact=position_rank_special_cases; function=commit_artifacts; "
+                    f"case_id={special_case['case_id']}; run_id={run_id}"
+                ),
+            ) as transaction:
+                if artifact_path.exists():
+                    raise RuntimeError("特殊案例正式证据目录在提交前并发出现。")
+                transaction.replace(target_path=artifact_path, staged_path=staging_path)
+                log_phase = "formal_verify"
+                click.echo(
+                    "planning_progress: artifact=position_rank_special_cases; function=commit_artifacts; phase=formal_verify; status=started; "
+                    f"case_id={special_case['case_id']}; path={artifact_path}; batch_state=pending; "
+                    f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
+                )
+                verify_artifacts(artifact_path, special_case)
+        except Exception:
+            shutil.rmtree(staging_path, ignore_errors=True)
+            raise
+        click.echo(
+            "special_case_committed: artifact=position_rank_special_cases; function=commit_artifacts; phase=commit; status=completed; "
+            f"case_id={special_case['case_id']}; path={artifact_path}; persisted=true; "
+            f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
+        )
+        click.echo(
+            "planning_progress: artifact=position_rank_special_cases; function=commit_artifacts; phase=artifact_state; status=completed; "
+            f"case_id={special_case['case_id']}; path={artifact_path}; verified_files=3/3; persisted=true; date_watermark=none; "
+            f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
+        )
+    except Exception as log_error:
+        click.echo(
+            "planning_progress: artifact=position_rank_special_cases; function=commit_artifacts; phase=commit; status=failed; "
+            f"case_id={special_case['case_id']}; failed_phase={log_phase}; written_files={log_written_files}/3; "
+            f"error={type(log_error).__name__}; elapsed_s={time.perf_counter() - log_started_at:.3f}"
+        )
+        raise
+
+
+# ## CLI：案例调度与整批就绪汇总
+# 
+# `main()` 检查案例路径边界，已有目录调用 `verify_artifacts()`，缺失目录调用 `fetch_official_response()`；启用 `--write` 后再调用 `commit_artifacts()`。入口保留运行边界、案例序号、已有证据结果摘要和只读跳过提交，不重复函数内部请求、生成、复读或提交起止日志。
+# 
+# 日志继续使用 88 个 `=` 的运行边界和 `artifact/function/phase/status` 字段；各函数的 `elapsed_s` 分别从本次函数调用开始累计。`special_case_existing_valid:`、`special_case_source_valid:`、`special_case_committed:` 前缀继续供 monitor 识别。
+# 
+# `position_rank_special_cases_ready` 现在表示本次选定湖中全部配置案例的证据已通过正式复读：只有已有证据复读和本次提交成功可以计入就绪；只读下载验收计为 `source_only_cases`，只要有此类案例就报告 `false`，整次只读检查仍正常完成。已有证据数、新提交数和仅来源验收数直接沿原循环累计，不重新扫描文件。
+# 
+# 本入口没有独立日期水位，统一记 `date_watermark=none`。失败时停止后续案例并保留原异常，不输出整批就绪或正常结束日志；具体失败阶段由负责操作的函数报告。
+# 
+# 配置案例总数和用于边界判断的规范 raw 根路径在案例循环前计算一次；每个案例目录仍分别解析并检查边界。固定值的外移不改变请求次数、现有证据分支、状态汇总或文件提交顺序。
+
+# ### 局部流程：调度与整批就绪汇总
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart TD
+#     A["循环前固定 raw 根及案例数；逐案例检查路径"] --> B{"目录存在？"}
+#     B -->|是| C["调用 verify_artifacts；成功后累计已有证据"]
+#     B -->|否| D["调用 fetch_official_response；函数自行报告"]
+#     D --> E{"启用写入？"}
+#     E -->|否| F["累计 source_only；报告跳过提交"]
+#     E -->|是| G["调用 commit_artifacts；成功后累计新提交"]
+#     C --> H["继续下一案例"]
+#     F --> H
+#     G --> H
+#     H --> I{"全部案例结束；source_only 为 0？"}
+#     I -->|是| J["报告证据 ready=true；无日期水位"]
+#     I -->|否| K["报告 ready=false；只读检查正常完成"]
+#     C -. 失败 .-> X["入口报告运行失败；原异常继续抛出"]
+#     D -. 失败 .-> X
+#     G -. 失败 .-> X
+# ```
 
 # In[ ]:
 
@@ -191,83 +649,138 @@ def verify_artifacts(
 def main(lake_root: pathlib.Path | None, write: bool) -> None:
     resolved_lake_root = (lake_root or settings.futures_lake_root).resolve()
     raw_root = resolved_lake_root / "raw"
+    log_started_at = time.perf_counter()
+    log_boundary = "=" * 88
+    log_phase = "run"
+    log_case_id = None
+    log_case_index = 0
+    log_case_count = len(POSITION_RANK_SPECIAL_CASES)
+    log_existing_cases = 0
+    log_committed_cases = 0
+    log_source_only_cases = 0
     click.echo(
-        f"special_case_count={len(POSITION_RANK_SPECIAL_CASES)}; "
-        f"lake_root={resolved_lake_root}; write={str(write).lower()}"
+        f"{log_boundary}\n特殊案例校准证据检查开始 / Special-case evidence run started\n"
+        "planning_progress: artifact=position_rank_special_cases; function=main; phase=run; status=started; "
+        f"special_case_count={log_case_count}; "
+        f"lake_root={resolved_lake_root}; write={str(write).lower()}; "
+        f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
     )
 
-    for special_case in POSITION_RANK_SPECIAL_CASES:
-        artifact_path = raw_root / special_case["raw_relative_path"]
-        if not artifact_path.resolve().is_relative_to(raw_root.resolve()):
-            raise ValueError("特殊案例证据路径越出 raw 根目录。")
-        if artifact_path.exists():
-            manifest = verify_artifacts(artifact_path, special_case)
+    try:
+        resolved_raw_root = raw_root.resolve()
+        for special_case in POSITION_RANK_SPECIAL_CASES:
+            log_case_index += 1
+            log_case_id = special_case["case_id"]
+            log_phase = "case_path"
             click.echo(
-                "special_case_existing_valid: "
-                f"case_id={special_case['case_id']}; "
-                f"sha256={manifest['official_response_sha256']}"
+                "检查案例目录 / Inspect case path\n"
+                "planning_progress: artifact=position_rank_special_cases; function=main; phase=case_path; status=started; "
+                f"case_id={log_case_id}; case_index={log_case_index}/{log_case_count}; "
+                f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
             )
-            continue
-
-        response = requests.get(special_case["official_url"], timeout=60)
-        if response.status_code != 200:
-            raise RuntimeError(
-                "上期所特殊案例请求失败；"
-                f"case_id={special_case['case_id']}, status={response.status_code}。"
-            )
-        manifest = validate_response(response.content, special_case)
-        click.echo(
-            "special_case_source_valid: "
-            f"case_id={special_case['case_id']}; rows=20; "
-            f"sha256={manifest['official_response_sha256']}"
-        )
-        if not write:
-            continue
-
-        artifact_path.parent.mkdir(parents=True, exist_ok=True)
-        staging_path = artifact_path.parent / (
-            f".{special_case['case_id']}.staging-{uuid.uuid4().hex}"
-        )
-        try:
-            staging_path.mkdir(parents=False, exist_ok=False)
-            (staging_path / "response.dat").write_bytes(response.content)
-            (staging_path / "response.sha256").write_text(
-                manifest["official_response_sha256"] + "\n",
-                encoding="ascii",
-                newline="\n",
-            )
-            (staging_path / "calibration.json").write_text(
-                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
-                encoding="utf-8",
-                newline="\n",
-            )
-            verify_artifacts(staging_path, special_case)
+            artifact_path = raw_root / special_case["raw_relative_path"]
+            if not artifact_path.resolve().is_relative_to(resolved_raw_root):
+                raise ValueError("特殊案例证据路径越出 raw 根目录。")
             if artifact_path.exists():
-                raise RuntimeError("特殊案例正式证据目录在提交前并发出现。")
-            os.replace(staging_path, artifact_path)
-            verify_artifacts(artifact_path, special_case)
-        except Exception:
-            shutil.rmtree(staging_path, ignore_errors=True)
-            raise
+                log_phase = "existing_verify"
+                manifest = verify_artifacts(artifact_path, special_case)
+                log_existing_cases += 1
+                click.echo(
+                    "special_case_existing_valid: artifact=position_rank_special_cases; function=main; phase=case_state; status=completed; outcome=existing_verified; "
+                    f"case_id={special_case['case_id']}; "
+                    f"sha256={manifest['official_response_sha256']}; elapsed_s={time.perf_counter() - log_started_at:.3f}"
+                )
+                continue
+
+            log_phase = "fetch"
+            response, manifest = fetch_official_response(special_case)
+            if not write:
+                log_source_only_cases += 1
+                click.echo(
+                    "planning_progress: artifact=position_rank_special_cases; function=main; phase=commit; status=skipped; "
+                    f"case_id={log_case_id}; reason=read_only; write=false; "
+                    f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
+                )
+                continue
+
+            log_phase = "commit"
+            commit_artifacts(artifact_path, response.content, manifest, special_case)
+            log_committed_cases += 1
+
         click.echo(
-            "special_case_committed: "
-            f"case_id={special_case['case_id']}; path={artifact_path}"
+            f"position_rank_special_cases_ready: {str(log_source_only_cases == 0).lower()}; "
+            "artifact=position_rank_special_cases; function=main; phase=artifact_state; status=completed; scope=configured_cases; "
+            f"existing_verified_cases={log_existing_cases}; committed_cases={log_committed_cases}; "
+            f"source_only_cases={log_source_only_cases}; date_watermark=none; elapsed_s={time.perf_counter() - log_started_at:.3f}"
         )
+        click.echo(
+            f"{log_boundary}\n特殊案例校准证据检查完成 / Special-case evidence run completed\n"
+            "planning_progress: artifact=position_rank_special_cases; function=main; phase=run; status=completed; "
+            f"processed_cases={log_case_index}; write={str(write).lower()}; "
+            f"elapsed_s={time.perf_counter() - log_started_at:.3f}\n{log_boundary}"
+        )
+    except Exception as log_error:
+        click.echo(
+            "planning_progress: artifact=position_rank_special_cases; function=main; phase=run; status=failed; "
+            f"failed_phase={log_phase}; case_id={log_case_id}; "
+            f"case_index={log_case_index}/{log_case_count}; error={type(log_error).__name__}; "
+            f"elapsed_s={time.perf_counter() - log_started_at:.3f}"
+        )
+        raise
 
-    click.echo("position_rank_special_cases_ready: true")
 
+# ## Notebook 与脚本执行入口
+# 
+# 与 b01、b02 一样，Notebook 使用 `notebook_args` 显式传入 Click 参数，避免读取内核的 `-f` 参数，并用 `standalone_mode=False` 返回单元格。当前参数为 `[]`，不带 `--write`：已有证据只复读，缺失证据仍请求一次官方来源并验收，不落盘。
+# 
+# 只有交互内核且没有 `__file__` 时才使用 Notebook 分支；Notebook 中导入同名 Python 模块不执行入口。直接运行 `.py` 时读取命令行参数。最后一格仅保存终端命令注释；正式归档需人工执行 `--write`。本入口没有日期、`--full` 或案例筛选参数。
+# 
 
-# ## Notebook 与脚本运行入口
+# ### 局部流程：Notebook 与脚本执行入口
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart TD
+#     A{"交互内核且没有文件路径变量？"} -->|是| B["显式 notebook_args；standalone_mode=False"]
+#     B --> C["当前空参数：只读验收；证据缺失仍请求一次"]
+#     A -->|否| D{"直接运行脚本？"}
+#     D -->|是| E["main 读取命令行参数"]
+#     D -->|否| F["模块导入：不执行入口"]
+# ```
+# 
 
 # In[ ]:
 
 
-if "ipykernel" in sys.modules:
+if "ipykernel" in sys.modules and "__file__" not in globals():
+    notebook_args = []
     main.main(
-        args=[],
+        args=notebook_args,
         prog_name="b01a_position_rank_special_case_calibration",
         standalone_mode=False,
     )
 elif __name__ == "__main__":
     main()
+
+
+# ### 局部流程：终端手动运行
+# 
+# 下面的代码单元格仅保存命令注释；实际启动需在终端执行对应命令。
+# 
+# ```mermaid
+# %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
+# flowchart LR
+#     A["在终端激活 latitude"] --> B["切换到项目根目录"]
+#     B --> C["手动运行对应 .py --write"]
+#     C --> D["已有证据只读；缺失案例逐个请求并归档"]
+# ```
+# 
+
+# In[ ]:
+
+
+# conda env list
+# conda activate latitude
+# cd E:\Latitude_Analytics_v2
+# python 02_Futures_Lakehouse\a02_Futures_Exchange_Reports\b01a_position_rank_special_case_calibration.py --write
 

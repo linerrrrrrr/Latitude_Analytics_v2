@@ -17,7 +17,7 @@ import psutil
 
 
 OPERATIONS_ROOT = pathlib.Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(OPERATIONS_ROOT))
+sys.path.insert(0, str(OPERATIONS_ROOT / "runtime"))
 
 import background_worker as worker  # noqa: E402
 
@@ -110,7 +110,7 @@ with pathlib.Path(sys.argv[1]).open("a", encoding="utf-8") as handle:
                 ["--write"],  # type: ignore[arg-type]
             )
 
-    def test_fixed_preflight_order_and_legacy_c08_rejection(self) -> None:
+    def test_fixed_preflight_order_and_explicit_manifest(self) -> None:
         self.assertEqual(
             [stage.name for stage in worker.DEFAULT_PREFLIGHT_STAGES],
             [
@@ -121,36 +121,26 @@ with pathlib.Path(sys.argv[1]).open("a", encoding="utf-8") as handle:
         )
         self.assertEqual(
             worker.DEFAULT_PREFLIGHT_STAGES[0].entrypoint_path,
-            worker.PROJECT_ROOT / "02_Futures_Lakehouse" / "verify_runtime.py",
+            worker.PROJECT_ROOT / "02_Futures_Lakehouse" / "a00_01_verify_runtime.py",
         )
         self.assertEqual(
             worker.DEFAULT_PREFLIGHT_STAGES[1].entrypoint_path,
-            worker.OPERATIONS_ROOT / "verify_operations_runtime.py",
+            worker.OPERATIONS_ROOT / "runtime" / "verify_operations_runtime.py",
         )
         self.assertEqual(
             worker.DEFAULT_PREFLIGHT_STAGES[2].arguments,
-            ("--check",),
+            ("--check", "--check-level", "code"),
         )
         self.assertEqual(
             worker.DEFAULT_PREFLIGHT_STAGES[2].entrypoint_path,
-            worker.COLLECTION_ROOT / "sync_notebook_exports.py",
+            worker.COLLECTION_ROOT / "a00_02_sync_notebook_exports.py",
         )
-        forbidden_stage = worker.StageSpec(
-            "quality/C08-audit",
-            pathlib.Path(worker.__file__),
-        )
-        with self.assertRaisesRegex(ValueError, "b08"):
-            worker.validate_stage_specs((forbidden_stage,), "业务")
+        stage = worker.StageSpec("a01/b08_full_minute_quality", pathlib.Path(worker.__file__), ("--confirm-full-quality",))
+        worker.validate_stage_specs((stage,), "业务")
+        with self.assertRaises(ValueError):
+            worker.validate_stage_specs((stage, stage), "业务")
 
-        hidden_in_arguments = worker.StageSpec(
-            "apparently-safe",
-            pathlib.Path(worker.__file__),
-            ("--entrypoint-path", "somewhere/b08.py"),
-        )
-        with self.assertRaisesRegex(ValueError, "b08"):
-            worker.validate_stage_specs((hidden_in_arguments,), "业务")
-
-    def test_b08_rejection_happens_before_lock_or_manifest(self) -> None:
+    def test_duplicate_stages_rejected_before_lock_or_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             temporary_root = pathlib.Path(temporary_directory)
             with self.isolated_worker(temporary_root) as (run_history, _):
@@ -159,11 +149,11 @@ with pathlib.Path(sys.argv[1]).open("a", encoding="utf-8") as handle:
                     "a01/b08_full_quality",
                     pathlib.Path(worker.__file__),
                 )
-                with self.assertRaisesRegex(ValueError, "b08"):
+                with self.assertRaisesRegex(ValueError, "重复"):
                     worker.run_batch(
                         operation_name="unit_b08_rejected",
                         run_root=run_root,
-                        stages=(forbidden_stage,),
+                        stages=(forbidden_stage, forbidden_stage),
                     )
                 self.assertFalse((run_root / "command_manifest.json").exists())
                 self.assertFalse((run_root / "status.json").exists())
@@ -484,6 +474,45 @@ pathlib.Path(sys.argv[1]).write_text("ran", encoding="utf-8")
                 if monitor_process.poll() is None:
                     monitor_process.kill()
                 monitor_process.wait(timeout=5)
+
+    def test_live_monitor_with_expired_lease_stops_child_tree_and_later_stage(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            temporary_root = pathlib.Path(temporary_directory)
+            pid_path = temporary_root / "children.json"
+            sentinel_path = temporary_root / "must_not_run.txt"
+            long_stage = self.make_script(temporary_root, "expire_lease.py", """
+import json, os, pathlib, subprocess, sys, time
+descendant = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"])
+pathlib.Path(sys.argv[1]).write_text(json.dumps([os.getpid(), descendant.pid]), encoding="utf-8")
+time.sleep(0.3)
+lease_path = pathlib.Path(sys.argv[2])
+lease = json.loads(lease_path.read_text(encoding="utf-8"))
+lease["heartbeat_at"] = "2020-01-01T00:00:00+00:00"
+temporary_path = lease_path.with_suffix(".tmp")
+temporary_path.write_text(json.dumps(lease), encoding="utf-8")
+os.replace(temporary_path, lease_path)
+time.sleep(60)
+""".lstrip())
+            sentinel_stage = self.make_script(temporary_root, "sentinel.py",
+                "import pathlib, sys; pathlib.Path(sys.argv[1]).write_text('ran')")
+            with self.isolated_worker(temporary_root) as (run_history, _):
+                run_root = self.monitored_run_root(run_history, "lease_expired")
+                worker.atomic_write_json(run_root / "request.json", {})
+                worker.atomic_write_json(run_root / "monitor.json", {
+                    "pid": os.getpid(), "process_created_at": psutil.Process().create_time(),
+                    "heartbeat_at": worker.utc_now_text(),
+                })
+                exit_code = worker.run_batch(operation_name="unit_lease_expired", run_root=run_root, stages=(
+                    worker.StageSpec("business/long", long_stage, (str(pid_path), str(run_root / "monitor.json"))),
+                    worker.StageSpec("business/must_not_run", sentinel_stage, (str(sentinel_path),)),
+                ))
+                self.assertEqual(exit_code, 1)
+                self.assertTrue(worker.process_is_alive(os.getpid()))
+                self.assertFalse(sentinel_path.exists())
+                for pid in json.loads(pid_path.read_text(encoding="utf-8")):
+                    self.assertFalse(worker.process_is_alive(pid))
+                self.assertIn("monitor_unavailable", worker.read_json_shared(run_root / "status.json")["error"])
+                self.assertFalse(worker.GLOBAL_LOCK_PATH.exists())
 
     def test_monitor_exit_with_fast_final_stage_cannot_publish_success(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:

@@ -54,7 +54,7 @@
 使用项目标准解释器：
 
 ```powershell
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/verify_runtime.py
+E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a00_01_verify_runtime.py
 ```
 
 Notebook 通过项目规定的标记文件搜索方式定位仓库根目录，并通过 `config.settings.settings.futures_lake_root` 定位正式湖仓。

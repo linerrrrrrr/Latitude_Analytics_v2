@@ -41,6 +41,8 @@ def load_notebook_module() -> tuple[types.ModuleType, str]:
 
 MODULE, EXPORTED_SOURCE = load_notebook_module()
 
+import a00_04_staged_path_transaction as transactions
+
 
 def exported_function_source(function_name: str) -> str:
     syntax_tree = ast.parse(EXPORTED_SOURCE)
@@ -542,10 +544,10 @@ class WarehouseReceiptTests(unittest.TestCase):
                 warehouse_frame(trading_date, quantity=99.0),
                 {trading_date},
             )
-            original_move = MODULE.shutil.move
+            original_move = transactions.os.replace
             move_count = 0
 
-            def fail_staging_install(source: str, destination: str) -> str:
+            def fail_staging_install(source, destination) -> None:
                 nonlocal move_count
                 move_count += 1
                 if move_count == 2:
@@ -553,8 +555,8 @@ class WarehouseReceiptTests(unittest.TestCase):
                 return original_move(source, destination)
 
             with mock.patch.object(
-                MODULE.shutil,
-                "move",
+                transactions.os,
+                "replace",
                 side_effect=fail_staging_install,
             ):
                 with self.assertRaisesRegex(OSError, "staging install"):

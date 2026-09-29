@@ -48,7 +48,7 @@ JQData 和 Tushare 是认证 SDK/API，不属于本轮网页反爬探测。项�
 先确认标准环境：
 
 ```powershell
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse\verify_runtime.py
+E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse\a00_01_verify_runtime.py
 ```
 
 低频性能样本（6 个业务逻辑请求，重复 3 轮；默认另有每主机一次 robots 请求）：
