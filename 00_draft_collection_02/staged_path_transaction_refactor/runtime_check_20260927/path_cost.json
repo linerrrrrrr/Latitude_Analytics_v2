@@ -1,0 +1,24 @@
+[
+  {
+    "targets": 6,
+    "pairs": 15,
+    "is_relative_to_calls": 30,
+    "elapsed_s": [
+      0.0002457998925819993,
+      0.00020840007346123457,
+      0.00020809995476156473
+    ],
+    "scope": "only overlap loop; no resolve, exists, mkdir, move, Parquet or logging"
+  },
+  {
+    "targets": 1200,
+    "pairs": 719400,
+    "is_relative_to_calls": 1438800,
+    "elapsed_s": [
+      11.144317399943247,
+      11.715190000017174,
+      11.617569499998353
+    ],
+    "scope": "only overlap loop; no resolve, exists, mkdir, move, Parquet or logging"
+  }
+]

@@ -1,0 +1,132 @@
+--- before/b02_futures_variety_calendar
++++ after/b02_futures_variety_calendar
+@@ -393,12 +393,8 @@
+ 
+     # 逐分区提交：先把正式旧分区移到本批备份，再把 staging 新分区移入。
+     # 每次移动都登记路径，后续任何检查失败都可以按相反顺序回滚。
+-    moved_partition_records = []
+-    variety_calendar_backup_dir.mkdir(parents=True, exist_ok=False)
+     variety_calendar_path.mkdir(parents=True, exist_ok=True)
+-    commit_succeeded = False
+     schema_marker_path = variety_calendar_path / "schema.parquet"
+-    schema_marker_created = False
+     expected_partition_schema = pa.schema(
+         [
+             FUTURES_VARIETY_CALENDAR_SCHEMA.field(name)
+@@ -413,7 +409,11 @@
+     expected_partition_row_count_by_key = staged_variety_calendar_df.groupby(
+         PARTITION_COLUMNS, observed=True,
+     ).size().to_dict()
+-    try:
++    with StagedPathTransaction(
++        root_path=variety_calendar_path, staging_dir=variety_calendar_staging_dir,
++        backup_dir=variety_calendar_backup_dir, quarantine_dir=variety_calendar_quarantine_dir,
++        log_context=f"table={TABLE_NAME}; run_id={run_id}",
++    ) as transaction:
+         for partition_index, (exchange_code, year, month) in enumerate(touched_partition_keys, start=1):
+             partition_started_at = perf_counter()
+             partition_relative_path = pathlib.Path(
+@@ -423,20 +423,17 @@
+             )
+             staged_partition_path = variety_calendar_staging_dir / partition_relative_path
+             formal_partition_path = variety_calendar_path / partition_relative_path
+-            backup_partition_path = variety_calendar_backup_dir / partition_relative_path
+             click.echo(
+                 f"partition_start: table={TABLE_NAME}; partition={partition_relative_path}; "
+                 f"completed={partition_index - 1}; total={partition_count}; run_id={run_id}"
+             )
+-            formal_partition_path.parent.mkdir(parents=True, exist_ok=True)
+-            backup_partition_path.parent.mkdir(parents=True, exist_ok=True)
+-            if formal_partition_path.exists():
+-                shutil.move(str(formal_partition_path), str(backup_partition_path))
+-            moved_partition_records.append((partition_relative_path, formal_partition_path, backup_partition_path))
+-            if staged_partition_path.is_dir():
+-                shutil.move(str(staged_partition_path), str(formal_partition_path))
+             expected_partition_row_count = int(
+                 expected_partition_row_count_by_key.get((exchange_code, year, month), 0)
++            )
++            # 合并结果为零行才明确删除；应有数据但 staging 缺失时由事务报错。
++            transaction.replace(
++                target_path=formal_partition_path,
++                staged_path=staged_partition_path if expected_partition_row_count else None,
+             )
+             if formal_partition_path.is_dir():
+                 committed_partition_dataset = ds.dataset(
+@@ -468,8 +465,12 @@
+         # 空库或清空最后一个分区后仍要保留可读取的表契约。
+         # 根目录 marker 没有 Hive 路径值，所以物理 Schema 只写五个非分区列。
+         if not len(staged_variety_calendar_table) and not any(variety_calendar_path.rglob("*.parquet")):
+-            schema_marker_created = True
+-            pq.write_table(pa.Table.from_batches([], schema=expected_partition_schema), schema_marker_path)
++            staged_schema_marker_path = variety_calendar_staging_dir / "schema.parquet"
++            pq.write_table(pa.Table.from_batches([], schema=expected_partition_schema), staged_schema_marker_path)
++            transaction.replace(
++                target_path=schema_marker_path, staged_path=staged_schema_marker_path,
++                quarantine_new=False,
++            )
+             with pq.ParquetFile(schema_marker_path) as schema_marker_file:
+                 validate_compatible_dataset_schema(
+                     schema_marker_file.schema_arrow, expected_partition_schema, "正式空表 marker ",
+@@ -477,62 +478,6 @@
+                 if schema_marker_file.metadata.num_rows != 0:
+                     raise ValueError("正式空表 marker 必须为零行。")
+ 
+-        commit_succeeded = True
+-
+-
+-    # =========================================================================
+-    # 8. 失败回滚与临时现场清理
+-    # =========================================================================
+-
+-    except Exception as commit_error:
+-        click.echo(
+-            f"planning_progress: table={TABLE_NAME}; phase=commit; status=failed; "
+-            f"error={type(commit_error).__name__}; rollback_partitions={len(moved_partition_records)}; "
+-            f"backup_dir={variety_calendar_backup_dir}; run_id={run_id}"
+-        )
+-        # 回滚本批已经移动的分区：先隔离新分区，再把旧分区移回原位。
+-        # 无法完整恢复时保留备份和隔离目录，避免为了清理现场继续破坏证据。
+-        if schema_marker_created and schema_marker_path.exists():
+-            schema_marker_path.unlink()
+-        rollback_errors = []
+-        for partition_relative_path, formal_partition_path, backup_partition_path in reversed(moved_partition_records):
+-            try:
+-                if formal_partition_path.exists():
+-                    quarantine_partition_path = variety_calendar_quarantine_dir / partition_relative_path
+-                    quarantine_partition_path.parent.mkdir(parents=True, exist_ok=True)
+-                    shutil.move(str(formal_partition_path), str(quarantine_partition_path))
+-                if backup_partition_path.exists():
+-                    formal_partition_path.parent.mkdir(parents=True, exist_ok=True)
+-                    shutil.move(str(backup_partition_path), str(formal_partition_path))
+-            except Exception as rollback_error:
+-                rollback_errors.append(
+-                    f"{partition_relative_path}: {type(rollback_error).__name__}: {rollback_error}"
+-                )
+-        if rollback_errors:
+-            click.echo(
+-                f"planning_progress: table={TABLE_NAME}; phase=rollback; status=failed; "
+-                f"failed_partitions={len(rollback_errors)}; backup_dir={variety_calendar_backup_dir}; run_id={run_id}"
+-            )
+-            raise RuntimeError(
+-                f"分区提交失败且回滚不完整；恢复副本保留在 {variety_calendar_backup_dir}；"
+-                f"回滚错误：{rollback_errors}"
+-            ) from commit_error
+-        click.echo(
+-            f"planning_progress: table={TABLE_NAME}; phase=rollback; status=completed; "
+-            f"partitions={len(moved_partition_records)}; quarantine_dir={variety_calendar_quarantine_dir}; run_id={run_id}"
+-        )
+-        if variety_calendar_quarantine_dir.exists() and any(variety_calendar_quarantine_dir.rglob("*")):
+-            raise RuntimeError(
+-                f"分区提交失败；旧分区已恢复，新分区隔离在 {variety_calendar_quarantine_dir}。"
+-            ) from commit_error
+-        raise
+-    finally:
+-        shutil.rmtree(variety_calendar_staging_dir, ignore_errors=True)
+-        if commit_succeeded or not any(variety_calendar_backup_dir.rglob("*.parquet")):
+-            shutil.rmtree(variety_calendar_backup_dir, ignore_errors=True)
+-        if variety_calendar_quarantine_dir.exists() and not any(variety_calendar_quarantine_dir.rglob("*")):
+-            shutil.rmtree(variety_calendar_quarantine_dir, ignore_errors=True)
+-
+     click.echo(
+         f"committed: table={TABLE_NAME}; status=completed; rows={len(incoming_variety_calendar_table)}; "
+         f"partitions={partition_count}; elapsed_s={perf_counter() - commit_started_at:.3f}; run_id={run_id}"

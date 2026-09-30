@@ -1,0 +1,69 @@
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -3,7 +3,7 @@
+ - [AGENTS.md](AGENTS.md)：变量命名与最小改动、项目运行环境、根目录定位与规范路由的项目级强制规则。
+ - [.gitignore](.gitignore) 与 [.gitattributes](.gitattributes)：代码和文档的 Git 收纳边界；排除本地数据、运行产物、备份及含凭据的只读旧文件，并固定 Notebook/Python 导出的 LF 与历史快照原始字节。已被 Git 跟踪的数据不会因新增忽略规则自动移除。
+ - [.env.template](.env.template)：项目根目录定位代码、当前稳定采集统一正式起点，以及包含 `raw`、`silver`、`gold` 的正式湖仓根路径环境变量权威模板。
+-- [02_Futures_Lakehouse/AGENTS.md](02_Futures_Lakehouse/AGENTS.md)：`E:\Latitude_Analytics_v2\02_Futures_Lakehouse` 整棵生产与运维目录树的目录级 Agent 规则入口，包含根级 `a00_01`—`a00_03` 支撑脚本编号、采集双轨、PythonExporter、`a00_02_sync_notebook_exports.py` 同步入口、正式 operations 路由及根级旧项目归档路由。
++- [02_Futures_Lakehouse/AGENTS.md](02_Futures_Lakehouse/AGENTS.md)：`E:\Latitude_Analytics_v2\02_Futures_Lakehouse` 整棵生产与运维目录树的目录级 Agent 规则入口，包含根级 `a00_01`—`a00_04` 支撑脚本编号、采集双轨、PythonExporter、`a00_02_sync_notebook_exports.py` 同步入口、正式 operations 路由及根级旧项目归档路由。
+ - [03_Futures_Database/AGENTS.md](03_Futures_Database/AGENTS.md)：`E:\Latitude_Analytics_v2\03_Futures_Database` 整棵目录树的目录级 Agent 规则入口，以及来源异常 raw/silver 边界、正式湖与项目专属研究成果边界、数据字段命名、跨引擎类型、Schema metadata 单一来源与 Notebook 开篇 Schema 契约呈现的永久文本规范。
+ - [03_Futures_Database/read_futures_lake_demo.ipynb](03_Futures_Database/read_futures_lake_demo.ipynb)：17 张稳定 silver 表的契约化读取示例；每张表必须由独立代码单元格演示；另含不计入 silver 表数的生意社 raw 原文与摘要核对示例。
+ - [02_Futures_Lakehouse/README.md](02_Futures_Lakehouse/README.md)：19 个正式采集入口（含人工 b08）的数据采集链路、来源异常留存与验收的运行语义、双轨同步入口、Schema metadata 运行时读取、Notebook 开篇 Schema 契约呈现、表粒度、主键、分区与更新水位规范。
+@@ -24,6 +24,7 @@
+ - [config/jqdata_connection.py](config/jqdata_connection.py)：JQData 认证以及 Windows TUN 物理出口绑定的项目级共享连接边界；业务采集与是否写入仍由各业务入口负责。
+ - [config/data_contracts.py](config/data_contracts.py)：17 张稳定 silver 数据湖 Schema（7 张日历维度表、10 张事实表）、表名/主键/分区 metadata 单一来源及 Pandas、Polars、Arrow 转换的可执行契约。
+ - [02_Futures_Lakehouse/a00_03_notebook_schema_browser.py](02_Futures_Lakehouse/a00_03_notebook_schema_browser.py)：采集与研究 Notebook 共用的 Schema 只读展示实现，包含关键内容选择、完整内容折叠及显式启用的有界数据/raw 文件样例；Schema 来自 `config/data_contracts.py`，不定义第二份数据契约、不调用 API 或写入数据。
++- [02_Futures_Lakehouse/a00_04_staged_path_transaction.py](02_Futures_Lakehouse/a00_04_staged_path_transaction.py)：湖仓级 staging 路径安装与失败恢复实现；当前由 a01/b01、b02 共用，业务合并、数据验收和共同回滚范围仍由环节决定。
+ - [00_draft_collection_02](00_draft_collection_02)：尚未经用户确认接纳为正式项目代码的脚本、测试、审计与验证工具的统一暂存目录。
+ - [05_Old_Projects/AGENTS.md](05_Old_Projects/AGENTS.md)：根级旧项目只读归档规则；包含重建前采集实现、更早历史采集项目和旧特征工程项目。
+ - 修改以上任一规范、模板或可执行契约前，必须检查其余索引项，并在同一次变更中同步所有受影响的描述、示例与代码。
+
+--- a/02_Futures_Lakehouse/AGENTS.md
++++ b/02_Futures_Lakehouse/AGENTS.md
+@@ -2,7 +2,7 @@
+ 
+ - 本文件是 `E:\Latitude_Analytics_v2\02_Futures_Lakehouse` 整棵生产与运维目录树的目录级 Agent 规则入口，适用于目录本身以及任意层级的当前和未来子目录。
+ - 本文件用于集中定义或索引期货湖仓生产与运维目录的全部 Agent 规则；`.ipynb/.py` 双轨及 PythonExporter 是 `a01`—`a04` 四个业务目录的入口规则，不覆盖纯控制面的 operations 脚本。
+-- 根级支撑脚本按 `a00_01_verify_runtime.py`、`a00_02_sync_notebook_exports.py`、`a00_03_notebook_schema_browser.py` 排列，分别负责环境检查、导出同步和 Schema/样例浏览；它们不占用 `a01`—`a04` 业务组编号，也不要求同名 Notebook。实际 preflight 与业务执行顺序仍由 operations 规范和 manifest 定义。
++- 根级支撑脚本按 `a00_01_verify_runtime.py`、`a00_02_sync_notebook_exports.py`、`a00_03_notebook_schema_browser.py`、`a00_04_staged_path_transaction.py` 排列，分别负责环境检查、导出同步、Schema/样例浏览和 staging 路径安装/失败恢复；它们不占用 `a01`—`a04` 业务组编号，也不要求同名 Notebook。实际 preflight 与业务执行顺序仍由 operations 规范和 manifest 定义。
+ - 当前范围包括 `a01_Futures_Market_Data`、`a02_Futures_Exchange_Reports`、`a03_External_Market_Data`、`a04_Macro_And_Interest_Rates`、`operations` 及其全部后代目录。特征工程已经独立迁移到根级 `04_Feature_Engineering`；旧采集和旧特征工程项目位于根级 `05_Old_Projects`，均不属于本目录树。
+ - 未来新增期货湖仓目录级规则时，应直接加入本文件或由本文件建立明确索引，不得另建无法从这里发现的孤立规范。
+ - 本目录继承根目录 [AGENTS.md](../AGENTS.md) 的全部规则。下级 `AGENTS.md` 或 README 可以增加更严格的要求，但未经用户明确同意，不得豁免、弱化或缩小本文件的覆盖范围。
+@@ -29,6 +29,8 @@
+ # 标准生成与验证
+ 
+ ## 共享配置与 Notebook 展示归属
++
++- 湖仓级安装与恢复操作位于 [a00_04_staged_path_transaction.py](a00_04_staged_path_transaction.py)，当前由 a01/b01、b02 共用。它按调用方给出的目标备份、安装或显式删除，并在安装或正式验收失败时共同恢复；业务合并、Parquet 写入及复读、状态推进和一次共同回滚的范围仍留在环节。其他入口继续使用现有实现，按用户选定的环节逐项接入。
+ 
+ - `config/futures_lakehouse/` 集中保存正式湖仓的事实采集范围、外部实体映射、宏观系列与可用日规则、已核实校准案例；它们向生产者和研究消费者共同公开，各业务目录不得复制第二份配置。配置范围与实际落盘覆盖的区别遵循 [数据库规则](../03_Futures_Database/AGENTS.md)。
+ - 既有 Schema metadata 中的旧配置路径按数据库规范保留为来源说明标识；模块迁移不改变任何 Schema 值，也不触发历史数据重写。
+@@ -140,5 +142,6 @@
+ - [config/jqdata_connection.py](../config/jqdata_connection.py)：JQData 认证及 Windows TUN 直连处理的共享边界；所有调用方必须从 `config` 导入。
+ - [config/data_contracts.py](../config/data_contracts.py)：17 张稳定 silver 数据湖 Schema 及 DataFrame 类型转换的可执行契约。
+ - [a00_03_notebook_schema_browser.py](a00_03_notebook_schema_browser.py)：采集与研究 Notebook 共用的 Schema 只读展示实现，按数据库规范统一呈现关键内容与完整内容折叠入口。
++- [a00_04_staged_path_transaction.py](a00_04_staged_path_transaction.py)：a01/b01、b02 共用的路径安装与失败恢复操作；不承载数据契约或业务更新范围。
+ - 修改本文件时，必须同步检查根目录规范索引和受影响子目录的规范；不得形成只在本文件可见的孤立约束。
+ - 修改数据湖字段、Schema、生产者、读取者、类型转换或相关验证时，必须同时读取并遵循 `03_Futures_Database/AGENTS.md` 与 `config/data_contracts.py`。
+
+--- a/02_Futures_Lakehouse/README.md
++++ b/02_Futures_Lakehouse/README.md
+@@ -12,6 +12,7 @@
+ ├─ a00_01_verify_runtime.py          # 环境检查
+ ├─ a00_02_sync_notebook_exports.py   # Notebook/Python 导出同步
+ ├─ a00_03_notebook_schema_browser.py # Schema 与数据样例浏览
++├─ a00_04_staged_path_transaction.py # staging 路径安装与失败恢复
+ ├─ a01_Futures_Market_Data/          # b01—b08：国内期货日历与行情
+ ├─ a02_Futures_Exchange_Reports/     # b01、b01a、b02、b03：交易所报告
+ ├─ a03_External_Market_Data/         # b01—b04：外部市场
+@@ -29,7 +30,9 @@
+    └─ run_history/
+ ```
+ 
+-根级 `a00_01`—`a00_03` 按环境检查、导出同步、契约浏览排列，是共用支撑脚本；业务组从 `a01` 开始。
++根级 `a00_01`—`a00_04` 按环境检查、导出同步、契约浏览、路径安装与恢复排列，是共用支撑脚本/模块；业务组从 `a01` 开始。
++
++a01/b01、b02 已共用 [StagedPathTransaction](a00_04_staged_path_transaction.py)：环节在事务内逐项安装并直接执行正式复读，全部通过后完成整组提交；安装或验收失败时倒序恢复实际移动的目标。合并方式、业务校验、更新范围、事务分组和返回值仍由各环节决定。b01 清理失败的新分区，b02 保留隔离的新分区；恢复不完整时保留旧备份。该模块使用同一文件系统内的路径替换，不提供跨目录原子可见性、进程终止后的自动恢复或并发写入协调。其余入口尚未接入，按 [湖仓目录规则](AGENTS.md) 逐项迁移。
+ 各业务步骤仍由同名 `.ipynb/.py` 双轨组成；业务组与组内步骤按编号保持既定依赖顺序。
+ 日常批次、人工维护、控制面测试和运行历史的职责见 [operations README](operations/README.md)。
+ 目录迁移不改写历史 manifest、日志、快照和已落盘 Schema metadata 中的来源标识；旧组编号 b01—b04 对应当前 a01—a04，旧步骤 cNN 对应当前组内 bNN，详细兼容边界见 [数据库规范](../03_Futures_Database/AGENTS.md#32-schema-metadata-的单一来源与运行时读取)。

@@ -1,0 +1,170 @@
+[
+  {
+    "id": "a04-b03-flow-overview",
+    "width": 701,
+    "height": 1628,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-83cfef17",
+    "width": 414,
+    "height": 526,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-08ed5352",
+    "width": 390,
+    "height": 550,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-166bdeb3",
+    "width": 586,
+    "height": 326,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-0ce81322",
+    "width": 418,
+    "height": 326,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-physical_schema_matches",
+    "width": 294,
+    "height": 526,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-open_compatible_dataset",
+    "width": 276,
+    "height": 478,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-open_exact_dataset",
+    "width": 442,
+    "height": 438,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-dbe3f417",
+    "width": 276,
+    "height": 302,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-validate_macro_release_frame",
+    "width": 276,
+    "height": 430,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-read_macro_calendar",
+    "width": 276,
+    "height": 326,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-read_optional_fact",
+    "width": 422,
+    "height": 438,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-351daaed",
+    "width": 402,
+    "height": 382,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-calendar_grid_is_complete",
+    "width": 728,
+    "height": 558,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-plan_macro_release_grids",
+    "width": 428,
+    "height": 905,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-7a257c15",
+    "width": 276,
+    "height": 302,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-create_eastmoney_session",
+    "width": 276,
+    "height": 406,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-query_eastmoney_report_range",
+    "width": 863,
+    "height": 1246,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-normalize_macro_release_response",
+    "width": 276,
+    "height": 454,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-359e5a66",
+    "width": 276,
+    "height": 430,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-write_fact_staging",
+    "width": 472,
+    "height": 441,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-upgrade_fact_metadata",
+    "width": 586,
+    "height": 630,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-commit_complete_fact_partition",
+    "width": 680,
+    "height": 814,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-6d6af383",
+    "width": 272,
+    "height": 278,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-apply_calendar_failure",
+    "width": 276,
+    "height": 326,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-commit_calendar_partition",
+    "width": 578,
+    "height": 758,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-4bc93daf",
+    "width": 686,
+    "height": 1168,
+    "clipped": 0
+  },
+  {
+    "id": "a04-b03-flow-14766fcd",
+    "width": 811,
+    "height": 686,
+    "clipped": 0
+  }
+]

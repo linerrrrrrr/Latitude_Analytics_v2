@@ -1,0 +1,658 @@
+{
+  "python": "E:\\anaconda3\\envs\\latitude\\python.exe",
+  "repetitions": 3,
+  "benchmark": [
+    {
+      "table": "dim_trade_calendar",
+      "scenario": "tail_one_day",
+      "version": "before",
+      "repetition": 1,
+      "elapsed_s": 0.045687199919484556,
+      "rows": 1,
+      "planned_partitions": 1,
+      "progress_events": 9,
+      "max_progress_gap_s": 0.028595900046639144,
+      "content_equal": true,
+      "untouched_files_equal": true,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_trade_calendar",
+      "scenario": "tail_one_day",
+      "version": "current",
+      "repetition": 1,
+      "elapsed_s": 0.042303700000047684,
+      "rows": 1,
+      "planned_partitions": 1,
+      "progress_events": 9,
+      "max_progress_gap_s": 0.026937799993902445,
+      "content_equal": true,
+      "untouched_files_equal": true,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_trade_calendar",
+      "scenario": "tail_one_day",
+      "version": "current",
+      "repetition": 2,
+      "elapsed_s": 0.042691699927672744,
+      "rows": 1,
+      "planned_partitions": 1,
+      "progress_events": 9,
+      "max_progress_gap_s": 0.027147999964654446,
+      "content_equal": true,
+      "untouched_files_equal": true,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_trade_calendar",
+      "scenario": "tail_one_day",
+      "version": "before",
+      "repetition": 2,
+      "elapsed_s": 0.04027009999845177,
+      "rows": 1,
+      "planned_partitions": 1,
+      "progress_events": 9,
+      "max_progress_gap_s": 0.02580509998369962,
+      "content_equal": true,
+      "untouched_files_equal": true,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_trade_calendar",
+      "scenario": "tail_one_day",
+      "version": "before",
+      "repetition": 3,
+      "elapsed_s": 0.043163100024685264,
+      "rows": 1,
+      "planned_partitions": 1,
+      "progress_events": 9,
+      "max_progress_gap_s": 0.02718699991237372,
+      "content_equal": true,
+      "untouched_files_equal": true,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_trade_calendar",
+      "scenario": "tail_one_day",
+      "version": "current",
+      "repetition": 3,
+      "elapsed_s": 0.043205800000578165,
+      "rows": 1,
+      "planned_partitions": 1,
+      "progress_events": 9,
+      "max_progress_gap_s": 0.026743700029328465,
+      "content_equal": true,
+      "untouched_files_equal": true,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_trade_calendar",
+      "scenario": "empty_lake_full_build",
+      "version": "before",
+      "repetition": 1,
+      "elapsed_s": 0.1542526000412181,
+      "rows": 6084,
+      "planned_partitions": 17,
+      "progress_events": 41,
+      "max_progress_gap_s": 0.025103899999521673,
+      "content_equal": true,
+      "untouched_files_equal": false,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_trade_calendar",
+      "scenario": "empty_lake_full_build",
+      "version": "current",
+      "repetition": 1,
+      "elapsed_s": 0.16800669999793172,
+      "rows": 6084,
+      "planned_partitions": 17,
+      "progress_events": 41,
+      "max_progress_gap_s": 0.025383200030773878,
+      "content_equal": true,
+      "untouched_files_equal": false,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_trade_calendar",
+      "scenario": "empty_lake_full_build",
+      "version": "current",
+      "repetition": 2,
+      "elapsed_s": 0.17686170001979917,
+      "rows": 6084,
+      "planned_partitions": 17,
+      "progress_events": 41,
+      "max_progress_gap_s": 0.030033200047910213,
+      "content_equal": true,
+      "untouched_files_equal": false,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_trade_calendar",
+      "scenario": "empty_lake_full_build",
+      "version": "before",
+      "repetition": 2,
+      "elapsed_s": 0.15529329993296415,
+      "rows": 6084,
+      "planned_partitions": 17,
+      "progress_events": 41,
+      "max_progress_gap_s": 0.02625849994365126,
+      "content_equal": true,
+      "untouched_files_equal": false,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_trade_calendar",
+      "scenario": "empty_lake_full_build",
+      "version": "before",
+      "repetition": 3,
+      "elapsed_s": 0.15597079996950924,
+      "rows": 6084,
+      "planned_partitions": 17,
+      "progress_events": 41,
+      "max_progress_gap_s": 0.025892200064845383,
+      "content_equal": true,
+      "untouched_files_equal": false,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_trade_calendar",
+      "scenario": "empty_lake_full_build",
+      "version": "current",
+      "repetition": 3,
+      "elapsed_s": 0.16753350000362843,
+      "rows": 6084,
+      "planned_partitions": 17,
+      "progress_events": 41,
+      "max_progress_gap_s": 0.02555589994881302,
+      "content_equal": true,
+      "untouched_files_equal": false,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "scenario": "tail_one_day",
+      "version": "before",
+      "repetition": 1,
+      "elapsed_s": 0.7111223998945206,
+      "rows": 87,
+      "planned_partitions": 6,
+      "progress_events": 24,
+      "max_progress_gap_s": 0.5875326000386849,
+      "content_equal": true,
+      "untouched_files_equal": true,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "scenario": "tail_one_day",
+      "version": "current",
+      "repetition": 1,
+      "elapsed_s": 0.6888449999969453,
+      "rows": 87,
+      "planned_partitions": 6,
+      "progress_events": 24,
+      "max_progress_gap_s": 0.5661114000249654,
+      "content_equal": true,
+      "untouched_files_equal": true,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "scenario": "tail_one_day",
+      "version": "current",
+      "repetition": 2,
+      "elapsed_s": 0.7040223000803962,
+      "rows": 87,
+      "planned_partitions": 6,
+      "progress_events": 24,
+      "max_progress_gap_s": 0.5833640999626368,
+      "content_equal": true,
+      "untouched_files_equal": true,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "scenario": "tail_one_day",
+      "version": "before",
+      "repetition": 2,
+      "elapsed_s": 0.6987966999877244,
+      "rows": 87,
+      "planned_partitions": 6,
+      "progress_events": 24,
+      "max_progress_gap_s": 0.5695754999760538,
+      "content_equal": true,
+      "untouched_files_equal": true,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "scenario": "tail_one_day",
+      "version": "before",
+      "repetition": 3,
+      "elapsed_s": 0.683843299979344,
+      "rows": 87,
+      "planned_partitions": 6,
+      "progress_events": 24,
+      "max_progress_gap_s": 0.5671086999354884,
+      "content_equal": true,
+      "untouched_files_equal": true,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "scenario": "tail_one_day",
+      "version": "current",
+      "repetition": 3,
+      "elapsed_s": 0.9413671999936923,
+      "rows": 87,
+      "planned_partitions": 6,
+      "progress_events": 24,
+      "max_progress_gap_s": 0.7810874000424519,
+      "content_equal": true,
+      "untouched_files_equal": true,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "scenario": "empty_lake_full_build",
+      "version": "before",
+      "repetition": 1,
+      "elapsed_s": 16.483747699996457,
+      "rows": 225298,
+      "planned_partitions": 1200,
+      "progress_events": 2416,
+      "max_progress_gap_s": 2.2394852000288665,
+      "content_equal": true,
+      "untouched_files_equal": false,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "scenario": "empty_lake_full_build",
+      "version": "current",
+      "repetition": 1,
+      "elapsed_s": 29.170898699900135,
+      "rows": 225298,
+      "planned_partitions": 1200,
+      "progress_events": 2416,
+      "max_progress_gap_s": 2.0775328999152407,
+      "content_equal": true,
+      "untouched_files_equal": false,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "scenario": "empty_lake_full_build",
+      "version": "current",
+      "repetition": 2,
+      "elapsed_s": 28.724057000014,
+      "rows": 225298,
+      "planned_partitions": 1200,
+      "progress_events": 2416,
+      "max_progress_gap_s": 2.0297607000684366,
+      "content_equal": true,
+      "untouched_files_equal": false,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "scenario": "empty_lake_full_build",
+      "version": "before",
+      "repetition": 2,
+      "elapsed_s": 16.131313599995337,
+      "rows": 225298,
+      "planned_partitions": 1200,
+      "progress_events": 2416,
+      "max_progress_gap_s": 2.0058494000695646,
+      "content_equal": true,
+      "untouched_files_equal": false,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "scenario": "empty_lake_full_build",
+      "version": "before",
+      "repetition": 3,
+      "elapsed_s": 16.661570800002664,
+      "rows": 225298,
+      "planned_partitions": 1200,
+      "progress_events": 2416,
+      "max_progress_gap_s": 2.3732444000197574,
+      "content_equal": true,
+      "untouched_files_equal": false,
+      "cleanup_ok": true
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "scenario": "empty_lake_full_build",
+      "version": "current",
+      "repetition": 3,
+      "elapsed_s": 31.284138399991207,
+      "rows": 225298,
+      "planned_partitions": 1200,
+      "progress_events": 2416,
+      "max_progress_gap_s": 3.1587276000063866,
+      "content_equal": true,
+      "untouched_files_equal": false,
+      "cleanup_ok": true
+    }
+  ],
+  "cli": [
+    {
+      "table": "dim_trade_calendar",
+      "scenario": "no_pending_as_of_snapshot",
+      "version": "before",
+      "repetition": 1,
+      "elapsed_s": 0.0317283000331372,
+      "authentication_calls": 0,
+      "exit_code": 0
+    },
+    {
+      "table": "dim_trade_calendar",
+      "scenario": "no_pending_as_of_snapshot",
+      "version": "before",
+      "repetition": 2,
+      "elapsed_s": 0.030876200064085424,
+      "authentication_calls": 0,
+      "exit_code": 0
+    },
+    {
+      "table": "dim_trade_calendar",
+      "scenario": "no_pending_as_of_snapshot",
+      "version": "before",
+      "repetition": 3,
+      "elapsed_s": 0.031213399954140186,
+      "authentication_calls": 0,
+      "exit_code": 0
+    },
+    {
+      "table": "dim_trade_calendar",
+      "scenario": "no_pending_as_of_snapshot",
+      "version": "current",
+      "repetition": 1,
+      "elapsed_s": 0.029959200066514313,
+      "authentication_calls": 0,
+      "exit_code": 0
+    },
+    {
+      "table": "dim_trade_calendar",
+      "scenario": "no_pending_as_of_snapshot",
+      "version": "current",
+      "repetition": 2,
+      "elapsed_s": 0.03293480002321303,
+      "authentication_calls": 0,
+      "exit_code": 0
+    },
+    {
+      "table": "dim_trade_calendar",
+      "scenario": "no_pending_as_of_snapshot",
+      "version": "current",
+      "repetition": 3,
+      "elapsed_s": 0.03083659999538213,
+      "authentication_calls": 0,
+      "exit_code": 0
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "scenario": "no_pending_as_of_snapshot",
+      "version": "before",
+      "repetition": 1,
+      "elapsed_s": 1.1163117000833154,
+      "authentication_calls": 0,
+      "exit_code": 0
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "scenario": "no_pending_as_of_snapshot",
+      "version": "before",
+      "repetition": 2,
+      "elapsed_s": 1.1004689999390393,
+      "authentication_calls": 0,
+      "exit_code": 0
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "scenario": "no_pending_as_of_snapshot",
+      "version": "before",
+      "repetition": 3,
+      "elapsed_s": 1.114293699967675,
+      "authentication_calls": 0,
+      "exit_code": 0
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "scenario": "no_pending_as_of_snapshot",
+      "version": "current",
+      "repetition": 1,
+      "elapsed_s": 1.6657884999876842,
+      "authentication_calls": 0,
+      "exit_code": 0
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "scenario": "no_pending_as_of_snapshot",
+      "version": "current",
+      "repetition": 2,
+      "elapsed_s": 1.2019636000040919,
+      "authentication_calls": 0,
+      "exit_code": 0
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "scenario": "no_pending_as_of_snapshot",
+      "version": "current",
+      "repetition": 3,
+      "elapsed_s": 1.093036500038579,
+      "authentication_calls": 0,
+      "exit_code": 0
+    }
+  ],
+  "inventory": [
+    {
+      "table": "dim_trade_calendar",
+      "rows": 6084,
+      "files": 18,
+      "actual_partitions": 17,
+      "bytes": 386312,
+      "min_date": "2010-01-01",
+      "max_date": "2026-08-28",
+      "tail_rows": 1,
+      "tail_partitions": 1
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "rows": 225298,
+      "files": 945,
+      "actual_partitions": 944,
+      "bytes": 12705073,
+      "min_date": "2010-01-04",
+      "max_date": "2026-08-28",
+      "tail_rows": 87,
+      "tail_partitions": 6
+    }
+  ],
+  "regression_elapsed_s": 2.455987500026822,
+  "tests": [
+    {
+      "id": "test_b01_c01_c02_daily_tail_modes.DailyTailModeTest.test_c01_collect_reports_progress_without_main_and_propagates_source_failure",
+      "elapsed_s": 0.011916400049813092
+    },
+    {
+      "id": "test_b01_c01_c02_daily_tail_modes.DailyTailModeTest.test_c01_commit_validates_dirty_year_once_without_formal_root_revalidation",
+      "elapsed_s": 0.0653844999615103
+    },
+    {
+      "id": "test_b01_c01_c02_daily_tail_modes.DailyTailModeTest.test_c01_formal_leaf_physical_reread_failure_rolls_back",
+      "elapsed_s": 0.0558118000626564
+    },
+    {
+      "id": "test_b01_c01_c02_daily_tail_modes.DailyTailModeTest.test_c01_full_commits_only_differences_across_years_without_revalidating_subset",
+      "elapsed_s": 0.088406499940902
+    },
+    {
+      "id": "test_b01_c01_c02_daily_tail_modes.DailyTailModeTest.test_c01_full_is_explicit_and_dates_are_mutually_exclusive",
+      "elapsed_s": 0.008943599998019636
+    },
+    {
+      "id": "test_b01_c01_c02_daily_tail_modes.DailyTailModeTest.test_c01_no_tail_does_not_collect",
+      "elapsed_s": 0.01786860008724034
+    },
+    {
+      "id": "test_b01_c01_c02_daily_tail_modes.DailyTailModeTest.test_c02_collects_and_commits_only_new_tail_dates",
+      "elapsed_s": 0.03162020002491772
+    },
+    {
+      "id": "test_b01_c01_c02_daily_tail_modes.DailyTailModeTest.test_c02_formal_leaf_physical_reread_failure_restores_old_leaf",
+      "elapsed_s": 0.05269449995830655
+    },
+    {
+      "id": "test_b01_c01_c02_daily_tail_modes.DailyTailModeTest.test_c02_no_new_c01_trading_day_does_not_collect_catalog",
+      "elapsed_s": 0.029372400022111833
+    },
+    {
+      "id": "test_b01_c01_c02_daily_tail_modes.DailyTailModeTest.test_descriptive_metadata_changes_are_compatible",
+      "elapsed_s": 0.0002559999702498317
+    },
+    {
+      "id": "test_b01_c01_c02_daily_tail_modes.DailyTailModeTest.test_physical_routing_metadata_change_is_rejected",
+      "elapsed_s": 0.00012889993377029896
+    },
+    {
+      "id": "test_futures_variety_calendar_complete_catalog.FuturesVarietyCalendarCompleteCatalogTest.test_catalog_validation_failure_reports_its_own_phase",
+      "elapsed_s": 0.015009800088591874
+    },
+    {
+      "id": "test_futures_variety_calendar_complete_catalog.FuturesVarietyCalendarCompleteCatalogTest.test_collect_does_not_recheck_upstream_natural_date_coverage",
+      "elapsed_s": 0.023699300014413893
+    },
+    {
+      "id": "test_futures_variety_calendar_complete_catalog.FuturesVarietyCalendarCompleteCatalogTest.test_complete_catalog_build_and_commit_do_not_use_fact_whitelist",
+      "elapsed_s": 0.09734480001498014
+    },
+    {
+      "id": "test_futures_variety_calendar_complete_catalog.FuturesVarietyCalendarCompleteCatalogTest.test_empty_result_conversion_failure_does_not_report_success",
+      "elapsed_s": 0.014848200022242963
+    },
+    {
+      "id": "test_futures_variety_calendar_complete_catalog.FuturesVarietyCalendarCompleteCatalogTest.test_empty_upstream_range_finishes_without_authentication",
+      "elapsed_s": 0.0145348000805825
+    },
+    {
+      "id": "test_futures_variety_calendar_complete_catalog.FuturesVarietyCalendarCompleteCatalogTest.test_execution_cell_distinguishes_notebook_script_and_module_import",
+      "elapsed_s": 0.007436699932441115
+    },
+    {
+      "id": "test_futures_variety_calendar_complete_catalog.FuturesVarietyCalendarCompleteCatalogTest.test_explicit_readonly_run_reports_completion_without_commit",
+      "elapsed_s": 0.007854099967516959
+    },
+    {
+      "id": "test_futures_variety_calendar_complete_catalog.FuturesVarietyCalendarCompleteCatalogTest.test_full_comparison_repairs_missing_and_changed_keys_and_rejects_excess_keys",
+      "elapsed_s": 0.2045901999808848
+    },
+    {
+      "id": "test_futures_variety_calendar_complete_catalog.FuturesVarietyCalendarCompleteCatalogTest.test_multimonth_replacement_preserves_outer_rows_and_clears_empty_leaves",
+      "elapsed_s": 0.16178940003737807
+    },
+    {
+      "id": "test_futures_variety_calendar_complete_catalog.FuturesVarietyCalendarCompleteCatalogTest.test_second_leaf_failure_restores_all_old_leaves_without_commit_success",
+      "elapsed_s": 0.18651709996629506
+    },
+    {
+      "id": "test_futures_variety_calendar_complete_catalog.FuturesVarietyCalendarCompleteCatalogTest.test_source_failure_propagates_without_collection_success",
+      "elapsed_s": 0.01490800001192838
+    },
+    {
+      "id": "test_b01_fragment_physical_contracts.FragmentPhysicalContractTests.test_descriptive_metadata_drift_remains_compatible",
+      "elapsed_s": 0.03280090005137026
+    },
+    {
+      "id": "test_b01_fragment_physical_contracts.FragmentPhysicalContractTests.test_later_fragment_physical_or_identity_drift_is_rejected",
+      "elapsed_s": 0.1997498000273481
+    },
+    {
+      "id": "test_b01_b02_commit_semantics.CommitSemanticsTest.test_b01_arrow_validation_is_not_repeated_inside_business_validation",
+      "elapsed_s": 0.08716919994913042
+    },
+    {
+      "id": "test_b01_b02_commit_semantics.CommitSemanticsTest.test_b01_entry_distinguishes_notebook_script_and_import",
+      "elapsed_s": 0.0021141000324860215
+    },
+    {
+      "id": "test_b01_b02_commit_semantics.CommitSemanticsTest.test_b01_main_summaries_refresh_worker_progress",
+      "elapsed_s": 0.10960849991533905
+    },
+    {
+      "id": "test_b01_b02_commit_semantics.CommitSemanticsTest.test_b01_read_or_install_failure_preserves_old_partition",
+      "elapsed_s": 0.09660169994458556
+    },
+    {
+      "id": "test_b01_b02_commit_semantics.CommitSemanticsTest.test_b01_schema_and_business_failures_still_stop_before_writing",
+      "elapsed_s": 0.011042300029657781
+    },
+    {
+      "id": "test_b01_b02_commit_semantics.CommitSemanticsTest.test_b02_empty_marker_failure_restores_previous_table",
+      "elapsed_s": 0.17228880000766367
+    },
+    {
+      "id": "test_b01_b02_commit_semantics.CommitSemanticsTest.test_b02_reads_upstream_once_and_preserves_modes_and_api_counts",
+      "elapsed_s": 0.15041440003551543
+    },
+    {
+      "id": "test_b01_b02_commit_semantics.CommitSemanticsTest.test_each_readback_gate_rejects_later_file_drift_and_restores_old_data",
+      "elapsed_s": 0.24435010005254298
+    },
+    {
+      "id": "test_b01_b02_commit_semantics.CommitSemanticsTest.test_formal_file_schema_is_checked_once_for_single_and_multiple_files",
+      "elapsed_s": 0.13901170005556196
+    },
+    {
+      "id": "test_staged_path_transaction.StagedPathTransactionTest.test_existing_backup_is_never_reused_or_cleaned",
+      "elapsed_s": 0.0028357000555843115
+    },
+    {
+      "id": "test_staged_path_transaction.StagedPathTransactionTest.test_explicit_delete_commits_but_missing_source_does_not_mean_delete",
+      "elapsed_s": 0.006399400066584349
+    },
+    {
+      "id": "test_staged_path_transaction.StagedPathTransactionTest.test_first_backup_failure_never_deletes_original",
+      "elapsed_s": 0.00567310000769794
+    },
+    {
+      "id": "test_staged_path_transaction.StagedPathTransactionTest.test_formal_validation_failure_restores_replacements_deletes_and_new_marker",
+      "elapsed_s": 0.013874399941414595
+    },
+    {
+      "id": "test_staged_path_transaction.StagedPathTransactionTest.test_group_commits_table_root_leaf_and_marker_without_touching_other_data",
+      "elapsed_s": 0.01579259999562055
+    },
+    {
+      "id": "test_staged_path_transaction.StagedPathTransactionTest.test_interrupted_restore_does_not_clean_the_only_old_copy",
+      "elapsed_s": 0.006104399915784597
+    },
+    {
+      "id": "test_staged_path_transaction.StagedPathTransactionTest.test_overlapping_targets_abort_and_restore_previous_install",
+      "elapsed_s": 0.008977800025604665
+    },
+    {
+      "id": "test_staged_path_transaction.StagedPathTransactionTest.test_restore_failure_keeps_backup_and_still_restores_other_targets",
+      "elapsed_s": 0.009597100084647536
+    },
+    {
+      "id": "test_staged_path_transaction.StagedPathTransactionTest.test_second_install_failure_rolls_back_all_preceding_targets",
+      "elapsed_s": 0.009283000021241605
+    },
+    {
+      "id": "test_staged_path_transaction.StagedPathTransactionTest.test_successful_rollback_can_retain_failed_leaf_but_remove_marker",
+      "elapsed_s": 0.013402400072664022
+    },
+    {
+      "id": "test_staged_path_transaction.StagedPathTransactionTest.test_targets_outside_scope_and_overlapping_recovery_paths_are_rejected",
+      "elapsed_s": 0.007252200040966272
+    }
+  ],
+  "regression_ok": true,
+  "formal_files_unchanged": true,
+  "total_elapsed_s": 181.70574030000716
+}

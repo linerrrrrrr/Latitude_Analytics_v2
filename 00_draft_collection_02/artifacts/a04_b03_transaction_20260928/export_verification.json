@@ -1,0 +1,9 @@
+{
+  "standard_entry": "a00_02_sync_notebook_exports.py",
+  "isolated_write_check": true,
+  "workflow_count": 19,
+  "published_target": "E:\\Latitude_Analytics_v2\\02_Futures_Lakehouse\\a04_Macro_And_Interest_Rates\\b03_macro_release.py",
+  "published_sha256": "10376f6baa2fc79c8238b401d98efd15be206d0578dd00fbd6a75dbe00da8a3d",
+  "other_production_files_written": 0,
+  "note": "19 组检查在临时副本完成；不表示原工作区其他正在编辑的双轨已同步。"
+}

@@ -1,0 +1,19 @@
+{
+  "sha256": "10376f6baa2fc79c8238b401d98efd15be206d0578dd00fbd6a75dbe00da8a3d",
+  "only_markdown_changed_after_business_tests": true,
+  "default_export_exact": true,
+  "changed_transaction_functions": [
+    "commit_calendar_partition",
+    "commit_complete_fact_partition",
+    "upgrade_fact_metadata"
+  ],
+  "original_comments_and_notebook_state_preserved": true,
+  "flowcharts_rendered": 28,
+  "changed_lakehouse_files_since_transaction_baseline": [
+    "02_Futures_Lakehouse\\AGENTS.md",
+    "02_Futures_Lakehouse\\README.md",
+    "02_Futures_Lakehouse\\a04_Macro_And_Interest_Rates\\b03_macro_release.ipynb",
+    "02_Futures_Lakehouse\\a04_Macro_And_Interest_Rates\\b03_macro_release.py"
+  ],
+  "shared_module_and_other_workflows_unchanged": true
+}
