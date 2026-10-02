@@ -1,3 +1,5 @@
+# Project runtime: Python 3.13, Conda environment latitude_env_v2.
+# Runtime and migration rules: AGENTS.md.
 akshare==1.18.30
 arch==8.0.0
 beautifulsoup4==4.14.3
@@ -12,12 +14,14 @@ ipywidgets==8.1.8
 jieba==0.42.1
 jqdatasdk==1.9.8
 lightgbm==4.6.0
+llvmlite==0.47.0
 lxml==6.0.2
 matplotlib==3.10.8
 MetaTrader5==5.0.5735
 nbconvert==7.17.0
 nbformat==5.10.4
 networkx==3.6.1
+numba==0.65.1
 numpy==2.4.3
 openai==2.30.0
 openpyxl==3.1.5
@@ -44,6 +48,7 @@ SQLAlchemy==2.0.47
 ssqueezepy==0.6.6
 statsmodels==0.14.6
 sympy==1.14.0
+thriftpy2==0.4.20
 tqdm==4.67.3
 tsfresh==0.21.2
 tushare==1.4.24

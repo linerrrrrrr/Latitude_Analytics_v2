@@ -1968,7 +1968,7 @@ elif __name__ == "__main__":
 # ```mermaid
 # %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
 # flowchart LR
-#     A["在终端激活 latitude"] --> B["切换到项目根目录"]
+#     A["在终端激活 latitude_env_v2"] --> B["切换到项目根目录"]
 #     B --> C["手动运行对应 .py --write"]
 #     C --> D["读取本地新候选及事实；整批日历叶共同提交旁证"]
 # ```
@@ -1977,7 +1977,7 @@ elif __name__ == "__main__":
 
 
 # conda env list
-# conda activate latitude
+# conda activate latitude_env_v2
 # cd E:\Latitude_Analytics_v2
 # python 02_Futures_Lakehouse\a01_Futures_Market_Data\b07_suspected_session_reconciliation.py --write
 

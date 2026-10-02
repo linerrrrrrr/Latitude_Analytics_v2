@@ -8,7 +8,7 @@ from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 
 
-EXPECTED_ENVIRONMENT = "latitude"
+EXPECTED_ENVIRONMENT = "latitude_env_v2"
 REQUIRED_PACKAGES = ("numpy", "pandas", "polars", "pyarrow", "psutil")
 
 

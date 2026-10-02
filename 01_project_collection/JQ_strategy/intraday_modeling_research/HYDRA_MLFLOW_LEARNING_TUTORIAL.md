@@ -797,7 +797,7 @@ A | rv_profile | figarch | clock_fixed | 待实现
 项目标准解释器：
 
 ~~~powershell
-$latitudePython = 'E:\anaconda3\envs\latitude\python.exe'
+$latitudePython = 'E:\anaconda3\envs\latitude_env_v2\python.exe'
 & $latitudePython -c "import sys; print(sys.executable)"
 ~~~
 
@@ -950,7 +950,7 @@ Set-Location 'E:\Latitude_Analytics_v2\01_project_collection\JQ_strategy\intrada
 
 ~~~powershell
 New-Item -ItemType Directory -Force -Path '.\learning_outputs\mlflow'
-& 'E:\anaconda3\envs\latitude\Scripts\mlflow.exe' server --backend-store-uri 'sqlite:///learning_outputs/mlflow/mlflow.db' --artifacts-destination './learning_outputs/mlflow/artifacts' --host 127.0.0.1 --port 5000
+& 'E:\anaconda3\envs\latitude_env_v2\Scripts\mlflow.exe' server --backend-store-uri 'sqlite:///learning_outputs/mlflow/mlflow.db' --artifacts-destination './learning_outputs/mlflow/artifacts' --host 127.0.0.1 --port 5000
 ~~~
 
 在浏览器打开 [本地 MLflow](http://127.0.0.1:5000)。服务前台运行于该终端，Ctrl+C 停止。后续启动时保持同一工作目录，才能读取同一相对路径数据库。

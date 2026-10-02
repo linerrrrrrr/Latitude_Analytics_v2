@@ -109,8 +109,8 @@ Notebook 是唯一直接编辑的业务源文件。以下同步命令可验证�
 不能解除上节两个运行阻塞：
 
 ```powershell
-E:\anaconda3\envs\latitude\python.exe 04_Feature_Engineering/b00_sync_notebook_exports.py --write
-E:\anaconda3\envs\latitude\python.exe 04_Feature_Engineering/b00_sync_notebook_exports.py --check
+E:\anaconda3\envs\latitude_env_v2\python.exe 04_Feature_Engineering/b00_sync_notebook_exports.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 04_Feature_Engineering/b00_sync_notebook_exports.py --check
 ```
 
 下面两条业务命令仅记录阻塞解除后的预期用法，当前不得据此认定入口可执行。恢复后，Notebook 默认只显示
@@ -118,8 +118,8 @@ E:\anaconda3\envs\latitude\python.exe 04_Feature_Engineering/b00_sync_notebook_e
 不写数据。日期筛选只允许预览；写入时重算该品种完整历史，并只替换该品种的年月分区：
 
 ```powershell
-E:\anaconda3\envs\latitude\python.exe 04_Feature_Engineering/b01_main_continuous_daily.py --exchange-code XSGE --underlying-code CU --start-date 2024-01-01 --end-date 2024-12-31
-E:\anaconda3\envs\latitude\python.exe 04_Feature_Engineering/b01_main_continuous_daily.py --exchange-code XSGE --underlying-code CU --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 04_Feature_Engineering/b01_main_continuous_daily.py --exchange-code XSGE --underlying-code CU --start-date 2024-01-01 --end-date 2024-12-31
+E:\anaconda3\envs\latitude_env_v2\python.exe 04_Feature_Engineering/b01_main_continuous_daily.py --exchange-code XSGE --underlying-code CU --write
 ```
 
 Notebook 的最后一个单元格提供只读交互界面：交易所下拉框、可输入品种框、展示起止日期、换月阈值、

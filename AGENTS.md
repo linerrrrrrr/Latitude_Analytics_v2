@@ -1,6 +1,7 @@
 # 规范索引与同步要求
 
 - [AGENTS.md](AGENTS.md)：变量命名与最小改动、项目运行环境、根目录定位与规范路由的项目级强制规则。
+- [requirements.txt](requirements.txt)：标准 `latitude_env_v2`（Python 3.13）环境的项目直接依赖版本；GPU 深度学习依赖仍按文件中的可选说明单独配置。
 - [.gitignore](.gitignore) 与 [.gitattributes](.gitattributes)：代码和文档的 Git 收纳边界；排除本地数据、运行产物、备份及含凭据的只读旧文件，并固定 Notebook/Python 导出的 LF 与历史快照原始字节。已被 Git 跟踪的数据不会因新增忽略规则自动移除。
 - [.env.template](.env.template)：项目根目录定位代码、当前稳定采集统一正式起点，以及包含 `raw`、`silver`、`gold` 的正式湖仓根路径环境变量权威模板。
 - [02_Futures_Lakehouse/AGENTS.md](02_Futures_Lakehouse/AGENTS.md)：`E:\Latitude_Analytics_v2\02_Futures_Lakehouse` 整棵生产与运维目录树的目录级 Agent 规则入口，包含根级 `a00_01`—`a00_04` 支撑脚本编号、采集双轨、PythonExporter、`a00_02_sync_notebook_exports.py` 同步入口、正式 operations 路由及根级旧项目归档路由。
@@ -332,12 +333,13 @@ Do not move down this list without a concrete reason.
 
 # 项目运行环境
 
-- 本仓库的标准 Python 环境是名为 `latitude` 的 Conda 环境。
-- 在本工作站上，使用 `E:\anaconda3\envs\latitude\python.exe` 运行 Python，或使用 `conda run -n latitude python`。
+- 本仓库的标准 Python 环境是名为 `latitude_env_v2` 的 Conda 环境，使用 Python 3.13；当前工作站版本为 3.13.15。
+- 旧环境保留为 `latitude_env_v1`（Python 3.11.15），用于保留旧依赖与回退；当前采集、研究和 Notebook 导出使用 `latitude_env_v2`。历史归档、实验记录和已有输出中的原 `latitude` 名称及路径保留为当时的执行证据；包含解释器路径及库版本指纹的研究成果仍按各项目契约验收，环境改名或升级不等于历史成果已在新环境重新验收。
+- 在本工作站上，使用 `E:\anaconda3\envs\latitude_env_v2\python.exe` 运行 Python，或使用 `conda run -n latitude_env_v2 python`。
 - 不要根据裸 `python` 或裸 `pip` 的结果判断依赖缺失；它们可能指向 Conda 的 `base` 环境。
 - 报告环境或依赖问题前，先输出 `sys.executable`，并使用标准解释器检查相关包。
 - 使用标准解释器执行 `python -m pip`，不要使用裸 `pip`。
-- 运行 `E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse\a00_01_verify_runtime.py`，验证当前运行环境及核心 DataFrame 依赖。
+- 运行 `E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse\a00_01_verify_runtime.py`，验证当前运行环境及核心 DataFrame 依赖。
 
 # 长时间任务的人工启动、后台执行与可见监控
 

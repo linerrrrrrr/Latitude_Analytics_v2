@@ -29,7 +29,7 @@
 
 ## 执行与 Windows I/O
 
-- worker 无隐式业务 manifest。单项与多选业务批次开始前按顺序各运行一次：a00_01_verify_runtime.py、runtime/verify_operations_runtime.py、a00_02_sync_notebook_exports.py --check --check-level code。标准解释器为 latitude。代码检查保留完整 Python AST 中的 docstring、字符串、参数和结构，忽略注释、格式及单元格编号/位置；它不替代默认 `--check-level full` 的完整字节检查和 Notebook 修改后的完整同步，详见 [湖仓规范](../AGENTS.md)。
+- worker 无隐式业务 manifest。单项与多选业务批次开始前按顺序各运行一次：a00_01_verify_runtime.py、runtime/verify_operations_runtime.py、a00_02_sync_notebook_exports.py --check --check-level code。标准解释器为 latitude_env_v2。代码检查保留完整 Python AST 中的 docstring、字符串、参数和结构，忽略注释、格式及单元格编号/位置；它不替代默认 `--check-level full` 的完整字节检查和 Notebook 修改后的完整同步，详见 [湖仓规范](../AGENTS.md)。
 - 保留 LongPathsEnabled=1、core.longpaths=true 和超过 260 字符路径 probe。preflight 不通过则不能执行业务。
 - worker 对每个 preflight 和业务阶段仅启动一次；非零、配额、中断、监控或发布故障不得由控制面重试 API、阶段或事务。业务入口已有 HTTP 有界重试、逐窗口失败汇总或配额后保存已有成果的策略仍由原入口定义，不得把 worker 停止后续环节宣传为任何一次请求失败都会立即退出整个脚本。psutil 跟踪全部 descendants，在非成功路径递归 terminate/kill，避免父进程退出后遗漏后代。
 - 状态保留 protocol_version、operation_name、mode、phase 与既有字段；mode=formal 仅表示兼容旧控制协议，实际是否提交和目标湖来自原业务参数。终态固定 succeeded/0、failed/1、quota_stopped/3、interrupted/130。
@@ -47,7 +47,7 @@
 - a00 执行看板同时显示流程位置、各步骤独立进度条、本步总量/已处理/剩余、异常项目、逐依赖/逐文件结果、耗时、心跳与增量日志。计数只来自脚本的结构化事件；已处理包含失败项，不等于成功量，步骤完成数不代表耗时百分比。无事件与旧历史保持未知；中断或失败保留最后位置。
 - 环境检查按解释器与依赖展示；控制面检查按原子长路径、共享读取、Arrow 往返展示；a00_02 分别展示生成、可选写入、复核，逐文件结果独立留存。a00 页面在本窗口内保留已选模式，切换和重读采集参数不重置模式；每种模式仍按工具绑定本窗口运行目录，不混用其他工具的计数或异步日志。界面顶部在所有页面持续显示本窗口活跃批次的阶段、计数、耗时、心跳和监控故障。
 
-- 工作台 a00 分组只允许运行固定命令：`a00_01_verify_runtime.py`、`runtime/verify_operations_runtime.py`、`a00_02_sync_notebook_exports.py --check --check-level code`、`a00_02_sync_notebook_exports.py --check --check-level full`、`a00_02_sync_notebook_exports.py --write`。工具命令不可由自由输入扩展；仍使用标准 latitude 解释器。
+- 工作台 a00 分组只允许运行固定命令：`a00_01_verify_runtime.py`、`runtime/verify_operations_runtime.py`、`a00_02_sync_notebook_exports.py --check --check-level code`、`a00_02_sync_notebook_exports.py --check --check-level full`、`a00_02_sync_notebook_exports.py --write`。工具命令不可由自由输入扩展；仍使用标准 latitude_env_v2 解释器。
 - 维护任务复用 worker、全局锁、唯一历史目录、可见监控、失败证据和中断边界，但不再串行附加三个业务 preflight，避免检查自身形成循环。维护不会隐式启动采集；代码或完整检查不会修复文件。
 - 完整同步会按默认 PythonExporter 重新生成四个业务目录下 19 个正式 Notebook 的同名 `.py` 并完整复核；启动前必须预览具体目标范围和写入意图，再由操作者点击同步确认。它不执行 Notebook 代码、不调用业务 API、不写湖；不得因新增按钮或测试本功能而由 Agent 自动触发实际同步。
 - `a00_03_notebook_schema_browser.py` 的 Schema、raw 和有界数据展示由 Notebook 调用，`a00_04_staged_path_transaction.py` 的事务目标和验收由业务调用者决定；两者没有独立 CLI，各自独立工作页只说明流程与职责并打开源码，不设置执行或通用恢复按钮。所有 a00 文件保持湖仓根目录原位和原编号。

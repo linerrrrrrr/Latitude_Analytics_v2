@@ -35,7 +35,7 @@
 
 ## Notebook 清单与状态
 
-当前不创建任何空 Notebook。状态为“待实现”的文件在对应后续对话开始实现时创建，并在同一次对话中使用 `Python (latitude)` clean kernel 从头执行和验证。
+当前不创建任何空 Notebook。状态为“待实现”的文件在对应后续对话开始实现时创建，并在同一次对话中使用 `Python (latitude_env_v2)` clean kernel 从头执行和验证。
 
 | 编号 | Notebook | 统计项目与主要流程 | 状态 |
 |---:|---|---|---|
@@ -98,7 +98,7 @@
 ## 第 09 项项目内运行控制
 
 - 第 09 项的统计与写入实现只存在于 `09_rolling_variance_forecasts.ipynb`；不得把模型逻辑复制到独立 Python 计算脚本。
-- `operations/item09/worker.py` 只负责用 clean `latitude` kernel 执行 Notebook、发布原子状态和保存失败时的 partial Notebook；`monitor.ps1` 只负责可见监控。两者不包含论文模型实现。
+- `operations/item09/worker.py` 只负责用 clean `latitude_env_v2` kernel 执行 Notebook、发布原子状态和保存失败时的 partial Notebook；`monitor.ps1` 只负责可见监控。两者不包含论文模型实现。
 - 每次长批次的状态、日志、独立 Jupyter runtime 和 partial Notebook 放在 `operations/item09/control_history/<control_run_id>/`。该目录由局部 `.gitignore` 排除，不属于版本化研究成果，也不作为后续统计输入。
 - 最初用于拼装 Notebook 的重复 builder 已删除；当前及后续实现以 Notebook 文件本身为唯一统计代码来源。
 - `references/item09/` 保存本项目核对论文方法与预测结果页时生成的页面图像，不属于数据成果或执行依赖。
@@ -165,7 +165,8 @@
 
 ## 环境、读取与验收
 
-- 标准解释器是 `E:\anaconda3\envs\latitude\python.exe`，Notebook kernel 使用 `Python (latitude)`。
+- 标准解释器是 `E:\anaconda3\envs\latitude_env_v2\python.exe`，Notebook kernel 使用 `Python (latitude_env_v2)`。
+- 2026-10-01 环境迁移只配置 Python 3.13 与依赖，不重算或改写第 09 项已验收成果。该项指纹包含完整代码、解释器路径、Python 与数值库版本；迁移后当前代码和环境不再匹配历史固定 run，默认 `read_validated` 会按原门禁拒绝重新验收。第 10—12 项仍可按自身契约读取历史已提交成果；在新环境重算并接纳新 run 须另行授权完整批次。
 - 项目根目录按仓库 `.env.template` 规定的标记文件搜索方式定位，再从 `config.settings.settings.futures_lake_root` 获取正式湖仓根目录；不得硬编码另一份正式湖路径。
 - 表名、主键和分区顺序以 `config/data_contracts.py` 的表级 Schema metadata 为准；字段、Arrow 类型和 nullable 以其中的权威 `pa.Schema` 为准。每本 Notebook 在首次读取前展示直接参与表的 Schema 契约。
 - 数据读取使用带分区或字段过滤的直接 PyArrow 调用；只读取当前统计项目需要的列和样本范围。

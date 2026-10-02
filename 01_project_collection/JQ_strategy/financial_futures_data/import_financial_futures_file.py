@@ -838,7 +838,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--write", action="store_true", help="完整校验提交复核后删除已消化 ZIP；省略时只校验并保留输入")
     arguments = parser.parse_args()
-    if Path(sys.prefix).name.lower() != "latitude":
-        raise RuntimeError(f"必须使用 latitude 环境；当前解释器：{sys.executable}")
+    if Path(sys.prefix).name.lower() != "latitude_env_v2":
+        raise RuntimeError(f"必须使用 latitude_env_v2 环境；当前解释器：{sys.executable}")
     print(json.dumps(import_financial_futures_file(write=arguments.write),
                      ensure_ascii=False, indent=2, sort_keys=True))

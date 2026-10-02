@@ -1,6 +1,6 @@
 """生成并检查四个业务目录中 Notebook 的同名 PythonExporter 脚本。"""
 
-# py文件生成：激活 latitude 环境，在本脚本所在目录运行 python a00_02_sync_notebook_exports.py --write。
+# py文件生成：激活 latitude_env_v2 环境，在本脚本所在目录运行 python a00_02_sync_notebook_exports.py --write。
 # 仅做检查：运行 python a00_02_sync_notebook_exports.py --check；不传参数也默认只检查，不修改文件。
 # 运行前正文检查：--check --check-level code；注释差异只警告，--write 始终完整导出和逐字节复核。
 
@@ -17,7 +17,7 @@ import nbformat
 from nbconvert.exporters import PythonExporter
 
 
-EXPECTED_ENVIRONMENT = "latitude"
+EXPECTED_ENVIRONMENT = "latitude_env_v2"
 PROJECT_DIR = Path(__file__).resolve().parent
 WORKFLOW_DIRS = (
     PROJECT_DIR / "a01_Futures_Market_Data",

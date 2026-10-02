@@ -46,8 +46,8 @@ finally {
 
 def main() -> None:
     print(f"python: {sys.executable}")
-    if pathlib.Path(sys.prefix).name.casefold() != "latitude":
-        raise RuntimeError("verify_operations_runtime 必须使用 latitude 环境。")
+    if pathlib.Path(sys.prefix).name.casefold() != "latitude_env_v2":
+        raise RuntimeError("verify_operations_runtime 必须使用 latitude_env_v2 环境。")
 
     with tempfile.TemporaryDirectory(
         prefix=".operations_runtime_",

@@ -29,6 +29,7 @@
 *.pid
 
 # Draft lakes, execution evidence, and one-off local backups
+/00_draft_collection_02/environment_rebuild_20261001/
 /00_draft_collection_02/run_status/
 /00_draft_collection_02/test_lakes/
 /00_draft_collection_02/rv1/

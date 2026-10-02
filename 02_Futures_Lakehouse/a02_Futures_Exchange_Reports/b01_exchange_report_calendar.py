@@ -54,7 +54,7 @@
 
 # ## 初始化与权威 Schema
 # 
-# 按项目标记文件查找根目录，加载 `latitude` 环境中的 Pandas、PyArrow、Click，以及品种日历和报告日历两张具名 Schema、事实白名单、项目设置和共享路径事务。此格只准备依赖，不展开日历或提交数据。
+# 按项目标记文件查找根目录，加载 `latitude_env_v2` 环境中的 Pandas、PyArrow、Click，以及品种日历和报告日历两张具名 Schema、事实白名单、项目设置和共享路径事务。此格只准备依赖，不展开日历或提交数据。
 
 # ### 局部流程：初始化
 # 
@@ -1401,7 +1401,7 @@ elif __name__ == "__main__":
 # ```mermaid
 # %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
 # flowchart LR
-#     A["在终端激活 latitude"] --> B["切换到项目根目录"]
+#     A["在终端激活 latitude_env_v2"] --> B["切换到项目根目录"]
 #     B --> C["手动运行对应 .py --write"]
 #     C --> D["本地全量比较；整批提交变更叶"]
 # ```
@@ -1410,7 +1410,7 @@ elif __name__ == "__main__":
 
 
 # conda env list
-# conda activate latitude
+# conda activate latitude_env_v2
 # cd E:\Latitude_Analytics_v2
 # python 02_Futures_Lakehouse\a02_Futures_Exchange_Reports\b01_exchange_report_calendar.py --write
 

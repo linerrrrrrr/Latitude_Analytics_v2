@@ -73,7 +73,7 @@ STATE_LABELS = {"starting": "初始化", "waiting_for_monitor": "等待监控", 
 LAKEHOUSE_ROOT = OPERATIONS_ROOT.parent
 MAINTENANCE_TOOLS = {
     "verify_runtime": ("Python 运行环境", LAKEHOUSE_ROOT / "a00_01_verify_runtime.py", (),
-                       "检查 latitude 解释器与核心依赖；不调用业务 API。"),
+                       "检查 latitude_env_v2 解释器与核心依赖；不调用业务 API。"),
     "verify_control": ("Windows 控制面 I/O", OPERATIONS_ROOT / "runtime" / "verify_operations_runtime.py", (),
                        "检查长路径、原子替换、共享读取与临时 Arrow 文件；不读写业务湖。"),
     "check_code": ("Notebook 代码正文检查", LAKEHOUSE_ROOT / "a00_02_sync_notebook_exports.py", ("--check", "--check-level", "code"),
@@ -2982,8 +2982,8 @@ def main(argv=None) -> int:
                                 run_root=run_root, stages=stages, preflight_stages=() if maintenance else None)
     if arguments:
         raise ValueError("直接运行 console.py 打开窗口；业务参数请在对应环节中填写。")
-    if pathlib.Path(sys.prefix).name.casefold() != "latitude":
-        raise RuntimeError("请使用 latitude 环境打开总控台。")
+    if pathlib.Path(sys.prefix).name.casefold() != "latitude_env_v2":
+        raise RuntimeError("请使用 latitude_env_v2 环境打开总控台。")
     if os.name == "nt":
         # Give the window its own taskbar identity instead of Python's icon.
         import ctypes

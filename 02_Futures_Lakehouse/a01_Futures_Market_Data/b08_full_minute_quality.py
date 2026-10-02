@@ -1674,7 +1674,7 @@ elif __name__ == "__main__":
 # ```mermaid
 # %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
 # flowchart LR
-#     A["在终端激活 latitude"] --> B["切换到项目根目录"]
+#     A["在终端激活 latitude_env_v2"] --> B["切换到项目根目录"]
 #     B --> C["手动运行对应 .py --confirm-full-quality --write"]
 #     C --> D["全量分钟主键求差；缺失表根和日历叶共同提交"]
 # ```
@@ -1683,7 +1683,7 @@ elif __name__ == "__main__":
 
 
 # conda env list
-# conda activate latitude
+# conda activate latitude_env_v2
 # cd E:\Latitude_Analytics_v2
 # python 02_Futures_Lakehouse\a01_Futures_Market_Data\b08_full_minute_quality.py --confirm-full-quality --write
 

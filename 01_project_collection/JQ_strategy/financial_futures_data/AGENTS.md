@@ -251,7 +251,7 @@ open, high, low, close, volume, money, open_interest
 
 # 第 08 项冻结的固定文件导入
 
-- 唯一导入实现为 `import_financial_futures_file.py` 中的 `import_financial_futures_file()`，使用 latitude。正式用户入口是 Notebook 第 3 节自动入库检查，发现固定文件即直接调用 write=True，不要求命令行或手工解压。没有文件是正常状态，继续规划。函数默认 write=False 只校验且保留 inbox，不要求提交前额外运行一次；原有 CLI 仅保留兼容，不接受任意输入文件或数据库路径。
+- 唯一导入实现为 `import_financial_futures_file.py` 中的 `import_financial_futures_file()`，使用 latitude_env_v2。正式用户入口是 Notebook 第 3 节自动入库检查，发现固定文件即直接调用 write=True，不要求命令行或手工解压。没有文件是正常状态，继续规划。函数默认 write=False 只校验且保留 inbox，不要求提交前额外运行一次；原有 CLI 仅保留兼容，不接受任意输入文件或数据库路径。
 - 快照只从同一个 inbox 打开句柄复制，写入临时文件并 flush/fsync；同句柄复读摘要与前后文件状态检测原地覆盖。复读临时副本后，以同卷原子、不覆盖的硬链接方式发布摘要名称并移除自己的临时名；已存在的摘要快照必须逐字节相同。后续 inbox 被人工替换不改变本次导入对象。禁止解析可变 inbox、解压执行文件内容或把同名旧文件当作新批次。
 - 本地资源门禁为 ZIP 最大 512 MiB、声明展开总量最大 1 GiB、manifest 最大 8 MiB、JSONL 单行最大 1 MiB；另复核策略文件定义的来源请求、观察块和理论键上限。门禁失败保留现场，不自动拆包或重试，也不是平台容量承诺。JSONL 按行读取并验证 canonical 字节、CRC、摘要和计数；不把 ZIP 路径解压到文件系统。
 - 导入器从全部请求块重建观察、来源请求与完整计划三级身份，包含失败和未执行块。新文件还只读正式行情日历中本批合约/日期范围，验证请求坐标、Session 边界、理论数量、权威休市状态及来源组的结构连续性；不重跑缺失规划、不重新证明上游业务主键，也不要求计划仍等于现在的下一批。若日历已修订而不再匹配，保留文件并停止，不能擅改传输证据。已提交同摘要文件完整复核原账本、观察、事实和首次观察引用，不因上游后续修订而修改或删除历史证据。
@@ -274,7 +274,7 @@ open, high, low, close, volume, money, open_interest
 
 # 第 07 项冻结的 Notebook 与聚宽代码生成
 
-- `plan_financial_futures_fetch.ipynb` 是唯一正式本地规划 Notebook，使用 `latitude` 内核，按标记文件定位仓库根并直接导入第 06 项规划器。开篇通过 `02_Futures_Lakehouse/a00_03_notebook_schema_browser.py` 的 `display_schema_metadata()` 展示 `TRADE_CALENDAR_SCHEMA` 与 `FUTURES_BAR_CALENDAR_SCHEMA`，项目 DuckDB 四表则只读展示 `financial_futures_local_contract.py` 的列定义；不得伪造新的 Arrow silver 契约或为了展示创建数据库。
+- `plan_financial_futures_fetch.ipynb` 是唯一正式本地规划 Notebook，使用 `latitude_env_v2` 内核，按标记文件定位仓库根并直接导入第 06 项规划器。开篇通过 `02_Futures_Lakehouse/a00_03_notebook_schema_browser.py` 的 `display_schema_metadata()` 展示 `TRADE_CALENDAR_SCHEMA` 与 `FUTURES_BAR_CALENDAR_SCHEMA`，项目 DuckDB 四表则只读展示 `financial_futures_local_contract.py` 的列定义；不得伪造新的 Arrow silver 契约或为了展示创建数据库。
 - Notebook 采用单次 Run All 的线性流程：开篇环境与第 1—2 节契约，第 3 节自动消化 ZIP，第 4—8 节全白名单缺失、覆盖与分批预估，第 9 节定义远端模板，最后第 10 节输出结论或完整聚宽代码。默认 as_of=None、acceptance_contract_dates=None；首次没有 ZIP、历史回补和日常增量共用此入口。合约首尾日期只是包围范围，预览过滤不改变规划范围。
 - 聚宽导出模板直接保存在 Notebook 文本单元格，不为交付再生成独立 `.py`。最后第 10 节重新核对内存计划 SHA-256，内嵌压缩计划与协议常量，只在本地编译、不执行远端代码；非空计划提供可全选文本框及纯文本 MIME，空计划不调用 API 或覆盖文件。
 - 第 3 节只调用正式导入函数并展示带时间结果，不复制解包、事务或缺失算法；每轮开篇重载模块并清空旧计划、代码、报告及规划就绪标志。导入失败或未经过规划时最后一格拒绝生成；成功后同一次 Run All 自动继续规划。修改流程前归档原 Notebook 及用户输出，交付 Notebook 清除过期输出但保留用户空单元格，最后代码格始终位于末尾。
@@ -290,7 +290,7 @@ open, high, low, close, volume, money, open_interest
 
 - 第 09 项历史验收曾显式设置 `acceptance_contract_dates=(("IF2409.CCFX", date(2024,6,28)), ("TF1303.CCFX", date(2012,6,11)))`。坐标仅用于该次验收，不是当前正常默认；正式日历始终决定 Session、理论数量与就绪性。
 - 首次空库准备时，该范围为 4 个来源请求、6 个观察块、512 个理论键（2 日线、510 分钟）。2026-09-04T21:49:20.164421+08:00 的真实运行返回 IF 日线 1 条、分钟 240 条；TF 日线与分钟均成功零行。此结果来自本轮报告及文件，不是根据早期探针预造或裁掉 TF。
-- 用户在本地 `latitude` 内核重启并按顺序运行 Notebook，核对本批范围后，把最终完整代码复制到聚宽干净内核的一个单元格手动执行。出现完整 `JQ_FINANCIAL_FUTURES_EXPORT_V1_BEGIN/END` 和下载指令后，手动下载固定正式 ZIP 并返回文件位置与完整输出；打包失败或没有下载指令时不取旧同名文件。
+- 用户在本地 `latitude_env_v2` 内核重启并按顺序运行 Notebook，核对本批范围后，把最终完整代码复制到聚宽干净内核的一个单元格手动执行。出现完整 `JQ_FINANCIAL_FUTURES_EXPORT_V1_BEGIN/END` 和下载指令后，手动下载固定正式 ZIP 并返回文件位置与完整输出；打包失败或没有下载指令时不取旧同名文件。
 - 收到本轮真实报告和文件后，先按报告时间新建独立记录，保存原始输出、结构化报告、实际执行代码身份和下载文件字节/摘要核对结果；与本地准备计划身份不符时停下核查。然后由正式导入器对本批执行 `--write`，复核同 SHA 重导无写入、四表计数和来源观察覆盖，再重新运行同验收范围的缺失检测。只有传输、导入、幂等和精确缺失证据均闭合后才勾选第 09 项。
 - `experiment_records/formal_roundtrip/prepared_YYYY-MM-DDTHHMMSS.ffffff+0800_item_09_vN/` 留存带本地准备时间的计划、生成代码非执行文本、准备验证和源码摘要，不冒充聚宽已执行；收到真实报告后另建以实际 `run_started_at` 命名的目录，沿用原始文本不变、SHA sidecar、分析与来源时间缺失标记规则。不能覆盖准备记录或旧轮次。
 - 本项已完成真实文件摘要／计划核对、正式四表提交、同 SHA 重导无写入、逐块观察与精确缺失回查。证据见 [本次真实往返记录](experiment_records/formal_roundtrip/2026-09-04T214920.164421+0800_item_09_v1/analysis.md)。首库现有 1 个批次、6 个观察、1 条日线和 240 条分钟；TF 的 1 个日线键和 270 个分钟键仍为来源确认缺失，两组验收坐标的待拉取均为 0。

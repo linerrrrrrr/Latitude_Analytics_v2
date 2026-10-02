@@ -11,7 +11,7 @@ import nbformat
 from nbconvert.exporters import PythonExporter
 
 
-EXPECTED_ENVIRONMENT = "latitude"
+EXPECTED_ENVIRONMENT = "latitude_env_v2"
 WORKFLOW_DIR = Path(__file__).resolve().parent
 WORKFLOW_PATTERN = "b[0-9][0-9]_*.ipynb"
 

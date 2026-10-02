@@ -56,7 +56,7 @@ a04/b02 保持三个独立事务边界：兼容旧 metadata 迁移替换整个�
   `settings.futures_lake_root` 引用，`--lake-root` 只作为非正式临时湖覆盖。
 - `.env` 的 `FUTURES_DATA_START_DATE` 是当前稳定采集统一正式起点；变量名为兼容既有期货入口而保留，
   `a04/b01` 也从该日期生成宏观理论历史水位，不另设生产日期范围。
-- 运行任何业务入口前必须先验证 `latitude` 环境和 Notebook/Python 代码正文一致性；预检失败时不调用 API。operations 业务启动采用 `--check --check-level code`，完整导出逐字节一致仍是正式同步和交付要求。
+- 运行任何业务入口前必须先验证 `latitude_env_v2` 环境和 Notebook/Python 代码正文一致性；预检失败时不调用 API。operations 业务启动采用 `--check --check-level code`，完整导出逐字节一致仍是正式同步和交付要求。
 - API 成功、确认空、可重试错误、永久错误、Schema 错误和质量错误分别处理；结构化事实正式路径
   复读成功前不得回写日历完成状态。生意社 b02 不生成结构化事实，必须在 raw 原文字节及 SHA-256 sidecar
   正式复读并核对一致后才回写日历。
@@ -210,9 +210,9 @@ raw 概览只读取文件状态、大小和最多 128 字节的摘要文本，�
 ## 双轨同步
 
 ```powershell
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_exports.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_exports.py --check
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_exports.py --check --check-level code
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_exports.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_exports.py --check
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_exports.py --check --check-level code
 ```
 
 同步入口只递归扫描四个正式 `a` 目录中的 `bNN_*.ipynb` 及 `bNNa_*.ipynb` 等带字母步骤，不扫描 operations、草稿或归档项目。
@@ -225,31 +225,31 @@ E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_
 已按用户要求删除。当前业务命令入口位于四个业务目录内，使用 `bNN_*.py` 及 `bNNa_*.py` 等带字母步骤名称，执行前先运行：
 
 ```powershell
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a00_01_verify_runtime.py
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_exports.py --check --check-level code
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a00_01_verify_runtime.py
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_exports.py --check --check-level code
 ```
 
 默认日常执行的 18 个阶段写入正式湖时不传湖路径和日期；其中 a01 默认只执行 b01—b07：
 
 ```powershell
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b01_trade_calendar.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b02_futures_variety_calendar.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b03_futures_contract_calendar.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b04_futures_bar_calendar.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b05_futures_daily.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b06_futures_minute.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b07_suspected_session_reconciliation.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a02_Futures_Exchange_Reports/b01_exchange_report_calendar.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a02_Futures_Exchange_Reports/b01a_position_rank_special_case_calibration.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a02_Futures_Exchange_Reports/b02_futures_holding_reports.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a02_Futures_Exchange_Reports/b03_warehouse_receipt.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a03_External_Market_Data/b01_external_market_calendar.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a03_External_Market_Data/b02_domestic_spot_basis.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a03_External_Market_Data/b03_overseas_futures.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a03_External_Market_Data/b04_external_index.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a04_Macro_And_Interest_Rates/b01_macro_release_calendar.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a04_Macro_And_Interest_Rates/b02_interest_rate.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a04_Macro_And_Interest_Rates/b03_macro_release.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b01_trade_calendar.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b02_futures_variety_calendar.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b03_futures_contract_calendar.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b04_futures_bar_calendar.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b05_futures_daily.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b06_futures_minute.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b07_suspected_session_reconciliation.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a02_Futures_Exchange_Reports/b01_exchange_report_calendar.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a02_Futures_Exchange_Reports/b01a_position_rank_special_case_calibration.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a02_Futures_Exchange_Reports/b02_futures_holding_reports.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a02_Futures_Exchange_Reports/b03_warehouse_receipt.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a03_External_Market_Data/b01_external_market_calendar.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a03_External_Market_Data/b02_domestic_spot_basis.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a03_External_Market_Data/b03_overseas_futures.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a03_External_Market_Data/b04_external_index.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a04_Macro_And_Interest_Rates/b01_macro_release_calendar.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a04_Macro_And_Interest_Rates/b02_interest_rate.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a04_Macro_And_Interest_Rates/b03_macro_release.py --write
 ```
 
 程序会先输出自动差集计划；不带 `--write` 时只采集、比较和校验，不提交。
@@ -257,7 +257,7 @@ E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a04_Macro_And_Interes
 `a02/b03` 的可选性能门槛只能成对用于无显式日期的自动正式 `--write`。本次恢复使用：
 
 ```powershell
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a02_Futures_Exchange_Reports/b03_warehouse_receipt.py --write --performance-window-size 50 --performance-max-median-seconds 15.4
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a02_Futures_Exchange_Reports/b03_warehouse_receipt.py --write --performance-window-size 50 --performance-max-median-seconds 15.4
 ```
 
 它在首 50 个成功完整提交分区后检查分区总耗时中位数；超过 15.4 秒时在安全提交边界终止，不回滚已成功分区。默认日常入口不启用该门槛，也不提供历史审计参数。
@@ -265,13 +265,13 @@ E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a02_Futures_Exchange_
 a01 的全历史维护、b07 有界强制校对和 b08 人工全量审计必须显式调用：
 
 ```powershell
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b01_trade_calendar.py --full --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b02_futures_variety_calendar.py --full --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b03_futures_contract_calendar.py --start-date YYYY-MM-DD --end-date YYYY-MM-DD --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b03_futures_contract_calendar.py --full --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b04_futures_bar_calendar.py --full --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b07_suspected_session_reconciliation.py --force --start-date YYYY-MM-DD --end-date YYYY-MM-DD --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b08_full_minute_quality.py --confirm-full-quality --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b01_trade_calendar.py --full --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b02_futures_variety_calendar.py --full --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b03_futures_contract_calendar.py --start-date YYYY-MM-DD --end-date YYYY-MM-DD --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b03_futures_contract_calendar.py --full --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b04_futures_bar_calendar.py --full --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b07_suspected_session_reconciliation.py --force --start-date YYYY-MM-DD --end-date YYYY-MM-DD --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a01_Futures_Market_Data/b08_full_minute_quality.py --confirm-full-quality --write
 ```
 
 总控台的“日常更新配置”选中 18 个阶段并开启各环节的 `--write`，a01 为 b01—b07；其他已编辑参数保留，操作者可逐项取消选择或写入，

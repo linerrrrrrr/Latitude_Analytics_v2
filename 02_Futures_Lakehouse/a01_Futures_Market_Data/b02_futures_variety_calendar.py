@@ -1495,7 +1495,7 @@ def main(
 # 
 # 与 b01 一样，Notebook 通过 `notebook_args` 显式传入 Click 参数，避免读取内核的 `-f` 参数，并用 `standalone_mode=False` 返回 Notebook。当前示例检查 `2026-08-01` 至 `2026-08-15`，未启用 `--write`；存在上游交易日时会请求一次来源目录。需要默认尾部只读检查时可将参数改为 `[]`。
 # 
-# 直接运行 Python 脚本时读取命令行参数；在 Notebook 中导入同名模块不会触发入口。最后一格列出 `latitude` 环境下的脚本命令，其中 `--write` 用于手动启动默认尾部更新。
+# 直接运行 Python 脚本时读取命令行参数；在 Notebook 中导入同名模块不会触发入口。最后一格列出 `latitude_env_v2` 环境下的脚本命令，其中 `--write` 用于手动启动默认尾部更新。
 
 # ### 局部流程：Notebook 与脚本执行入口
 # 
@@ -1553,7 +1553,7 @@ elif __name__ == "__main__":
 # ```mermaid
 # %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
 # flowchart LR
-#     A["在终端激活 latitude"] --> B["切换到项目根目录"]
+#     A["在终端激活 latitude_env_v2"] --> B["切换到项目根目录"]
 #     B --> C["手动运行对应 .py --write"]
 #     C --> D["默认尾部更新并提交"]
 # ```
@@ -1562,7 +1562,7 @@ elif __name__ == "__main__":
 
 
 # conda env list
-# conda activate latitude
+# conda activate latitude_env_v2
 # cd E:\Latitude_Analytics_v2
 # python 02_Futures_Lakehouse\a01_Futures_Market_Data\b02_futures_variety_calendar.py --write
 

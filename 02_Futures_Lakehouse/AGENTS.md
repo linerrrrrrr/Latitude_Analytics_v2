@@ -21,7 +21,7 @@
 - `02_Futures_Lakehouse/a01_Futures_Market_Data` 至 `a04_Macro_And_Interest_Rates` 四个业务目录中的采集入口都必须同时保留同一目录、同一基名的 `.ipynb` 与 `.py`，例如 `b01_trade_calendar.ipynb` 与 `b01_trade_calendar.py`。一级业务目录使用 `aNN`，组内业务步骤使用 `bNN`，原执行顺序保持不变。
 - 业务工作流入口包括数据采集、清洗与加工、因子研究、策略研究、回测、建模、评估、报告和可视化等可独立运行的任务；当前由哪种文件起步不影响双轨要求。只读旧项目不属于本规则的改造范围。
 - `.ipynb` 用于交互式分步执行、观察中间结果和记录业务解释；`.py` 用于批量执行、模块导入、测试和调度。两者都是正式交付物，未经用户明确同意不得删除、遗漏或用其中一轨替代另一轨。
-- `.ipynb` 是唯一允许直接编辑的源文件；同名 `.py` 必须使用项目标准 `latitude` 环境中的默认 `nbconvert.exporters.PythonExporter` 完整生成，并与导出结果逐字节一致。
+- `.ipynb` 是唯一允许直接编辑的源文件；同名 `.py` 必须使用项目标准 `latitude_env_v2` 环境中的默认 `nbconvert.exporters.PythonExporter` 完整生成，并与导出结果逐字节一致。
 - 两轨必须保持核心业务逻辑一致，包括参数与默认值、数据源、字段和 Schema、路径、过滤条件、更新水位及输出语义。Notebook 输出以及 PythonExporter 未导出的元数据可以只存在于 `.ipynb`；Markdown、代码单元格顺序和展示代码若会进入导出结果，就必须同步出现在 `.py` 中。
 - 不得直接修改或重新格式化导出的 `.py`；PythonExporter 生成的 shebang、编码声明、`# In[...]` 标记、Markdown 注释、空行与单元格顺序必须原样保留。
 - 共享模块必须符合根目录 `AGENTS.md` 的抽象判定：承担项目级不变量或数据契约、独立且实质复杂的操作、危险或不稳定的外部副作用边界，或者由多个独立真实调用方以相同语义复用。普通顺序步骤、单次底层库调用和只为消除少量重复而抽出的代码应保留在当前 Notebook/模块内。同名 `.py` 仍只能是该 Notebook 的完整导出结果。
@@ -42,10 +42,10 @@
 ## 环境与导出检查
 
 运行本目录树内任何业务工作流入口前，先使用本目录的统一环境预检入口验证标准
-`latitude` 环境及核心 DataFrame 依赖：
+`latitude_env_v2` 环境及核心 DataFrame 依赖：
 
 ```powershell
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a00_01_verify_runtime.py
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a00_01_verify_runtime.py
 ```
 
 `a00_01_verify_runtime.py` 是验证脚本，不是业务工作流入口，不要求创建同名 Notebook。
@@ -53,9 +53,9 @@ E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a00_01_verify_runtime
 四个业务目录必须使用湖仓根目录的 `a00_02_sync_notebook_exports.py` 作为双轨生成与检查入口：
 
 ```powershell
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_exports.py --write
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_exports.py --check
-E:\anaconda3\envs\latitude\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_exports.py --check --check-level code
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_exports.py --write
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_exports.py --check
+E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse/a00_02_sync_notebook_exports.py --check --check-level code
 ```
 
 - `--write` 使用默认 PythonExporter 递归扫描四个正式 `a` 目录，重新生成其中 `b01` 起始业务 Notebook 的同名 `.py`，随后执行 Notebook 结构、脚本语法和逐字节检查；同步脚本不执行业务 Notebook 单元格，也不调用 API。

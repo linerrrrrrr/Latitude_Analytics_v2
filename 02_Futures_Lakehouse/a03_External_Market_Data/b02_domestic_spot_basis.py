@@ -1444,7 +1444,7 @@ elif __name__ == "__main__":
 # ```mermaid
 # %%{init: {"flowchart": {"nodeSpacing": 24, "rankSpacing": 24, "padding": 12, "wrappingWidth": 230}}}%%
 # flowchart TD
-#     A["在终端激活 latitude；切换到项目根目录"] --> B["人工运行对应 .py --write"]
+#     A["在终端激活 latitude_env_v2；切换到项目根目录"] --> B["人工运行对应 .py --write"]
 #     B --> C["自动补 raw 或修复日历；逐日期和逐叶提交"]
 # ```
 
@@ -1452,7 +1452,7 @@ elif __name__ == "__main__":
 
 
 # conda env list
-# conda activate latitude
+# conda activate latitude_env_v2
 # cd E:\Latitude_Analytics_v2
 # python 02_Futures_Lakehouse\a03_External_Market_Data\b02_domestic_spot_basis.py --write
 

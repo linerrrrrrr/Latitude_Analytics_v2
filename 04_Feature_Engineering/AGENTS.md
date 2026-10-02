@@ -14,7 +14,7 @@
 
 # `.ipynb` 与 `.py` 双轨
 
-- 本目录中项目自研的特征工程业务工作流入口必须同时保留同目录、同基名的 `.ipynb` 与 `.py`。Notebook 是唯一允许直接编辑的业务源文件；同名 `.py` 必须由标准 `latitude` 环境中的默认 `nbconvert.exporters.PythonExporter` 完整生成并逐字节一致。
+- 本目录中项目自研的特征工程业务工作流入口必须同时保留同目录、同基名的 `.ipynb` 与 `.py`。Notebook 是唯一允许直接编辑的业务源文件；同名 `.py` 必须由标准 `latitude_env_v2` 环境中的默认 `nbconvert.exporters.PythonExporter` 完整生成并逐字节一致。
 - 修改业务 Notebook 后使用本目录的 `b00_sync_notebook_exports.py --write` 生成脚本，交付前使用 `--check` 复核。同步入口是运维与验证脚本，不要求同名 Notebook。
 - `.py` 不得直接修改或格式化。参数、默认值、silver 输入、Schema、分区、过滤、更新水位与 gold 输出语义必须先在 Notebook 中完成，再重新导出。
 - `__init__.py`、配置模块、测试、验证脚本和同步脚本默认不要求同名 Notebook；实际承担独立特征工程业务任务的文件不得套用该例外。

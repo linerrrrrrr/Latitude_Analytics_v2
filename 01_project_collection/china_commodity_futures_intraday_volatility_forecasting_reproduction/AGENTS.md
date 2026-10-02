@@ -21,7 +21,7 @@
 ## Notebook 实施边界
 
 - 每次对话只聚焦 README 清单中的一个统计项目。只有在开始完整实现该项目时，才创建其对应 Notebook；不得预建空 Notebook。
-- 新建 Notebook 必须在同一次对话中写明其统计目的、经济意义、论文公式或表图对应、代码步骤、验证、结果解释和限制，并使用 `Python (latitude)` clean kernel 从头执行成功。
+- 新建 Notebook 必须在同一次对话中写明其统计目的、经济意义、论文公式或表图对应、代码步骤、验证、结果解释和限制，并使用 `Python (latitude_env_v2)` clean kernel 从头执行成功。
 - 每本 Notebook 必须自包含。允许重复直接且清晰的 PyArrow、Pandas、NumPy、SciPy、Statsmodels 或 `arch` 调用；不得建立共享 helper、隐藏的跨 Notebook 状态或普通持久化缓存来缩短 Notebook。第 09 项经本项目成果契约提交的 research artifact 是唯一例外。
 - 第 09 项的模型、数据变换和成果写入逻辑只允许存在于 `09_rolling_variance_forecasts.ipynb`。项目内 worker 只能执行 Notebook 和发布控制状态，monitor 只能显示状态；不得恢复用于拼装 Notebook 的重复 builder。
 - 除第 09 项成果这一显式契约边界外，后续统计项目需要前序结果时仍必须在当前 Notebook 内直接重新计算，不得读取未经授权的中间文件。第 10—12 项只可读取 README 固定且已经完整验收的第 09 项 `run_id`；固定 run 缺失、损坏或指纹不符时必须硬失败，不得静默重算或改读 `LATEST`。
@@ -38,7 +38,8 @@
 
 ## 验证与长任务
 
-- Notebook 必须使用仓库标准 `latitude` 环境执行；不得根据裸 `python` 或裸 `pip` 判断依赖状态。
+- Notebook 必须使用仓库标准 `latitude_env_v2` 环境执行；不得根据裸 `python` 或裸 `pip` 判断依赖状态。
+- Python 3.13 环境迁移不改写已有成果、固定 run 或指纹门禁。第 09 项历史 run 的完整代码与环境指纹不匹配当前运行时，默认 `read_validated` 必须保持硬失败；在新环境重算并接纳新 run 须另行取得完整批次授权。第 10—12 项仍按自身契约读取历史已提交成果，具体迁移边界见 README 的“环境、读取与验收”。
 - 每个统计项目必须保留能独立复核的数据覆盖、边界、公式、参数约束和有限性断言；不能只展示最终表图。
 - 预计超过十分钟的完整滚动模型或 bootstrap 批次，必须在对应对话中取得用户对边界清楚批次的明确授权，并遵守根规范中的 detached worker、用户可见监控、有界健康检查和失败保留要求。
 - 第 09 项默认以 `read_validated` 模式读取 README 固定 run；`compute_or_resume` 仍是预计超过十分钟的有界批次，每一次启动或恢复都必须取得当次明确授权，不得因已有 checkpoint 自动续跑或自动重试。

@@ -223,7 +223,7 @@ def main() -> int:
         client = ProgressNotebookClient(
             notebook,
             timeout=86_400,
-            kernel_name="latitude",
+            kernel_name="latitude_env_v2",
             resources={"metadata": {"path": str(args.notebook.parent)}},
             allow_errors=False,
             record_timing=True,

@@ -413,7 +413,7 @@ manifest、`_SUCCESS`、不可变提交和下游固定 run 规则只由对应项
   权威 Schema 常量，且不得恢复已被 `dim_futures_bar_calendar` 替代的旧状态表。
 - 每张表必须由独立代码单元格演示；单个演示单元格不得同时读取多张表。公共导入、项目根目录定位、
   分区定义和展示函数可以放在单独的初始化单元格。
-- Demo 必须使用项目规定的根目录标记文件搜索方式、`latitude` 环境、
+- Demo 必须使用项目规定的根目录标记文件搜索方式、`latitude_env_v2` 环境、
   `config/data_contracts.py` 中的权威 Schema 及统一 Arrow 转换入口；禁止直接依赖
   Pandas 或 Polars 推断落盘类型。
 - 每个示例直接用 PyArrow Dataset 读取，并通过相应 Arrow Schema 校验和转换。分钟线示例必须先按

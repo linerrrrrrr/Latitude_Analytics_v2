@@ -82,7 +82,7 @@ financial_futures_data/
 
 ## 轻量数据库与状态模型
 
-项目库固定为 `data/warehouse/financial_futures.duckdb`。DuckDB 无需启动数据库服务，日线与分钟线都保存在同一文件中；当前标准 `latitude` 环境已验证 DuckDB 1.5.4 的单文件事务、回滚和只读重开行为。第 05 项已经冻结列级 Schema，但数据库仍只允许由第 08 项正式导入入口按需初始化。
+项目库固定为 `data/warehouse/financial_futures.duckdb`。DuckDB 无需启动数据库服务，日线与分钟线都保存在同一文件中；当前标准 `latitude_env_v2` 环境已验证 DuckDB 1.5.4 的单文件事务、回滚和只读重开行为。第 05 项已经冻结列级 Schema，但数据库仍只允许由第 08 项正式导入入口按需初始化。
 
 第一版只保留四类持久表：
 
@@ -144,7 +144,7 @@ data/inbox/JQ_FINANCIAL_FUTURES_TRANSFER.zip
 
 ## 第 07 项：本地 Notebook 与完整聚宽代码
 
-正式入口为 [`plan_financial_futures_fetch.ipynb`](plan_financial_futures_fetch.ipynb)，使用 latitude 内核，每轮运行全部单元格（Run All）。环境格重载模块并清空旧状态；第 1—2 节展示交易日历、bar 日历与项目库契约，第 3 节自动消化 ZIP，第 4—8 节全白名单精确缺失、覆盖、请求范围和剩余轮数，第 9 节定义远端模板，最后第 10 节输出结论或完整聚宽代码。默认使用当前北京时间与全白名单，不再限定两组验收坐标。
+正式入口为 [`plan_financial_futures_fetch.ipynb`](plan_financial_futures_fetch.ipynb)，使用 latitude_env_v2 内核，每轮运行全部单元格（Run All）。环境格重载模块并清空旧状态；第 1—2 节展示交易日历、bar 日历与项目库契约，第 3 节自动消化 ZIP，第 4—8 节全白名单精确缺失、覆盖、请求范围和剩余轮数，第 9 节定义远端模板，最后第 10 节输出结论或完整聚宽代码。默认使用当前北京时间与全白名单，不再限定两组验收坐标。
 
 最终输出框内 Ctrl+A、Ctrl+C，在聚宽研究 Notebook 重启内核后粘贴到一个单元格执行即可；代码自带压缩后的计划，不需要上传其他脚本。远端模板直接属于本 Notebook，不额外生成一份本地 `.py`。本地运行不会执行字符串里的聚宽请求或文件覆盖。
 
@@ -202,7 +202,7 @@ write=True 且数据库最终复核成功后，删除本次已消化 ZIP、清�
 
 本项已执行的验收顺序：
 
-1. 本地使用 `latitude` 内核重启并从头运行 Notebook，确认第 7 节本批仅含上述两组坐标；把最后一格的完整代码复制到聚宽研究 Notebook 的干净内核，在一个单元格中执行。
+1. 本地使用 `latitude_env_v2` 内核重启并从头运行 Notebook，确认第 7 节本批仅含上述两组坐标；把最后一格的完整代码复制到聚宽研究 Notebook 的干净内核，在一个单元格中执行。
 2. 只有出现完整 `JQ_FINANCIAL_FUTURES_EXPORT_V1_BEGIN/END` 与下载指令后，才手动下载正式 `JQ_FINANCIAL_FUTURES_TRANSFER.zip`。返回完整输出与下载文件位置，不能用旧 PROBE 包或没有下载指令时的旧同名文件。
 3. 收到文件后核对字节数、SHA-256、运行 ID 和本次计划，再由正式导入器提交这一个小批次；随后核对同 SHA 重导无写入、四表计数和重新计算的精确缺失，全部通过才勾选第 09 项。
 

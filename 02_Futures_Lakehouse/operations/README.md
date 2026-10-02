@@ -6,15 +6,15 @@
 
 ## 打开与使用
 
-标准 `latitude` 环境需要 PySide6；版本随项目 [requirements.txt](../../requirements.txt) 管理。当前固定 `PySide6==6.11.2`，安装命令为：
+标准 `latitude_env_v2` 环境需要 PySide6；版本随项目 [requirements.txt](../../requirements.txt) 管理。当前固定 `PySide6==6.11.2`，安装命令为：
 
 ```powershell
-& 'E:\anaconda3\envs\latitude\python.exe' -m pip install 'PySide6==6.11.2'
+& 'E:\anaconda3\envs\latitude_env_v2\python.exe' -m pip install 'PySide6==6.11.2'
 ```
 
 ```powershell
 Set-Location -LiteralPath 'E:\Latitude_Analytics_v2'
-& 'E:\anaconda3\envs\latitude\pythonw.exe' 'E:\Latitude_Analytics_v2\02_Futures_Lakehouse\operations\console.py'
+& 'E:\anaconda3\envs\latitude_env_v2\pythonw.exe' 'E:\Latitude_Analytics_v2\02_Futures_Lakehouse\operations\console.py'
 ```
 
 打开窗口默认进入 a00，只读取源码参数和历史证据，不调用业务 API。进入 a01/b01“日历结果”页后，会按下述结果展示边界只读加载交易日历；页面不写业务湖。若需要查看启动错误，可用同环境 `python.exe` 替代 `pythonw.exe`。
@@ -136,9 +136,9 @@ Windows 状态读取使用 `ReadWrite | Delete` 共享并立即关闭；发布�
 ## 验证
 
 ```powershell
-& 'E:\anaconda3\envs\latitude\python.exe' -m unittest discover -s 'E:\Latitude_Analytics_v2\02_Futures_Lakehouse\operations\tests' -v
-& 'E:\anaconda3\envs\latitude\python.exe' 'E:\Latitude_Analytics_v2\02_Futures_Lakehouse\operations\runtime\verify_operations_runtime.py'
-& 'E:\anaconda3\envs\latitude\python.exe' -m unittest discover -s 'E:\Latitude_Analytics_v2\00_draft_collection_02\tests' -p 'test_a00_workbench.py' -v
+& 'E:\anaconda3\envs\latitude_env_v2\python.exe' -m unittest discover -s 'E:\Latitude_Analytics_v2\02_Futures_Lakehouse\operations\tests' -v
+& 'E:\anaconda3\envs\latitude_env_v2\python.exe' 'E:\Latitude_Analytics_v2\02_Futures_Lakehouse\operations\runtime\verify_operations_runtime.py'
+& 'E:\anaconda3\envs\latitude_env_v2\python.exe' -m unittest discover -s 'E:\Latitude_Analytics_v2\00_draft_collection_02\tests' -p 'test_a00_workbench.py' -v
 ```
 
 测试只使用控制面临时脚本和路径，不调用业务 API、不写正式湖。Qt 界面测试使用 offscreen 平台，不打开用户桌面窗口、不触发生产批次。
