@@ -6,7 +6,7 @@
 - [README.md](README.md) 是本项目目标、固定样本、统计口径、Notebook 清单和实施状态的权威说明；实现或修改任何统计项目时必须同步维护其状态和实际复现等级。
 - README 同时固定第 09 项已经完整验收、允许第 10—12 项消费的准确 `run_id`；`LATEST` 只能帮助发现候选 run，不能替代 README 中的固定值。
 - `operations/item09/` 是第 09 项长批次控制脚本与本地运行现场的唯一项目内位置；统计实现仍只存在于 Notebook，运行控制不得成为第二份模型来源。
-- 任何正式 `silver` 读取都必须遵循 [03_Futures_Database/AGENTS.md](../../03_Futures_Database/AGENTS.md) 和 [config/data_contracts.py](../../config/data_contracts.py)。
+- 任何正式 `silver` 读取都必须遵循 [02_Market_Data/a02_Lake/AGENTS.md](../../02_Market_Data/a02_Lake/AGENTS.md) 和 [config/data_contracts.py](../../config/data_contracts.py)。
 - 如果本文件、README、数据库规范或权威 Schema 之间出现冲突，必须先消除冲突，不得选择性执行。
 
 ## 数据访问边界

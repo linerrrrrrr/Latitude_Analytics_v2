@@ -5,10 +5,20 @@
 !.env.example
 
 # Materialized data lake datasets
-/03_Futures_Database/futures_lake/
+/02_Market_Data/a02_Lake/*
+!/02_Market_Data/a02_Lake/AGENTS.md
+!/02_Market_Data/a02_Lake/read_futures_lake_demo.ipynb
 
-# Local operations run evidence and control-plane state
-/02_Futures_Lakehouse/operations/run_history/
+# Local operations and data-source audit evidence
+/02_Market_Data/a01_Collection/operations/run_history/
+/02_Market_Data/a01_Collection/checks/results/
+
+# Research scope-local caches, MLflow database/sidecars, artifacts and staging
+/04_Research/a02_Experiments/*/c01_Data/
+/04_Research/a02_Experiments/*/c02_Tracking/
+
+# Local notebook outputs; ownership and export rules: 00_draft_collection_01/AGENTS.md
+/00_draft_collection_01/testing_[0-9]*/
 
 # Materialized research data and local backup archives (existing tracked files stay tracked)
 *.parquet
@@ -28,20 +38,12 @@
 *.xz
 *.pid
 
+# Local environment rebuild evidence
+/environment/rebuild_20261001/
+
 # Draft lakes, execution evidence, and one-off local backups
-/00_draft_collection_02/environment_rebuild_20261001/
-/00_draft_collection_02/run_status/
-/00_draft_collection_02/test_lakes/
-/00_draft_collection_02/rv1/
-/00_draft_collection_02/t2/
-/00_draft_collection_02/.c08-diag-*/
 /00_draft_collection_02/git_coverage_20260926/
-/00_draft_collection_02/lakehouse_layout_20260926/
 /00_draft_collection_02/migration_reports/
-/00_draft_collection_02/notebook_schema_browser_before_visual_20260926.py
-/00_draft_collection_02/experiment_night_session_attribution/output/
-/00_draft_collection_02/internet_scraper_interface_audit/results/
-/00_draft_collection_02/research_outputs/joinquant_financial_futures_protocol_2026-09-02/
 /00_draft_collection_02/质检交付包/Runoff_inventory.csv
 
 # Keep written experiment analyses; exclude raw execution captures and generated snapshots

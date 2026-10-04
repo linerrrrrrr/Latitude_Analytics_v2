@@ -8,7 +8,7 @@
 
 `C:\Users\31918\Desktop\bookshelf_02_期货外刊\Volatility forecasting in the Chinese commodity futures market with intraday data.pdf`
 
-项目规则见 [AGENTS.md](AGENTS.md)。项目同时遵循仓库根 [AGENTS.md](../../AGENTS.md)、[期货数据库规范](../../03_Futures_Database/AGENTS.md) 和权威 [Schema 契约](../../config/data_contracts.py)。
+项目规则见 [AGENTS.md](AGENTS.md)。项目同时遵循仓库根 [AGENTS.md](../../AGENTS.md)、[期货数据库规范](../../02_Market_Data/a02_Lake/AGENTS.md) 和权威 [Schema 契约](../../config/data_contracts.py)。
 
 ## 固定研究边界
 

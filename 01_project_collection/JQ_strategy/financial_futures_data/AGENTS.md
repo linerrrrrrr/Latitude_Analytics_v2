@@ -2,13 +2,13 @@
 
 - 本文件适用于 `01_project_collection/JQ_strategy/financial_futures_data` 整棵目录树。
 - 用户已在 2026-09-02 明确确认本目录作为正式项目子目录，用于金融期货的人工聚宽取数规划、固定名单文件接收、本地缺失检测和项目内轻量数据库导入。
-- 本目录继承仓库根 `AGENTS.md` 的全部规则。凡涉及正式数据湖读取、Arrow Schema、字段、类型或转换，还必须遵循 `03_Futures_Database/AGENTS.md` 和 `config/data_contracts.py`。
+- 本目录继承仓库根 `AGENTS.md` 的全部规则。凡涉及正式数据湖读取、Arrow Schema、字段、类型或转换，还必须遵循 `02_Market_Data/a02_Lake/AGENTS.md` 和 `config/data_contracts.py`。
 
 # 规范索引与同步要求
 
 - [仓库根 AGENTS.md](../../../AGENTS.md)：项目级命名、最小改动、运行环境、正式湖定位和规范同步要求。
-- [仓库 Python 依赖清单](../../../requirements.txt)：本项目本地数据库所用 DuckDB 的可复现版本来源。
-- [数据库 AGENTS.md](../../../03_Futures_Database/AGENTS.md)：正式数据湖读取、字段、类型、Arrow Schema 和项目专属数据边界。
+- [仓库 Python 依赖清单](../../../environment/requirements.txt)：本项目本地数据库所用 DuckDB 的可复现版本来源。
+- [数据库 AGENTS.md](../../../02_Market_Data/a02_Lake/AGENTS.md)：正式数据湖读取、字段、类型、Arrow Schema 和项目专属数据边界。
 - [稳定 silver 可执行契约](../../../config/data_contracts.py)：正式 17 张 silver 表的唯一 Schema 与 metadata 来源。
 - [正式事实采集白名单](../../../config/futures_lakehouse/futures_fact_collection_policy.py)：正式商品期货事实生产白名单；不得作为本子项目金融期货白名单。
 - [项目金融期货范围策略](financial_futures_collection_policy.py)：本子项目中金所品种白名单、支持频率、当前聚宽数据就绪时点与有界计划规模的唯一可执行来源。
@@ -274,7 +274,7 @@ open, high, low, close, volume, money, open_interest
 
 # 第 07 项冻结的 Notebook 与聚宽代码生成
 
-- `plan_financial_futures_fetch.ipynb` 是唯一正式本地规划 Notebook，使用 `latitude_env_v2` 内核，按标记文件定位仓库根并直接导入第 06 项规划器。开篇通过 `02_Futures_Lakehouse/a00_03_notebook_schema_browser.py` 的 `display_schema_metadata()` 展示 `TRADE_CALENDAR_SCHEMA` 与 `FUTURES_BAR_CALENDAR_SCHEMA`，项目 DuckDB 四表则只读展示 `financial_futures_local_contract.py` 的列定义；不得伪造新的 Arrow silver 契约或为了展示创建数据库。
+- `plan_financial_futures_fetch.ipynb` 是唯一正式本地规划 Notebook，使用 `latitude_env_v2` 内核，按标记文件定位仓库根并直接导入第 06 项规划器。开篇通过 `02_Market_Data/a01_Collection/b00_03_notebook_schema_browser.py` 的 `display_schema_metadata()` 展示 `TRADE_CALENDAR_SCHEMA` 与 `FUTURES_BAR_CALENDAR_SCHEMA`，项目 DuckDB 四表则只读展示 `financial_futures_local_contract.py` 的列定义；不得伪造新的 Arrow silver 契约或为了展示创建数据库。
 - Notebook 采用单次 Run All 的线性流程：开篇环境与第 1—2 节契约，第 3 节自动消化 ZIP，第 4—8 节全白名单缺失、覆盖与分批预估，第 9 节定义远端模板，最后第 10 节输出结论或完整聚宽代码。默认 as_of=None、acceptance_contract_dates=None；首次没有 ZIP、历史回补和日常增量共用此入口。合约首尾日期只是包围范围，预览过滤不改变规划范围。
 - 聚宽导出模板直接保存在 Notebook 文本单元格，不为交付再生成独立 `.py`。最后第 10 节重新核对内存计划 SHA-256，内嵌压缩计划与协议常量，只在本地编译、不执行远端代码；非空计划提供可全选文本框及纯文本 MIME，空计划不调用 API 或覆盖文件。
 - 第 3 节只调用正式导入函数并展示带时间结果，不复制解包、事务或缺失算法；每轮开篇重载模块并清空旧计划、代码、报告及规划就绪标志。导入失败或未经过规划时最后一格拒绝生成；成功后同一次 Run All 自动继续规划。修改流程前归档原 Notebook 及用户输出，交付 Notebook 清除过期输出但保留用户空单元格，最后代码格始终位于末尾。
@@ -311,7 +311,7 @@ open, high, low, close, volume, money, open_interest
 - 记录目录已存在时必须停止，不得覆盖。`raw_output.txt` 首次落盘用户返回的可见文本并保留 BEGIN/END 外的异常输出；只有信封完整且 JSON 可解析时才从信封内原样提取 `result.json`。两份证据首次落盘后不可修改，并分别保存 SHA-256 sidecar；分析修订不得回写或重排原始结果。
 - `analysis.md` 必须分别记录报告初始化时间、本地记录时间、可获得时的消息接收时间、完整性、摘要、已确认事项、未决事项、门禁判定和下一探针改动。它只是可修订的实验解释，生产代码不得扫描本目录取得规则；五轮闭合后仍须把获接纳结论同步到本文件、README、策略配置和正式实现。
 - 每条记录必须关联执行时的探针版本和源码 SHA-256，并把用户实际执行的单元格源码作为不可执行的 `probe_source.py.txt` 证据快照及摘要一并保存；若历史运行缺少源码快照，必须如实记录可复现性缺口。默认交付方式是在对话中直接提供完整 Notebook 单元格，用户返回结果后再从已完成对话逐字提取该源码进入对应时间戳记录；不要求为了交付或执行预先创建一份独立 `.py` 文件。保存源码文本证据不改变代码归属。
-- 只有确有独立本地调试或复用需要时才创建探索性 `.py` 文件；此类尚未接纳的文件仍只能位于根级 `00_draft_collection_02/scripts`，必须在实验记录中注明实际路径，且已经执行的版本不得被下一版覆盖。历史第 01 轮 v2 保留为 `probe_joinquant_financial_futures_round_01.py`，从 v3 起采用版本化文件名。是否存在独立草稿文件不改变探针的有界读取、人工聚宽执行和证据留存要求。
+- 只有确有独立本地调试或复用需要时才创建探索性 `.py` 文件；此类尚未接纳的文件仍只能位于根级 `00_draft_collection_02/scripts`，必须在实验记录中注明实际路径，且已经执行的版本不得被下一版覆盖。查阅已完成探针时，使用对应执行记录中的 `probe_source.py.txt` 及其摘要；缺少源码的历史运行以记录中的可复现性缺口说明为准。第 01—04 轮已经核对源码快照的七份草稿执行副本已清理。是否存在独立草稿文件不改变探针的有界读取、人工聚宽执行和证据留存要求。
 - `partial_missing` 指请求块完整成功、确认没有截顶但来源返回数少于理论数；它与配额停止、异常中断或疑似截顶不同。只有第 03 项定义的前一种情况可以形成成功观察，实验报告和后续协议不得混用。
 - 任一轮出现环境差异、异常或反例时，先保留原始结构化输出并修订下一轮探针，不得为得到预期答案而静默删样本、换边界或放宽完成条件。只有五轮证据均闭合，才可同步本文件、README 和受影响配置并勾选第 04 项。
 

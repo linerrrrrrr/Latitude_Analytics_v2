@@ -1,407 +1,312 @@
 # 规范索引与同步要求
 
-- [AGENTS.md](AGENTS.md)：变量命名与最小改动、项目运行环境、根目录定位与规范路由的项目级强制规则。
-- [requirements.txt](requirements.txt)：标准 `latitude_env_v2`（Python 3.13）环境的项目直接依赖版本；GPU 深度学习依赖仍按文件中的可选说明单独配置。
-- [.gitignore](.gitignore) 与 [.gitattributes](.gitattributes)：代码和文档的 Git 收纳边界；排除本地数据、运行产物、备份及含凭据的只读旧文件，并固定 Notebook/Python 导出的 LF 与历史快照原始字节。已被 Git 跟踪的数据不会因新增忽略规则自动移除。
-- [.env.template](.env.template)：项目根目录定位代码、当前稳定采集统一正式起点，以及包含 `raw`、`silver`、`gold` 的正式湖仓根路径环境变量权威模板。
-- [02_Futures_Lakehouse/AGENTS.md](02_Futures_Lakehouse/AGENTS.md)：`E:\Latitude_Analytics_v2\02_Futures_Lakehouse` 整棵生产与运维目录树的目录级 Agent 规则入口，包含根级 `a00_01`—`a00_04` 支撑脚本编号、采集双轨、PythonExporter、`a00_02_sync_notebook_exports.py` 同步入口、正式 operations 路由及根级旧项目归档路由。
-- [03_Futures_Database/AGENTS.md](03_Futures_Database/AGENTS.md)：`E:\Latitude_Analytics_v2\03_Futures_Database` 整棵目录树的目录级 Agent 规则入口，以及来源异常 raw/silver 边界、正式湖与项目专属研究成果边界、数据字段命名、跨引擎类型、Schema metadata 单一来源与 Notebook 开篇 Schema 契约呈现的永久文本规范。
-- [03_Futures_Database/read_futures_lake_demo.ipynb](03_Futures_Database/read_futures_lake_demo.ipynb)：17 张稳定 silver 表的契约化读取示例；每张表必须由独立代码单元格演示；另含不计入 silver 表数的生意社 raw 原文与摘要核对示例。
-- [02_Futures_Lakehouse/README.md](02_Futures_Lakehouse/README.md)：19 个正式采集入口（含人工 b08）的数据采集链路、来源异常留存与验收的运行语义、双轨同步入口、Schema metadata 运行时读取、Notebook 开篇 Schema 契约呈现、表粒度、主键、分区与更新水位规范。
-- [02_Futures_Lakehouse/operations/AGENTS.md](02_Futures_Lakehouse/operations/AGENTS.md)：19 个正式环节的单项/批量人工启动、18 项日常快捷配置、维护工具白名单、detached worker、可见总控台、状态发布、失败停止、现场保留与人工核查边界的正式运维规范。
-- [02_Futures_Lakehouse/operations/README.md](02_Futures_Lakehouse/operations/README.md)：PySide6 采集工作台、a00 检查看板、a01/b01 日历结果表及 b02—b04 专属看板、原参数透传、运行前代码检查与完整导出同步、实时日志、只读参考快照及有界单批运行说明。
-- [04_Feature_Engineering/AGENTS.md](04_Feature_Engineering/AGENTS.md)：独立特征工程项目的双轨、silver 消费与当前结构迁移阻塞规范。
-- [04_Feature_Engineering/README.md](04_Feature_Engineering/README.md)：主力连续合约、log 双向复权、期限结构边界及当前 gold 实验工作流说明；当前仅完成结构迁移，不代表业务入口已经恢复运行。
-- [01_project_collection/china_futures_market_evolution_reproduction/AGENTS.md](01_project_collection/china_futures_market_evolution_reproduction/AGENTS.md)：中国期货市场演变方法复现项目的只读 silver 消费、方法说明路由与局部执行规则。
-- [01_project_collection/china_commodity_futures_intraday_volatility_forecasting_reproduction/AGENTS.md](01_project_collection/china_commodity_futures_intraday_volatility_forecasting_reproduction/AGENTS.md)：中国商品期货日内波动预测方法复现项目的只读 silver 消费、项目专属版本化研究成果、项目内长批次控制、固定研究口径、逐项 Notebook 工作方式与局部执行规则。
-- [01_project_collection/JQ_strategy/volatility_research/README.md](01_project_collection/JQ_strategy/volatility_research/README.md)：JQ_strategy 下波动率研究子项目的通用数学符号、文献映射、周期尺度与方法整理主入口；[READING_TUTORIAL.md](01_project_collection/JQ_strategy/volatility_research/READING_TUTORIAL.md) 按前置知识、逐步符号定义、手算与理解检查组织阅读教程；[supporting_materials/README.md](01_project_collection/JQ_strategy/volatility_research/supporting_materials/README.md) 定义一次 IM 研究支持附件的归档范围与证据定位，不把案例参数提升为通用规范。
-- [01_project_collection/JQ_strategy/financial_futures_data/AGENTS.md](01_project_collection/JQ_strategy/financial_futures_data/AGENTS.md)：JQ_strategy 金融期货人工聚宽取数、本地缺失检测、项目轻量数据库及正式湖只读边界的目录级规则。
-- [01_project_collection/JQ_strategy/financial_futures_data/README.md](01_project_collection/JQ_strategy/financial_futures_data/README.md)：金融期货固定名单文件人工传输闭环、正式文件路由及逐项建设状态。
-- [01_project_collection/JQ_strategy/financial_futures_data/financial_futures_collection_policy.py](01_project_collection/JQ_strategy/financial_futures_data/financial_futures_collection_policy.py)：JQ_strategy 项目局部中金所金融期货白名单、支持频率与当前聚宽数据就绪时点的唯一可执行来源。
-- [config/futures_lakehouse/futures_fact_collection_policy.py](config/futures_lakehouse/futures_fact_collection_policy.py)：日线、分钟线和逐品种交易所报告共用的国内期货事实采集白名单唯一权威来源；白名单只含明确列出的交易所—品种，不得把它解释为品种、合约、日历或研究宇宙。
-- [config/futures_lakehouse/futures_position_rank_special_cases.py](config/futures_lakehouse/futures_position_rank_special_cases.py)：已经人工核实的成交持仓排名来源特殊案例、完整坏载荷指纹、上期所权威原文摘要与校准值唯一配置来源；配置不调用 API、不决定是否写入。
-- [config/futures_lakehouse/external_market_entities.py](config/futures_lakehouse/external_market_entities.py)：外部市场日历与外部指数事实共用的请求实体、Eastmoney 指标映射及有效期唯一权威来源；配置不调用 API、不决定是否写入。
-- [config/futures_lakehouse/macro_release_entities.py](config/futures_lakehouse/macro_release_entities.py)：宏观发布日历、SHIBOR 与宏观事实共用的 25 个系列、来源列、宏观数值偏移、理论频率及版本化可用日规则唯一权威来源；配置不调用 API、不决定是否写入。
-- [config/jqdata_connection.py](config/jqdata_connection.py)：JQData 认证以及 Windows TUN 物理出口绑定的项目级共享连接边界；业务采集与是否写入仍由各业务入口负责。
-- [config/data_contracts.py](config/data_contracts.py)：17 张稳定 silver 数据湖 Schema（7 张日历维度表、10 张事实表）、表名/主键/分区 metadata 单一来源及 Pandas、Polars、Arrow 转换的可执行契约。
-- [02_Futures_Lakehouse/a00_03_notebook_schema_browser.py](02_Futures_Lakehouse/a00_03_notebook_schema_browser.py)：采集与研究 Notebook 共用的 Schema 只读展示实现，包含关键内容选择、完整内容折叠及显式启用的有界数据/raw 文件样例；Schema 来自 `config/data_contracts.py`，不定义第二份数据契约、不调用 API 或写入数据。
-- [02_Futures_Lakehouse/a00_04_staged_path_transaction.py](02_Futures_Lakehouse/a00_04_staged_path_transaction.py)：湖仓级 staging 路径安装与失败恢复实现；当前由 a01/b01、b02、b03、b04、b05、b06、b07、b08、a02/b01、b01a、b02、b03、a03/b01、b02、b03、b04 与 a04/b01、b02、b03 共用，业务合并、数据验收和共同回滚范围仍由环节决定。
-- [02_Futures_Lakehouse/operations/referance/snapshot_manifest.json](02_Futures_Lakehouse/operations/referance/snapshot_manifest.json)：本次 operations 重构前全目录只读 ZIP 的逐文件摘要清单；冻结证据，不是新的运行规范。
-- [00_draft_collection_02](00_draft_collection_02)：尚未经用户确认接纳为正式项目代码的脚本、测试、审计与验证工具的统一暂存目录。
-- [05_Old_Projects/AGENTS.md](05_Old_Projects/AGENTS.md)：根级旧项目只读归档规则；包含重建前采集实现、更早历史采集项目和旧特征工程项目。
-- 修改以上任一规范、模板或可执行契约前，必须检查其余索引项，并在同一次变更中同步所有受影响的描述、示例与代码。
-- 新增具有规范作用的文本时，必须将其加入本索引，并在其他相关规范文本中添加反向索引；不得形成无法从本索引发现的孤立规范。
-- 若不同规范之间存在冲突，必须先消除冲突再完成任务，不得选择性遵循其中一份。
+本文件定义全仓通用规则；目录业务细则由下列入口定义。修改索引中的规范、模板或可执行契约前，检查其余索引项，并在同一次变更中同步受影响的说明、示例和代码。新增规范须加入本索引及相关文件的反向索引；规范冲突必须先消除，不得选择性执行。
+
+- [仓库 README](README.md)：分区、正式入口与记录归属。
+- [本文件](AGENTS.md)：[写作与读者前提](#写作与读者前提)、命名、实现、环境及执行边界。
+- [环境说明](environment/README.md)：v2 重建、v1 回退、验证边界及环境材料收纳；[requirements.txt](environment/requirements.txt) 保存直接依赖与可选 GPU 安装说明；[alipai 说明](environment/alipai/README.md) 定义 SDK 依赖例外、验证入口与批次结果。
+- [.gitignore](.gitignore) 与 [.gitattributes](.gitattributes)：Git 收纳、敏感旧文件排除、Notebook/Python 的 LF 和历史快照字节保护。忽略规则不会移除已跟踪的数据。
+- [.env.template](.env.template)：根目录定位、统一采集起点和正式湖根路径。
+- [采集 AGENTS](02_Market_Data/a01_Collection/AGENTS.md)：采集目录全树规则、b00 支撑脚本、Notebook/Python 双轨与导出同步。
+- [采集 README](02_Market_Data/a01_Collection/README.md)：19 个正式入口的来源、粒度、更新水位、写入与验收。
+- [采集检查](02_Market_Data/a01_Collection/checks/README.md)：来源质量、API 行为与连接确认、采集代码本地测试及检查记录。
+- [湖仓 AGENTS](02_Market_Data/a02_Lake/AGENTS.md)：字段与类型、Schema metadata、raw/silver 边界、研究成果边界及 Notebook 契约展示。
+- [数据湖读取 Demo](02_Market_Data/a02_Lake/read_futures_lake_demo.ipynb)：17 张 silver 表逐表独立演示，另含生意社 raw 字节与摘要核对。
+- [operations AGENTS](02_Market_Data/a01_Collection/operations/AGENTS.md)：单项/批量授权、18 项日常配置、维护白名单、worker、监控与失败处置。
+- [operations README](02_Market_Data/a01_Collection/operations/README.md)：GUI、看板、参数、代码检查、完整导出同步、日志与历史查看。
+- [研究 AGENTS](04_Research/AGENTS.md) 与 [README](04_Research/README.md)：方法及派生编号、demo 引用、Notebook 代理、时间分区实验、本地／云端成果边界及 `referance/` 参考资料。
+- [研究 Notebook 加载器](04_Research/a00_notebook_loader.py)：按 `export` 标签加载同名 Notebook 定义，不执行未标记 demo，也不复制算法源码。
+- [市场演变复现规则](01_project_collection/china_futures_market_evolution_reproduction/AGENTS.md)：只读 silver、方法说明及逐项执行。
+- [日内波动预测复现规则](01_project_collection/china_commodity_futures_intraday_volatility_forecasting_reproduction/AGENTS.md)：固定研究口径、Notebook、版本化成果与项目内长批次。
+- [波动率研究入口](01_project_collection/JQ_strategy/volatility_research/README.md)、[阅读教程](01_project_collection/JQ_strategy/volatility_research/READING_TUTORIAL.md) 与 [支持附件说明](01_project_collection/JQ_strategy/volatility_research/supporting_materials/README.md)：分别定义通用符号与方法、学习顺序、一次 IM 研究的归档证据和适用边界。
+- [金融期货数据 AGENTS](01_project_collection/JQ_strategy/financial_futures_data/AGENTS.md) 与 [README](01_project_collection/JQ_strategy/financial_futures_data/README.md)：人工聚宽传输、缺失检测、项目数据库、正式湖只读及建设状态。
+- [金融期货采集政策](01_project_collection/JQ_strategy/financial_futures_data/financial_futures_collection_policy.py)：项目局部中金所白名单、频率与数据就绪时点的可执行唯一来源。
+- [国内期货事实政策](config/futures_lakehouse/futures_fact_collection_policy.py)：日线、分钟线及逐品种交易所报告共用的事实采集白名单；不定义品种、合约、日历或研究宇宙。
+- [成交持仓特殊案例](config/futures_lakehouse/futures_position_rank_special_cases.py)：已核实案例、完整坏载荷指纹、交易所摘要与校准值的唯一配置。
+- [外部市场实体](config/futures_lakehouse/external_market_entities.py)：请求实体、Eastmoney 映射与有效期的唯一配置。
+- [宏观发布实体](config/futures_lakehouse/macro_release_entities.py)：宏观日历、SHIBOR 与事实共用的系列、来源列、数值偏移、频率及版本化可用日规则。特殊案例、外部市场与宏观配置均不调用 API，也不决定是否写入。
+- [JQData 连接](config/jqdata_connection.py)：共享认证与 Windows TUN 物理出口绑定；业务采集和写入由入口负责。
+- [数据契约](config/data_contracts.py)：17 张稳定 silver 表（7 张日历维度表、10 张事实表）的唯一 Schema、表名/主键/分区 metadata 及 Pandas、Polars、Arrow 转换。
+- [Schema 浏览器](02_Market_Data/a01_Collection/b00_03_notebook_schema_browser.py)：共用的只读契约展示及显式启用的有界数据/raw 样例；不另定义契约、不调用 API 或写数据。
+- [路径事务](02_Market_Data/a01_Collection/b00_04_staged_path_transaction.py)：共用 staging 安装与失败恢复；业务合并、验收和共同回滚范围由环节决定。
+- [operations 参考快照清单](02_Market_Data/a01_Collection/operations/referance/snapshot_manifest.json)：重构前只读 ZIP 的逐文件摘要，属于冻结证据。
+- [实验草稿区规则](00_draft_collection_01/AGENTS.md)：探索 Notebook、配套输出目录、默认内嵌展示、显式导出及引用同步。
+- [草稿区](00_draft_collection_02)：临时文件及尚待用户确认去留、复用或最终归属的材料；处置遵循[草稿区与文件收纳规则](#草稿区与文件收纳规则)。
+- [旧项目 AGENTS](05_Old_Projects/AGENTS.md)：历史采集与特征工程项目的递归只读保护。
+
+# 写作与读者前提
+
+不要让读者替作者补全语境。本节适用于本仓库的研究报告、Notebook、技术文档与 AI Agent 规则。
+
+写作不是单纯把作者脑中的信息转成文字。只要文本用于交流，它就隐含了一个读者模型：读者是谁、已经知道什么、从哪里开始阅读、当前能看到什么，以及读这段文字是为了完成什么任务。
+
+很多所谓“文字脱节”，并不是句子语法错误，也不是术语太专业，而是作者调用了并未建立的读者前提。作者知道某件事，于是无意识地把“我知道”写成了“我们都知道”。
+
+## 三个关键概念
+
+- Audience model / 受众模型：文本究竟假定什么样的人正在阅读，而不能只笼统地写“面向工程师”“面向领导”。
+- Common ground / 共同基础：作者和读者在当前交流中可以合法视为已经共享的信息。作者自己的项目经历不自动属于共同基础。
+- Pragmatic presupposition / 语用预设：一句话在真正表达新信息以前，已经要求读者接受或识别的一组背景条件。
+
+基本约束：当前句子所依赖的前提，只能来自目标读者合理已有的知识、本文此前已经建立的信息、当前可感知环境，或明确指定的外部材料。
+
+## 写作时真正需要维持的是稳定的“读者模型”
+
+避免未经建立的读者前提，并不要求所有文档都从零解释所有知识。专业文档当然可以假定读者已经理解某些领域概念。例如面向量化研究人员的报告，没有必要重新解释什么是收益率、回撤或主力合约。
+
+真正需要明确的是：哪些知识允许被假定为已知，哪些信息必须由当前文本建立。
+
+写作前至少应确定：
+
+- 目标读者是谁：例如熟悉 Python 和期货市场，但第一次接触当前项目；
+- 允许预设什么：例如理解收益率、回撤、滚动窗口等通用概念；
+- 不得预设什么：例如旧版实现、内部会议、此前聊天记录、项目历史和未公开的命名约定；
+- 读者可能从哪里进入：从第一页顺序阅读，还是可能直接打开某个章节、Notebook 或文件；
+- 读者要完成什么任务：理解研究结论、复现实验、修改代码，还是执行项目规则。
+
+所谓“面向工程师”“面向研究员”往往仍然过于宽泛。真正能够约束写作的是对已有知识、未知背景、阅读入口和任务目标的明确规定。
+
+## 总约束与逐句检查
+
+写作前先建立稳定的读者模型和语境边界。明确读者已经知道什么、不知道什么，从哪里进入文本，为了什么任务阅读，以及哪些信息可以合理视为共享背景。
+
+全文不得无提示地提高读者的知识水平，也不得把作者本人拥有的项目历史、会议记录、工作过程或当前会话当成读者已经拥有的信息。
+
+逐句检查：
+
+- 这个概念，读者凭什么知道？
+- 这个“它、这里、上述、之前、继续”，读者凭什么确定指什么？
+- 这条规则依赖的条件是否已经写出来？
+- 这项背景属于目标读者合理已有的知识，还是只是作者自己恰好知道？
+- 如果拿掉当前聊天记录、会议历史、旧版本和作者本人，这句话是否仍然能够稳定解释？
+
+尤其避免：
+
+> “继续按照原来的方法。”
+>
+> “和上次一样。”
+>
+> “这里不再处理。”
+>
+> “按照现有逻辑即可。”
+>
+> “具体过程见之前内容。”
+
+这些表达并非绝对不能出现，但其参照对象必须已经被当前文本可靠建立。
+
+更一般地说：不要把作者的工作过程当成读者的理解路径。
+
+研究者可能经历：旧方案 → 讨论 → 修改 → Notebook → 某次运行 → 再修改 → 最终报告。
+
+但外部读者真正需要的通常是：研究对象是什么 → 为什么研究 → 如何研究 → 使用什么证据 → 得到什么结果 → 结论适用于什么范围。
+
+工程项目也是如此。开发者可能经历多次迁移、重构和目录调整，但新进入项目的人或 AI Agent 首先需要的是当前系统的结构、规则和边界，而不是先恢复整个开发历史。
+
+最终目标：每一次省略都有依据，每一次指代都有对象，每一次语境切换都先建立再使用。
+
+这样形成的文档，即使换读者、换入口、换时间甚至换一次 AI 会话，其核心含义仍然能够保持稳定。
+
+## 示例与解释
+
+以下三个示例说明写作规则的应用。示例中的样本数量、文档名、批次时间和目录路径用于解释表达问题，不构成本仓库的数据事实或目录约定。
+
+### Demo 1：研究报告面向外部读者，却写成了内部工作日志
+
+研究报告开篇的反例：
+
+> “本报告承接策略生成研究……”
+>
+> “分类依据为所有思维导图和60条策略清单。”
+>
+> “新上传的《固定区间研究》仅保存策略清单与任务预览……”
+>
+> “本报告实证部分读取此前交付包《回测总控》在2026年9月30日03:43批次保存的统计与曲线……”
+
+这些话对于刚刚完成这项工作的内部人员可能非常明确，但对于第一次拿到正式研究报告的外部读者，存在大量未经建立的预设：
+
+- 什么是“策略生成研究”，报告与它是什么关系？
+- “所有思维导图”具体是哪一些？
+- 什么叫“新上传”？谁上传给谁？
+- “此前交付包”是什么文档体系？
+- 为什么读者需要知道 03:43 这个运行批次？
+- “单元格未保存输出”是研究结论，还是作者制作报告时遇到的工作过程问题？
+
+根本问题：作者把“报告是怎样被制作出来的”误写成了“读者理解研究对象所需要知道的内容”。
+
+正式报告应该优先告诉读者：本报告研究如何对现有规则策略进行分类，并检验不同类别策略在统一回测条件下是否表现出可解释的收益差异。研究对象共包含60项策略规则；其中45项具有完整可用的回测结果，构成本报告的实证样本。其余策略因回测数据不完整，不参与当前绩效比较。
+
+如果确实存在数据来源限制，可以再写：本报告仅使用已经形成完整回测输出的样本，因此当前结论只适用于上述45项策略。这里保留真正影响结论边界的信息，删除“谁上传了哪个 Notebook、几点跑出的结果”这种生产过程噪声。
+
+给 AI 的约束：撰写正式报告时，默认读者没有参与研究过程。不要使用“此前交付”“新上传”“本次任务”“上一版”“03:43批次”等只有项目内部人员才能理解的过程性表述。先说明研究对象、问题、方法、样本和结论；只有当内部过程会改变证据可靠性或适用范围时，才将其转换为面向读者的数据限制说明。
+
+### Demo 2：Notebook 把项目历史当成当前说明
+
+例如：
+
+> 本 Notebook 参考旧版主力判定与拼接思路……
+>
+> 期限结构继续使用真实合约原始价格，不使用这里的累计复权因子。
+
+第一次进入 Notebook 的研究人员可能完全理解“主力合约”“期限结构”和“复权”这些专业概念，却仍然不知道：
+
+- “旧版”是什么；
+- 旧版究竟采用什么规则；
+- “继续”是在延续什么历史；
+- “这里的累计复权因子”是哪一个对象。
+
+关键区分：领域知识已知，不等于项目内部对象已经进入当前语篇。
+
+更适合入口文档的写法是：本 Notebook 从真实合约日线行情中构造主力连续序列。交易日 t 的主力合约只能使用 t−1 日及以前已经收盘的数据确定，以避免未来信息。连续序列会生成用于消除换月跳跃的复权价格；期限结构指标则始终使用各真实合约的原始价格，因为该指标需要保留同一时点不同合约之间的真实价差关系。
+
+最后如果需要，才补充：该规则由旧项目方案演化而来。
+
+给 AI 的约束：当前实现必须能够独立说明。“沿用旧版”“与之前一致”“继续采用”等历史关系只能作为补充，不能代替当前规则本身的定义。
+
+### Demo 3：不要把作者所处的情境，当成文本已经提供的信息
+
+路线指引很容易暴露这种问题：
+
+> 前行 200 米，在路口左转，再沿右侧道路前进。
+
+这句话只有在一些没有写出的条件成立时才足够明确：读者正站在作者预想的位置、面对预想的方向，并且是在现场阅读。
+
+普遍结构：作者拥有某个当前情境，于是误以为读者也拥有这个情境。
+
+同样的问题在研究、技术文档和项目规则中更加常见：
+
+> “这里继续使用之前的方法。”
+>
+> “按照现有方式处理即可。”
+>
+> “与上次一致，不再调整这一部分。”
+>
+> “保持当前目录结构。”
+
+写下这些话的人通常知道“这里”“之前”“上次”“当前”分别指什么，因为他刚刚修改过代码、参加过会议，或者正停留在某个目录、Notebook 或对话中。但换一个读者、换一个时间、换一个入口，这些信息就可能消失。
+
+例如在 AGENTS.md 中写：“保持现有方式，不要使用旧方案”。对于刚进入仓库的 AI Agent，这并没有形成一条稳定规则。它仍然需要自行判断：
+
+- “现有方式”具体是什么；
+- “旧方案”是哪一套；
+- 两者在哪里区分；
+- 规则适用于整个项目还是某个目录；
+- 什么行为才算违反这条规则。
+
+问题因此不只是“表达不够清楚”，而是文本产生了不必要的语境依赖：只有保留作者当时的工作现场、会话记录或项目历史，文本才能得到稳定解释。研究报告、技术文档和 Agent 规则尤其需要避免这种写法，因为它们往往需要跨越不同的读者、时间、会话和阅读入口继续使用。
+
+因此，应把真正影响理解和执行的条件写进文本，而不是要求读者恢复作者当时所处的情境。
+
+不要只写：继续使用原来的方法。
+
+应直接写清：主力合约判定只使用上一交易日及以前已经收盘的数据。
+
+不要只写：保持现有目录结构。
+
+应直接写清：新增策略统一放入 strategies/；每个策略对应一个 .py 文件，不新增按“人类可读/机器可读”划分的平行目录。
+
+这里涉及的仍然是共同基础（common ground）和指示（deixis）。像“这里”“之前”“当前”“原来”“继续”“同样处理”这样的表达，本身不能完全确定意义，需要借助上下文解释。问题发生在作者把只有自己掌握的上下文，误判成了作者与读者已经共享的上下文。
+
+给 AI 的约束：不要把当前会话、作者的工作过程、会议历史、默认阅读顺序或项目内部经验视为读者天然拥有的信息。使用“这里、上述、之前、继续、仍然、原来、现有方式、同样处理”等依赖语境的表达时，检查其对象是否能够仅凭当前文本确定。若不能，应直接写明对象、条件、规则和适用范围。
 
 # 变量命名与最小改动
 
 ## 判断顺序
 
-- 变量名首先服务于语义清晰、身份连续和类型可辨识，不以字符最少为目标。在不丢失重要业务身份、处理角色、契约状态或对象表示的前提下，再选择最紧凑的名称。
-- “最小改动”主要约束任务范围：不得因为修改一个工作流而顺带扫描、重命名无关模块。它不表示旧短名天然优先，也不禁止在当前已触及的完整工作流内，为消除含混、保持共同词根或显式区分表示而成组改名。
-- 不仅判断单个名称“能否看懂”，还要判断它在函数边界、较长流程、日志、异常、调试器和搜索结果中能否仍然独立表意。显式名称能稳定降低跳读或误用风险时，可以重命名已有的通用短名。
+变量名优先保证语义清楚、身份连续和类型可辨识，再考虑长度。名称应在函数边界、日志、异常、调试器和搜索结果中独立表意；不得为了字符少牺牲业务身份、处理角色或契约状态。
+
+“最小改动”约束任务范围，不保护含混旧名。可以在已触及的完整工作流中成组改名以消除歧义、统一词根和区分表示，不得扩展成无关模块的风格清洗。
 
 ## 业务身份、处理角色与对象表示
 
-* 同一业务实体在同一工作流中应保留稳定的业务词根。变量名优先按“角色或状态 + 业务实体 + 表示类型”组织，例如 `expected_calendar_df`、`validated_calendar_table`。
-* 对象表示或类型转换本身不改变业务身份和处理角色。DataFrame、Arrow Table、Dataset 之间转换时，默认只改变表示后缀，例如 `new_variety_calendar_df -> new_variety_calendar_table`；不得仅因 `pandas_to_arrow()` 等转换改称 `incoming_*`。
-* 只有来源、职责、生命周期或已保证的后置条件确实发生变化时，才新增或替换角色修饰词，例如 `calendar_table -> validated_calendar_table`。不得用近似含义的词替换来伪装阶段变化。
-* 跨越具有独立契约的函数或组件边界时，可以按该组件中的处理角色命名，例如调用侧的 `new_calendar_table` 可作为 `commit_partition(incoming_table=...)` 传入。
-* 同一实体存在多种表示或作用域较长时，应明确使用 `*_df`、`*_table`、`*_dataset`、`*_schema`、`*_path`、`*_dir` 等后缀。避免 `data`、`result`、`frame`、`checked` 等无法表达业务身份的泛化名称。
+- 同一实体保持稳定业务词根，优先使用“角色或状态 + 业务实体 + 表示类型”，如 `expected_calendar_df`、`validated_calendar_table`。
+- 表示转换不改变业务身份和角色。例如 `new_variety_calendar_df -> new_variety_calendar_table` 只换表示后缀，不因 `pandas_to_arrow()` 改称 `incoming_*`。只有来源、职责、生命周期或已保证的后置条件变化，才改变角色词。
+- 跨独立契约边界可以使用组件内的角色名，例如调用侧 `new_calendar_table` 传给 `commit_partition(incoming_table=...)`；不得用近义词伪造阶段变化。
+- 多种表示并存或作用域较长时，明确使用 `*_df`、`*_table`、`*_dataset`、`*_schema`、`*_path`、`*_dir`。避免无法表达身份的 `data`、`result`、`frame`、`checked`。
 
 ## 已确认的项目偏好
 
-- 在 `a01/b01_trade_calendar` 这类同时包含 Pandas、Arrow、Dataset、Schema、多个日历状态和提交阶段的工作流中，`calendar_table`、`new_calendar_df`、`validated_calendar_table`、`existing_calendar_dataset`、`existing_calendar_table`、`existing_calendar_schema`、`requested_calendar_df`、`expected_calendar_df`、`pending_calendar_df`、`valid_calendar_dates`、`incomplete_calendar_dates` 和 `expected_calendar_signature_by_date` 都是合理且应保留的显式命名。不得仅为恢复旧名、缩短名称或减少类型后缀而改回 `table`、`frame`、`checked`、`existing`、`valid_dates` 或 `expected_signature_by_date`。
-- 在 `a01/b02_futures_variety_calendar` 中，`pandas_to_arrow()` 只把同一份新生成的品种日历从 Pandas 表示转换为符合权威 Schema 的 Arrow 表示，因此应保持 `new_variety_calendar_df -> new_variety_calendar_table` 的身份连续性。除非 `incoming` 在该工作流中另有可独立说明的来源或职责，否则不得改称 `incoming_variety_calendar_table`。
-- 上述例子表达的是项目偏好，不是要求把其他文件中所有短名立即批量替换。新任务只在其授权和实际触及的代码边界内应用这项偏好。
+- b01/c01 中的 `calendar_table`、`new_calendar_df`、`validated_calendar_table`、`existing_calendar_dataset`、`existing_calendar_table`、`existing_calendar_schema`、`requested_calendar_df`、`expected_calendar_df`、`pending_calendar_df`、`valid_calendar_dates`、`incomplete_calendar_dates`、`expected_calendar_signature_by_date` 均有独立语义；不得仅为缩短或恢复旧名而改回 `table`、`frame`、`checked`、`existing`、`valid_dates`、`expected_signature_by_date`。
+- b01/c02 的 `pandas_to_arrow()` 保持 `new_variety_calendar_df -> new_variety_calendar_table`；除非存在独立可说明的来源或职责，不改称 `incoming_variety_calendar_table`。
+- 这些偏好只应用于授权且实际触及的代码，不要求立即改遍其他文件。
 
 ## 改名边界与偏好校准
 
-- 内部函数参数可以为业务身份或对象表示而改名，例如 `table -> calendar_table`、`frame -> new_calendar_df`；必须同时检查并更新函数体、文档、测试和所有关键字参数调用。CLI 选项、配置键、Schema metadata、数据字段和对外稳定 API 仍需优先保持兼容；如果必须改名，要明确处理迁移边界。
-- 在一个已触及的函数或工作流中，为了稳定共同词根和成对角色，可以一次同步相关名称；不得把这项授权扩展成跨无关函数、脚本或目录的风格清洗。
-- 当用户要求制定命名规范、评审一组系统性改名，或同一处同时存在两种合理风格而用户偏好还不明确时，应优先展示当前代码中的多组具体对比例子并请用户说明偏好，而不是用抽象的“简洁”或“明确”标签替用户选择。例子应覆盖函数参数、业务词根、阶段修饰词、对象表示后缀、集合复数、映射方向、路径和计数命名等边界。
-- 偏好校准可以分多轮进行。每一轮都要沿用用户已确认的选择，只询问新的边界或反例；一旦形成可复用的稳定偏好，应在用户授权下回写相应规范，避免后续 Agent 重复猜测或反复询问同一问题。单个局部且低风险的命名决策可以直接依照已确认偏好执行，不必为每个变量停下询问。
+- 内部参数改名须同步函数体、文档、测试及所有关键字调用。CLI、配置键、Schema metadata、字段和稳定 API 优先兼容；必要改名须处理迁移边界。
+- 制定命名规范、评审系统性改名，或两种合理风格之间的偏好尚不明确时，用当前代码的具体对比例子向用户校准；覆盖参数、业务词根、角色、表示后缀、集合复数、映射方向、路径和计数，不能只问抽象的“简洁还是明确”。
+- 多轮校准沿用已确认选择，只询问新边界；形成可复用偏好后，在用户授权下回写规范。局部低风险命名可依已确认偏好执行，不必逐个询问。
 
 # Simplicity, readability, and abstraction rules
 
-## Core principle
+Optimize for top-to-bottom understanding, modification, debugging, and deletion. Prefer explicit code, shallow calls, and local readability over DRYness, short functions, or theoretical elegance.
 
-Optimize for code that can be understood by reading it from top to bottom.
+## Direct implementation
 
-Prefer explicit implementation, shallow call chains, and local readability over
-DRYness, small functions, or additional abstraction.
-
-Do not optimize the codebase for theoretical elegance. Optimize it for
-understanding, modification, debugging, and deletion.
-
-Share stable rules, invariants, contracts, and genuinely independent operations.
-Do not share ordinary sequential implementation steps merely to remove a small
-amount of duplication.
-
-## Prefer direct code
-
-- Prefer direct library calls over project-local wrappers when the library API
-  is already clear and stable.
-- Do not create a helper merely to wrap:
-  - a single library call;
-  - a trivial expression;
-  - simple object construction;
-  - a short transformation;
-  - a small validation that is only relevant to one caller.
-- Straightforward calls to libraries such as PyArrow, Pandas, Polars, `pathlib`,
-  `shutil`, NumPy, and similar dependencies should normally remain visible at
-  the point where they are used.
-
-Prefer:
-
-```python
-dataset = ds.dataset(
-    table_path,
-    format="parquet",
-    partitioning=partitioning,
-)
-```
-
-over:
-
-```python
-dataset = open_arrow_dataset(table_path, partitioning)
-```
-
-when the wrapper adds no meaningful semantics.
-
-## Optimize for linear readability
-
-- A complete operation should normally be understandable by reading its owning
-  function sequentially from top to bottom.
-- Do not extract sequential implementation steps into helpers merely to shorten
-  the parent function.
-- Do not create helpers merely to give a block of code a name.
-- When a sequential block needs explanation, prefer a short comment over moving
-  the block into another function.
-- Prefer one longer coherent function over several small functions when the
-  smaller functions are only stages of the same workflow.
-- Function length is not a reason to refactor by itself.
-- A 100-line function implementing one coherent sequential operation may be
-  preferable to ten 10-line helpers that require constant navigation.
-
-## Minimize navigation
-
-- Avoid making the reader jump between functions to understand ordinary control
-  flow.
-- Keep internal call chains shallow.
-
-A normal implementation should preferably look like:
-
-```text
-operation
-    -> external library
-```
-
-or:
-
-```text
-operation
-    -> one meaningful project abstraction
-    -> external library
-```
-
-Avoid:
-
-```text
-operation
-    -> helper
-    -> utility
-    -> adapter
-    -> wrapper
-    -> external library
-```
-
-- If understanding a helper requires immediately opening its implementation,
-  consider inlining it.
-- A helper should be worth navigating to.
-
-## Duplication is acceptable
-
-- DRY is not a primary objective.
-- Duplication alone is not a reason to refactor.
-- Prefer duplicated straightforward implementation over additional indirection.
-- Prefer repeating simple library calls in multiple modules over introducing a
-  shared wrapper solely to remove repetition.
-- It is acceptable for multiple modules to contain similar 5-30 line blocks when
-  keeping those blocks local makes each workflow easier to understand.
-- Do not extract common code merely because two implementations look similar.
-- Abstract semantic duplication, not textual duplication.
-- Refactor duplication only when maintaining the duplicated implementations has
-  become a concrete problem.
-
-Prefer duplicated implementation over duplicated navigation.
+- Keep clear library calls visible at their use site. Do not wrap a single call, trivial expression, simple construction or transformation, or caller-specific validation merely to name it.
+- Keep a coherent operation and its ordinary sequential steps together. Use a short comment when explanation is needed; function length alone does not justify splitting. One coherent 100-line function can be clearer than ten navigational steps.
+- Prefer `operation -> library`, or `operation -> one meaningful abstraction -> library`. If a helper requires immediately opening its implementation to understand ordinary control flow, consider inlining it.
+- Straightforward duplication is acceptable, including similar 5–30 line blocks. Share stable rules and semantic invariants; do not extract steps merely because their text repeats. Deduplicate when maintenance has become a concrete problem.
 
 ## When abstraction is justified
 
-Create a helper, shared module, class, wrapper, or other abstraction only when it
-has a concrete current responsibility.
+A helper, module, class, or shared boundary must have a current responsibility: enforce a contract or invariant; perform an independent domain/technical operation; isolate substantial complexity or dangerous/unstable external effects; serve multiple independent real callers with the same meaning; or provide a boundary independently useful to test, reason about, or replace.
 
-Good reasons include:
+A one-caller helper deserves scrutiny: inline it when it is only a stage of its caller. Do not build chains of `_prepare_*`, `_build_*`, `_process_*`, and `_finalize_*` without independent semantics. For example, a shared `validate_arrow_table(table, schema)` enforces a contract; `make_hive_partitioning(fields)` merely wrapping `ds.partitioning(...)` usually does not.
 
-1. It enforces an important project-wide invariant or data contract.
-2. It represents a genuinely independent domain or technical operation.
-3. It isolates substantial complexity that would obscure the owning workflow.
-4. It isolates dangerous or unstable external side effects or APIs.
-5. It has multiple independent real callers with the same semantic meaning.
-6. It provides a boundary that is independently useful to test, reason about, or
-   replace.
+Shared utilities must hold stable concepts, not miscellaneous convenient snippets. Do not create `utils.py`, `helpers.py`, `common.py`, managers, providers, factories, adapters, registries, or services solely for possible reuse. Preserve useful large-scale boundaries for schemas, domain models, configuration, contracts, protocols, and substantial external-system interactions; each new module and dependency edge still has a cost.
 
-Do not create abstractions for hypothetical future reuse. Do not create an
-abstraction merely because code could be extracted.
+## Data workflows and refactoring
 
-## Helpers
+Keep file operations visible in their owning workflow: validate input, stage and write, read back, validate, back up and install, roll back on failure, then clean up. Do not turn each stage into a helper just to shorten the function.
 
-- A helper should represent an independent operation, not merely one step of
-  another operation.
+Within authorized changes, prefer removing unnecessary wrappers, minimizing changed files and dependencies, and preserving existing clear boundaries. Do not redesign unrelated code or build for hypothetical future requirements.
 
-Good:
-
-```python
-validate_arrow_table(table, schema)
-```
-
-when it defines and enforces the project's Arrow data contract.
-
-Potentially good:
-
-```python
-dataset_partitions(path, fields)
-```
-
-when it performs a complete operation such as discovering logical Hive
-partitions from dataset fragments.
-
-Usually unnecessary:
-
-```python
-make_hive_partitioning(fields)
-```
-
-when it only wraps:
-
-```python
-ds.partitioning(pa.schema(fields), flavor="hive")
-```
-
-- A helper with only one caller should be treated skeptically.
-- If a one-caller helper only contains part of the caller's sequential workflow,
-  inline it by default.
-- Do not decompose a function into `_prepare_*`, `_build_*`, `_create_*`,
-  `_process_*`, `_finalize_*`, or similar helpers unless those operations have
-  genuinely independent semantics.
-
-## Shared utilities
-
-- Do not move code into a shared utility module merely because it is reusable.
-- Shared utilities should contain stable concepts, not miscellaneous convenient
-  snippets.
-- Prefer keeping implementation local until there are multiple independent real
-  callers and the shared semantic meaning is clear.
-- Share rules and invariants; keep ordinary workflow steps local to the workflow
-  that owns them.
-- Do not create generic `utils.py`, `helpers.py`, `common.py`, manager, provider,
-  factory, adapter, registry, service, or similar layers without a concrete
-  architectural reason.
-- A new file or module is a dependency boundary and therefore has a cost.
-
-## Large-scale structure
-
-Preserve clear large-scale boundaries.
-
-It is appropriate to centralize things such as:
-
-- schemas;
-- data contracts;
-- domain models;
-- configuration;
-- project-wide invariants;
-- genuinely shared protocols;
-- substantial external-system boundaries.
-
-Do not confuse large-scale modularity with fine-grained decomposition. A project
-may have clear modules while still keeping the implementation inside each module
-direct and linear.
-
-## Data and I/O code
-
-For data pipelines, prefer exposing the actual sequence of operations. Opening
-the workflow that owns a file operation should normally show the relevant
-PyArrow, `pathlib`, `shutil`, or DataFrame calls directly.
-
-For example, a write workflow may directly show:
-
-```text
-validate input
--> create staging path
--> write with PyArrow
--> read written data back
--> validate
--> move old data to backup
--> move staging data into place
--> rollback on failure
--> cleanup
-```
-
-Do not automatically turn each stage into a separate helper. The sequence itself
-is often the most useful documentation of how the system works.
-
-## Refactoring rules
-
-When modifying existing code:
-
-- Prefer simplifying existing structure over introducing new architecture.
-- Prefer removing unnecessary wrappers and indirection.
-- Minimize the number of files involved in a change.
-- Minimize new dependency edges between modules.
-- Preserve existing clear architectural boundaries.
-- Do not redesign unrelated code.
-- Do not introduce abstractions for possible future requirements.
-- Do not split code merely to satisfy an arbitrary function-length target.
-- Do not deduplicate straightforward code unless duplication is causing a real
-  maintenance problem.
-
-## Decision rule
-
-Before creating any helper, class, wrapper, shared function, or module, ask:
-
-1. Does this abstraction represent something meaningful on its own?
-2. Does it remove substantial complexity rather than merely move code elsewhere?
-3. Does it enforce an important invariant?
-4. Is it independently reused by real callers?
-5. Will the caller become easier to understand without immediately opening the
-   abstraction?
-
-If the answer to all of these is no, keep the code inline.
-
-## Preferred implementation order
-
-When several designs are valid, prefer them in this order:
-
-1. Direct linear code using the underlying library.
-2. Direct linear code with small explanatory comments.
-3. A meaningful independent helper where necessary.
-4. A shared abstraction with demonstrated reuse or invariant value.
-5. Additional architectural layers only when clearly required.
-
-Do not move down this list without a concrete reason.
+Choose direct library code first, then explanatory comments, an independently meaningful helper, a demonstrated shared abstraction, and only then additional layers. Move beyond direct code only for one of the current responsibilities above.
 
 # 项目运行环境
 
-- 本仓库的标准 Python 环境是名为 `latitude_env_v2` 的 Conda 环境，使用 Python 3.13；当前工作站版本为 3.13.15。
-- 旧环境保留为 `latitude_env_v1`（Python 3.11.15），用于保留旧依赖与回退；当前采集、研究和 Notebook 导出使用 `latitude_env_v2`。历史归档、实验记录和已有输出中的原 `latitude` 名称及路径保留为当时的执行证据；包含解释器路径及库版本指纹的研究成果仍按各项目契约验收，环境改名或升级不等于历史成果已在新环境重新验收。
-- 在本工作站上，使用 `E:\anaconda3\envs\latitude_env_v2\python.exe` 运行 Python，或使用 `conda run -n latitude_env_v2 python`。
-- 不要根据裸 `python` 或裸 `pip` 的结果判断依赖缺失；它们可能指向 Conda 的 `base` 环境。
-- 报告环境或依赖问题前，先输出 `sys.executable`，并使用标准解释器检查相关包。
-- 使用标准解释器执行 `python -m pip`，不要使用裸 `pip`。
-- 运行 `E:\anaconda3\envs\latitude_env_v2\python.exe 02_Futures_Lakehouse\a00_01_verify_runtime.py`，验证当前运行环境及核心 DataFrame 依赖。
+- 开发、采集、研究、Notebook 与 alipai 本地入口统一使用 `latitude_env_v2`。版本、解释器、重建顺序、依赖例外、v1 回退和历史成果验收边界见[环境说明](environment/README.md)。
+- 判断依赖问题前先输出 `sys.executable`，再用 v2 解释器运行 `python -m pip` 或检查包；不得依据可能指向 base 的裸 `python` / `pip` 判断缺失。
+- 环境检查：`E:\anaconda3\envs\latitude_env_v2\python.exe 02_Market_Data\a01_Collection\b00_01_verify_runtime.py`。
 
 # 长时间任务的人工启动、后台执行与可见监控
 
-- 预计运行超过 10 分钟的任务，只能由用户在当前交互中明确授权为一个边界清楚的批次。允许把该批次交给与 Codex 回合解耦的 detached/background worker，但不得据此创建定时任务、常驻守护服务、自动恢复或未来批次授权。
-- 预计运行时长、正式湖写入或采用 detached/background worker，均不自动触发非正式小样本、测试湖演练或仅因运行时长追加的 dry-run。此类步骤属于可选检查，只有用户在当前交互中明确要求时才执行；用户要求“可选时不要检查”时必须跳过，不得把未执行样本作为阻塞正式批次的理由。
-- 后台 worker 必须同时配有独立、用户可见且不依赖 LLM 的 Terminal 窗口、pane，或由所属工作流规范明确规定的独立总控台窗口，持续显示当前阶段、可量化进度、累计耗时、心跳新鲜度和失败信息；仅写日志文件不构成可见监控。
-- worker 和 monitor 都不得要求 Codex 回合保持活动。Codex 只做一次有界健康检查；确认 worker、业务子进程、心跳和可见 monitor 均正常后，必须立即结束回合，不得用 sleep、进程轮询或 tail 日志维持 Agent 存活。
-- worker 不得自动重试。普通失败、配额停止或监控异常都必须停止后续阶段，保留状态、日志和事务证据，等待操作者核查后显式决定是否启动新的有界批次。
-- Windows monitor 读取原子状态文件时，必须使用允许 `ReadWrite` 与 `Delete` 的文件共享方式，读取后立即释放句柄；禁止用会阻塞 `os.replace` 的默认独占/非删除共享读取持续轮询状态文件。2026-08-21 的样本运行曾因 monitor 与 worker 对 `status.json` 发生共享冲突，导致业务仍正常时控制面报 `WinError 5` 并停止，此项是据此冻结的强制边界。
-- worker 的状态发布必须采用同目录临时文件、flush/fsync、原子替换；只允许对状态文件替换时的 Windows `WinError 5/32` 做短时有界重试。该控制面重试不属于业务重试，不得据此重试 API、阶段或事务。状态发布最终失败时，worker 必须终止当前业务子进程并保留现场，不能留下失去监控的孤儿任务。
+- 预计超过 10 分钟的任务须由用户在当前交互中明确授权一个有清楚边界的批次。可使用与 Codex 回合解耦的 detached/background worker；这不授权定时任务、常驻守护、自动恢复或未来批次。
+- 时长、正式湖写入或后台执行不自动要求小样本、测试湖或追加 dry-run。此类可选检查只在当前交互明确要求时执行；用户要求跳过时必须跳过，不得以未做样本阻塞正式批次。
+- worker 必须配独立、可见且不依赖 LLM 的 Terminal、pane 或所属工作流规定的总控台，持续展示阶段、可量化进度、耗时、心跳新鲜度和失败信息；仅写日志不算监控。
+- worker 和 monitor 不得依赖 Codex 回合存活。只做一次有界健康检查，确认 worker、业务子进程、心跳和可见 monitor 正常后立即结束回合；不用 sleep、轮询或 tail 维持 Agent。
+- worker 不自动重试。普通失败、配额停止或监控异常须停止后续阶段、保留状态/日志/事务证据，由操作者核查后显式决定新的有界批次。
+- Windows monitor 读取原子状态文件须允许 `ReadWrite | Delete` 共享，并立即释放句柄，不能阻塞 `os.replace`。状态发布使用同目录临时文件、flush/fsync 和原子替换；只对该替换的 `WinError 5/32` 短时有界重试，不扩展到 API、业务阶段或事务。发布最终失败须终止业务子进程并保留现场。
 
-# 草稿脚本与测试收纳规则
+# 草稿区与文件收纳规则
 
-- 项目根目录不得新建或恢复 `scripts`、`tests` 目录；原有内容统一暂存于 `00_draft_collection_02/scripts` 和 `00_draft_collection_02/tests`。
-- 未经用户明确确认正式归属的新脚本、测试、一次性迁移代码、审计工具与验证工具，必须先放入 `00_draft_collection_02`，不得散落在项目根目录或任意业务子目录。
-- 将 `00_draft_collection_02` 中的代码提升到正式目录前，必须由用户明确确认目标文件及归属；不得由 Agent 自行认定为正式项目代码。
-- 移入草稿区不等于用户已经接受该代码。若既有正式入口仍引用被移动文件，必须同步修正路径以避免断链，并在审计结果中明确列出该依赖，等待用户决定保留、改造或移除。
-- 审计发现的其他疑似未获接受脚本，只能先报告清单；未经用户对具体目标授权，不得继续移动、删除或改写。
+`00_draft_collection_02` 是流动的暂存区，收纳临时文件，以及尚未由用户决定去留、复用或最终目录的材料。其中既可能有用完即可丢弃的一次性文件，也可能有需要保存的数据源质检、实验依据或可复用代码；位于草稿区本身不代表材料没有价值。
+
+- 用途完成后，Agent 应说明具体材料的用途、结果、保存或复用价值及建议去向，由用户确认其重要性、是否保留或删除、是否复用及最终收纳目录。一次性验证已经完成，不构成自动删除依据。
+- 用户确认删除的材料才可删除；确认保留的证据或复用文件，在最终目录确定后移出草稿区。已有明确授权的具体文件或批次按授权范围执行，无需重复确认；未决定的材料继续暂存，Agent 不自行接纳、删除或安排永久归属。
+- 全部待办材料完成处置且没有新增材料时，草稿区应不留文件或子目录。实际工作不断产生新材料，允许暂时非空；不得为了清空目录跳过用户确认，也不得把暂存位置当作最终收纳位置。
+
+- 分区结构见 [README](README.md)：市场数据第二层固定为 `a01_Collection`、`a02_Lake`；GUI 留在采集目录，正式湖根不另加 `futures_lake` 一层。 采集目录的编号按层级递进：`a01_Collection/bNN_业务组/cNN_环节`；与业务组同层的支撑文件使用 `b00_NN`，具体入口见采集规范。
+- 已确定所属项目的历史、日志、状态及验收记录归产生它们的项目。采集运维使用 `02_Market_Data/a01_Collection/operations/run_history/`；研究记录归所属研究项目。草稿区不得充当正式工作流长期日志仓库。
+- `00_draft_collection_01/` 中的实验工作遵循[实验草稿区规则](00_draft_collection_01/AGENTS.md)，包括 Notebook 与配套输出收纳、默认展示、导出和跨 Notebook 引用；目录业务细则不在根文件重复定义。
+- 根目录不得新建或恢复 `scripts/`、`tests/`。尚未确认归属的新脚本、测试、一次性迁移及审计验证工具先放 `00_draft_collection_02`；脚本和测试按需使用其中的 `scripts/`、`tests/`，不预建或永久保留空目录，不散落在业务目录。
+- 已接纳的数据源质量与连接检查归 `a01_Collection/checks/`；来源检查与采集代码的本地测试统一归其 `tests/`，来源检查结果归其 `results/`。`operations/` 只收纳 GUI 及直接支撑它的代码、资源，其测试归 `operations/tests/`、运行记录归 `operations/run_history/`。采集维护历史包保存在 `05_Old_Projects/collection_maintenance_20261002.zip`，保留包内原路径和摘要，不从包内导入代码。
+- 移入草稿不等于接纳：既有入口引用被移动文件时，须修正路径并报告依赖，待用户决定保留、改造或移除。审计发现其他疑似未接纳脚本时先报告，未获具体目标授权不得移动、删除或改写。
 
 # 项目根目录定位约定
 
-- `.env.template` 中记录的项目根目录定位约定，是 AI 修改本仓库时必须遵循的权威规范。
-- 从子目录运行的代码如果需要先定位项目根目录，再导入 `config.settings.settings`，必须使用下面的标记文件搜索方式。不要引入其他项目根目录定位方法。
-
-```python
-import pathlib
-import sys
-
-project_markers = [".git", ".env", "config/settings.py"]
-current_path = pathlib.Path.cwd().resolve()  # 当前工作目录
-
-for candidate_root in [current_path, *current_path.parents]:
-    if all((candidate_root / marker).exists() for marker in project_markers):
-        sys.path.insert(0, str(candidate_root))
-        break
-else:
-    raise RuntimeError("未找到项目根目录")
-
-from config.settings import settings
-```
+以 [.env.template](.env.template) 的代码为唯一定位方式：从当前工作目录向父目录查找同时包含 `.git`、`.env`、`config/settings.py` 的目录，加入 `sys.path` 后再导入 `config.settings.settings`；找不到则报错，不另建定位实现。
 
 # 正式期货湖仓定位、raw 归档与 silver 自动更新契约
 
-- `.env` 的 `FUTURES_LAKE_ROOT` 是正式期货湖仓根目录的唯一配置来源；来源原文与证据归档、稳定表和实验性输出分别位于其 `raw`、`silver`、`gold` 子目录。生产代码通过 `config.settings.settings.futures_lake_root` 引用，不得另写一份正式路径常量。该路径约定不构成对 gold 表集合、字段、Schema、组织方式或研究方法的统一定义。
-- 来源异常的 raw 证据留存、silver 验收和完成状态是不同语义；通用边界以 `03_Futures_Database/AGENTS.md` 的“来源异常留存与 silver 验收”条款为唯一文本权威。raw 留存不等于 silver 通过，目录级规则不得把二者合并。
-- 生意社国内现货基差链路长期只归档 HTTP `response.content` 原始字节及其 SHA-256 sidecar，不解析页面、不提取字段，也不生产结构化现货基差事实。正式路径固定为 `raw/100ppi/domestic_spot_basis/year=YYYY/month=MM/observation_date=YYYY-MM-DD/{response.html,response.sha256}`。HTTP 200 的任意响应内容在两文件正式复读并核对摘要后，都回写外部市场日历为 `success`、`record_count=1`、`passed`；不得根据空正文、HTML 结构或业务内容另作质量判断。
-- 生意社原文待办集合定义为：`上游 required 日期 −（原文字节与 SHA-256 sidecar 共同完整且外部市场日历状态完整的日期）`。原文归档完整但日历状态缺失或陈旧时，只从正式 raw 复读证据无 API 修复日历；原文缺失或摘要不一致才重新请求。页面结构监测、历史重采、解析、字段提取和结构化事实生产均属于未来另行确认的独立项目。
-- `a02/b01a_position_rank_special_case_calibration` 是 b01 与 b02 之间的正式特殊案例证据环节。它只处理 `config/futures_lakehouse/futures_position_rank_special_cases.py` 明确列出的案例：正式 raw 证据缺失时各请求一次冻结的交易所 URL，只有 HTTP 成功、响应 SHA-256、目标合约及完整 Top 20 校准值同时与配置一致才原子提交 `raw/shfe/position_rank_special_cases/<case_id>/{response.dat,response.sha256,calibration.json}`；证据已存在时只复读，不联网。该环节不写 silver、不扫描未配置异常、不自动推断新案例，也不进行业务重试。
-- `a02/b02` 只在配置指定格点的 JQData 成交量榜完整 20 行与冻结坏载荷逐值一致时，才要求上述正式 raw 证据并把该榜整组替换为交易所权威 Top 20；来源已等于权威值时原样通过，任何第三种载荷都硬失败。持买仓、持卖仓和其他格点不受影响；完成后的报告日历必须永久保留包含案例 ID 与交易所原文摘要的 `success + warning` 校准证据，日常不得因此重拉。
-- `fact_domestic_spot_basis_daily` 不再属于稳定 silver 契约；若旧正式湖中仍存在该表，当前采集入口和契约变更不得自动删除、迁移或改写它，应留待用户另行决定处置。
-- 除下述已迁移的 a01 日常增量链路和 `a02/b03_warehouse_receipt` 外，silver 业务表的默认更新集合仍定义为：`上游当前有效格点 − 下游已经完整落盘的格点 = 本次自动更新范围`。空目录只是下游完整格点集合为空的普通情形，必须由同一自动入口自然得到全量建表，不另设一套生产日期范围。
-- a01/b01—b04 的默认日常路径只处理可信正式水位之后的尾部新增；b01 以正式最大自然日推进，b02/b03 分别只消费上游新增交易日，b04 只消费 b03 尾部新增结构。历史内部缺口、删除、来源修订和结构修订只由显式 `--full` 慢路径发现；b03 仍保留成对日期质检。b03 日常遇到无有效 `trade_time` 的来源合约只 warning、跳过并推进水位，后续由显式全量审计统计。
-- a01/b05—b06 每次仍按当前白名单窄列向量评估全部理论格点，但日常 API 待办只由 `is_fetch_required=true AND is_fetch_completed=false` 形成；正式成功提交后的 `is_fetch_completed`、成功批次、条数和质量是可信快照，不从全历史事实重新证明或修复。白名单扩大自动回补从未完成格点；缩小保留既有事实与完成/质量/b07 证据，只停止未来采集并清零当前缺失；再次纳入的已完成格点不重复拉取。
-- 每张 silver 表的生产者仍对转换结果和自己的 dirty 完整叶承担完整业务质量验证。正式提交成功即证明该表的主键、水位、覆盖和其他权威业务约束已经成立；clean 历史和下游消费者必须信任这项证明，不得在日常重新扫描或复算。a01/b01—b07 与 `a02/b03` 已采用 dirty 叶单次业务校验，staging 和正式安装只复读物理字段、类型、nullable、表名、主键、分区及行数/主键摘要；描述性 metadata 差异以当前 `config/data_contracts.py` 为权威，不触发历史 Parquet 重写。尚未采用这一提交策略的入口继续遵守各自现有完整复读契约。
-- 写入正式 silver 时，原则上禁止操作者用日期、月份等截断生产水位。a01/b01、b02、b04 的 `--full` 与显式日期互斥，且只有 `--full --write` 允许正式全历史维护；a01/b03 的成对日期或 `--full` 只定义来源双向质检范围，`--write` 仅提交发现的差异；a01/b07 的 `--force --write` 必须带日期范围或合约范围；a01/b08 只能显式 `--confirm-full-quality --write` 人工运行。其他入口的显式范围仍仅可用于只读检查，或写入明确不同于正式湖的临时/测试湖。
-- 当前正式采集拓扑固定为 17 张稳定 silver 表、19 个正式采集入口（包含只能人工显式运行的 a01/b08）和 18 个默认日常阶段。operations 总控台的日常快捷选择包含这 18 个阶段，a01 为 b01—b07；允许操作者单独选择任意正式环节并配置其原 CLI 参数。b08 不进入日常快捷选择，必须人工单独选择并显式设置 `--confirm-full-quality`，提交时另选 `--write`；单项直接启动与批量预览启动的授权边界见 operations 规范。
-- 本规则是 silver 数据采集的全项目目标契约；后续生产契约调整按用户确认的入口范围进行。发现个别脚本仍保留与本规则不一致的旧参数语义时，不得据此弱化本规则，也不得未经授权顺带批量修改其他业务脚本。gold 的实验输出契约和更新方式由所属下游工作流局部说明，不得提升为数据库级统一规则。
+- 正式湖仅由 `.env` 的 `FUTURES_LAKE_ROOT` 配置，代码使用 `config.settings.settings.futures_lake_root`。raw、silver、gold 的目录划分不构成 gold 表集合、Schema 或研究方法的全仓定义。
+- 在任何目录修改数据湖生产者、消费者、字段、Schema、转换或验证时，必须遵循[湖仓规则](02_Market_Data/a02_Lake/AGENTS.md)和[可执行契约](config/data_contracts.py)。raw 留证、silver 验收和完成状态不得混同；生产者验证来源及 dirty 输出，消费者和 clean 历史按契约信任正式提交的业务证明。
+- 各入口的更新集合、空湖全建、日期/全量写入门禁、来源异常和提交验收以[采集规则](02_Market_Data/a01_Collection/AGENTS.md)、[采集说明](02_Market_Data/a01_Collection/README.md)及湖仓规则为准。其中包括生意社只归档原文、特殊案例精确校准、可信完成状态，以及 c08 必须人工显式选择和确认的例外；不得用通用求差或重试替代这些边界。
+- 生产契约调整只按用户确认的入口范围实施。发现脚本保留不一致的旧语义时，不得据此弱化契约，也不得顺带批量修改其他业务脚本。gold 输出由所属工作流定义和验证。
 
 # 目录级规范路由
 
-- 在 `02_Futures_Lakehouse` 目录树内工作时，必须读取并遵循 [02_Futures_Lakehouse/AGENTS.md](02_Futures_Lakehouse/AGENTS.md)；涉及正式 worker、monitor、状态、失败现场或人工处置时还必须读取 [operations AGENTS.md](02_Futures_Lakehouse/operations/AGENTS.md)。
-- 在 `04_Feature_Engineering` 目录树内工作时，必须读取并遵循 [04_Feature_Engineering/AGENTS.md](04_Feature_Engineering/AGENTS.md)。该项目当前仅完成结构迁移，已知运行阻塞不得被路径移动或双轨检查掩盖。
-- 旧采集和旧特征工程项目位于根级 `05_Old_Projects`，其只读保护以 [05_Old_Projects/AGENTS.md](05_Old_Projects/AGENTS.md) 为准。
-- 在 `03_Futures_Database` 目录树内工作，或在任何目录修改数据湖字段、Schema、生产者、读取者、类型转换及相关验证时，必须读取并遵循 [03_Futures_Database/AGENTS.md](03_Futures_Database/AGENTS.md) 和 `config/data_contracts.py`。
-- 目录级业务细则只在对应目录的 `AGENTS.md` 中定义；根文件只负责项目级通用规则与规范路由，不复制目录细则。
+- 在 `00_draft_collection_01/` 内创建、修改或执行实验，读取[实验草稿区 AGENTS](00_draft_collection_01/AGENTS.md)。
+- 在采集目录树内工作，读取[采集 AGENTS](02_Market_Data/a01_Collection/AGENTS.md)；涉及 worker、monitor、状态或失败处置，再读[operations AGENTS](02_Market_Data/a01_Collection/operations/AGENTS.md)。在其他目录涉及湖仓契约，也须遵守上节规则。
+- 在 `04_Research` 内工作，读取[研究 AGENTS](04_Research/AGENTS.md)。当前仅建立方法／实验骨架与加载器，具体环节尚未定义；原特征工程留存与已知阻塞见[研究说明](04_Research/README.md)。研究代理与采集完整 PythonExporter 导出分别遵循所属目录规则。其他研究项目遵循上方索引中的项目入口。
+- `05_Old_Projects` 遵守[归档只读规则](05_Old_Projects/AGENTS.md)。归档规范中的旧采集路径属于迁移前标识；当前维护入口以根 README 和采集 AGENTS 为准，不改写归档文件。
+- 目录业务细则在所属 AGENTS 中定义，根文件只保留全仓规则和必要路由，不复制目录细则。

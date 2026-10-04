@@ -4,13 +4,10 @@
 
 # Historical snapshot manifests verify exact bytes, not normalized text.
 *.snapshot -text
-00_draft_collection_02/scripts/invoke_c03_contract_calendar.py -text
-00_draft_collection_02/scripts/run_b01_b04_historical_full_batch.py -text
-00_draft_collection_02/scripts/run_metadata_sync_and_b02_b04.py -text
-00_draft_collection_02/scripts/sync_current_silver_parquet_metadata.py -text
-00_draft_collection_02/tests/test_b01_b04_historical_full_batch_manifest.py -text
-00_draft_collection_02/tests/test_sync_current_silver_parquet_metadata.py -text
 
 # Read-only project/source archives retain their original bytes as well.
 05_Old_Projects/** -text
 01_project_collection/JQ_strategy/volatility_research/supporting_materials/** -text
+00_draft_collection_02/feature_engineering_before_research/** -text
+environment/rebuild_20261001/** -text
+environment/alipai/results/** -text
