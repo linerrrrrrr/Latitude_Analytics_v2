@@ -1,0 +1,38 @@
+{
+  "recorded_at": "2026-09-05T02:27:27.557505+08:00",
+  "browser": "Codex In-app Browser",
+  "joinquant_notebook": "f_0010.ipynb",
+  "execution_cell": "%run -i JQ_FINANCIAL_FUTURES_BROWSER_BATCH_20260905T022526.py",
+  "uploaded_source": {
+    "file_name": "JQ_FINANCIAL_FUTURES_BROWSER_BATCH_20260905T022526.py",
+    "bytes": 1052637,
+    "sha256": "6b72eabdb07120a8ea35516b2d219fef8de3712b9750790dd9043d786ae773f0"
+  },
+  "downloaded_file": {
+    "path": "C:/Users/31918/Downloads/JQ_FINANCIAL_FUTURES_TRANSFER.zip",
+    "bytes": 1502633,
+    "sha256": "565712e30e69ae2148377ffe9a0c54707fb7b98ff0105e038ca5291766b59829",
+    "matched_joinquant_report": true
+  },
+  "local_import": {
+    "status": "imported",
+    "started_at": "2026-09-05T02:27:25.495276+08:00",
+    "completed_at": "2026-09-05T02:27:27.557505+08:00",
+    "database_write_performed": true,
+    "database_state_verified": true,
+    "inbox_deleted": true,
+    "rows_inserted_this_invocation": {
+      "daily": 6580,
+      "minute": 0
+    },
+    "database_sha256_before": "ff4ab1c7d7b9be7b239ba03da871c4a03f48d1fbf41b889a7afe4817f0fbd23e",
+    "database_sha256_after": "27fc06ca4646ccea8679958656c09c64a68d40ed6b1dc81c14b16f0b27eebdfa"
+  },
+  "next_plan": {
+    "remaining_transfers": 41,
+    "remaining_source_requests": 1347,
+    "current_source_requests": 64,
+    "plan_sha256": "9e1cbd24279ab50c3725ac244adc99f64fd1bbe42fdb283c27bc623af1488c30"
+  },
+  "remote_file_retained": true
+}

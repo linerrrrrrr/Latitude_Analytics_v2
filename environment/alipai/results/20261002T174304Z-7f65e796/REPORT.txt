@@ -1,0 +1,103 @@
+alipai 0.4.13：本项目预计需要的功能与实测结果
+验证日期：2026-10-03（北京时间）
+
+结论：本地 Python 3.13 / NumPy 2 已能完成本项目常用的 CPU 云计算提交、
+数据传输、函数组合、双机分片和任务控制。尚不能把整个 SDK 判定为全面兼容。
+普通安装仍受到 SDK 声明的 numpy<2 限制；本实验只在临时目录安装 alipai，
+通过 PYTHONPATH 加载，没有改 SDK 源码、没有修改两个 Conda 环境。
+
+验证对象是 24 行合成价格与线性回归样本，不是正式行情、模型或研究结论。
+需求范围依据 testing_11 的 OSS/DLC 用法，以及训练/测试拆分、动态重采样、
+跨环节函数调用、上游结果复用、本地保存结果这些研究需求确定。
+
+本地：Python 3.13.15，NumPy 2.4.3，Pandas 3.0.1，PyArrow 24.0.0。
+云端：SDK retrieve("PyTorch", "latest", accelerator_type="CPU") 实际返回
+pytorch-training:1.12-cpu-py39-ubuntu20.04，Python 3.9.5。
+显式安装的云端依赖：NumPy 1.26.4、Pandas 2.2.3、SciPy 1.13.1、
+PyArrow 19.0.1、Hydra 1.3.2、MLflow Skinny 2.22.2。
+因此，主机 SDK 可用与云端也运行 Python 3.13 是两件分别需要验证的事。
+
+逐项结果（passed 不包含下文列出的未测范围）：
+
+01. 默认 PAI 配置与认证：通过。沿用本机既有配置，没有把凭据写入脚本。
+02. 镜像查询和选择：通过。list_images、retrieve 均可调用。
+03. OSS 上传、读取、列举、删除：通过。上传后按字节核对 Parquet 内容。
+04. 本地 source_dir 自动上传：通过。云端确实执行了上传的 workload.py。
+05. OSS source_dir：通过。第二种提交方式与双机任务均从 OSS 读取源码。
+06. Notebook 函数导出及互相调用：通过。临时 Notebook 经 PythonExporter
+    导出函数模块；波动率函数实际调用重采样函数，2min、3min 参数均成功。
+    这只验证代码依赖能够随包运行，不是未来 Notebook 中转架构的实现。
+07. 训练/测试输入通道：通过。训练输入为单个文件，测试输入为目录，
+    分别读取 16 行和 8 行，并校验训练时间严格早于测试时间。
+08. 参数和环境变量：通过。命令行 PAI_USER_ARGS、hyperparameters.json、
+    PAI_HPS、PAI_HPS_INTERVAL 及自定义环境变量均已在云端核对。
+09. requirements.txt 自动安装：失败。文件已在 OSS 和云端源码目录中出现，
+    启动日志却先报告 requirements.txt 不存在，最终缺少 hydra。
+    这是当前镜像/启动链路的实测现象，未证明由 Python 3.13 引起。
+10. 显式 requirements=[...]：通过。全部指定依赖完成安装，负载成功执行。
+11. Estimator 单机运算：通过。最小二乘得到约 [1, 2] 的回归系数，
+    测试集 MSE=0，另执行了 SciPy GH 分布 logpdf 与重采样/波动率计算。
+12. Parquet 与 JSON 结果回传：通过。读取云端预测，与预期逐行核对。
+    包括本地 PyArrow 24 写、云端 19 读，以及云端写、本地读取的方向。
+13. checkpoint 保存和跨任务读取：通过。第一任务保存 step=1，
+    第二任务读取该状态并报告 resumed_step=2。未验证故障自动恢复训练。
+14. 同一数据集复用：通过。双机任务复用原 OSS 输入，提交前核对原 SHA-256，
+    没有再次上传数据。此处只验证复用能力，没有制定正式数据集标识规则。
+15. Processor 双机任务与自定义输出通道：通过。RANK=0/1，WORLD_SIZE=2，
+    输出分别含偶数/奇数行，合并后 24 行无重复、无遗漏。
+    SDK 对 Processor 明确给出 experimental 提示，暂不据此定为项目标准入口。
+16. 上游计算结果作为输入：通过。双机任务读取第一项成功任务的 result.json。
+17. 状态、日志、重新连接、按名称查询任务：通过。新进程可按任务 ID 读取，
+    也可在按名称过滤的任务列表中找到本实验任务。
+18. 失败识别：通过。预设 RuntimeError 导致 Failed，日志保留指定标记，
+    job.wait(show_logs=False) 抛出 UnexpectedStatusException。
+19. 主动停止：通过。运行约 30 秒后调用 SDK 内置客户端的 stop_training_job，
+    最终确认 Terminated。TrainingJob 对象自身没有对应的高层 stop 方法。
+20. PAI 正则指标采集：未跑通。定义已被服务保存，日志有 MSE=0；另一个
+    任务连续输出 7 次 0.25，但最新值与历史值接口仍为空。
+    旧环境查询同一任务也为空；根因未确定，不能归因于 NumPy 2。
+21. Hydra + MLflow：云端微型验证通过。Hydra 覆盖配置，MLflow 在云实例的
+    临时文件目录记录参数/MSE，再读取核对。没有部署 MLflow 服务，也没有
+    验证远程 tracking server；本地 v2 尚未安装这两个可选组件。
+22. NumPy 2 序列化：单个 float64/int64 数组、NumPy/Pandas JSON 通过。
+    PyTorchSerializer.serialize([array1, array2]) 失败，报数组真值含混。
+    在旧 Python 3.11.15 / NumPy 1.26.4 下复现相同错误，属于已有实现问题。
+23. 临时存储回收：通过。确认全部任务结束后删除本轮 17 个 OSS 对象，
+    共 32,667 字节，逐项检查不存在；结果和必要日志摘要集中保留在 results.json。
+
+新建的五个云任务：
+train1lx9ekqz88k  源码目录依赖文件验证：Failed，缺少 hydra。
+train1atr1u2zrm1  显式依赖及单机完整负载：Succeed。
+traino2r5l6g13rw  双机分片与跨任务复用：Succeed。
+train1crsf7ujmd1  主动制造异常：Failed，属于通过的失败识别测试。
+trainardgcqfxqp5  主动停止与持续指标：Terminated，停止验证通过。
+云任务历史保留；本轮 OSS 文件已清理，所以历史任务链接中的输入/输出 URI
+仅用于定位证据，不能再当作仍然有效的云文件。更早的 1+1 任务不在此次清理范围。
+
+适合当前项目的使用方式：先采用 Estimator + 明确的 OSS 输入/输出 +
+显式 requirements 参数。重采样、波动率或模型代码仍是普通 Python 函数，
+随当前任务代码一起提交；指标优先写入结果文件，PAI 正则采集暂不能作为唯一记录。
+SDK 有能力复用数据和返回结果，但训练/测试边界、数据版本、缓存复用和清理时机
+仍需要项目自己定义。本实验不修改正式架构或两个环境的依赖清单。
+
+未验证：GPU/CUDA、真正的神经网络分布式梯度同步、模型二进制跨版本恢复、
+云端 Python 3.13、自定义镜像、本地 Docker 模式、NAS/MaxCompute/VPC、
+PAI 数据集/实验注册、AutoML、托管 Pipeline、在线 EAS 推理。
+运行时间上限已传入任务；本轮没有故意等待超时，不能宣称自动超时终止已验证。
+这些功能不属于当前 testing_11 的必要路径，不能从本轮结果推断其兼容性。
+
+官方参考（2026-10-03 查阅）：
+训练、输入通道、参数及依赖文件：
+https://help.aliyun.com/zh/pai/developer-reference/submit-a-training-job
+Estimator、checkpoint、指标正则 API：
+https://pai-sdk.oss-cn-shanghai.aliyuncs.com/pai/doc/latest/api/estimator.html
+分布式任务示例：
+https://pai-sdk.oss-cn-shanghai.aliyuncs.com/pai/doc/latest/tutorial/pytorch_ddp/pytorch_ddp.html
+源码与依赖范围：
+https://github.com/aliyun/pai-python-sdk
+https://raw.githubusercontent.com/aliyun/pai-python-sdk/master/requirements/requirements.txt
+
+文件用途：verify.py 是本地逐项入口；workload.py 是微型云端负载；
+results.json 是本轮原始结果；本文件解释结果、适用范围和限制。
+复跑方法见 verify.py 与上一级 smoke_test.py 的开篇说明。
+results.json 存在时禁止重复提交同名验证项；需要新批次时先另存旧记录。

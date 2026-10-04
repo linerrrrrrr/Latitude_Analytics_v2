@@ -1,0 +1,257 @@
+{
+  "elapsed_seconds": 74.61560820000159,
+  "tables": [
+    {
+      "table": "dim_external_market_calendar",
+      "files_checked": 606,
+      "row_count": 128478,
+      "schema_errors": [],
+      "schema_version_counts": {
+        "1.3.0": 606
+      },
+      "completed": true
+    },
+    {
+      "table": "dim_futures_bar_calendar",
+      "files_checked": 1901,
+      "row_count": 9846670,
+      "schema_errors": [
+        {
+          "path": "E:\\Latitude_Analytics_v2\\02_Market_Data\\a02_Lake\\silver\\dim_futures_bar_calendar\\schema.parquet",
+          "error": "physical schema differs"
+        }
+      ],
+      "schema_version_counts": {
+        "1.4.0": 1901
+      },
+      "completed": true
+    },
+    {
+      "table": "dim_futures_contract_calendar",
+      "files_checked": 951,
+      "row_count": 7694739,
+      "schema_errors": [
+        {
+          "path": "E:\\Latitude_Analytics_v2\\02_Market_Data\\a02_Lake\\silver\\dim_futures_contract_calendar\\schema.parquet",
+          "error": "physical schema differs"
+        }
+      ],
+      "schema_version_counts": {
+        "1.2.0": 951
+      },
+      "completed": true
+    },
+    {
+      "table": "dim_futures_exchange_report_calendar",
+      "files_checked": 2851,
+      "row_count": 681636,
+      "schema_errors": [
+        {
+          "path": "E:\\Latitude_Analytics_v2\\02_Market_Data\\a02_Lake\\silver\\dim_futures_exchange_report_calendar\\schema.parquet",
+          "error": "physical schema differs"
+        }
+      ],
+      "schema_version_counts": {
+        "1.3.0": 2815,
+        "1.4.0": 36
+      },
+      "completed": true
+    },
+    {
+      "table": "dim_futures_variety_calendar",
+      "files_checked": 951,
+      "row_count": 227212,
+      "schema_errors": [
+        {
+          "path": "E:\\Latitude_Analytics_v2\\02_Market_Data\\a02_Lake\\silver\\dim_futures_variety_calendar\\schema.parquet",
+          "error": "physical schema differs"
+        }
+      ],
+      "schema_version_counts": {
+        "1.2.0": 951
+      },
+      "completed": true
+    },
+    {
+      "table": "dim_macro_release_calendar",
+      "files_checked": 404,
+      "row_count": 37849,
+      "schema_errors": [
+        {
+          "path": "E:\\Latitude_Analytics_v2\\02_Market_Data\\a02_Lake\\silver\\dim_macro_release_calendar\\schema.parquet",
+          "error": "physical schema differs"
+        }
+      ],
+      "schema_version_counts": {
+        "1.1.0": 404
+      },
+      "completed": true
+    },
+    {
+      "table": "dim_trade_calendar",
+      "files_checked": 18,
+      "row_count": 6118,
+      "schema_errors": [
+        {
+          "path": "E:\\Latitude_Analytics_v2\\02_Market_Data\\a02_Lake\\silver\\dim_trade_calendar\\schema.parquet",
+          "error": "physical schema differs"
+        }
+      ],
+      "schema_version_counts": {
+        "1.1.0": 18
+      },
+      "completed": true
+    },
+    {
+      "table": "fact_external_index_daily",
+      "files_checked": 786,
+      "row_count": 67591,
+      "schema_errors": [
+        {
+          "path": "E:\\Latitude_Analytics_v2\\02_Market_Data\\a02_Lake\\silver\\fact_external_index_daily\\schema.parquet",
+          "error": "physical schema differs"
+        }
+      ],
+      "schema_version_counts": {
+        "1.1.0": 786
+      },
+      "completed": true
+    },
+    {
+      "table": "fact_futures_daily",
+      "files_checked": 10272,
+      "row_count": 2076956,
+      "schema_errors": [
+        {
+          "path": "E:\\Latitude_Analytics_v2\\02_Market_Data\\a02_Lake\\silver\\fact_futures_daily\\schema.parquet",
+          "error": "physical schema differs"
+        }
+      ],
+      "schema_version_counts": {
+        "1.5.0": 10272
+      },
+      "completed": true
+    },
+    {
+      "table": "fact_futures_member_position_daily",
+      "files_checked": 1,
+      "row_count": 0,
+      "schema_errors": [
+        {
+          "path": "E:\\Latitude_Analytics_v2\\02_Market_Data\\a02_Lake\\silver\\fact_futures_member_position_daily\\schema.parquet",
+          "error": "physical schema differs"
+        }
+      ],
+      "schema_version_counts": {
+        "1.2.0": 1
+      },
+      "completed": true
+    },
+    {
+      "table": "fact_futures_minute",
+      "files_checked": 6623,
+      "row_count": 527130532,
+      "schema_errors": [
+        {
+          "path": "E:\\Latitude_Analytics_v2\\02_Market_Data\\a02_Lake\\silver\\fact_futures_minute\\schema.parquet",
+          "error": "physical schema differs"
+        }
+      ],
+      "schema_version_counts": {
+        "1.5.0": 6623
+      },
+      "completed": true
+    },
+    {
+      "table": "fact_futures_missing_bar",
+      "files_checked": 2382,
+      "row_count": 8951963,
+      "schema_errors": [
+        {
+          "path": "E:\\Latitude_Analytics_v2\\02_Market_Data\\a02_Lake\\silver\\fact_futures_missing_bar\\schema.parquet",
+          "error": "physical schema differs"
+        }
+      ],
+      "schema_version_counts": {
+        "1.2.0": 2382
+      },
+      "completed": true
+    },
+    {
+      "table": "fact_futures_position_rank_daily",
+      "files_checked": 5507,
+      "row_count": 13234819,
+      "schema_errors": [
+        {
+          "path": "E:\\Latitude_Analytics_v2\\02_Market_Data\\a02_Lake\\silver\\fact_futures_position_rank_daily\\schema.parquet",
+          "error": "physical schema differs"
+        }
+      ],
+      "schema_version_counts": {
+        "1.2.0": 5507
+      },
+      "completed": true
+    },
+    {
+      "table": "fact_futures_warehouse_receipt_daily",
+      "files_checked": 5818,
+      "row_count": 1381849,
+      "schema_errors": [
+        {
+          "path": "E:\\Latitude_Analytics_v2\\02_Market_Data\\a02_Lake\\silver\\fact_futures_warehouse_receipt_daily\\schema.parquet",
+          "error": "physical schema differs"
+        }
+      ],
+      "schema_version_counts": {
+        "1.2.0": 5708,
+        "1.3.0": 110
+      },
+      "completed": true
+    },
+    {
+      "table": "fact_interest_rate_daily",
+      "files_checked": 202,
+      "row_count": 32528,
+      "schema_errors": [
+        {
+          "path": "E:\\Latitude_Analytics_v2\\02_Market_Data\\a02_Lake\\silver\\fact_interest_rate_daily\\schema.parquet",
+          "error": "physical schema differs"
+        }
+      ],
+      "schema_version_counts": {
+        "1.1.0": 202
+      },
+      "completed": true
+    },
+    {
+      "table": "fact_macro_release",
+      "files_checked": 202,
+      "row_count": 2866,
+      "schema_errors": [
+        {
+          "path": "E:\\Latitude_Analytics_v2\\02_Market_Data\\a02_Lake\\silver\\fact_macro_release\\schema.parquet",
+          "error": "physical schema differs"
+        }
+      ],
+      "schema_version_counts": {
+        "1.1.0": 202
+      },
+      "completed": true
+    },
+    {
+      "table": "fact_overseas_futures_daily",
+      "files_checked": 203,
+      "row_count": 113897,
+      "schema_errors": [
+        {
+          "path": "E:\\Latitude_Analytics_v2\\02_Market_Data\\a02_Lake\\silver\\fact_overseas_futures_daily\\schema.parquet",
+          "error": "physical schema differs"
+        }
+      ],
+      "schema_version_counts": {
+        "1.2.0": 203
+      },
+      "completed": true
+    }
+  ]
+}

@@ -1,0 +1,420 @@
+{
+  "download_instruction": {
+    "action": "Download this fixed-name ZIP from the JoinQuant file panel, replace the previous local file, and return the original ZIP together with this complete BEGIN/END output.",
+    "expected_bytes": 8437,
+    "expected_sha256": "e331a7da334a9f62ab5e2708a0675190dcdba84d51dd5c56b0af45081e7516c4",
+    "file_name": "JQ_FINANCIAL_FUTURES_TRANSFER_PROBE.zip"
+  },
+  "elapsed_seconds": 0.073277,
+  "environment": {
+    "market_time_zone": "Asia/Shanghai",
+    "numpy_version": "1.14.6",
+    "pandas_version": "0.23.4",
+    "platform": "Linux-5.4.256-1.el7.elrepo.x86_64-x86_64-with-debian-stretch-sid",
+    "python_implementation": "CPython",
+    "python_version": "3.6.7",
+    "working_directory": "/home/jquser"
+  },
+  "manifest": {
+    "daily_record_count": 1,
+    "eligible_observation_count": 3,
+    "market_time_zone": "Asia/Shanghai",
+    "members": {
+      "daily.jsonl": {
+        "bytes": 255,
+        "record_count": 1,
+        "sha256": "57dab18248c83d2f7db540692e889d2d4a6544fc12a274db175b4d49b13bffed"
+      },
+      "minute.jsonl": {
+        "bytes": 66903,
+        "record_count": 240,
+        "sha256": "047a7620dd4839088446988d54a3f0be7e83d79869ba92a0cc1eba2a8cc97f55"
+      },
+      "request_blocks.jsonl": {
+        "bytes": 4035,
+        "record_count": 3,
+        "sha256": "a75d69981ab168ca642cf207f5e33695fd29afd5d15c14c8cdcaa9676738303a"
+      }
+    },
+    "minute_record_count": 240,
+    "package_format_version": "joinquant_financial_futures_transfer_probe_v1",
+    "probe_only_not_formal_schema": true,
+    "probe_version": "joinquant_financial_futures_round_05_v2",
+    "publication_status": "complete",
+    "request_block_count": 3,
+    "run_id": "5ae3afe3-bae0-42c4-a3bb-4d5a1fe4a2ae",
+    "run_started_at": "2026-09-03T23:34:54.394064+08:00",
+    "source_api": "jqresearch.api.get_price"
+  },
+  "package_format_version": "joinquant_financial_futures_transfer_probe_v1",
+  "probe_version": "joinquant_financial_futures_round_05_v2",
+  "publication": {
+    "final_validation": {
+      "checks": {
+        "all_request_blocks_complete": true,
+        "daily_business_keys_are_unique": true,
+        "daily_keys_match_expected": true,
+        "daily_record_count_is_1": true,
+        "final_bytes_match_in_memory": true,
+        "final_sha256_matches_in_memory": true,
+        "fixed_file_exists": true,
+        "manifest_matches_in_memory": true,
+        "manifest_publication_status_is_complete": true,
+        "member_descriptors_match_disk": true,
+        "minute_business_keys_are_unique": true,
+        "minute_keys_match_expected": true,
+        "minute_record_count_is_240": true,
+        "request_block_count_is_3": true,
+        "request_blocks_match_in_memory": true,
+        "temp_file_exists": false,
+        "zip_member_names_match": true,
+        "zip_test_bad_member_is_none": true
+      },
+      "final_file_bytes": 8437,
+      "final_file_sha256": "e331a7da334a9f62ab5e2708a0675190dcdba84d51dd5c56b0af45081e7516c4",
+      "passed": true,
+      "zip_member_details": [
+        {
+          "compressed_bytes": 490,
+          "compression_type": 8,
+          "crc32": 3535608386,
+          "name": "manifest.json",
+          "uncompressed_bytes": 869
+        },
+        {
+          "compressed_bytes": 808,
+          "compression_type": 8,
+          "crc32": 3887922446,
+          "name": "request_blocks.jsonl",
+          "uncompressed_bytes": 4035
+        },
+        {
+          "compressed_bytes": 189,
+          "compression_type": 8,
+          "crc32": 2285910211,
+          "name": "daily.jsonl",
+          "uncompressed_bytes": 255
+        },
+        {
+          "compressed_bytes": 6512,
+          "compression_type": 8,
+          "crc32": 906855655,
+          "name": "minute.jsonl",
+          "uncompressed_bytes": 66903
+        }
+      ]
+    },
+    "fixed_file_path": "/home/jquser/JQ_FINANCIAL_FUTURES_TRANSFER_PROBE.zip",
+    "latest_in_memory_bytes": 8437,
+    "latest_in_memory_sha256": "e331a7da334a9f62ab5e2708a0675190dcdba84d51dd5c56b0af45081e7516c4",
+    "preexisting_fixed_file": {
+      "bytes": 13546,
+      "exists": true,
+      "sha256": "6302a8035b761332ee0dbfb70041995b19a64ec992b4a744d938f60ed6782c65"
+    },
+    "status": "ok",
+    "temp_cleanup": "not_present",
+    "temp_file_path": "/home/jquser/.JQ_FINANCIAL_FUTURES_TRANSFER_PROBE.zip.tmp"
+  },
+  "request_observations": [
+    {
+      "actual": {
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "pre_close",
+          "open_interest"
+        ],
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "pre_close": "float64",
+          "volume": "float64"
+        },
+        "duplicate_key_count": 0,
+        "extra_key_count": 0,
+        "extra_keys": [],
+        "first_key": "2024-06-28",
+        "index_dtype": "datetime64[ns]",
+        "index_python_type": "DatetimeIndex",
+        "index_timezone": null,
+        "key_count": 1,
+        "keys_sha256": "f1f59901d745d1c8ba1b908a958c82dd0dfb8741f6fa11a8e9149fda4a61c385",
+        "last_key": "2024-06-28",
+        "missing_key_count": 0,
+        "missing_keys": [],
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "pre_close": 0,
+          "volume": 0
+        },
+        "null_value_count": 0,
+        "python_type": "DataFrame",
+        "shape": [
+          1,
+          8
+        ]
+      },
+      "contract_code": "IF2409.CCFX",
+      "coverage_status": "complete",
+      "elapsed_seconds": 0.00429,
+      "end_at": "2024-06-28",
+      "expected": {
+        "first_key": "2024-06-28",
+        "key_count": 1,
+        "key_name": "trading_date",
+        "keys_sha256": "f1f59901d745d1c8ba1b908a958c82dd0dfb8741f6fa11a8e9149fda4a61c385",
+        "last_key": "2024-06-28"
+      },
+      "fields": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "money",
+        "pre_close",
+        "open_interest"
+      ],
+      "frequency": "1d",
+      "observation_eligible": true,
+      "quality_status": "passed",
+      "request_id": "IF2409_20240628_DAILY",
+      "request_status": "success",
+      "session_number": 0,
+      "start_at": "2024-06-28",
+      "trading_date": "2024-06-28"
+    },
+    {
+      "actual": {
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "open_interest"
+        ],
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "volume": "float64"
+        },
+        "duplicate_key_count": 0,
+        "extra_key_count": 0,
+        "extra_keys": [],
+        "first_key": "2024-06-28T09:31:00",
+        "index_dtype": "datetime64[ns]",
+        "index_python_type": "DatetimeIndex",
+        "index_timezone": null,
+        "key_count": 120,
+        "keys_sha256": "26dc68eb94bfebb349adf5a5a0797d24ffd472f143b20c0a2099611f473f2ca3",
+        "last_key": "2024-06-28T11:30:00",
+        "missing_key_count": 0,
+        "missing_keys": [],
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        },
+        "null_value_count": 0,
+        "python_type": "DataFrame",
+        "shape": [
+          120,
+          7
+        ]
+      },
+      "contract_code": "IF2409.CCFX",
+      "coverage_status": "complete",
+      "elapsed_seconds": 0.020776,
+      "end_at": "2024-06-28 11:30:00",
+      "expected": {
+        "first_key": "2024-06-28T09:31:00",
+        "key_count": 120,
+        "key_name": "bar_at",
+        "keys_sha256": "26dc68eb94bfebb349adf5a5a0797d24ffd472f143b20c0a2099611f473f2ca3",
+        "last_key": "2024-06-28T11:30:00"
+      },
+      "fields": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "money",
+        "open_interest"
+      ],
+      "frequency": "1m",
+      "observation_eligible": true,
+      "quality_status": "passed",
+      "request_id": "IF2409_20240628_MINUTE_SESSION_1",
+      "request_status": "success",
+      "session_number": 1,
+      "start_at": "2024-06-28 09:31:00",
+      "trading_date": "2024-06-28"
+    },
+    {
+      "actual": {
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "open_interest"
+        ],
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "volume": "float64"
+        },
+        "duplicate_key_count": 0,
+        "extra_key_count": 0,
+        "extra_keys": [],
+        "first_key": "2024-06-28T13:01:00",
+        "index_dtype": "datetime64[ns]",
+        "index_python_type": "DatetimeIndex",
+        "index_timezone": null,
+        "key_count": 120,
+        "keys_sha256": "21d13027cbfb27fe95c93d629cf0709267975906e876d8fac427867b36859c92",
+        "last_key": "2024-06-28T15:00:00",
+        "missing_key_count": 0,
+        "missing_keys": [],
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        },
+        "null_value_count": 0,
+        "python_type": "DataFrame",
+        "shape": [
+          120,
+          7
+        ]
+      },
+      "contract_code": "IF2409.CCFX",
+      "coverage_status": "complete",
+      "elapsed_seconds": 0.019856,
+      "end_at": "2024-06-28 15:00:00",
+      "expected": {
+        "first_key": "2024-06-28T13:01:00",
+        "key_count": 120,
+        "key_name": "bar_at",
+        "keys_sha256": "21d13027cbfb27fe95c93d629cf0709267975906e876d8fac427867b36859c92",
+        "last_key": "2024-06-28T15:00:00"
+      },
+      "fields": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "money",
+        "open_interest"
+      ],
+      "frequency": "1m",
+      "observation_eligible": true,
+      "quality_status": "passed",
+      "request_id": "IF2409_20240628_MINUTE_SESSION_2",
+      "request_status": "success",
+      "session_number": 2,
+      "start_at": "2024-06-28 13:01:00",
+      "trading_date": "2024-06-28"
+    }
+  ],
+  "request_plan": [
+    {
+      "contract_code": "IF2409.CCFX",
+      "end_at": "2024-06-28",
+      "fields": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "money",
+        "pre_close",
+        "open_interest"
+      ],
+      "frequency": "1d",
+      "key_name": "trading_date",
+      "request_id": "IF2409_20240628_DAILY",
+      "session_number": 0,
+      "start_at": "2024-06-28",
+      "trading_date": "2024-06-28"
+    },
+    {
+      "contract_code": "IF2409.CCFX",
+      "end_at": "2024-06-28 11:30:00",
+      "fields": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "money",
+        "open_interest"
+      ],
+      "frequency": "1m",
+      "key_name": "bar_at",
+      "request_id": "IF2409_20240628_MINUTE_SESSION_1",
+      "session_number": 1,
+      "start_at": "2024-06-28 09:31:00",
+      "trading_date": "2024-06-28"
+    },
+    {
+      "contract_code": "IF2409.CCFX",
+      "end_at": "2024-06-28 15:00:00",
+      "fields": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "money",
+        "open_interest"
+      ],
+      "frequency": "1m",
+      "key_name": "bar_at",
+      "request_id": "IF2409_20240628_MINUTE_SESSION_2",
+      "session_number": 2,
+      "start_at": "2024-06-28 13:01:00",
+      "trading_date": "2024-06-28"
+    }
+  ],
+  "run_id": "5ae3afe3-bae0-42c4-a3bb-4d5a1fe4a2ae",
+  "run_started_at": "2026-09-03T23:34:54.394064+08:00",
+  "status": "ok"
+}
+

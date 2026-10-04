@@ -1,0 +1,30 @@
+import datetime as dt
+import hashlib
+import json
+import pathlib
+from zoneinfo import ZoneInfo
+
+module_dir = pathlib.Path.cwd() / "financial_futures_data"
+record_dir = module_dir / "experiment_records/formal_roundtrip/2026-09-04T214920.164421+0800_item_09_v1"
+notebook = json.loads((module_dir / "plan_financial_futures_fetch.ipynb").read_text(encoding="utf-8"))
+prepared_notebook = json.loads((record_dir.parent / "prepared_2026-09-04T213454.688871+0800_item_09_v1/notebook_source.ipynb.txt").read_text(encoding="utf-8"))
+changed_cells = [index for index, cell in enumerate(prepared_notebook["cells"]) if cell["source"] != notebook["cells"][index]["source"]]
+assert changed_cells == [0,14,18]
+assert all(notebook["cells"][index]["cell_type"] == "markdown" for index in changed_cells)
+assert len(notebook["cells"]) == len(prepared_notebook["cells"]) + 1
+assert not "".join(notebook["cells"][-1]["source"]).strip()
+assert [cell.get("execution_count") for cell in notebook["cells"] if cell["cell_type"] == "code"] == list(range(1,11)) + [None]
+saved_code = "".join(notebook["cells"][19]["outputs"][1]["data"]["text/plain"])
+assert hashlib.sha256(saved_code.encode("utf-8")).hexdigest() == "195f1ee712974e4493be25d946e88c70d6eee622e6f55570cfe87b6cd03cfff7"
+readme = (module_dir / "README.md").read_text(encoding="utf-8")
+assert "- [x] 09．完成真实小批次端到端验收" in readme
+assert "- [ ] 10．执行初始全量回补并冻结日常操作说明" in readme
+assert "第 09 项真实小批次验收（已完成）" in (module_dir / "AGENTS.md").read_text(encoding="utf-8")
+assert sorted(path.name for path in (module_dir / "data/staging").iterdir()) == [".gitignore"]
+assert hashlib.sha256((module_dir / "data/warehouse/financial_futures.duckdb").read_bytes()).hexdigest() == "71b6b4e972bb0d59bdb410bb5778ebeefa4b5371c782aa92ba89201e3d84ace0"
+assert hashlib.sha256((module_dir / "data/inbox/JQ_FINANCIAL_FUTURES_TRANSFER.zip").read_bytes()).hexdigest() == "cc9e1a530ab75ab66f49a10f7acb058b47e824ae0669d18e2f7d00d630df7ec6"
+print(json.dumps({"status":"passed","verified_at":dt.datetime.now(ZoneInfo("Asia/Shanghai")).isoformat(),
+    "changed_notebook_markdown_cells":changed_cells,"user_empty_cell_representation":notebook["cells"][-1]["source"],
+    "prior_document_check_error":"Assertion expected [] for empty cell source; actual legal representation was empty string. Corrected verification to test joined source emptiness; no business code or data correction.",
+    "business_code_and_saved_user_output_preserved":True,"item_09_complete":True,"item_10_not_started":True,
+    "notebook_sha256":hashlib.sha256((module_dir / "plan_financial_futures_fetch.ipynb").read_bytes()).hexdigest()},ensure_ascii=False,indent=2))

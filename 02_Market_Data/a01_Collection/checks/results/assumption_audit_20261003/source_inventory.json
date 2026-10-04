@@ -1,0 +1,6215 @@
+[
+  {
+    "path": "02_Market_Data/a01_Collection/b01_Futures_Market_Data/c01_trade_calendar.py",
+    "sha256": "cb19f8b24cd5b33b436b752820f507fd243038405c883d7a60c9fc683c796996",
+    "constants": [
+      {
+        "line": 76,
+        "source": "project_markers = ['.git', '.env', 'config/settings.py']"
+      },
+      {
+        "line": 158,
+        "source": "PHYSICAL_METADATA_KEYS = (b'table_name', b'primary_key', b'partition_columns')"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 86,
+        "source": "raise RuntimeError('未找到项目根目录')"
+      },
+      {
+        "line": 168,
+        "source": "raise TypeError(f'{context}字段及顺序与契约不一致。')"
+      },
+      {
+        "line": 175,
+        "source": "raise TypeError(f'{context}字段 {expected_field.name!r} 的类型或 nullable 与契约不一致。')"
+      },
+      {
+        "line": 180,
+        "source": "raise TypeError(f'{context}{metadata_key.decode()} metadata 与契约不一致。')"
+      },
+      {
+        "line": 260,
+        "source": "raise ValueError('交易日历不得为空。')"
+      },
+      {
+        "line": 264,
+        "source": "raise ValueError('交易日历存在重复主键。')"
+      },
+      {
+        "line": 276,
+        "source": "raise ValueError('交易日历自然日不连续。')"
+      },
+      {
+        "line": 280,
+        "source": "raise ValueError('date_key 与 calendar_date 不一致。')"
+      },
+      {
+        "line": 286,
+        "source": "raise ValueError('weekday 与 calendar_date 不一致。')"
+      },
+      {
+        "line": 290,
+        "source": "raise ValueError('is_weekend 与 weekday 不一致。')"
+      },
+      {
+        "line": 294,
+        "source": "raise ValueError('source 不是约定值 JQData_get_trade_days。')"
+      },
+      {
+        "line": 298,
+        "source": "raise ValueError('calendar_name 不是约定值 CN_FUTURES_MARKET。')"
+      },
+      {
+        "line": 302,
+        "source": "raise ValueError('calendar_timezone 不是 Asia/Shanghai。')"
+      },
+      {
+        "line": 306,
+        "source": "raise ValueError('effective_after 不是 20:00:00。')"
+      },
+      {
+        "line": 310,
+        "source": "raise ValueError('year 与 calendar_date 不一致。')"
+      },
+      {
+        "line": 314,
+        "source": "raise ValueError('updated_at 不得晚于当前校验时间。')"
+      },
+      {
+        "line": 512,
+        "source": "raise ValueError('staging 主键不唯一。')"
+      },
+      {
+        "line": 514,
+        "source": "raise ValueError('staging 行数检查失败。')"
+      },
+      {
+        "line": 550,
+        "source": "raise FileNotFoundError(f'staging 缺少 {partition_relative_path}。')"
+      },
+      {
+        "line": 574,
+        "source": "raise ValueError(f'正式分区 {partition_relative_path} 主键不唯一。')"
+      },
+      {
+        "line": 577,
+        "source": "raise ValueError(f'正式分区 {partition_relative_path} 行数检查失败。')"
+      },
+      {
+        "line": 642,
+        "source": "raise ValueError('起始日期不得晚于结束日期。')"
+      },
+      {
+        "line": 662,
+        "source": "raise ValueError('JQData 返回了请求范围之外的交易日。')"
+      },
+      {
+        "line": 790,
+        "source": "raise click.UsageError('--start-date 与 --end-date 必须同时提供。')"
+      },
+      {
+        "line": 792,
+        "source": "raise click.UsageError('--full 与 --start-date/--end-date 不能同时提供。')"
+      },
+      {
+        "line": 794,
+        "source": "raise click.UsageError(\n            '显式指定日期时禁止写入 FUTURES_LAKE_ROOT 指向的正式湖；'\n            '请移除日期参数使用自动补缺，或改用非正式测试湖。'\n        )"
+      },
+      {
+        "line": 807,
+        "source": "raise ValueError(\n            f'配置起点 {configured_start_date} 晚于当前有效截止日 {valid_end_date}。'\n        )"
+      },
+      {
+        "line": 835,
+        "source": "raise click.BadParameter('起始日期不得晚于结束日期。')"
+      },
+      {
+        "line": 837,
+        "source": "raise click.BadParameter(\n                f'结束日期不得晚于当前有效截止日 {valid_end_date}（北京时间 20:00 生效）。',\n                param_hint='--end-date',\n            )"
+      },
+      {
+        "line": 960,
+        "source": "raise ValueError(\n                '现有交易日历包含配置起点之前或有效截止日之后的日期：'\n                f'{out_of_watermark_calendar_dates[:10]}'\n            )"
+      }
+    ]
+  },
+  {
+    "path": "02_Market_Data/a01_Collection/b01_Futures_Market_Data/c02_futures_variety_calendar.py",
+    "sha256": "c0dbd0f2818fe7622b04ee3f85b2ab573b37cf2b3604daa01c1226834ccaf7e4",
+    "constants": [
+      {
+        "line": 113,
+        "source": "project_markers = [\".git\", \".env\", \"config/settings.py\"]"
+      },
+      {
+        "line": 190,
+        "source": "PHYSICAL_METADATA_KEYS = (b\"table_name\", b\"primary_key\", b\"partition_columns\")"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 122,
+        "source": "raise RuntimeError(\"未找到项目根目录\")"
+      },
+      {
+        "line": 223,
+        "source": "raise TypeError(f\"{context}字段及顺序与契约不一致。\")"
+      },
+      {
+        "line": 230,
+        "source": "raise TypeError(f\"{context}字段 {expected_field.name!r} 的类型或 nullable 与契约不一致。\")"
+      },
+      {
+        "line": 235,
+        "source": "raise TypeError(f\"{context}{metadata_key.decode()} metadata 与契约不一致。\")"
+      },
+      {
+        "line": 443,
+        "source": "raise ValueError(\"起始日期不得晚于结束日期。\")"
+      },
+      {
+        "line": 463,
+        "source": "raise ValueError(\"待提交数据的主键不唯一。\")"
+      },
+      {
+        "line": 468,
+        "source": "raise ValueError(\"待提交数据包含请求日期范围之外的交易日。\")"
+      },
+      {
+        "line": 473,
+        "source": "raise ValueError(\"该品种当日上市区间内的固定月份合约数 active_contract_count 必须全部大于 0。\")"
+      },
+      {
+        "line": 477,
+        "source": "raise ValueError(\"source 与数据契约不一致。\")"
+      },
+      {
+        "line": 489,
+        "source": "raise ValueError(\"year/month 分区列与 trading_date 不一致。\")"
+      },
+      {
+        "line": 520,
+        "source": "raise ValueError(f\"数据集路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 646,
+        "source": "raise ValueError(\"合并后的触达分区主键不唯一。\")"
+      },
+      {
+        "line": 648,
+        "source": "raise ValueError(\"合并后的触达分区 active_contract_count 必须全部大于 0。\")"
+      },
+      {
+        "line": 652,
+        "source": "raise ValueError(\"合并后的触达分区 source 与契约不一致。\")"
+      },
+      {
+        "line": 662,
+        "source": "raise ValueError(\"合并后的触达分区年月与交易日不一致。\")"
+      },
+      {
+        "line": 712,
+        "source": "raise ValueError(\"staging 主键不唯一。\")"
+      },
+      {
+        "line": 714,
+        "source": "raise ValueError(\"staging 行数检查失败。\")"
+      },
+      {
+        "line": 721,
+        "source": "raise"
+      },
+      {
+        "line": 792,
+        "source": "raise ValueError(f\"正式分区 {partition_relative_path} 主键不唯一。\")"
+      },
+      {
+        "line": 797,
+        "source": "raise ValueError(f\"正式分区 {partition_relative_path} 行数检查失败。\")"
+      },
+      {
+        "line": 818,
+        "source": "raise ValueError(\"正式空表 marker 必须为零行。\")"
+      },
+      {
+        "line": 884,
+        "source": "raise ValueError(\"起始日期与结束日期必须同时提供。\")"
+      },
+      {
+        "line": 886,
+        "source": "raise ValueError(\"起始日期不得晚于结束日期。\")"
+      },
+      {
+        "line": 895,
+        "source": "raise FileNotFoundError(f\"缺少上游交易日历：{trade_calendar_path}\")"
+      },
+      {
+        "line": 973,
+        "source": "raise TypeError(\n                f\"get_all_securities 应返回 pandas.DataFrame，实际为 {type(futures_contract_catalog_df).__name__}。\"\n            )"
+      },
+      {
+        "line": 988,
+        "source": "raise ValueError(\n                f\"get_all_securities 缺少列：{sorted(required_catalog_columns - set(futures_contract_catalog_df.columns))}\"\n            )"
+      },
+      {
+        "line": 1016,
+        "source": "raise ValueError(f\"get_all_securities 合约代码重复：{duplicate_contract_codes}\")"
+      },
+      {
+        "line": 1018,
+        "source": "raise ValueError(\"get_all_securities 未返回任何固定月份期货合约。\")"
+      },
+      {
+        "line": 1030,
+        "source": "raise ValueError(\"固定月份合约的 start_date/end_date 包含空值。\")"
+      },
+      {
+        "line": 1032,
+        "source": "raise ValueError(\"固定月份合约存在 start_date 晚于 end_date 的记录。\")"
+      },
+      {
+        "line": 1103,
+        "source": "raise"
+      },
+      {
+        "line": 1162,
+        "source": "raise click.UsageError(\"--start-date 与 --end-date 必须同时提供。\")"
+      },
+      {
+        "line": 1164,
+        "source": "raise click.UsageError(\"--full 与 --start-date/--end-date 不能同时提供。\")"
+      },
+      {
+        "line": 1166,
+        "source": "raise click.UsageError(\n            \"显式指定日期时禁止写入 FUTURES_LAKE_ROOT 指向的正式湖；\"\n            \"请移除日期参数使用自动补缺，或改用非正式测试湖。\"\n        )"
+      },
+      {
+        "line": 1188,
+        "source": "raise click.BadParameter(\"起始日期不得晚于结束日期。\")"
+      },
+      {
+        "line": 1248,
+        "source": "raise FileNotFoundError(f\"缺少上游交易日历：{trade_calendar_path}\")"
+      },
+      {
+        "line": 1373,
+        "source": "raise ValueError(\"现有品种日历主键不唯一。\")"
+      },
+      {
+        "line": 1375,
+        "source": "raise ValueError(\"现有品种日历 active_contract_count 包含非正数。\")"
+      },
+      {
+        "line": 1379,
+        "source": "raise ValueError(\"现有品种日历 source 与契约不一致。\")"
+      },
+      {
+        "line": 1389,
+        "source": "raise ValueError(\"现有品种日历分区年月与交易日不一致。\")"
+      },
+      {
+        "line": 1401,
+        "source": "raise ValueError(\n            \"现有品种日历包含不属于上游有效格点的主键；\"\n            f\"自动补缺不会静默删除这些行：{sorted(out_of_watermark_primary_key_set)[:10]}\"\n        )"
+      }
+    ]
+  },
+  {
+    "path": "02_Market_Data/a01_Collection/b01_Futures_Market_Data/c03_futures_contract_calendar.py",
+    "sha256": "57cff0ae9a06b7d457cc6d09604a91f56746b6872472fe36c3d6bd1ca87be756",
+    "constants": [
+      {
+        "line": 101,
+        "source": "project_markers = [\".git\", \".env\", \"config/settings.py\"]"
+      },
+      {
+        "line": 172,
+        "source": "PHYSICAL_METADATA_KEYS = (b\"table_name\", b\"primary_key\", b\"partition_columns\")"
+      },
+      {
+        "line": 173,
+        "source": "AUTOMATIC_TAIL_PROCESSED_THROUGH_KEY = b\"automatic_tail_processed_through\""
+      },
+      {
+        "line": 289,
+        "source": "VARIETY_DATE_COLUMNS = [\"exchange_code\", \"underlying_code\", \"trading_date\"]"
+      },
+      {
+        "line": 294,
+        "source": "INFO_FIELDS = [  # 从 JQData get_futures_info 请求的原始字段。\n    \"contract_multiplier\",  # 合约乘数。\n    \"tick_size\",  # 最小价格变动单位。\n    \"trade_time\",  # 原始交易时间文本；后续拆为多个 Session。\n]"
+      },
+      {
+        "line": 299,
+        "source": "INFO_BATCH_SIZE = 200"
+      },
+      {
+        "line": 300,
+        "source": "SOURCE_NAME = \"JQData_get_all_securities+get_futures_info\""
+      }
+    ],
+    "constraints": [
+      {
+        "line": 111,
+        "source": "raise RuntimeError(\"未找到项目根目录\")"
+      },
+      {
+        "line": 183,
+        "source": "raise TypeError(f\"{context}字段及顺序与契约不一致。\")"
+      },
+      {
+        "line": 190,
+        "source": "raise TypeError(f\"{context}字段 {expected_field.name!r} 的类型或 nullable 与契约不一致。\")"
+      },
+      {
+        "line": 195,
+        "source": "raise TypeError(f\"{context}{metadata_key.decode()} metadata 与契约不一致。\")"
+      },
+      {
+        "line": 233,
+        "source": "raise ValueError(\n            \"schema.parquet 中 automatic_tail_processed_through 不是有效 ISO 日期。\"\n        ) from error"
+      },
+      {
+        "line": 270,
+        "source": "raise RuntimeError(\"b03 自动尾部水位 staging 复读失败。\")"
+      },
+      {
+        "line": 287,
+        "source": "raise"
+      },
+      {
+        "line": 384,
+        "source": "raise ValueError(f\"无法完整解析 trade_time Session：{session_value!r}\")"
+      },
+      {
+        "line": 405,
+        "source": "raise ValueError(f\"{context}主键不唯一。\")"
+      },
+      {
+        "line": 413,
+        "source": "raise ValueError(f\"{context}包含非固定月份合约代码。\")"
+      },
+      {
+        "line": 415,
+        "source": "raise ValueError(f\"{context}包含连续或指数合约代码。\")"
+      },
+      {
+        "line": 419,
+        "source": "raise ValueError(f\"{context}exchange_code 与合约后缀不一致。\")"
+      },
+      {
+        "line": 423,
+        "source": "raise ValueError(f\"{context}underlying_code 与合约代码不一致。\")"
+      },
+      {
+        "line": 426,
+        "source": "raise ValueError(f\"{context}source 与数据契约不一致。\")"
+      },
+      {
+        "line": 431,
+        "source": "raise ValueError(f\"{context}{row.contract_code} 的交易日越出上市区间。\")"
+      },
+      {
+        "line": 433,
+        "source": "raise ValueError(f\"{context}{row.contract_code} 的交易日越出规则区间。\")"
+      },
+      {
+        "line": 435,
+        "source": "raise ValueError(f\"{context}session_number 必须大于 0。\")"
+      },
+      {
+        "line": 441,
+        "source": "raise ValueError(f\"{context}{session_text} 与 Session 时间戳不一致。\")"
+      },
+      {
+        "line": 443,
+        "source": "raise ValueError(f\"{context}Session 起点必须严格早于终点。\")"
+      },
+      {
+        "line": 447,
+        "source": "raise ValueError(f\"{context}Session 时间差不是整分钟。\")"
+      },
+      {
+        "line": 449,
+        "source": "raise ValueError(f\"{context}minute_count 与 Session 时间差不一致。\")"
+      },
+      {
+        "line": 453,
+        "source": "raise ValueError(f\"{context}is_night_session 与起始钟点不一致。\")"
+      },
+      {
+        "line": 455,
+        "source": "raise ValueError(f\"{context}spans_midnight 与时间戳日期不一致。\")"
+      },
+      {
+        "line": 458,
+        "source": "raise ValueError(f\"{context}非空 contract_multiplier 必须大于 0。\")"
+      },
+      {
+        "line": 460,
+        "source": "raise ValueError(f\"{context}非空 tick_size 必须大于 0。\")"
+      },
+      {
+        "line": 462,
+        "source": "raise ValueError(f\"{context}year/month 与 trading_date 不一致。\")"
+      },
+      {
+        "line": 470,
+        "source": "raise ValueError(f\"{context}{group_key} 的 Session 编号不连续。\")"
+      },
+      {
+        "line": 472,
+        "source": "raise ValueError(f\"{context}{group_key} 包含重复 Session 起点。\")"
+      },
+      {
+        "line": 529,
+        "source": "raise ValueError(\"尾部起点不能与闭区间同时提供。\")"
+      },
+      {
+        "line": 531,
+        "source": "raise ValueError(\"闭区间起止日期必须同时提供。\")"
+      },
+      {
+        "line": 536,
+        "source": "raise FileNotFoundError(\n            f\"缺少上游品种日历：{upstream_variety_calendar_path}\"\n        )"
+      },
+      {
+        "line": 548,
+        "source": "raise TypeError(\"上游品种日历字段集合与契约不一致。\")"
+      },
+      {
+        "line": 633,
+        "source": "raise TypeError(\n                \"get_all_securities 应返回 pandas.DataFrame，实际为 \"\n                f\"{type(contract_catalog_df).__name__}。\"\n            )"
+      },
+      {
+        "line": 652,
+        "source": "raise ValueError(f\"get_all_securities 缺少列：{missing_columns}\")"
+      },
+      {
+        "line": 674,
+        "source": "raise ValueError(\n                \"get_all_securities 未返回任何固定月份期货合约。\"\n            )"
+      },
+      {
+        "line": 687,
+        "source": "raise ValueError(\n                \"get_all_securities 合约代码重复：\"\n                f\"{duplicate_contract_codes}\"\n            )"
+      },
+      {
+        "line": 701,
+        "source": "raise ValueError(\n                \"固定月份合约的 start_date/end_date 包含空值。\"\n            )"
+      },
+      {
+        "line": 708,
+        "source": "raise ValueError(\n                \"固定月份合约存在 start_date 晚于 end_date 的记录。\"\n            )"
+      },
+      {
+        "line": 758,
+        "source": "raise ValueError(\n                \"完整合约目录无法覆盖任何请求的上游品种日格点。\"\n            )"
+      },
+      {
+        "line": 792,
+        "source": "raise TypeError(\n                    \"get_futures_info 应返回 dict，实际为 \"\n                    f\"{type(batch_contract_info).__name__}。\"\n                )"
+      },
+      {
+        "line": 800,
+        "source": "raise ValueError(\n                        \"get_futures_info 重复返回 \"\n                        f\"{normalized_contract_code}。\"\n                    )"
+      },
+      {
+        "line": 805,
+        "source": "raise TypeError(\n                        f\"{normalized_contract_code} 的合约信息不是 dict。\"\n                    )"
+      },
+      {
+        "line": 812,
+        "source": "raise ValueError(\n                        f\"{normalized_contract_code} 的 \"\n                        \"get_futures_info 缺少字段：\"\n                        f\"{missing_info_fields}\"\n                    )"
+      },
+      {
+        "line": 837,
+        "source": "raise ValueError(\n                \"get_futures_info 缺少 \"\n                f\"{len(missing_contract_codes)} 个合约：\"\n                f\"{missing_contract_codes[:10]}\"\n            )"
+      },
+      {
+        "line": 843,
+        "source": "raise ValueError(\n                \"get_futures_info 返回未请求合约：\"\n                f\"{unexpected_contract_codes[:10]}\"\n            )"
+      },
+      {
+        "line": 917,
+        "source": "raise ValueError(\n                    f\"无法确定 {earliest_trading_date} 的前一交易日。\"\n                )"
+      },
+      {
+        "line": 976,
+        "source": "raise"
+      },
+      {
+        "line": 1048,
+        "source": "raise ValueError(\n                    f\"完整合约目录缺少请求的上游品种：{variety_key}\"\n                )"
+      },
+      {
+        "line": 1085,
+        "source": "raise ValueError(\n                        f\"{contract.contract_code} 的 \"\n                        \"trade_time 不是规则列表。\"\n                    )"
+      },
+      {
+        "line": 1096,
+        "source": "raise ValueError(\n                            f\"{contract.contract_code} 包含非法 \"\n                            f\"trade_time 规则：{trade_time_rule!r}\"\n                        )"
+      },
+      {
+        "line": 1107,
+        "source": "raise ValueError(\n                            f\"{contract.contract_code} 的规则生效日\"\n                            f\"晚于失效日：{trade_time_rule!r}\"\n                        )"
+      },
+      {
+        "line": 1135,
+        "source": "raise ValueError(\n                        f\"{contract.contract_code} 在 \"\n                        f\"{variety_day.trading_date} 命中 \"\n                        f\"{len(matching_trade_time_rules)} 条 \"\n                        \"trade_time 规则。\"\n                    )"
+      },
+      {
+        "line": 1294,
+        "source": "raise"
+      },
+      {
+        "line": 1351,
+        "source": "raise ValueError(\"替换起止日期必须同时提供。\")"
+      },
+      {
+        "line": 1356,
+        "source": "raise ValueError(\"替换起始日期不得晚于结束日期。\")"
+      },
+      {
+        "line": 1361,
+        "source": "raise ValueError(\n                \"精确品种日替换与日期区间替换不能同时提供。\"\n            )"
+      },
+      {
+        "line": 1375,
+        "source": "raise ValueError(\"待提交数据越出指定 Hive 分区。\")"
+      },
+      {
+        "line": 1386,
+        "source": "raise ValueError(\n                        \"待提交数据越出精确品种日替换范围。\"\n                    )"
+      },
+      {
+        "line": 1400,
+        "source": "raise ValueError(\n                    \"待提交数据越出显式替换日期范围。\"\n                )"
+      },
+      {
+        "line": 1423,
+        "source": "raise ValueError(\n                    f\"数据集路径越出 silver 根目录：{managed_path}\"\n                )"
+      },
+      {
+        "line": 1601,
+        "source": "raise ValueError(\"staging 主键不唯一。\")"
+      },
+      {
+        "line": 1603,
+        "source": "raise ValueError(\"staging 分区行数检查失败。\")"
+      },
+      {
+        "line": 1606,
+        "source": "raise"
+      },
+      {
+        "line": 1657,
+        "source": "raise ValueError(\"正式空表 marker 必须为零行。\")"
+      },
+      {
+        "line": 1681,
+        "source": "raise ValueError(\"正式分区主键不唯一。\")"
+      },
+      {
+        "line": 1686,
+        "source": "raise ValueError(\"正式分区行数检查失败。\")"
+      },
+      {
+        "line": 1701,
+        "source": "raise"
+      },
+      {
+        "line": 1781,
+        "source": "raise click.UsageError(\n            \"--start-date 与 --end-date 必须同时提供。\"\n        )"
+      },
+      {
+        "line": 1785,
+        "source": "raise click.UsageError(\n            \"--full 与 --start-date/--end-date 不能同时提供。\"\n        )"
+      },
+      {
+        "line": 1803,
+        "source": "raise click.BadParameter(\n            \"起始日期不得晚于结束日期。\"\n        )"
+      },
+      {
+        "line": 1869,
+        "source": "raise ValueError(\n                    \"正式表包含非法分区文件：\"\n                    f\"{parquet_path}\"\n                )"
+      }
+    ]
+  },
+  {
+    "path": "02_Market_Data/a01_Collection/b01_Futures_Market_Data/c04_futures_bar_calendar.py",
+    "sha256": "e1f9b04d3a16dc2a615aacef8a67dbf50a28d07c02195252e04b26226635a263",
+    "constants": [
+      {
+        "line": 85,
+        "source": "project_markers = [\".git\", \".env\", \"config/settings.py\"]"
+      },
+      {
+        "line": 174,
+        "source": "BAR_FREQUENCIES = (\"1d\", \"1m\")"
+      },
+      {
+        "line": 187,
+        "source": "SCHEDULE_STATUSES = {\n    \"scheduled\",\n    \"suspected_closed\",\n    \"confirmed_closed\",\n}"
+      },
+      {
+        "line": 192,
+        "source": "EVIDENCE_LEVELS = {\n    \"contract_rule\",\n    \"inferred\",\n    \"reconciled\",\n    \"authoritative\",\n}"
+      },
+      {
+        "line": 198,
+        "source": "QUALITY_STATUSES = {\n    \"pending\",\n    \"passed\",\n    \"warning\",\n    \"failed\",\n    \"not_applicable\",\n}"
+      },
+      {
+        "line": 629,
+        "source": "SCHEMA_IDENTITY_METADATA_KEYS = [\n    b\"table_name\",\n    b\"primary_key\",\n    b\"partition_columns\",\n]"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 95,
+        "source": "raise RuntimeError(\"未找到项目根目录\")"
+      },
+      {
+        "line": 295,
+        "source": "raise ValueError(f\"{context}主键不唯一。\")"
+      },
+      {
+        "line": 303,
+        "source": "raise ValueError(f\"{context}session_number 必须大于 0。\")"
+      },
+      {
+        "line": 305,
+        "source": "raise ValueError(f\"{context}Session 起点必须严格早于终点。\")"
+      },
+      {
+        "line": 307,
+        "source": "raise ValueError(f\"{context}Session 时间差不是整分钟。\")"
+      },
+      {
+        "line": 309,
+        "source": "raise ValueError(f\"{context}minute_count 与 Session 时间差不一致。\")"
+      },
+      {
+        "line": 311,
+        "source": "raise ValueError(f\"{context}minute_count 必须大于 0。\")"
+      },
+      {
+        "line": 321,
+        "source": "raise ValueError(f\"{context}exchange_code 与合约代码后缀不一致。\")"
+      },
+      {
+        "line": 326,
+        "source": "raise ValueError(f\"{context}year/month 与 trading_date 不一致。\")"
+      },
+      {
+        "line": 333,
+        "source": "raise ValueError(f\"{context}同一合约日的 Session 编号不连续。\")"
+      },
+      {
+        "line": 340,
+        "source": "raise ValueError(f\"{context}同一合约日的直接属性不一致。\")"
+      },
+      {
+        "line": 366,
+        "source": "raise ValueError(f\"{context}主键不唯一。\")"
+      },
+      {
+        "line": 370,
+        "source": "raise ValueError(f\"{context}bar_frequency 不在允许枚举中。\")"
+      },
+      {
+        "line": 380,
+        "source": "raise ValueError(f\"{context}exchange_code 与合约代码后缀不一致。\")"
+      },
+      {
+        "line": 385,
+        "source": "raise ValueError(f\"{context}year/month 与 trading_date 不一致。\")"
+      },
+      {
+        "line": 387,
+        "source": "raise ValueError(f\"{context}expected_bar_count 必须大于 0。\")"
+      },
+      {
+        "line": 399,
+        "source": "raise ValueError(f\"{context}日线 Session 结构不合法。\")"
+      },
+      {
+        "line": 417,
+        "source": "raise ValueError(f\"{context}分钟 Session 结构不合法。\")"
+      },
+      {
+        "line": 422,
+        "source": "raise ValueError(f\"{context}分钟 Session 编号不连续。\")"
+      },
+      {
+        "line": 444,
+        "source": "raise ValueError(f\"{context}{column} 不在允许枚举中。\")"
+      },
+      {
+        "line": 455,
+        "source": "raise ValueError(f\"{context}中文状态说明字段不得为空。\")"
+      },
+      {
+        "line": 460,
+        "source": "raise ValueError(f\"{context}实际与缺失条数不得为负。\")"
+      },
+      {
+        "line": 470,
+        "source": "raise ValueError(f\"{context}确认休市必须具有权威证据且不得继续拉取。\")"
+      },
+      {
+        "line": 478,
+        "source": "raise ValueError(f\"{context}完成状态缺少运行批次或完成时间。\")"
+      },
+      {
+        "line": 480,
+        "source": "raise ValueError(f\"{context}未完成格点不得具有完成时间。\")"
+      },
+      {
+        "line": 487,
+        "source": "raise ValueError(f\"{context}未经缺失检查不得记录缺失。\")"
+      },
+      {
+        "line": 496,
+        "source": "raise ValueError(f\"{context}missing_bar_count 无法由条数复算。\")"
+      },
+      {
+        "line": 501,
+        "source": "raise ValueError(f\"{context}is_data_missing 与缺失条数不一致。\")"
+      },
+      {
+        "line": 506,
+        "source": "raise ValueError(f\"{context}非 pending 质量状态缺少检查时间。\")"
+      },
+      {
+        "line": 624,
+        "source": "raise TypeError(\"数据集缺少契约字段。\") from error"
+      },
+      {
+        "line": 688,
+        "source": "raise FileNotFoundError(f\"{label}不存在：{table_path}\")"
+      },
+      {
+        "line": 705,
+        "source": "raise TypeError(f\"{label} 物理结构或表身份与契约不一致。\")"
+      },
+      {
+        "line": 724,
+        "source": "raise TypeError(\n                    f\"{label} fragment 物理结构或表身份与契约不一致：\"\n                    f\"{fragment.path}\"\n                )"
+      },
+      {
+        "line": 747,
+        "source": "raise"
+      },
+      {
+        "line": 784,
+        "source": "raise ValueError(f\"数据集包含非法分区文件：{parquet_path}\")"
+      },
+      {
+        "line": 794,
+        "source": "raise ValueError(f\"数据集包含非法分区目录：{parquet_path}\")"
+      },
+      {
+        "line": 819,
+        "source": "raise"
+      },
+      {
+        "line": 837,
+        "source": "raise ValueError(\"分区键不得为空。\")"
+      },
+      {
+        "line": 882,
+        "source": "raise"
+      },
+      {
+        "line": 1052,
+        "source": "raise"
+      },
+      {
+        "line": 1104,
+        "source": "raise"
+      },
+      {
+        "line": 1240,
+        "source": "raise FileNotFoundError(f\"数据集没有 Parquet 文件：{table_path}\")"
+      },
+      {
+        "line": 1245,
+        "source": "raise TypeError(\n                f\"Parquet 文件 Schema/metadata 与契约不一致：{parquet_path}\"\n            )"
+      },
+      {
+        "line": 1300,
+        "source": "raise TypeError(\n                f\"正式叶 {partition_key} 物理结构或表身份与契约不兼容。\"\n            )"
+      },
+      {
+        "line": 1322,
+        "source": "raise"
+      },
+      {
+        "line": 1341,
+        "source": "raise ValueError(\"替换起止日期必须同时提供。\")"
+      },
+      {
+        "line": 1343,
+        "source": "raise ValueError(\"替换起始日期不得晚于结束日期。\")"
+      },
+      {
+        "line": 1366,
+        "source": "raise ValueError(\"待提交数据越出指定 Hive 分区。\")"
+      },
+      {
+        "line": 1374,
+        "source": "raise ValueError(\"待提交数据越出显式替换日期范围。\")"
+      },
+      {
+        "line": 1397,
+        "source": "raise ValueError(f\"数据集路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 1483,
+        "source": "raise TypeError(\"staging Schema/metadata 与契约不一致。\")"
+      },
+      {
+        "line": 1492,
+        "source": "raise ValueError(\"staging 分区主键不唯一。\")"
+      },
+      {
+        "line": 1494,
+        "source": "raise ValueError(\"staging 分区行数摘要不一致。\")"
+      },
+      {
+        "line": 1497,
+        "source": "raise"
+      },
+      {
+        "line": 1540,
+        "source": "raise ValueError(\"schema.parquet 必须是 0 行契约标记。\")"
+      },
+      {
+        "line": 1558,
+        "source": "raise ValueError(\"正式 schema.parquet 必须匹配文件契约且为 0 行。\")"
+      },
+      {
+        "line": 1578,
+        "source": "raise TypeError(\"正式叶物理结构或表身份与契约不一致。\")"
+      },
+      {
+        "line": 1588,
+        "source": "raise ValueError(\"正式叶主键不唯一。\")"
+      },
+      {
+        "line": 1590,
+        "source": "raise ValueError(\"正式叶行数与 staging 摘要不一致。\")"
+      },
+      {
+        "line": 1605,
+        "source": "raise"
+      },
+      {
+        "line": 1731,
+        "source": "raise click.UsageError(\"--start-date 与 --end-date 必须同时提供。\")"
+      },
+      {
+        "line": 1733,
+        "source": "raise click.UsageError(\"--full 与显式日期范围互斥。\")"
+      },
+      {
+        "line": 1735,
+        "source": "raise click.UsageError(\n            \"显式指定日期时禁止写入 FUTURES_LAKE_ROOT 指向的正式湖；\"\n            \"请移除日期参数使用自动补缺，或改用非正式测试湖。\"\n        )"
+      },
+      {
+        "line": 1747,
+        "source": "raise click.BadParameter(\"起始日期不得晚于结束日期。\")"
+      },
+      {
+        "line": 1810,
+        "source": "raise ValueError(\n            f\"现有行情日历包含非法频率分区：{sorted(invalid_frequencies)}\"\n        )"
+      },
+      {
+        "line": 1885,
+        "source": "raise"
+      }
+    ]
+  },
+  {
+    "path": "02_Market_Data/a01_Collection/b01_Futures_Market_Data/c05_futures_daily.py",
+    "sha256": "479512895ddc70667c41a3e2f3179c3c229148fbc5c7c7c3d45b464bd79c0184",
+    "constants": [
+      {
+        "line": 82,
+        "source": "project_markers = [\".git\", \".env\", \"config/settings.py\"]"
+      },
+      {
+        "line": 193,
+        "source": "PRICE_FIELDS = [\n    \"open\",\n    \"high\",\n    \"low\",\n    \"close\",\n    \"volume\",\n    \"money\",\n    \"pre_close\",\n]"
+      },
+      {
+        "line": 202,
+        "source": "MARKET_VALUE_COLUMNS = [\n    \"previous_close\",\n    \"previous_settlement\",\n    \"open\",\n    \"high\",\n    \"low\",\n    \"close\",\n    \"settlement\",\n    \"close_change_from_previous_settlement\",\n    \"settlement_change_from_previous_settlement\",\n    \"volume\",\n    \"money\",\n    \"open_interest\",\n    \"open_interest_change\",\n]"
+      },
+      {
+        "line": 218,
+        "source": "SOURCE_NAME = \"JQData_get_price_daily_get_extras_raw\""
+      },
+      {
+        "line": 219,
+        "source": "LEGACY_SOURCE_NAMES = {\"JQData_get_price_1d_skip_paused\"}"
+      },
+      {
+        "line": 220,
+        "source": "LEGACY_NULL_EXTRA_FIELDS = [\n    \"previous_close\",\n    \"previous_settlement\",\n    \"settlement\",\n    \"close_change_from_previous_settlement\",\n    \"settlement_change_from_previous_settlement\",\n    \"open_interest_change\",\n]"
+      },
+      {
+        "line": 228,
+        "source": "SELECTED_REASON = \"命中国内期货事实采集白名单；日线事实需要采集。\""
+      },
+      {
+        "line": 229,
+        "source": "EXCLUDED_REASON = (\n    \"未命中国内期货事实采集白名单；保留理论格点和既有事实，\"\n    \"当前不要求采集日线事实。\"\n)"
+      },
+      {
+        "line": 234,
+        "source": "MAX_CONTRACTS_PER_REQUEST = 100"
+      },
+      {
+        "line": 235,
+        "source": "MAX_ESTIMATED_VALUES_PER_BATCH = 90_000"
+      },
+      {
+        "line": 236,
+        "source": "LOOKBACK_CALENDAR_DAYS = 45"
+      },
+      {
+        "line": 237,
+        "source": "DEFAULT_QUOTA_RESERVE = 5_000_000"
+      },
+      {
+        "line": 239,
+        "source": "SCHEDULE_STATUSES = {\n    \"scheduled\",\n    \"suspected_closed\",\n    \"confirmed_closed\",\n}"
+      },
+      {
+        "line": 244,
+        "source": "EVIDENCE_LEVELS = {\n    \"contract_rule\",\n    \"inferred\",\n    \"reconciled\",\n    \"authoritative\",\n}"
+      },
+      {
+        "line": 250,
+        "source": "QUALITY_STATUSES = {\n    \"pending\",\n    \"passed\",\n    \"warning\",\n    \"failed\",\n    \"not_applicable\",\n}"
+      },
+      {
+        "line": 735,
+        "source": "SCHEMA_IDENTITY_METADATA_KEYS = [\n    b\"table_name\",\n    b\"primary_key\",\n    b\"partition_columns\",\n]"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 92,
+        "source": "raise RuntimeError(\"未找到项目根目录\")"
+      },
+      {
+        "line": 366,
+        "source": "raise ValueError(f\"{context}{column} 包含非有限数。\")"
+      },
+      {
+        "line": 372,
+        "source": "raise ValueError(f\"{context}{column} 包含非有限数。\")"
+      },
+      {
+        "line": 378,
+        "source": "raise ValueError(f\"{context}主键不唯一。\")"
+      },
+      {
+        "line": 394,
+        "source": "raise ValueError(f\"{context}交易所与合约代码后缀不一致。\")"
+      },
+      {
+        "line": 398,
+        "source": "raise ValueError(f\"{context}品种代码无法由合约代码复算。\")"
+      },
+      {
+        "line": 405,
+        "source": "raise ValueError(f\"{context}year/month 与 trading_date 不一致。\")"
+      },
+      {
+        "line": 409,
+        "source": "raise ValueError(f\"{context}source 与 JQData 日线契约不一致。\")"
+      },
+      {
+        "line": 416,
+        "source": "raise ValueError(f\"{context}有效行情行必须具有 close。\")"
+      },
+      {
+        "line": 421,
+        "source": "raise ValueError(f\"{context}缺失占位行的行情度量必须全部为空。\")"
+      },
+      {
+        "line": 424,
+        "source": "raise ValueError(f\"{context}{column} 不得为负。\")"
+      },
+      {
+        "line": 446,
+        "source": "raise ValueError(f\"{context}收盘价相对昨结涨跌额无法复算。\")"
+      },
+      {
+        "line": 452,
+        "source": "raise ValueError(f\"{context}收盘涨跌缺少必要输入。\")"
+      },
+      {
+        "line": 473,
+        "source": "raise ValueError(f\"{context}结算价相对昨结涨跌额无法复算。\")"
+      },
+      {
+        "line": 479,
+        "source": "raise ValueError(f\"{context}结算涨跌缺少必要输入。\")"
+      },
+      {
+        "line": 496,
+        "source": "raise ValueError(\n                f\"{context}previous_settlement 与前序事实不一致。\"\n            )"
+      },
+      {
+        "line": 522,
+        "source": "raise ValueError(f\"{context}持仓变化无法由前序事实复算。\")"
+      },
+      {
+        "line": 557,
+        "source": "raise ValueError(f\"{context}主键不唯一。\")"
+      },
+      {
+        "line": 568,
+        "source": "raise ValueError(f\"{context}{column} 不在允许枚举中。\")"
+      },
+      {
+        "line": 579,
+        "source": "raise ValueError(f\"{context}状态说明字段不得为空。\")"
+      },
+      {
+        "line": 589,
+        "source": "raise ValueError(f\"{context}交易所与合约代码后缀不一致。\")"
+      },
+      {
+        "line": 596,
+        "source": "raise ValueError(f\"{context}year/month 与 trading_date 不一致。\")"
+      },
+      {
+        "line": 598,
+        "source": "raise ValueError(f\"{context}expected_bar_count 必须大于 0。\")"
+      },
+      {
+        "line": 603,
+        "source": "raise ValueError(f\"{context}实际与缺失条数不得为负。\")"
+      },
+      {
+        "line": 618,
+        "source": "raise ValueError(f\"{context}日线 Session 结构不合法。\")"
+      },
+      {
+        "line": 635,
+        "source": "raise ValueError(f\"{context}分钟 Session 结构不合法。\")"
+      },
+      {
+        "line": 647,
+        "source": "raise ValueError(f\"{context}确认休市必须具有权威证据且不得拉取。\")"
+      },
+      {
+        "line": 657,
+        "source": "raise ValueError(f\"{context}完成状态缺少运行批次或完成时间。\")"
+      },
+      {
+        "line": 659,
+        "source": "raise ValueError(f\"{context}未完成格点不得具有完成时间。\")"
+      },
+      {
+        "line": 669,
+        "source": "raise ValueError(f\"{context}未经检查不得记录缺失。\")"
+      },
+      {
+        "line": 678,
+        "source": "raise ValueError(f\"{context}missing_bar_count 无法复算。\")"
+      },
+      {
+        "line": 683,
+        "source": "raise ValueError(f\"{context}is_data_missing 与缺失条数不一致。\")"
+      },
+      {
+        "line": 688,
+        "source": "raise ValueError(f\"{context}非 pending 状态缺少检查时间。\")"
+      },
+      {
+        "line": 719,
+        "source": "raise TypeError(\"数据集缺少契约字段。\") from error"
+      },
+      {
+        "line": 805,
+        "source": "raise FileNotFoundError(f\"{label}不存在：{table_path}\")"
+      },
+      {
+        "line": 821,
+        "source": "raise TypeError(f\"{label} 物理结构或表身份与契约不一致。\")"
+      },
+      {
+        "line": 837,
+        "source": "raise TypeError(\n                    f\"{label} Parquet fragment 物理结构或表身份与契约不一致：\"\n                    f\"{fragment.path}\"\n                )"
+      },
+      {
+        "line": 858,
+        "source": "raise"
+      },
+      {
+        "line": 905,
+        "source": "raise ValueError(\"日线窄列规划只能包含 1d 格点。\")"
+      },
+      {
+        "line": 909,
+        "source": "raise ValueError(\"日线窄列规划 session_number 必须为 0。\")"
+      },
+      {
+        "line": 976,
+        "source": "raise"
+      },
+      {
+        "line": 1017,
+        "source": "raise ValueError(\"白名单 dirty 规划主键不唯一。\")"
+      },
+      {
+        "line": 1020,
+        "source": "raise ValueError(\n            f\"白名单 dirty 格点无法匹配日历叶：{missing_keys[:5].tolist()}\"\n        )"
+      },
+      {
+        "line": 1212,
+        "source": "raise"
+      },
+      {
+        "line": 1271,
+        "source": "raise TypeError(\"schema_error: get_price 未返回 DataFrame。\")"
+      },
+      {
+        "line": 1283,
+        "source": "raise ValueError(\"schema_error: 多合约 get_price 缺少 code。\")"
+      },
+      {
+        "line": 1290,
+        "source": "raise ValueError(\n            f\"schema_error: get_price 缺列 {sorted(missing_columns)}\"\n        )"
+      },
+      {
+        "line": 1305,
+        "source": "raise ValueError(\n            f\"schema_error: get_price 返回未请求合约 {sorted(unexpected_codes)}\"\n        )"
+      },
+      {
+        "line": 1321,
+        "source": "raise ValueError(\n                    f\"schema_error: get_price {column} 含非有限数。\"\n                )"
+      },
+      {
+        "line": 1330,
+        "source": "raise ValueError(\n                f\"schema_error: get_price {column} 不得为负。\"\n            )"
+      },
+      {
+        "line": 1336,
+        "source": "raise ValueError(\"schema_error: get_price 返回重复合约日。\")"
+      },
+      {
+        "line": 1362,
+        "source": "raise TypeError(f\"schema_error: {value_column} 未返回 DataFrame。\")"
+      },
+      {
+        "line": 1371,
+        "source": "raise ValueError(\n            f\"schema_error: {value_column} 缺少合约列 {sorted(missing_codes)}\"\n        )"
+      },
+      {
+        "line": 1376,
+        "source": "raise ValueError(\n            f\"schema_error: {value_column} 返回未请求合约 \"\n            f\"{sorted(unexpected_codes)}\"\n        )"
+      },
+      {
+        "line": 1406,
+        "source": "raise ValueError(\n                f\"schema_error: {value_column} 含非有限数。\"\n            )"
+      },
+      {
+        "line": 1417,
+        "source": "raise ValueError(\n            \"schema_error: open_interest 不得为负。\"\n        )"
+      },
+      {
+        "line": 1422,
+        "source": "raise ValueError(f\"schema_error: {value_column} 返回重复合约日。\")"
+      },
+      {
+        "line": 1491,
+        "source": "raise RuntimeError(\"retryable_error: get_price 返回 None。\")"
+      },
+      {
+        "line": 1511,
+        "source": "raise RuntimeError(\"retryable_error: futures_sett_price 返回 None。\")"
+      },
+      {
+        "line": 1531,
+        "source": "raise RuntimeError(\"retryable_error: futures_positions 返回 None。\")"
+      },
+      {
+        "line": 1570,
+        "source": "raise ValueError(\n                    f\"schema_error: {response_name} 返回日期越出请求范围。\"\n                )"
+      },
+      {
+        "line": 1681,
+        "source": "raise"
+      },
+      {
+        "line": 1773,
+        "source": "raise TypeError(\n                    f\"正式叶 {partition_key} 包含不兼容 Parquet fragment：\"\n                    f\"{fragment.path}\"\n                )"
+      },
+      {
+        "line": 1779,
+        "source": "raise TypeError(\n                f\"正式叶 {partition_key} 物理结构或表身份与契约不一致。\"\n            )"
+      },
+      {
+        "line": 1801,
+        "source": "raise"
+      },
+      {
+        "line": 1861,
+        "source": "raise ValueError(f\"事务路径越出 silver 根目录：{path}\")"
+      },
+      {
+        "line": 1872,
+        "source": "raise ValueError(\"日常增量提交不得写空叶分区。\")"
+      },
+      {
+        "line": 1877,
+        "source": "raise ValueError(\"待提交数据越出指定 Hive 分区。\")"
+      },
+      {
+        "line": 1885,
+        "source": "raise ValueError(f\"事务包含重复目标叶：{destination_key}\")"
+      },
+      {
+        "line": 1912,
+        "source": "raise ValueError(\"schema.parquet 必须是 0 行契约标记。\")"
+      },
+      {
+        "line": 1917,
+        "source": "raise TypeError(\n                        f\"{table_name} schema.parquet 与权威契约不一致。\"\n                    )"
+      },
+      {
+        "line": 1924,
+        "source": "raise FileNotFoundError(\n                    f\"{table_name} 已有数据但缺少 schema.parquet。\"\n                )"
+      },
+      {
+        "line": 1964,
+        "source": "raise FileNotFoundError(\n                        f\"staging 缺少叶分区：{staging_leaf_path}\"\n                    )"
+      },
+      {
+        "line": 1973,
+        "source": "raise TypeError(\n                            f\"staging 文件 Schema 不一致：{parquet_path}\"\n                        )"
+      },
+      {
+        "line": 1986,
+        "source": "raise ValueError(\"staging 行数与待提交完整叶不一致。\")"
+      },
+      {
+        "line": 1990,
+        "source": "raise ValueError(\"staging 主键不唯一。\")"
+      },
+      {
+        "line": 1993,
+        "source": "raise"
+      },
+      {
+        "line": 2046,
+        "source": "raise ValueError(\"正式 schema.parquet 必须匹配文件契约且为 0 行。\")"
+      },
+      {
+        "line": 2061,
+        "source": "raise FileNotFoundError(\n                        f\"正式叶缺少 Parquet 文件：{destination_path}\"\n                    )"
+      },
+      {
+        "line": 2070,
+        "source": "raise TypeError(\n                            f\"正式叶文件 Schema 不一致：{parquet_path}\"\n                        )"
+      },
+      {
+        "line": 2083,
+        "source": "raise ValueError(\"正式叶行数与 staging 不一致。\")"
+      },
+      {
+        "line": 2087,
+        "source": "raise ValueError(\"正式叶主键不唯一。\")"
+      },
+      {
+        "line": 2112,
+        "source": "raise"
+      },
+      {
+        "line": 2218,
+        "source": "raise"
+      },
+      {
+        "line": 2295,
+        "source": "raise ValueError(\"完成状态输入事实主键不唯一。\")"
+      },
+      {
+        "line": 2298,
+        "source": "raise ValueError(\n                f\"事实行无法匹配日线日历：{missing_keys[:5].tolist()}\"\n            )"
+      },
+      {
+        "line": 2305,
+        "source": "raise ValueError(\"完成状态回写命中了当前无需拉取的格点。\")"
+      },
+      {
+        "line": 2344,
+        "source": "raise"
+      },
+      {
+        "line": 2372,
+        "source": "raise FileNotFoundError(f\"b04 日历叶不存在：{partition_key}\")"
+      },
+      {
+        "line": 2423,
+        "source": "raise"
+      },
+      {
+        "line": 2478,
+        "source": "raise click.UsageError(\"--start-date 与 --end-date 必须同时提供。\")"
+      },
+      {
+        "line": 2480,
+        "source": "raise click.UsageError(\n            \"显式指定日期时禁止写入 FUTURES_LAKE_ROOT 指向的正式湖；\"\n            \"请移除日期参数使用自动补缺，或改用非正式测试湖。\"\n        )"
+      },
+      {
+        "line": 2490,
+        "source": "raise click.BadParameter(\"起始日期不得晚于结束日期。\")"
+      }
+    ]
+  },
+  {
+    "path": "02_Market_Data/a01_Collection/b01_Futures_Market_Data/c06_futures_minute.py",
+    "sha256": "c8919ee6bb96d5fadaaf774fdff5c9d53769a99ea0cb454686e42439ad5e8c20",
+    "constants": [
+      {
+        "line": 86,
+        "source": "project_markers = [\".git\", \".env\", \"config/settings.py\"]"
+      },
+      {
+        "line": 172,
+        "source": "SESSION_KEY = [  # 汇总分钟条数和回写状态所用的 Session 业务键。\n    \"contract_code\",  # 固定月份合约代码。\n    \"trading_date\",  # 分钟 bar 归属的期货交易日。\n    \"session_number\",  # 同一合约日内的 Session 顺序号。\n]"
+      },
+      {
+        "line": 187,
+        "source": "PRICE_FIELDS = [  # JQData 一分钟响应中参与行情质量检查的字段。\n    \"open\",  # 分钟开盘价。\n    \"high\",  # 分钟最高价。\n    \"low\",  # 分钟最低价。\n    \"close\",  # 分钟收盘价。\n    \"volume\",  # 分钟成交量，单位为手。\n    \"money\",  # 分钟成交额，单位为元。\n    \"open_interest\",  # 分钟结束时持仓量，单位为手。\n]"
+      },
+      {
+        "line": 196,
+        "source": "SOURCE_NAME = \"JQData_get_price_1m_skip_paused_fq_none\""
+      },
+      {
+        "line": 197,
+        "source": "LEGACY_SOURCE_NAMES = {\"JQData_get_price_1m\", \"JQData_get_price_1m_skip_paused\"}"
+      },
+      {
+        "line": 198,
+        "source": "DEFAULT_QUOTA_RESERVE = 5_000_000"
+      },
+      {
+        "line": 200,
+        "source": "SELECTED_REASON = (\n    \"命中国内期货事实采集白名单；一分钟事实需要采集。\"\n)"
+      },
+      {
+        "line": 203,
+        "source": "EXCLUDED_REASON = (\n    \"未命中国内期货事实采集白名单；\"\n    \"保留理论格点但不采集一分钟事实，既有历史分钟事实不自动删除。\"\n)"
+      },
+      {
+        "line": 208,
+        "source": "SCHEDULE_STATUSES = {\n    \"scheduled\",\n    \"suspected_closed\",\n    \"confirmed_closed\",\n}"
+      },
+      {
+        "line": 213,
+        "source": "EVIDENCE_LEVELS = {\n    \"contract_rule\",\n    \"inferred\",\n    \"reconciled\",\n    \"authoritative\",\n}"
+      },
+      {
+        "line": 219,
+        "source": "QUALITY_STATUSES = {\n    \"pending\",\n    \"passed\",\n    \"warning\",\n    \"failed\",\n    \"not_applicable\",\n}"
+      },
+      {
+        "line": 227,
+        "source": "EVIDENCE_COLUMNS = [  # b06 产生新分钟状态时必须清空的旧 b07 校对证据。\n    \"daily_open\",  # JQData 日线开盘价旁证。\n    \"daily_high\",  # JQData 日线最高价旁证。\n    \"daily_low\",  # JQData 日线最低价旁证。\n    \"daily_close\",  # JQData 日线收盘价旁证。\n    \"daily_volume\",  # JQData 日线成交量旁证。\n    \"daily_money\",  # JQData 日线成交额旁证。\n    \"daily_open_interest\",  # JQData 日线收盘持仓量旁证。\n    \"aggregated_open\",  # 其他完整 Session 重聚合开盘价。\n    \"aggregated_high\",  # 其他完整 Session 重聚合最高价。\n    \"aggregated_low\",  # 其他完整 Session 重聚合最低价。\n    \"aggregated_close\",  # 其他完整 Session 重聚合收盘价。\n    \"aggregated_volume\",  # 其他完整 Session 重聚合成交量。\n    \"aggregated_money\",  # 其他完整 Session 重聚合成交额。\n    \"aggregated_open_interest\",  # 其他完整 Session 末条有效持仓量。\n    \"ohlc_matches_daily\",  # 重聚合 OHLC 是否均匹配日线。\n    \"volume_matches_daily\",  # 重聚合成交量是否匹配日线。\n    \"money_matches_daily\",  # 重聚合成交额是否匹配日线。\n    \"open_interest_matches_daily\",  # 重聚合末持仓是否匹配日线。\n]"
+      },
+      {
+        "line": 263,
+        "source": "MINUTE_PLANNING_COLUMNS = [\n    \"bar_frequency\",\n    \"contract_code\",\n    \"exchange_code\",\n    \"underlying_code\",\n    \"trading_date\",\n    \"session_number\",\n    \"session_start_at\",\n    \"session_end_at\",\n    \"schedule_status\",\n    \"is_fetch_required\",\n    \"expected_bar_count\",\n    \"is_fetch_completed\",\n    \"year\",\n    \"month\",\n]"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 97,
+        "source": "raise RuntimeError(\"未找到项目根目录\")"
+      },
+      {
+        "line": 325,
+        "source": "raise ValueError(f\"{context}主键不唯一。\")"
+      },
+      {
+        "line": 327,
+        "source": "raise ValueError(f\"{context}bar_frequency 不在允许枚举中。\")"
+      },
+      {
+        "line": 329,
+        "source": "raise ValueError(f\"{context}schedule_status 不在允许枚举中。\")"
+      },
+      {
+        "line": 331,
+        "source": "raise ValueError(f\"{context}evidence_level 不在允许枚举中。\")"
+      },
+      {
+        "line": 333,
+        "source": "raise ValueError(f\"{context}quality_status 不在允许枚举中。\")"
+      },
+      {
+        "line": 346,
+        "source": "raise ValueError(f\"{context}状态说明字段不得为空。\")"
+      },
+      {
+        "line": 353,
+        "source": "raise ValueError(f\"{context}交易所与合约代码后缀不一致。\")"
+      },
+      {
+        "line": 359,
+        "source": "raise ValueError(f\"{context}year/month 与 trading_date 不一致。\")"
+      },
+      {
+        "line": 361,
+        "source": "raise ValueError(f\"{context}expected_bar_count 必须大于 0。\")"
+      },
+      {
+        "line": 366,
+        "source": "raise ValueError(f\"{context}实际与缺失条数不得为负。\")"
+      },
+      {
+        "line": 379,
+        "source": "raise ValueError(f\"{context}日线 Session 结构不合法。\")"
+      },
+      {
+        "line": 381,
+        "source": "raise ValueError(f\"{context}日线理论条数必须为 1。\")"
+      },
+      {
+        "line": 383,
+        "source": "raise ValueError(f\"{context}分钟 session_number 必须大于 0。\")"
+      },
+      {
+        "line": 388,
+        "source": "raise ValueError(f\"{context}分钟 Session 起点必须早于终点。\")"
+      },
+      {
+        "line": 394,
+        "source": "raise ValueError(f\"{context}确认休市状态缺少权威证据或仍要求拉取。\")"
+      },
+      {
+        "line": 405,
+        "source": "raise ValueError(f\"{context}完成状态缺少批次或完成时间。\")"
+      },
+      {
+        "line": 407,
+        "source": "raise ValueError(f\"{context}未完成格点不得具有完成时间。\")"
+      },
+      {
+        "line": 414,
+        "source": "raise ValueError(f\"{context}未经检查不得记录缺失。\")"
+      },
+      {
+        "line": 430,
+        "source": "raise ValueError(f\"{context}缺失状态无法由当前格点复算。\")"
+      },
+      {
+        "line": 434,
+        "source": "raise ValueError(f\"{context}非 pending 状态缺少质检时间。\")"
+      },
+      {
+        "line": 444,
+        "source": "raise ValueError(f\"{context}b07 四项比较必须同时为空或同时非空。\")"
+      },
+      {
+        "line": 450,
+        "source": "raise ValueError(f\"{context}reconciled 必须具有四项匹配证据。\")"
+      },
+      {
+        "line": 538,
+        "source": "raise ValueError(f\"{context}{column} 包含非有限数。\")"
+      },
+      {
+        "line": 545,
+        "source": "raise ValueError(f\"{context}主键不唯一。\")"
+      },
+      {
+        "line": 555,
+        "source": "raise ValueError(f\"{context}交易所与合约代码后缀不一致。\")"
+      },
+      {
+        "line": 561,
+        "source": "raise ValueError(f\"{context}品种代码无法由合约代码复算。\")"
+      },
+      {
+        "line": 567,
+        "source": "raise ValueError(f\"{context}year/month 与 trading_date 不一致。\")"
+      },
+      {
+        "line": 569,
+        "source": "raise ValueError(f\"{context}session_number 必须大于 0。\")"
+      },
+      {
+        "line": 571,
+        "source": "raise ValueError(f\"{context}source 与 JQData 分钟契约不一致。\")"
+      },
+      {
+        "line": 573,
+        "source": "raise ValueError(f\"{context}数量和金额不得为负。\")"
+      },
+      {
+        "line": 594,
+        "source": "raise ValueError(f\"{context}分钟行不属于待办 Session。\")"
+      },
+      {
+        "line": 601,
+        "source": "raise ValueError(f\"{context}分钟行未继承 Session 业务属性。\")"
+      },
+      {
+        "line": 606,
+        "source": "raise ValueError(f\"{context}bar_at 越出 (Session 开始,结束]。\")"
+      },
+      {
+        "line": 618,
+        "source": "raise ValueError(\n                f\"{context}bar_at 不是 Session 内的理论分钟格点。\"\n            )"
+      },
+      {
+        "line": 628,
+        "source": "raise ValueError(\n                f\"{context}Session 实际分钟条数超过理论条数。\"\n            )"
+      },
+      {
+        "line": 700,
+        "source": "raise TypeError(\"数据集缺少契约字段。\") from error"
+      },
+      {
+        "line": 789,
+        "source": "raise FileNotFoundError(f\"{label}不存在：{table_path}\")"
+      },
+      {
+        "line": 806,
+        "source": "raise TypeError(f\"{label}物理字段、类型或 nullable 与契约不一致。\")"
+      },
+      {
+        "line": 808,
+        "source": "raise TypeError(f\"{label}表名、主键或分区 metadata 与契约不一致。\")"
+      },
+      {
+        "line": 823,
+        "source": "raise TypeError(\n                    f\"{label} Parquet fragment 物理字段、类型或 nullable 不兼容：\"\n                    f\"{fragment.path}\"\n                )"
+      },
+      {
+        "line": 828,
+        "source": "raise TypeError(\n                    f\"{label} Parquet fragment 表名、主键或分区 metadata 不兼容：\"\n                    f\"{fragment.path}\"\n                )"
+      },
+      {
+        "line": 850,
+        "source": "raise"
+      },
+      {
+        "line": 895,
+        "source": "raise ValueError(f\"数据集包含非法分区文件：{parquet_path}\")"
+      },
+      {
+        "line": 904,
+        "source": "raise ValueError(f\"数据集包含非法分区目录：{parquet_path}\")"
+      },
+      {
+        "line": 925,
+        "source": "raise"
+      },
+      {
+        "line": 982,
+        "source": "raise TypeError(f\"叶分区物理 Schema 不兼容：{parquet_path}\")"
+      },
+      {
+        "line": 984,
+        "source": "raise TypeError(f\"叶分区表身份 metadata 不兼容：{parquet_path}\")"
+      },
+      {
+        "line": 1026,
+        "source": "raise"
+      },
+      {
+        "line": 1110,
+        "source": "raise"
+      },
+      {
+        "line": 1174,
+        "source": "raise"
+      },
+      {
+        "line": 1210,
+        "source": "raise"
+      },
+      {
+        "line": 1244,
+        "source": "raise TypeError(\"schema_error: get_price 未返回 DataFrame。\")"
+      },
+      {
+        "line": 1258,
+        "source": "raise ValueError(\n            f\"schema_error: get_price 缺列 {sorted(missing_columns)}\"\n        )"
+      },
+      {
+        "line": 1267,
+        "source": "raise ValueError(\"schema_error: get_price 返回未请求合约。\")"
+      },
+      {
+        "line": 1288,
+        "source": "raise ValueError(\n                    f\"schema_error: get_price {column} 含非有限数。\"\n                )"
+      },
+      {
+        "line": 1298,
+        "source": "raise ValueError(\"schema_error: get_price 返回重复分钟主键。\")"
+      },
+      {
+        "line": 1379,
+        "source": "raise RuntimeError(\n                    f\"retryable_error: get_price 返回 None：{contract_code}\"\n                )"
+      },
+      {
+        "line": 1424,
+        "source": "raise ValueError(\n                    \"schema_error: get_price 返回越出请求 Session 边界的分钟：\"\n                    f\"{unexpected_rows.head(5).to_dict(orient='records')}\"\n                )"
+      },
+      {
+        "line": 1486,
+        "source": "raise"
+      },
+      {
+        "line": 1554,
+        "source": "raise ValueError(\"分区键不得为空。\")"
+      },
+      {
+        "line": 1605,
+        "source": "raise ValueError(\"待提交数据越出指定 Hive 分区。\")"
+      },
+      {
+        "line": 1619,
+        "source": "raise ValueError(f\"数据集路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 1637,
+        "source": "raise ValueError(f\"b06 不支持提交未知表：{table_name}\")"
+      },
+      {
+        "line": 1674,
+        "source": "raise FileNotFoundError(f\"staging 缺少 {relative_path}。\")"
+      },
+      {
+        "line": 1680,
+        "source": "raise TypeError(\"staging 物理 Schema 与契约不兼容。\")"
+      },
+      {
+        "line": 1682,
+        "source": "raise TypeError(\"staging 表身份 metadata 与契约不兼容。\")"
+      },
+      {
+        "line": 1693,
+        "source": "raise ValueError(\"staging 行数摘要与待提交分区不一致。\")"
+      },
+      {
+        "line": 1697,
+        "source": "raise ValueError(\"staging 主键不唯一。\")"
+      },
+      {
+        "line": 1700,
+        "source": "raise"
+      },
+      {
+        "line": 1739,
+        "source": "raise ValueError(\"schema.parquet 必须是 0 行契约标记。\")"
+      },
+      {
+        "line": 1741,
+        "source": "raise TypeError(\"schema.parquet 物理 Schema 与契约不兼容。\")"
+      },
+      {
+        "line": 1743,
+        "source": "raise TypeError(\"schema.parquet 表身份 metadata 与契约不兼容。\")"
+      },
+      {
+        "line": 1761,
+        "source": "raise ValueError(\"正式 schema.parquet 必须匹配文件契约且为 0 行。\")"
+      },
+      {
+        "line": 1770,
+        "source": "raise FileNotFoundError(f\"正式叶缺少 Parquet 文件：{destination_path}\")"
+      },
+      {
+        "line": 1776,
+        "source": "raise TypeError(\"正式叶物理 Schema 与契约不兼容。\")"
+      },
+      {
+        "line": 1778,
+        "source": "raise TypeError(\"正式叶表身份 metadata 与契约不兼容。\")"
+      },
+      {
+        "line": 1789,
+        "source": "raise ValueError(\"正式叶行数摘要与 staging 不一致。\")"
+      },
+      {
+        "line": 1793,
+        "source": "raise ValueError(\"正式叶主键不唯一。\")"
+      },
+      {
+        "line": 1809,
+        "source": "raise"
+      },
+      {
+        "line": 1892,
+        "source": "raise"
+      },
+      {
+        "line": 1992,
+        "source": "raise"
+      },
+      {
+        "line": 2035,
+        "source": "raise FileNotFoundError(f\"日历回写目标叶不存在：{partition_key}\")"
+      },
+      {
+        "line": 2049,
+        "source": "raise ValueError(\n                        f\"政策回写主键无法完整匹配：{partition_key}\"\n                    )"
+      },
+      {
+        "line": 2119,
+        "source": "raise ValueError(\n                        f\"待回写 Session 无法完整匹配正式日历：{partition_key}\"\n                    )"
+      },
+      {
+        "line": 2126,
+        "source": "raise ValueError(\"状态回写命中了非待采集分钟 Session。\")"
+      },
+      {
+        "line": 2139,
+        "source": "raise ValueError(\n                        \"分钟实际条数或 OHLC 异常条数越出理论边界。\"\n                    )"
+      },
+      {
+        "line": 2252,
+        "source": "raise"
+      },
+      {
+        "line": 2307,
+        "source": "raise click.UsageError(\"--start-date 与 --end-date 必须同时提供。\")"
+      },
+      {
+        "line": 2309,
+        "source": "raise click.UsageError(\n            \"显式指定日期时禁止写入 FUTURES_LAKE_ROOT 指向的正式湖；\"\n            \"请移除日期参数使用自动补缺，或改用非正式测试湖。\"\n        )"
+      },
+      {
+        "line": 2319,
+        "source": "raise click.BadParameter(\"起始日期不得晚于结束日期。\")"
+      },
+      {
+        "line": 2649,
+        "source": "raise RuntimeError(\"日历完成摘要行数与已提交 Session 数不一致。\")"
+      }
+    ]
+  },
+  {
+    "path": "02_Market_Data/a01_Collection/b01_Futures_Market_Data/c07_suspected_session_reconciliation.py",
+    "sha256": "1152413d21ceb27257a7e7c6a62f94a07825b8852b0db0c2ff01e45636b36fbd",
+    "constants": [
+      {
+        "line": 84,
+        "source": "project_markers = [\".git\", \".env\", \"config/settings.py\"]"
+      },
+      {
+        "line": 265,
+        "source": "EVIDENCE_RULE_VERSION = \"c07-v3\""
+      },
+      {
+        "line": 266,
+        "source": "PRICE_TOLERANCE_FACTOR = 0.5"
+      },
+      {
+        "line": 267,
+        "source": "VOLUME_ATOL = 1e-6"
+      },
+      {
+        "line": 268,
+        "source": "MONEY_RTOL = 1e-6"
+      },
+      {
+        "line": 269,
+        "source": "MONEY_ATOL = 0.01"
+      },
+      {
+        "line": 270,
+        "source": "OPEN_INTEREST_ATOL = 1e-6"
+      },
+      {
+        "line": 272,
+        "source": "PRICE_METRICS = [  # 逐项使用 tick_size/2 容差比较的价格度量。\n    \"open\",  # 开盘价。\n    \"high\",  # 最高价。\n    \"low\",  # 最低价。\n    \"close\",  # 收盘价。\n]"
+      },
+      {
+        "line": 278,
+        "source": "QUANTITY_METRICS = [  # 使用各自契约容差比较的数量/金额度量。\n    \"volume\",  # 成交量，单位为手。\n    \"money\",  # 成交额，单位为元。\n    \"open_interest\",  # 收盘或末条有效持仓量，单位为手。\n]"
+      },
+      {
+        "line": 296,
+        "source": "SCHEDULE_STATUSES = {\n    \"scheduled\",\n    \"suspected_closed\",\n    \"confirmed_closed\",\n}"
+      },
+      {
+        "line": 301,
+        "source": "EVIDENCE_LEVELS = {\n    \"contract_rule\",\n    \"inferred\",\n    \"reconciled\",\n    \"authoritative\",\n}"
+      },
+      {
+        "line": 307,
+        "source": "QUALITY_STATUSES = {\n    \"pending\",\n    \"passed\",\n    \"warning\",\n    \"failed\",\n    \"not_applicable\",\n}"
+      },
+      {
+        "line": 552,
+        "source": "SCHEMA_IDENTITY_METADATA_KEYS = [\n    b\"table_name\",\n    b\"primary_key\",\n    b\"partition_columns\",\n]"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 93,
+        "source": "raise RuntimeError(\"未找到项目根目录\")"
+      },
+      {
+        "line": 210,
+        "source": "raise RuntimeError(\"日线和分钟事实的 Hive 分区契约不一致。\")"
+      },
+      {
+        "line": 366,
+        "source": "raise ValueError(f\"{context}主键不唯一。\")"
+      },
+      {
+        "line": 374,
+        "source": "raise ValueError(f\"{context}bar_frequency 不在允许枚举中。\")"
+      },
+      {
+        "line": 376,
+        "source": "raise ValueError(f\"{context}schedule_status 不在允许枚举中。\")"
+      },
+      {
+        "line": 378,
+        "source": "raise ValueError(f\"{context}evidence_level 不在允许枚举中。\")"
+      },
+      {
+        "line": 380,
+        "source": "raise ValueError(f\"{context}quality_status 不在允许枚举中。\")"
+      },
+      {
+        "line": 383,
+        "source": "raise ValueError(f\"{context}状态说明字段不得为空。\")"
+      },
+      {
+        "line": 389,
+        "source": "raise ValueError(f\"{context}交易所与合约代码后缀不一致。\")"
+      },
+      {
+        "line": 394,
+        "source": "raise ValueError(\n                    f\"{context}year/month 与 trading_date 不一致。\"\n                )"
+      },
+      {
+        "line": 398,
+        "source": "raise ValueError(\n                    f\"{context}expected_bar_count 必须大于 0。\"\n                )"
+      },
+      {
+        "line": 402,
+        "source": "raise ValueError(f\"{context}实际与缺失条数不得为负。\")"
+      },
+      {
+        "line": 413,
+        "source": "raise ValueError(\n                        f\"{context}日线 session_number 必须为 0。\"\n                    )"
+      },
+      {
+        "line": 417,
+        "source": "raise ValueError(\n                        f\"{context}日线 Session 专属字段必须为空。\"\n                    )"
+      },
+      {
+        "line": 421,
+        "source": "raise ValueError(f\"{context}日线理论条数必须为 1。\")"
+      },
+      {
+        "line": 424,
+        "source": "raise ValueError(\n                        f\"{context}分钟 session_number 必须大于 0。\"\n                    )"
+      },
+      {
+        "line": 428,
+        "source": "raise ValueError(\n                        f\"{context}分钟 Session 起点必须早于终点。\"\n                    )"
+      },
+      {
+        "line": 435,
+        "source": "raise ValueError(f\"{context}确认休市必须具有权威证据。\")"
+      },
+      {
+        "line": 437,
+        "source": "raise ValueError(f\"{context}确认休市不得继续要求拉取。\")"
+      },
+      {
+        "line": 442,
+        "source": "raise ValueError(f\"{context}完成状态缺少批次或完成时间。\")"
+      },
+      {
+        "line": 444,
+        "source": "raise ValueError(f\"{context}未完成格点不得具有完成时间。\")"
+      },
+      {
+        "line": 449,
+        "source": "raise ValueError(f\"{context}未经检查不得记录缺失。\")"
+      },
+      {
+        "line": 461,
+        "source": "raise ValueError(\n                        f\"{context}missing_bar_count 无法复算。\"\n                    )"
+      },
+      {
+        "line": 465,
+        "source": "raise ValueError(\n                        f\"{context}is_data_missing 与缺失条数不一致。\"\n                    )"
+      },
+      {
+        "line": 473,
+        "source": "raise ValueError(f\"{context}非 pending 状态缺少质检时间。\")"
+      },
+      {
+        "line": 478,
+        "source": "raise ValueError(\n                        f\"{context}reconciled 只能用于疑似休市 Session。\"\n                    )"
+      },
+      {
+        "line": 482,
+        "source": "raise ValueError(\n                        f\"{context}reconciled 必须具有四类一致旁证。\"\n                    )"
+      },
+      {
+        "line": 506,
+        "source": "raise"
+      },
+      {
+        "line": 547,
+        "source": "raise TypeError(\"数据集缺少契约字段。\") from error"
+      },
+      {
+        "line": 606,
+        "source": "raise FileNotFoundError(f\"{label}不存在：{table_path}\")"
+      },
+      {
+        "line": 617,
+        "source": "raise TypeError(f\"{label} 物理结构或表身份与契约不一致。\")"
+      },
+      {
+        "line": 634,
+        "source": "raise TypeError(\n                    f\"{label} schema.parquet 物理结构或表身份与契约不一致。\"\n                )"
+      },
+      {
+        "line": 648,
+        "source": "raise"
+      },
+      {
+        "line": 674,
+        "source": "raise TypeError(\n                    f\"{label}包含物理结构或表身份不兼容的 Parquet fragment：\"\n                    f\"{fragment.path}\"\n                )"
+      },
+      {
+        "line": 693,
+        "source": "raise"
+      },
+      {
+        "line": 715,
+        "source": "raise ValueError(\"分区键不得为空。\")"
+      },
+      {
+        "line": 998,
+        "source": "raise ValueError(\n                                            f\"分钟直接依赖字段 {name} 包含非有限数。\"\n                                        )"
+      },
+      {
+        "line": 1155,
+        "source": "raise"
+      },
+      {
+        "line": 1239,
+        "source": "raise ValueError(\"待提交日历数据越出指定 Hive 分区。\")"
+      },
+      {
+        "line": 1276,
+        "source": "raise ValueError(\n                    f\"数据集路径越出 silver 根目录：{managed_path}\"\n                )"
+      },
+      {
+        "line": 1308,
+        "source": "raise TypeError(\n                        \"staging Parquet 文件 Schema/metadata 与契约不一致：\"\n                        f\"{parquet_path}\"\n                    )"
+      },
+      {
+        "line": 1322,
+        "source": "raise TypeError(\n                    \"staging 数据集 Schema/metadata 与契约不一致。\"\n                )"
+      },
+      {
+        "line": 1343,
+        "source": "raise ValueError(\"staging 日历叶主键不唯一。\")"
+      },
+      {
+        "line": 1345,
+        "source": "raise ValueError(\"staging 日历叶行数摘要不一致。\")"
+      },
+      {
+        "line": 1353,
+        "source": "raise"
+      },
+      {
+        "line": 1392,
+        "source": "raise FileNotFoundError(\n                            f\"staging 缺少日历叶分区：{relative_path}\"\n                        )"
+      },
+      {
+        "line": 1425,
+        "source": "raise TypeError(\n                            \"正式日历叶物理结构或表身份与契约不一致。\"\n                        )"
+      },
+      {
+        "line": 1435,
+        "source": "raise ValueError(\"正式日历叶主键不唯一。\")"
+      },
+      {
+        "line": 1439,
+        "source": "raise ValueError(\"正式日历叶行数与 staging 摘要不一致。\")"
+      },
+      {
+        "line": 1448,
+        "source": "raise"
+      },
+      {
+        "line": 1464,
+        "source": "raise"
+      },
+      {
+        "line": 1516,
+        "source": "raise click.UsageError(\n            \"--start-date 与 --end-date 必须同时提供。\"\n        )"
+      },
+      {
+        "line": 1530,
+        "source": "raise click.BadParameter(\"起始日期不得晚于结束日期。\")"
+      },
+      {
+        "line": 1544,
+        "source": "raise click.UsageError(\n            \"使用 --force 时必须同时提供日期范围或 \"\n            \"--contract-code，以限制重算范围。\"\n        )"
+      },
+      {
+        "line": 1554,
+        "source": "raise click.UsageError(\n            \"正式湖的日期或合约定向写入必须同时使用 --force；\"\n            \"普通 --write 只处理默认新增候选。\"\n        )"
+      }
+    ]
+  },
+  {
+    "path": "02_Market_Data/a01_Collection/b01_Futures_Market_Data/c08_full_minute_quality.py",
+    "sha256": "67983d0835918f81d7c0b081d36b932dd4326537291046ed30592a235ccc60cc",
+    "constants": [
+      {
+        "line": 88,
+        "source": "project_markers = [\".git\", \".env\", \"config/settings.py\"]"
+      },
+      {
+        "line": 203,
+        "source": "MINUTE_KEY_COLUMNS = [\n    \"contract_code\",  # 固定月份合约代码。\n    \"bar_at\",  # 实际一分钟 bar 的 Asia/Shanghai 结束时刻。\n]"
+      },
+      {
+        "line": 207,
+        "source": "SESSION_MATCH_COLUMNS = [\n    \"contract_code\",  # 固定月份合约代码。\n    \"trading_date\",  # Session 归属的期货交易日。\n    \"session_number\",  # 同一合约日内的 Session 顺序号。\n]"
+      },
+      {
+        "line": 278,
+        "source": "SCHEMA_IDENTITY_METADATA_KEYS = [\n    b\"table_name\",\n    b\"primary_key\",\n    b\"partition_columns\",\n]"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 98,
+        "source": "raise RuntimeError(\"未找到项目根目录\")"
+      },
+      {
+        "line": 273,
+        "source": "raise TypeError(\"数据集缺少契约字段。\") from error"
+      },
+      {
+        "line": 349,
+        "source": "raise FileNotFoundError(f\"{label}不存在：{table_path}\")"
+      },
+      {
+        "line": 366,
+        "source": "raise TypeError(f\"{label} Dataset 物理结构或表身份与契约不一致。\")"
+      },
+      {
+        "line": 378,
+        "source": "raise TypeError(\n                    f\"{label} fragment 物理结构或表身份与契约不一致：\"\n                    f\"{fragment.path}\"\n                )"
+      },
+      {
+        "line": 399,
+        "source": "raise"
+      },
+      {
+        "line": 421,
+        "source": "raise ValueError(\"分区键不得为空。\")"
+      },
+      {
+        "line": 451,
+        "source": "raise ValueError(f\"数据集包含非法分区文件：{parquet_path}\")"
+      },
+      {
+        "line": 461,
+        "source": "raise ValueError(f\"数据集包含非法分区目录：{parquet_path}\")"
+      },
+      {
+        "line": 481,
+        "source": "raise"
+      },
+      {
+        "line": 579,
+        "source": "raise"
+      },
+      {
+        "line": 633,
+        "source": "raise ValueError(f\"{context}缺失明细主键不唯一。\")"
+      },
+      {
+        "line": 640,
+        "source": "raise ValueError(f\"{context}缺失明细越出目标 Hive 分区。\")"
+      },
+      {
+        "line": 652,
+        "source": "raise"
+      },
+      {
+        "line": 683,
+        "source": "raise ValueError(f\"{context}行情日历越出目标 Hive 分区。\")"
+      },
+      {
+        "line": 697,
+        "source": "raise ValueError(f\"{context}required Session 尚未完成 b06。\")"
+      },
+      {
+        "line": 703,
+        "source": "raise ValueError(f\"{context}实际或缺失条数为负。\")"
+      },
+      {
+        "line": 705,
+        "source": "raise ValueError(f\"{context}实际与缺失条数不能还原理论条数。\")"
+      },
+      {
+        "line": 707,
+        "source": "raise ValueError(f\"{context}缺失标志与缺失条数不一致。\")"
+      },
+      {
+        "line": 712,
+        "source": "raise ValueError(f\"{context}缺失检查时间未统一更新。\")"
+      },
+      {
+        "line": 714,
+        "source": "raise ValueError(f\"{context}更新时间未统一更新。\")"
+      },
+      {
+        "line": 726,
+        "source": "raise"
+      },
+      {
+        "line": 845,
+        "source": "raise ValueError(\n                \"分钟缺失审计只能在全部 required Session 完成 b06 后运行；\"\n                f\"示例：{pending_examples.to_dict(orient='records')}\"\n            )"
+      },
+      {
+        "line": 994,
+        "source": "raise ValueError(\n                        f\"{minute_partition_key} 理论时点展开条数与 b04 不一致。\"\n                    )"
+      },
+      {
+        "line": 1130,
+        "source": "raise ValueError(\n                            \"staging 缺失明细内容检查失败：\"\n                            f\"partition={missing_partition_key}\"\n                        )"
+      },
+      {
+        "line": 1200,
+        "source": "raise ValueError(\n                    \"staging 行情日历内容检查失败：\"\n                    f\"partition={calendar_partition_key}\"\n                )"
+      },
+      {
+        "line": 1223,
+        "source": "raise ValueError(\"staging 缺失明细总行数与主键求差汇总不一致。\")"
+      },
+      {
+        "line": 1251,
+        "source": "raise"
+      },
+      {
+        "line": 1312,
+        "source": "raise ValueError(f\"staging 路径必须位于 silver 根目录内：{staging_path}\")"
+      },
+      {
+        "line": 1391,
+        "source": "raise ValueError(\"正式缺失明细总行数与主键求差汇总不一致。\")"
+      },
+      {
+        "line": 1396,
+        "source": "raise ValueError(\"正式缺失明细分区集合与 staging 不一致。\")"
+      },
+      {
+        "line": 1418,
+        "source": "raise ValueError(\"正式缺失明细分区内容检查失败。\")"
+      },
+      {
+        "line": 1462,
+        "source": "raise ValueError(\"正式行情日历分区内容检查失败。\")"
+      },
+      {
+        "line": 1475,
+        "source": "raise"
+      },
+      {
+        "line": 1491,
+        "source": "raise"
+      },
+      {
+        "line": 1534,
+        "source": "raise click.UsageError(\n            \"分钟主键缺失审计必须显式传入 --confirm-full-quality。\"\n        )"
+      }
+    ]
+  },
+  {
+    "path": "02_Market_Data/a01_Collection/b02_Futures_Exchange_Reports/c01_exchange_report_calendar.py",
+    "sha256": "9ea60fb565fd34ab575eb92a6bcf8d0dc6f37f26610c7a9004e2c1fcdce89520",
+    "constants": [
+      {
+        "line": 84,
+        "source": "project_markers = [\".git\", \".env\", \"config/settings.py\"]"
+      },
+      {
+        "line": 198,
+        "source": "POLICY_COLUMNS = [\n    \"is_fetch_required\",  # 当前格点是否必须进入事实采集。\n    \"requirement_reason\",  # 当前选择或排除规则的中文说明。\n]"
+      },
+      {
+        "line": 202,
+        "source": "STATE_COLUMNS = [\n    \"is_fetch_completed\",  # 事实提交及正式复读形成的持久完成凭证。\n    \"fetch_result_status\",  # 最近一次采集结果状态。\n    \"is_data_missing\",  # 应有报告但确认空响应时的缺失状态。\n    \"expected_record_count\",  # 当前能够明确确认的最小记录数。\n    \"actual_record_count\",  # 相应事实表正式复读的实际记录数。\n    \"quality_status\",  # 本格点综合质量状态。\n    \"quality_reason\",  # 本格点质量结论的中文说明。\n    \"fetch_run_id\",  # 最近一次事实采集批次标识。\n    \"fetch_completed_at\",  # 事实提交和正式复读完成时间。\n    \"quality_checked_at\",  # 最近一次质量检查时间。\n]"
+      },
+      {
+        "line": 215,
+        "source": "FETCH_RESULT_STATUSES = {\n    \"pending\",\n    \"success\",\n    \"empty_confirmed\",\n    \"retryable_error\",\n    \"permanent_error\",\n    \"not_required\",\n}"
+      },
+      {
+        "line": 223,
+        "source": "QUALITY_STATUSES = {\n    \"pending\",\n    \"passed\",\n    \"warning\",\n    \"failed\",\n    \"not_applicable\",\n}"
+      },
+      {
+        "line": 230,
+        "source": "SCHEMA_IDENTITY_METADATA_KEYS = [\n    b\"table_name\",\n    b\"primary_key\",\n    b\"partition_columns\",\n]"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 94,
+        "source": "raise RuntimeError(\"未找到项目根目录\")"
+      },
+      {
+        "line": 291,
+        "source": "raise TypeError(\"数据集缺少权威 Schema 字段。\") from error"
+      },
+      {
+        "line": 343,
+        "source": "raise FileNotFoundError(f\"{label}不存在：{table_path}\")"
+      },
+      {
+        "line": 360,
+        "source": "raise TypeError(f\"{label}物理结构或表身份与权威契约不一致。\")"
+      },
+      {
+        "line": 372,
+        "source": "raise"
+      },
+      {
+        "line": 398,
+        "source": "raise ValueError(f\"{context}报告日历主键不唯一。\")"
+      },
+      {
+        "line": 410,
+        "source": "raise ValueError(f\"{context}dataset_name 不在权威枚举中。\")"
+      },
+      {
+        "line": 412,
+        "source": "raise ValueError(f\"{context}fetch_result_status 不在允许枚举中。\")"
+      },
+      {
+        "line": 414,
+        "source": "raise ValueError(f\"{context}quality_status 不在允许枚举中。\")"
+      },
+      {
+        "line": 416,
+        "source": "raise ValueError(f\"{context}requirement_reason 不得为空。\")"
+      },
+      {
+        "line": 418,
+        "source": "raise ValueError(f\"{context}quality_reason 不得为空。\")"
+      },
+      {
+        "line": 423,
+        "source": "raise ValueError(f\"{context}year/month 与 trading_date 不一致。\")"
+      },
+      {
+        "line": 427,
+        "source": "raise ValueError(f\"{context}理论或实际记录数不得为负。\")"
+      },
+      {
+        "line": 432,
+        "source": "raise ValueError(f\"{context}当前无需采集格点不得标记数据缺失。\")"
+      },
+      {
+        "line": 435,
+        "source": "raise ValueError(f\"{context}无完成凭证的免采集格点必须为 not_required。\")"
+      },
+      {
+        "line": 437,
+        "source": "raise ValueError(f\"{context}无完成凭证的免采集格点记录数必须为 0。\")"
+      },
+      {
+        "line": 439,
+        "source": "raise ValueError(f\"{context}无完成凭证的免采集格点必须为 not_applicable。\")"
+      },
+      {
+        "line": 444,
+        "source": "raise ValueError(f\"{context}无完成凭证的免采集格点不得保留运行审计值。\")"
+      },
+      {
+        "line": 446,
+        "source": "raise ValueError(f\"{context}需采集格点不得标为 not_required。\")"
+      },
+      {
+        "line": 451,
+        "source": "raise ValueError(f\"{context}完成布尔值与采集结果状态不一致。\")"
+      },
+      {
+        "line": 454,
+        "source": "raise ValueError(f\"{context}完成格点缺少批次或完成时间。\")"
+      },
+      {
+        "line": 456,
+        "source": "raise ValueError(f\"{context}未完成格点不得具有完成时间。\")"
+      },
+      {
+        "line": 464,
+        "source": "raise ValueError(f\"{context}缺失状态不能由当前结果复算。\")"
+      },
+      {
+        "line": 470,
+        "source": "raise ValueError(f\"{context}已形成质检结论但缺少质检时间。\")"
+      },
+      {
+        "line": 472,
+        "source": "raise ValueError(f\"{context}updated_at 不得晚于当前 UTC 时间。\")"
+      },
+      {
+        "line": 493,
+        "source": "raise"
+      },
+      {
+        "line": 678,
+        "source": "raise"
+      },
+      {
+        "line": 789,
+        "source": "raise"
+      },
+      {
+        "line": 892,
+        "source": "raise ValueError(f\"数据集路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 963,
+        "source": "raise ValueError(\"staging 触达行数与完整分区计划不一致。\")"
+      },
+      {
+        "line": 979,
+        "source": "raise ValueError(\"staging 叶分区行数与期望不一致。\")"
+      },
+      {
+        "line": 985,
+        "source": "raise ValueError(\"staging 叶分区内容与期望不一致。\")"
+      },
+      {
+        "line": 994,
+        "source": "raise"
+      },
+      {
+        "line": 1035,
+        "source": "raise FileNotFoundError(\n                                f\"staging 叶分区存在性与期望不一致：{relative_path}\"\n                            )"
+      },
+      {
+        "line": 1067,
+        "source": "raise ValueError(\"正式报告日历总行数与完整期望表不一致。\")"
+      },
+      {
+        "line": 1069,
+        "source": "raise ValueError(\"正式报告日历内容与完整期望表不一致。\")"
+      },
+      {
+        "line": 1083,
+        "source": "raise"
+      },
+      {
+        "line": 1099,
+        "source": "raise"
+      },
+      {
+        "line": 1147,
+        "source": "raise click.UsageError(\"--start-date 与 --end-date 必须同时提供。\")"
+      },
+      {
+        "line": 1149,
+        "source": "raise click.UsageError(\n            \"显式指定日期时禁止写入 FUTURES_LAKE_ROOT 指向的正式湖；\"\n            \"请移除日期参数使用自动更新，或改用非正式测试湖。\"\n        )"
+      },
+      {
+        "line": 1160,
+        "source": "raise click.BadParameter(\"起始日期不得晚于结束日期。\")"
+      },
+      {
+        "line": 1360,
+        "source": "raise"
+      }
+    ]
+  },
+  {
+    "path": "02_Market_Data/a01_Collection/b02_Futures_Exchange_Reports/c01a_position_rank_special_case_calibration.py",
+    "sha256": "138c1b9fe4e536cbfd079aa689c8958b9a9a30553d7ba1756b7c1e0974f7b31e",
+    "constants": [
+      {
+        "line": 86,
+        "source": "project_markers = [\".git\", \".env\", \"config/settings.py\"]"
+      },
+      {
+        "line": 106,
+        "source": "ARTIFACT_FILENAMES = {\n    \"response.dat\",\n    \"response.sha256\",\n    \"calibration.json\",\n}"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 95,
+        "source": "raise RuntimeError(\"未找到项目根目录\")"
+      },
+      {
+        "line": 197,
+        "source": "raise ValueError(\"上期所特殊案例响应不是有效 UTF-8 JSON。\") from error"
+      },
+      {
+        "line": 202,
+        "source": "raise ValueError(\"上期所特殊案例响应缺少 o_cursor 列表。\")"
+      },
+      {
+        "line": 220,
+        "source": "raise ValueError(\"上期所特殊案例响应包含非对象记录。\")"
+      },
+      {
+        "line": 238,
+        "source": "raise ValueError(\"上期所特殊案例 Top 20 字段或类型不合法。\")"
+      },
+      {
+        "line": 244,
+        "source": "raise ValueError(\"上期所特殊案例未精确覆盖成交量第 1—20 名。\")"
+      },
+      {
+        "line": 247,
+        "source": "raise ValueError(\"上期所特殊案例成交量没有按名次非递增。\")"
+      },
+      {
+        "line": 249,
+        "source": "raise ValueError(\"上期所特殊案例 Top 20 与冻结校准值不一致。\")"
+      },
+      {
+        "line": 263,
+        "source": "raise"
+      },
+      {
+        "line": 298,
+        "source": "raise ValueError(\n                \"上期所特殊案例完整响应 SHA-256 与冻结值不一致；\"\n                f\"actual={response_sha256}。\"\n            )"
+      },
+      {
+        "line": 319,
+        "source": "raise"
+      },
+      {
+        "line": 363,
+        "source": "raise ValueError(\n                f\"特殊案例证据文件集合不一致：{sorted(actual_filenames)}。\"\n            )"
+      },
+      {
+        "line": 381,
+        "source": "raise ValueError(\"特殊案例响应摘要 sidecar 不一致。\")"
+      },
+      {
+        "line": 393,
+        "source": "raise ValueError(\"特殊案例校准清单与正式原文或冻结配置不一致。\")"
+      },
+      {
+        "line": 407,
+        "source": "raise"
+      },
+      {
+        "line": 445,
+        "source": "raise RuntimeError(\n                \"上期所特殊案例请求失败；\"\n                f\"case_id={special_case['case_id']}, status={response.status_code}。\"\n            )"
+      },
+      {
+        "line": 468,
+        "source": "raise"
+      },
+      {
+        "line": 578,
+        "source": "raise RuntimeError(\"特殊案例正式证据目录在提交前并发出现。\")"
+      },
+      {
+        "line": 589,
+        "source": "raise"
+      },
+      {
+        "line": 606,
+        "source": "raise"
+      },
+      {
+        "line": 683,
+        "source": "raise ValueError(\"特殊案例证据路径越出 raw 根目录。\")"
+      },
+      {
+        "line": 729,
+        "source": "raise"
+      }
+    ]
+  },
+  {
+    "path": "02_Market_Data/a01_Collection/b02_Futures_Exchange_Reports/c02_futures_holding_reports.py",
+    "sha256": "66ae7025e0828d632e0a085369cbcbdc79bb1144ccd68d1e80d0647a714f1231",
+    "constants": [
+      {
+        "line": 95,
+        "source": "project_markers = [\".git\", \".env\", \"config/settings.py\"]"
+      },
+      {
+        "line": 208,
+        "source": "GRID_COLUMNS = [\n    \"exchange_code\",  # 项目/JQData 标准交易所代码。\n    \"underlying_code\",  # 期货品种代码。\n    \"trading_date\",  # 报告归属交易日。\n]"
+      },
+      {
+        "line": 213,
+        "source": "DATASET_NAMES = [\n    \"position_rank\",  # 逐会员排名事实。\n    \"member_position\",  # 明确参与者类型汇总事实。\n]"
+      },
+      {
+        "line": 234,
+        "source": "JQDATA_FIELDS = [\n    \"day\",  # 交易日。\n    \"code\",  # JQData 合约代码。\n    \"exchange\",  # JQData 交易所代码。\n    \"underlying_code\",  # 期货品种代码。\n    \"rank_type_ID\",  # 排名类别编码，仅用于交叉校验类别稳定性。\n    \"rank_type\",  # 排名类别中文名称。\n    \"rank\",  # 本类别名次。\n    \"member_name\",  # 会员简称或明确参与者类型汇总标签。\n    \"indicator\",  # 本类别指标值。\n    \"indicator_increase\",  # 本类别指标较前一日变化。\n]"
+      },
+      {
+        "line": 247,
+        "source": "RUN_QUERY_ROW_LIMIT = 5000"
+      },
+      {
+        "line": 248,
+        "source": "MAX_SOURCE_RANK = 20"
+      },
+      {
+        "line": 249,
+        "source": "SOURCE_DUPLICATE_REASON_MARKER = \"来源重复归一化：\""
+      },
+      {
+        "line": 250,
+        "source": "SOURCE_SPECIAL_CASE_REASON_MARKER = \"来源特殊校准：\""
+      },
+      {
+        "line": 251,
+        "source": "SCHEMA_IDENTITY_METADATA_KEYS = [\n    b\"table_name\",\n    b\"primary_key\",\n    b\"partition_columns\",\n]"
+      },
+      {
+        "line": 257,
+        "source": "POSITION_SOURCE = \"JQData_FUT_MEMBER_POSITION_RANK\""
+      },
+      {
+        "line": 258,
+        "source": "MEMBER_SOURCE = \"JQData_FUT_MEMBER_POSITION_RANK_participant_summary\""
+      },
+      {
+        "line": 261,
+        "source": "PARTICIPANT_LABELS = {\n    \"期货公司\": \"futures_company\",\n    \"期货公司会员\": \"futures_company\",\n    \"境外特殊经纪参与者\": \"futures_company\",\n    \"期货公司会员/境外特殊经纪参与者\": \"futures_company\",\n    \"非期货公司\": \"non_futures_company\",\n    \"非期货公司会员\": \"non_futures_company\",\n    \"境外特殊非经纪参与者\": \"non_futures_company\",\n    \"非期货公司会员/境外特殊非经纪参与者\": \"non_futures_company\",\n}"
+      },
+      {
+        "line": 273,
+        "source": "JQDATA_RESPONSE_EXCHANGES = {\n    \"CCFX\": {\"CCFX\", \"CFFEX\"},\n    \"XDCE\": {\"XDCE\", \"DCE\"},\n    \"XZCE\": {\"XZCE\", \"CZCE\", \"ZCE\"},\n    \"XSGE\": {\"XSGE\", \"SHFE\"},\n    \"XINE\": {\"XINE\", \"INE\", \"SHFE\"},\n    \"GFEX\": {\"GFEX\"},\n}"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 105,
+        "source": "raise RuntimeError(\"未找到项目根目录\")"
+      },
+      {
+        "line": 337,
+        "source": "raise TypeError(\"数据集缺少权威 Schema 字段。\") from error"
+      },
+      {
+        "line": 388,
+        "source": "raise FileNotFoundError(f\"{label}不存在：{table_path}\")"
+      },
+      {
+        "line": 404,
+        "source": "raise TypeError(f\"{label}物理结构或表身份与权威契约不一致。\")"
+      },
+      {
+        "line": 416,
+        "source": "raise"
+      },
+      {
+        "line": 456,
+        "source": "raise ValueError(f\"{context}报告日历主键不唯一。\")"
+      },
+      {
+        "line": 477,
+        "source": "raise ValueError(f\"{context}报告数据集名称不在权威枚举中。\")"
+      },
+      {
+        "line": 479,
+        "source": "raise ValueError(f\"{context}采集结果状态不在允许枚举中。\")"
+      },
+      {
+        "line": 481,
+        "source": "raise ValueError(f\"{context}质量状态不在允许枚举中。\")"
+      },
+      {
+        "line": 483,
+        "source": "raise ValueError(f\"{context}报告日历中文原因不得为空。\")"
+      },
+      {
+        "line": 485,
+        "source": "raise ValueError(f\"{context}报告日历年月分区与交易日不一致。\")"
+      },
+      {
+        "line": 487,
+        "source": "raise ValueError(f\"{context}报告日历记录数不得为负。\")"
+      },
+      {
+        "line": 491,
+        "source": "raise ValueError(f\"{context}当前无需采集格点不得标记数据缺失。\")"
+      },
+      {
+        "line": 494,
+        "source": "raise ValueError(f\"{context}无完成凭证的免采集格点必须为 not_required。\")"
+      },
+      {
+        "line": 496,
+        "source": "raise ValueError(f\"{context}无完成凭证的免采集格点记录数必须为 0。\")"
+      },
+      {
+        "line": 498,
+        "source": "raise ValueError(f\"{context}无完成凭证的免采集格点必须为 not_applicable。\")"
+      },
+      {
+        "line": 507,
+        "source": "raise ValueError(f\"{context}无完成凭证的免采集格点不得保留运行审计值。\")"
+      },
+      {
+        "line": 509,
+        "source": "raise ValueError(f\"{context}需采集格点不得标为 not_required。\")"
+      },
+      {
+        "line": 513,
+        "source": "raise ValueError(f\"{context}完成布尔值与采集结果状态不一致。\")"
+      },
+      {
+        "line": 516,
+        "source": "raise ValueError(f\"{context}完成格点缺少批次或完成时间。\")"
+      },
+      {
+        "line": 518,
+        "source": "raise ValueError(f\"{context}未完成格点不得具有完成时间。\")"
+      },
+      {
+        "line": 525,
+        "source": "raise ValueError(f\"{context}缺失状态不能由当前结果复算。\")"
+      },
+      {
+        "line": 527,
+        "source": "raise ValueError(f\"{context}已形成质检结论但缺少质检时间。\")"
+      },
+      {
+        "line": 529,
+        "source": "raise ValueError(f\"{context}updated_at 不得晚于当前 UTC 时间。\")"
+      },
+      {
+        "line": 544,
+        "source": "raise ValueError(f\"{context}排名事实主键不唯一。\")"
+      },
+      {
+        "line": 548,
+        "source": "raise ValueError(f\"{context}来源合约或会员名称不得为空。\")"
+      },
+      {
+        "line": 550,
+        "source": "raise ValueError(f\"{context}排名事实来源不一致。\")"
+      },
+      {
+        "line": 552,
+        "source": "raise ValueError(f\"{context}排名事实年月分区与交易日不一致。\")"
+      },
+      {
+        "line": 560,
+        "source": "raise ValueError(f\"{context}排名事实至少需要一个成交或持仓指标。\")"
+      },
+      {
+        "line": 565,
+        "source": "raise ValueError(f\"{context}{rank_name} 与 {value_name} 必须同时存在或同时为空。\")"
+      },
+      {
+        "line": 567,
+        "source": "raise ValueError(f\"{context}{rank_name} 必须大于零。\")"
+      },
+      {
+        "line": 569,
+        "source": "raise ValueError(f\"{context}{value_name} 不得为负。\")"
+      },
+      {
+        "line": 575,
+        "source": "raise ValueError(f\"{context}标准合约代码不合法。\")"
+      },
+      {
+        "line": 590,
+        "source": "raise ValueError(f\"{context}参与者类型事实主键不唯一。\")"
+      },
+      {
+        "line": 594,
+        "source": "raise ValueError(f\"{context}参与者类型不在允许枚举中。\")"
+      },
+      {
+        "line": 596,
+        "source": "raise ValueError(f\"{context}参与者类型事实来源合约不得为空。\")"
+      },
+      {
+        "line": 598,
+        "source": "raise ValueError(f\"{context}参与者类型事实来源不一致。\")"
+      },
+      {
+        "line": 600,
+        "source": "raise ValueError(f\"{context}参与者类型事实年月分区与交易日不一致。\")"
+      },
+      {
+        "line": 608,
+        "source": "raise ValueError(f\"{context}参与者类型事实至少需要一个成交或持仓指标。\")"
+      },
+      {
+        "line": 610,
+        "source": "raise ValueError(f\"{context}参与者类型数量指标不得为负。\")"
+      },
+      {
+        "line": 705,
+        "source": "raise"
+      },
+      {
+        "line": 727,
+        "source": "raise ValueError(f\"{label}分区键数量与权威分区列不一致。\")"
+      },
+      {
+        "line": 747,
+        "source": "raise FileNotFoundError(f\"{label}缺少根级 schema.parquet。\")"
+      },
+      {
+        "line": 757,
+        "source": "raise TypeError(f\"{label}根级 schema.parquet 与权威物理契约不一致。\")"
+      },
+      {
+        "line": 783,
+        "source": "raise TypeError(f\"{label}叶文件物理结构或表身份与权威契约不一致：{leaf_file}\")"
+      },
+      {
+        "line": 821,
+        "source": "raise"
+      },
+      {
+        "line": 871,
+        "source": "raise ValueError(\"特殊案例证据路径越出 raw 根目录。\")"
+      },
+      {
+        "line": 873,
+        "source": "raise FileNotFoundError(\n                \"缺少排名特殊案例正式证据；请先运行 \"\n                \"b02/c01a_position_rank_special_case_calibration；\"\n                f\"case_id={special_case['case_id']}。\"\n            )"
+      },
+      {
+        "line": 885,
+        "source": "raise ValueError(\"排名特殊案例正式证据文件集合不一致。\")"
+      },
+      {
+        "line": 892,
+        "source": "raise ValueError(\"排名特殊案例正式原文 SHA-256 与冻结值不一致。\")"
+      },
+      {
+        "line": 902,
+        "source": "raise ValueError(\"排名特殊案例摘要 sidecar 与正式原文不一致。\")"
+      },
+      {
+        "line": 925,
+        "source": "raise ValueError(\"排名特殊案例校准清单与冻结配置不一致。\")"
+      },
+      {
+        "line": 935,
+        "source": "raise"
+      },
+      {
+        "line": 982,
+        "source": "raise ValueError(\n                    \"schema_error: 已知排名特殊案例没有恰好返回 20 条目标记录；\"\n                    f\"case_id={special_case['case_id']}, rows={len(case_df)}。\"\n                )"
+      },
+      {
+        "line": 995,
+        "source": "raise ValueError(\"schema_error: 已知排名特殊案例类别文字发生变化。\")"
+      },
+      {
+        "line": 1011,
+        "source": "raise ValueError(\"schema_error: 已知排名特殊案例数值类型发生变化。\")"
+      },
+      {
+        "line": 1034,
+        "source": "raise ValueError(\n                    \"schema_error: 已知排名特殊案例既不匹配冻结坏指纹，也不匹配官方值；\"\n                    f\"case_id={special_case['case_id']}。\"\n                )"
+      },
+      {
+        "line": 1078,
+        "source": "raise"
+      },
+      {
+        "line": 1121,
+        "source": "raise ValueError(f\"schema_error: 无法唯一识别 JQData rank_type={rank_type!r}。\")"
+      },
+      {
+        "line": 1132,
+        "source": "raise ValueError(\"schema_error: JQData code 为空。\")"
+      },
+      {
+        "line": 1137,
+        "source": "raise ValueError(\n            \"schema_error: JQData code 后缀与报告日历交易所不一致；\"\n            f\"code={source_symbol}, expected_one_of={sorted(allowed_suffixes)}。\"\n        )"
+      },
+      {
+        "line": 1143,
+        "source": "raise ValueError(\n            \"schema_error: JQData code 与报告日历品种不一致；\"\n            f\"code={source_symbol}, expected={underlying_code}。\"\n        )"
+      },
+      {
+        "line": 1170,
+        "source": "raise TypeError(\"schema_error: JQData 排名查询未返回 DataFrame。\")"
+      },
+      {
+        "line": 1184,
+        "source": "raise ValueError(f\"schema_error: JQData 排名表缺列 {sorted(missing_columns)}。\")"
+      },
+      {
+        "line": 1186,
+        "source": "raise ValueError(\"schema_error: 单格点响应达到 run_query 上限，不能证明结果完整。\")"
+      },
+      {
+        "line": 1191,
+        "source": "raise ValueError(\"schema_error: JQData 排名响应包含请求交易日之外的行。\")"
+      },
+      {
+        "line": 1195,
+        "source": "raise ValueError(\"schema_error: JQData 排名响应品种与待办日历不一致。\")"
+      },
+      {
+        "line": 1208,
+        "source": "raise ValueError(\n                \"schema_error: JQData 排名响应交易所与待办日历不一致；\"\n                f\"actual={actual_exchange_values}。\"\n            )"
+      },
+      {
+        "line": 1241,
+        "source": "raise ValueError(\"schema_error: 同一 rank_type_ID 对应多个业务类别。\")"
+      },
+      {
+        "line": 1252,
+        "source": "raise ValueError(\n                    f\"schema_error: JQData 排名名次必须是 1 至 {MAX_SOURCE_RANK} 的整数。\"\n                )"
+      },
+      {
+        "line": 1256,
+        "source": "raise ValueError(\"schema_error: JQData 排名指标必须非空且非负。\")"
+      },
+      {
+        "line": 1260,
+        "source": "raise ValueError(\"schema_error: JQData member_name 为空。\")"
+      },
+      {
+        "line": 1346,
+        "source": "raise ValueError(\n                        \"schema_error: 同一来源事实键的重复行存在指标、变化、\"\n                        f\"类别或原始参与者标签冲突；key={metric_key}。\"\n                    )"
+      },
+      {
+        "line": 1412,
+        "source": "raise"
+      },
+      {
+        "line": 1518,
+        "source": "raise ValueError(f\"报告日历缺少成对的排名/参与者格点：{grid_key}\")"
+      },
+      {
+        "line": 1558,
+        "source": "raise"
+      },
+      {
+        "line": 1623,
+        "source": "raise"
+      },
+      {
+        "line": 1685,
+        "source": "raise ValueError(\"待提交内容越出指定 Hive 叶分区。\")"
+      },
+      {
+        "line": 1698,
+        "source": "raise ValueError(f\"数据集路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 1740,
+        "source": "raise ValueError(\"staging 完整分区内容检查失败。\")"
+      },
+      {
+        "line": 1744,
+        "source": "raise"
+      },
+      {
+        "line": 1796,
+        "source": "raise ValueError(\"正式完整分区内容检查失败。\")"
+      },
+      {
+        "line": 1809,
+        "source": "raise"
+      },
+      {
+        "line": 1823,
+        "source": "raise"
+      },
+      {
+        "line": 2004,
+        "source": "raise"
+      },
+      {
+        "line": 2100,
+        "source": "raise"
+      },
+      {
+        "line": 2152,
+        "source": "raise ValueError(\"JQData 排名批量查询日期不得为空。\")"
+      },
+      {
+        "line": 2154,
+        "source": "raise ValueError(\"JQData 排名批量查询日期不得重复。\")"
+      },
+      {
+        "line": 2191,
+        "source": "raise RuntimeError(\n                    f\"{error_type}: JQData FUT_MEMBER_POSITION_RANK 查询失败；\"\n                    f\"exchange={exchange_code}, underlying={underlying_code}, dates={date_group}。\"\n                ) from error"
+      },
+      {
+        "line": 2198,
+        "source": "raise RuntimeError(\n                    \"retryable_error: JQData 排名批量查询返回 None；\"\n                    f\"exchange={exchange_code}, underlying={underlying_code}, dates={date_group}。\"\n                )"
+      },
+      {
+        "line": 2203,
+        "source": "raise TypeError(\"schema_error: JQData 排名批量查询未返回 DataFrame。\")"
+      },
+      {
+        "line": 2207,
+        "source": "raise ValueError(\n                    f\"schema_error: JQData 排名批量响应缺列 {sorted(missing_columns)}。\"\n                )"
+      },
+      {
+        "line": 2222,
+        "source": "raise ValueError(\n                        \"schema_error: JQData 排名批量响应包含请求交易日之外的行。\"\n                    )"
+      },
+      {
+        "line": 2229,
+        "source": "raise ValueError(\n                        \"schema_error: JQData 排名批量响应品种与待办日历不一致。\"\n                    )"
+      },
+      {
+        "line": 2247,
+        "source": "raise ValueError(\n                        \"schema_error: JQData 排名批量响应交易所与待办日历不一致；\"\n                        f\"actual={actual_exchange_values}。\"\n                    )"
+      },
+      {
+        "line": 2255,
+        "source": "raise ValueError(\n                        \"schema_error: JQData 排名单日响应达到 5000 行上限，\"\n                        \"不能证明 Top 20 榜单结果完整。\"\n                    )"
+      },
+      {
+        "line": 2292,
+        "source": "raise"
+      },
+      {
+        "line": 2353,
+        "source": "raise click.UsageError(\"--start-date 与 --end-date 必须同时提供。\")"
+      },
+      {
+        "line": 2355,
+        "source": "raise click.UsageError(\n                \"显式指定日期时禁止写入 FUTURES_LAKE_ROOT 指向的正式湖；\"\n                \"请移除日期参数使用自动更新，或改用非正式测试湖。\"\n            )"
+      },
+      {
+        "line": 2363,
+        "source": "raise click.BadParameter(\"起始日期不得晚于结束日期。\")"
+      },
+      {
+        "line": 2620,
+        "source": "raise ValueError(\n                            \"报告日历完整叶缺少唯一的成对待办格点；\"\n                            f\"dataset={dataset_name}, grid={grid}。\"\n                        )"
+      },
+      {
+        "line": 2625,
+        "source": "raise ValueError(\n                            \"报告日历格点在事实提交前已不再要求采集；\"\n                            f\"dataset={dataset_name}, grid={grid}。\"\n                        )"
+      },
+      {
+        "line": 2730,
+        "source": "raise"
+      }
+    ]
+  },
+  {
+    "path": "02_Market_Data/a01_Collection/b02_Futures_Exchange_Reports/c03_warehouse_receipt.py",
+    "sha256": "15019e0a919f4bde50ec49d597d07183aa5bc2e524f469958fd9635e3c7a912d",
+    "constants": [
+      {
+        "line": 96,
+        "source": "project_markers = [\".git\", \".env\", \"config/settings.py\"]"
+      },
+      {
+        "line": 195,
+        "source": "GRID_COLUMNS = [\n    \"exchange_code\",  # 项目/JQData 标准交易所代码。\n    \"underlying_code\",  # 期货品种代码。\n    \"trading_date\",  # 仓单报告归属交易日。\n]"
+      },
+      {
+        "line": 206,
+        "source": "SCHEMA_IDENTITY_METADATA_KEYS = [\n    b\"table_name\",\n    b\"primary_key\",\n    b\"partition_columns\",\n]"
+      },
+      {
+        "line": 213,
+        "source": "JQDATA_FIELDS = [\n    \"day\",  # 来源报告日期。\n    \"exchange\",  # 来源交易所代码，仅用于复核日历。\n    \"underlying_code\",  # 来源品种代码。\n    \"warehouse_name\",  # 仓库或统计地点名称。\n    \"warehouse_receipt_number\",  # 当日仓单数量。\n    \"unit\",  # 来源计量单位。\n    \"warehouse_receipt_number_increase\",  # 相对昨日增减。\n]"
+      },
+      {
+        "line": 222,
+        "source": "SOURCE = \"JQData_finance_FUT_WAREHOUSE_RECEIPT\""
+      },
+      {
+        "line": 225,
+        "source": "JQDATA_RESPONSE_EXCHANGES = {\n    \"CCFX\": {\"CCFX\", \"CFFEX\"},\n    \"XDCE\": {\"XDCE\", \"DCE\"},\n    \"XZCE\": {\"XZCE\", \"CZCE\", \"ZCE\"},\n    \"XSGE\": {\"XSGE\", \"SHFE\"},\n    \"XINE\": {\"XINE\", \"INE\", \"SHFE\"},\n    \"GFEX\": {\"GFEX\"},\n}"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 106,
+        "source": "raise RuntimeError(\"未找到项目根目录\")"
+      },
+      {
+        "line": 281,
+        "source": "raise TypeError(\"数据集缺少权威 Schema 字段。\") from error"
+      },
+      {
+        "line": 348,
+        "source": "raise FileNotFoundError(f\"{label}缺少根级 schema.parquet：{table_path}\")"
+      },
+      {
+        "line": 365,
+        "source": "raise TypeError(f\"{label}根级 schema.parquet 与权威物理契约不一致。\")"
+      },
+      {
+        "line": 376,
+        "source": "raise"
+      },
+      {
+        "line": 411,
+        "source": "raise TypeError(\"正式报告日历物理结构或表身份与权威契约不一致。\")"
+      },
+      {
+        "line": 427,
+        "source": "raise TypeError(\n                    \"正式报告日历包含不兼容 Parquet fragment：\"\n                    f\"{fragment.path}\"\n                )"
+      },
+      {
+        "line": 448,
+        "source": "raise"
+      },
+      {
+        "line": 488,
+        "source": "raise ValueError(f\"{context}报告日历主键不唯一。\")"
+      },
+      {
+        "line": 509,
+        "source": "raise ValueError(f\"{context}包含非仓单报告日历行。\")"
+      },
+      {
+        "line": 511,
+        "source": "raise ValueError(f\"{context}采集结果状态不在允许枚举中。\")"
+      },
+      {
+        "line": 513,
+        "source": "raise ValueError(f\"{context}质量状态不在允许枚举中。\")"
+      },
+      {
+        "line": 515,
+        "source": "raise ValueError(f\"{context}报告日历中文原因不得为空。\")"
+      },
+      {
+        "line": 517,
+        "source": "raise ValueError(f\"{context}报告日历年月分区与交易日不一致。\")"
+      },
+      {
+        "line": 519,
+        "source": "raise ValueError(f\"{context}报告日历记录数不得为负。\")"
+      },
+      {
+        "line": 523,
+        "source": "raise ValueError(f\"{context}当前无需采集格点不得标记数据缺失。\")"
+      },
+      {
+        "line": 526,
+        "source": "raise ValueError(f\"{context}无完成凭证的免采集格点必须为 not_required。\")"
+      },
+      {
+        "line": 528,
+        "source": "raise ValueError(f\"{context}无完成凭证的免采集格点记录数必须为 0。\")"
+      },
+      {
+        "line": 530,
+        "source": "raise ValueError(f\"{context}无完成凭证的免采集格点必须为 not_applicable。\")"
+      },
+      {
+        "line": 539,
+        "source": "raise ValueError(f\"{context}无完成凭证的免采集格点不得保留运行审计值。\")"
+      },
+      {
+        "line": 541,
+        "source": "raise ValueError(f\"{context}需采集格点不得标为 not_required。\")"
+      },
+      {
+        "line": 545,
+        "source": "raise ValueError(f\"{context}完成布尔值与采集结果状态不一致。\")"
+      },
+      {
+        "line": 548,
+        "source": "raise ValueError(f\"{context}完成格点缺少批次或完成时间。\")"
+      },
+      {
+        "line": 550,
+        "source": "raise ValueError(f\"{context}未完成格点不得具有完成时间。\")"
+      },
+      {
+        "line": 557,
+        "source": "raise ValueError(f\"{context}缺失状态不能由当前结果复算。\")"
+      },
+      {
+        "line": 559,
+        "source": "raise ValueError(f\"{context}已形成质检结论但缺少质检时间。\")"
+      },
+      {
+        "line": 561,
+        "source": "raise ValueError(f\"{context}updated_at 不得晚于当前 UTC 时间。\")"
+      },
+      {
+        "line": 579,
+        "source": "raise ValueError(f\"{context}仓单事实主键不唯一。\")"
+      },
+      {
+        "line": 585,
+        "source": "raise ValueError(f\"{context}仓库名称不得为空。\")"
+      },
+      {
+        "line": 587,
+        "source": "raise ValueError(f\"{context}仓单事实来源不一致。\")"
+      },
+      {
+        "line": 589,
+        "source": "raise ValueError(f\"{context}仓单年月分区与交易日不一致。\")"
+      },
+      {
+        "line": 591,
+        "source": "raise ValueError(f\"{context}仓单数量必须为有限非负数。\")"
+      },
+      {
+        "line": 595,
+        "source": "raise ValueError(f\"{context}非空仓单单位不得为空白。\")"
+      },
+      {
+        "line": 598,
+        "source": "raise ValueError(f\"{context}仓单数量变化必须为有限数。\")"
+      },
+      {
+        "line": 600,
+        "source": "raise ValueError(f\"{context}仓单 updated_at 不得晚于当前 UTC 时间。\")"
+      },
+      {
+        "line": 637,
+        "source": "raise ValueError(\"分区键数量与权威分区列不一致。\")"
+      },
+      {
+        "line": 678,
+        "source": "raise FileNotFoundError(f\"{label}叶目录不含 Parquet 文件：{leaf_path}\")"
+      },
+      {
+        "line": 691,
+        "source": "raise TypeError(f\"{label}叶包含不兼容文件：{parquet_path}\")"
+      },
+      {
+        "line": 711,
+        "source": "raise TypeError(f\"{label}叶物理结构或表身份与权威契约不一致。\")"
+      },
+      {
+        "line": 725,
+        "source": "raise ValueError(f\"{label}叶内容越出指定 Hive 分区。\")"
+      },
+      {
+        "line": 737,
+        "source": "raise"
+      },
+      {
+        "line": 789,
+        "source": "raise FileNotFoundError(f\"{label}叶目录不含 Parquet 文件：{leaf_path}\")"
+      },
+      {
+        "line": 802,
+        "source": "raise TypeError(f\"{label}叶包含不兼容文件：{parquet_path}\")"
+      },
+      {
+        "line": 821,
+        "source": "raise TypeError(f\"{label}叶物理结构或表身份与权威契约不一致。\")"
+      },
+      {
+        "line": 839,
+        "source": "raise ValueError(f\"{label}叶主键越出指定 Hive 分区。\")"
+      },
+      {
+        "line": 855,
+        "source": "raise"
+      },
+      {
+        "line": 899,
+        "source": "raise TypeError(\"schema_error: JQData 仓单查询未返回 DataFrame。\")"
+      },
+      {
+        "line": 910,
+        "source": "raise ValueError(f\"schema_error: JQData 仓单表缺列 {sorted(missing_columns)}。\")"
+      },
+      {
+        "line": 912,
+        "source": "raise ValueError(\"schema_error: 单格点响应达到 run_query 上限，不能证明结果完整。\")"
+      },
+      {
+        "line": 917,
+        "source": "raise ValueError(\"schema_error: JQData 仓单响应包含请求交易日之外的行。\")"
+      },
+      {
+        "line": 921,
+        "source": "raise ValueError(\"schema_error: JQData 仓单响应品种与待办日历不一致。\")"
+      },
+      {
+        "line": 935,
+        "source": "raise ValueError(\n                \"schema_error: JQData 仓单响应交易所与待办日历不一致；\"\n                f\"actual={sorted(set(response_exchange_codes))}。\"\n            )"
+      },
+      {
+        "line": 949,
+        "source": "raise ValueError(\"schema_error: JQData warehouse_name 为空。\")"
+      },
+      {
+        "line": 952,
+        "source": "raise ValueError(\"schema_error: JQData warehouse_name 为空。\")"
+      },
+      {
+        "line": 959,
+        "source": "raise ValueError(\"schema_error: JQData 仓单数量必须非空、有限且非负。\")"
+      },
+      {
+        "line": 974,
+        "source": "raise ValueError(\"schema_error: JQData 仓单数量变化必须为有限数。\")"
+      },
+      {
+        "line": 1021,
+        "source": "raise"
+      },
+      {
+        "line": 1088,
+        "source": "raise"
+      },
+      {
+        "line": 1146,
+        "source": "raise"
+      },
+      {
+        "line": 1168,
+        "source": "raise ValueError(f\"报告日历叶缺少唯一仓单格点：{grid}。\")"
+      },
+      {
+        "line": 1174,
+        "source": "raise ValueError(f\"仓单格点提交前已不再属于未完成待办：{grid}。\")"
+      },
+      {
+        "line": 1191,
+        "source": "raise"
+      },
+      {
+        "line": 1288,
+        "source": "raise ValueError(\"待提交仓单内容越出指定 Hive 叶分区。\")"
+      },
+      {
+        "line": 1315,
+        "source": "raise ValueError(f\"数据集路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 1369,
+        "source": "raise ValueError(\"仓单 staging 行数或主键摘要检查失败。\")"
+      },
+      {
+        "line": 1373,
+        "source": "raise"
+      },
+      {
+        "line": 1433,
+        "source": "raise ValueError(\"正式仓单行数或主键摘要检查失败。\")"
+      },
+      {
+        "line": 1446,
+        "source": "raise"
+      },
+      {
+        "line": 1460,
+        "source": "raise"
+      },
+      {
+        "line": 1552,
+        "source": "raise ValueError(f\"报告日历叶缺少待完成格点：{missing_grid_keys}。\")"
+      },
+      {
+        "line": 1565,
+        "source": "raise"
+      },
+      {
+        "line": 1587,
+        "source": "raise ValueError(\"失败状态不在允许枚举中。\")"
+      },
+      {
+        "line": 1616,
+        "source": "raise ValueError(f\"报告日历叶缺少待记录失败的格点：{grid_key}。\")"
+      },
+      {
+        "line": 1629,
+        "source": "raise"
+      },
+      {
+        "line": 1753,
+        "source": "raise ValueError(f\"数据集路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 1795,
+        "source": "raise ValueError(\"报告日历 staging 行数或主键摘要检查失败。\")"
+      },
+      {
+        "line": 1799,
+        "source": "raise"
+      },
+      {
+        "line": 1839,
+        "source": "raise ValueError(\"正式报告日历行数或主键摘要检查失败。\")"
+      },
+      {
+        "line": 1852,
+        "source": "raise"
+      },
+      {
+        "line": 1876,
+        "source": "raise"
+      },
+      {
+        "line": 1937,
+        "source": "raise RuntimeError(\n                f\"{error_type}: JQData FUT_WAREHOUSE_RECEIPT 查询失败；grid={grid}。\"\n            ) from error"
+      },
+      {
+        "line": 1942,
+        "source": "raise RuntimeError(\n                f\"retryable_error: JQData 仓单查询返回 None；grid={grid}。\"\n            )"
+      },
+      {
+        "line": 1955,
+        "source": "raise"
+      },
+      {
+        "line": 2034,
+        "source": "raise click.UsageError(\"--start-date 与 --end-date 必须同时提供。\")"
+      },
+      {
+        "line": 2037,
+        "source": "raise click.UsageError(\n                \"--performance-window-size 与 \"\n                \"--performance-max-median-seconds 必须同时提供。\"\n            )"
+      },
+      {
+        "line": 2042,
+        "source": "raise click.UsageError(\n                \"显式指定日期时禁止写入 FUTURES_LAKE_ROOT 指向的正式湖；\"\n                \"请移除日期参数使用自动更新，或改用非正式测试湖。\"\n            )"
+      },
+      {
+        "line": 2051,
+        "source": "raise click.UsageError(\n                \"性能门槛只允许用于无显式日期的正式湖 --write 自动更新。\"\n            )"
+      },
+      {
+        "line": 2058,
+        "source": "raise click.BadParameter(\"起始日期不得晚于结束日期。\")"
+      },
+      {
+        "line": 2210,
+        "source": "raise click.ClickException(message) from error"
+      },
+      {
+        "line": 2333,
+        "source": "raise RuntimeError(\"性能门槛样本计数状态不一致。\")"
+      },
+      {
+        "line": 2343,
+        "source": "raise click.ClickException(message)"
+      },
+      {
+        "line": 2362,
+        "source": "raise"
+      }
+    ]
+  },
+  {
+    "path": "02_Market_Data/a01_Collection/b03_External_Market_Data/c01_external_market_calendar.py",
+    "sha256": "8f4e10f74ec44ceda0d421212d79f4245773208d2defb3a0c2dcedac40b4d8cc",
+    "constants": [
+      {
+        "line": 85,
+        "source": "project_markers = [\".git\", \".env\", \"config/settings.py\"]"
+      },
+      {
+        "line": 202,
+        "source": "POLICY_COLUMNS = [\n    \"is_fetch_required\",  # 当前理论格点是否应由相应下游产物入口请求。\n    \"requirement_reason\",  # 当前工作日、交易日、有效期和配置版本说明。\n]"
+      },
+      {
+        "line": 206,
+        "source": "STATE_COLUMNS = [\n    \"is_fetch_completed\",  # 请求、下游产物提交及正式复读是否完成。\n    \"fetch_result_status\",  # 最近一次下游产物采集结果。\n    \"is_data_missing\",  # 允许确认空的事实源是否判为应有而缺失。\n    \"actual_record_count\",  # 正式下游产物复读数量；生意社 raw 成功固定为 1。\n    \"quality_status\",  # 格点综合质量状态。\n    \"quality_reason\",  # 格点质量结论的中文说明。\n    \"fetch_run_id\",  # 最近一次下游产物采集批次号。\n    \"fetch_completed_at\",  # 最近一次下游产物完成时间。\n    \"quality_checked_at\",  # 最近一次质量检查时间。\n    \"updated_at\",  # 本行任一业务状态最后变化时间。\n]"
+      },
+      {
+        "line": 219,
+        "source": "FETCH_RESULT_STATUSES = {\n    \"pending\",\n    \"success\",\n    \"empty_confirmed\",\n    \"retryable_error\",\n    \"permanent_error\",\n    \"not_required\",\n}"
+      },
+      {
+        "line": 227,
+        "source": "QUALITY_STATUSES = {\n    \"pending\",\n    \"passed\",\n    \"warning\",\n    \"failed\",\n    \"not_applicable\",\n}"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 95,
+        "source": "raise RuntimeError(\"未找到项目根目录\")"
+      },
+      {
+        "line": 286,
+        "source": "raise TypeError(\"数据集缺少权威 Schema 字段。\") from error"
+      },
+      {
+        "line": 337,
+        "source": "raise FileNotFoundError(f\"{label}不存在：{table_path}\")"
+      },
+      {
+        "line": 361,
+        "source": "raise TypeError(f\"{label}物理字段、类型或 nullable 与权威契约不兼容。\")"
+      },
+      {
+        "line": 367,
+        "source": "raise TypeError(f\"{label}表名、主键或分区 metadata 与权威契约不兼容。\")"
+      },
+      {
+        "line": 380,
+        "source": "raise TypeError(\n                    f\"{label}存在物理结构不兼容的 Parquet fragment：{fragment.path}\"\n                )"
+      },
+      {
+        "line": 387,
+        "source": "raise TypeError(f\"{label}存在表身份 metadata 不兼容的 fragment：{fragment.path}\")"
+      },
+      {
+        "line": 408,
+        "source": "raise"
+      },
+      {
+        "line": 439,
+        "source": "raise TypeError(f\"{label} Schema/metadata 与权威契约不一致。\")"
+      },
+      {
+        "line": 451,
+        "source": "raise"
+      },
+      {
+        "line": 511,
+        "source": "raise ValueError(f\"{context}外部市场日历主键不唯一。\")"
+      },
+      {
+        "line": 522,
+        "source": "raise ValueError(f\"{context}dataset_name 不在权威枚举中。\")"
+      },
+      {
+        "line": 524,
+        "source": "raise ValueError(f\"{context}fetch_result_status 不在允许枚举中。\")"
+      },
+      {
+        "line": 526,
+        "source": "raise ValueError(f\"{context}quality_status 不在允许枚举中。\")"
+      },
+      {
+        "line": 528,
+        "source": "raise ValueError(f\"{context}requirement_reason 不得为空。\")"
+      },
+      {
+        "line": 530,
+        "source": "raise ValueError(f\"{context}quality_reason 不得为空。\")"
+      },
+      {
+        "line": 535,
+        "source": "raise ValueError(f\"{context}year/month 与 observation_date 不一致。\")"
+      },
+      {
+        "line": 537,
+        "source": "raise ValueError(f\"{context}实际记录数不得为负。\")"
+      },
+      {
+        "line": 542,
+        "source": "raise ValueError(f\"{context}生意社原始页面请求实体必须为 ALL。\")"
+      },
+      {
+        "line": 546,
+        "source": "raise ValueError(f\"{context}生意社原始页面归档禁止 empty_confirmed。\")"
+      },
+      {
+        "line": 549,
+        "source": "raise ValueError(f\"{context}境外期货请求实体必须为 ALL。\")"
+      },
+      {
+        "line": 551,
+        "source": "raise ValueError(f\"{context}外部指数请求实体未命中项目配置。\")"
+      },
+      {
+        "line": 556,
+        "source": "raise ValueError(f\"{context}无需请求格点必须为 not_required。\")"
+      },
+      {
+        "line": 558,
+        "source": "raise ValueError(f\"{context}无需请求格点不得标记完成或数据缺失。\")"
+      },
+      {
+        "line": 560,
+        "source": "raise ValueError(f\"{context}无需请求格点的记录数必须为 0。\")"
+      },
+      {
+        "line": 562,
+        "source": "raise ValueError(f\"{context}无需请求格点必须为 not_applicable。\")"
+      },
+      {
+        "line": 567,
+        "source": "raise ValueError(f\"{context}无需请求格点不得保留下游产物运行审计值。\")"
+      },
+      {
+        "line": 569,
+        "source": "raise ValueError(f\"{context}需请求格点不得标为 not_required。\")"
+      },
+      {
+        "line": 574,
+        "source": "raise ValueError(f\"{context}完成布尔值与采集结果状态不一致。\")"
+      },
+      {
+        "line": 577,
+        "source": "raise ValueError(f\"{context}完成格点缺少批次或完成时间。\")"
+      },
+      {
+        "line": 579,
+        "source": "raise ValueError(f\"{context}未完成格点不得具有完成时间。\")"
+      },
+      {
+        "line": 583,
+        "source": "raise ValueError(f\"{context}success 必须有正式下游产物且不得标记缺失。\")"
+      },
+      {
+        "line": 585,
+        "source": "raise ValueError(f\"{context}empty_confirmed 的正式事实计数必须为 0。\")"
+      },
+      {
+        "line": 587,
+        "source": "raise ValueError(f\"{context}数据缺失只能来自确认空响应。\")"
+      },
+      {
+        "line": 600,
+        "source": "raise ValueError(\n                    f\"{context}生意社完成格点必须为 success + passed、产物数 1 且不缺失。\"\n                )"
+      },
+      {
+        "line": 608,
+        "source": "raise ValueError(f\"{context}已形成质检结论但缺少质检时间。\")"
+      },
+      {
+        "line": 610,
+        "source": "raise ValueError(f\"{context}updated_at 不得晚于当前 UTC 时间。\")"
+      },
+      {
+        "line": 631,
+        "source": "raise"
+      },
+      {
+        "line": 822,
+        "source": "raise"
+      },
+      {
+        "line": 945,
+        "source": "raise"
+      },
+      {
+        "line": 1048,
+        "source": "raise ValueError(f\"数据集路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 1123,
+        "source": "raise ValueError(\"staging 触达行数与完整分区计划不一致。\")"
+      },
+      {
+        "line": 1128,
+        "source": "raise ValueError(\"metadata 升级 staging 与完整期望表逐值不一致。\")"
+      },
+      {
+        "line": 1153,
+        "source": "raise ValueError(\"staging 叶分区行数与期望不一致。\")"
+      },
+      {
+        "line": 1159,
+        "source": "raise ValueError(\"staging 叶分区内容与期望不一致。\")"
+      },
+      {
+        "line": 1168,
+        "source": "raise"
+      },
+      {
+        "line": 1208,
+        "source": "raise FileNotFoundError(\n                                f\"staging 叶分区存在性与期望不一致：{relative_path}\"\n                            )"
+      },
+      {
+        "line": 1239,
+        "source": "raise ValueError(\"正式外部市场日历总行数与完整期望表不一致。\")"
+      },
+      {
+        "line": 1241,
+        "source": "raise ValueError(\"正式外部市场日历内容与完整期望表不一致。\")"
+      },
+      {
+        "line": 1255,
+        "source": "raise"
+      },
+      {
+        "line": 1271,
+        "source": "raise"
+      },
+      {
+        "line": 1331,
+        "source": "raise click.UsageError(\"--start-date 与 --end-date 必须同时提供。\")"
+      },
+      {
+        "line": 1333,
+        "source": "raise click.UsageError(\n                \"显式指定日期时禁止写入 FUTURES_LAKE_ROOT 指向的正式湖；\"\n                \"请移除日期参数使用自动更新，或改用非正式测试湖。\"\n            )"
+      },
+      {
+        "line": 1344,
+        "source": "raise click.BadParameter(\"起始日期不得晚于结束日期。\")"
+      },
+      {
+        "line": 1527,
+        "source": "raise"
+      }
+    ]
+  },
+  {
+    "path": "02_Market_Data/a01_Collection/b03_External_Market_Data/c02_domestic_spot_basis.py",
+    "sha256": "db492637b215849b77bc9a1332bf8709660938d80de356dadc60b5c9c31c5527",
+    "constants": [
+      {
+        "line": 48,
+        "source": "project_markers = [\".git\", \".env\", \"config/settings.py\"]"
+      },
+      {
+        "line": 101,
+        "source": "DATASET_NAME = \"domestic_spot_basis\""
+      },
+      {
+        "line": 102,
+        "source": "ENTITY_CODE = \"ALL\""
+      },
+      {
+        "line": 106,
+        "source": "RESPONSE_FILE_NAME = \"response.html\""
+      },
+      {
+        "line": 107,
+        "source": "SHA256_FILE_NAME = \"response.sha256\""
+      },
+      {
+        "line": 109,
+        "source": "URL_TEMPLATE = \"https://www.100ppi.com/sf/day-{observation_date}.html\""
+      },
+      {
+        "line": 110,
+        "source": "REQUEST_TIMEOUT_SECONDS = 30"
+      },
+      {
+        "line": 111,
+        "source": "REQUEST_HEADERS = {\n    \"User-Agent\": (\n        \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) \"\n        \"AppleWebKit/537.36 (KHTML, like Gecko) \"\n        \"Chrome/138.0.0.0 Safari/537.36\"\n    ),\n    \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\",\n    \"Accept-Language\": \"zh-CN,zh;q=0.9,en;q=0.8\",\n    \"Referer\": \"https://www.100ppi.com/sf/\",\n}"
+      },
+      {
+        "line": 122,
+        "source": "FETCH_RESULT_STATUSES = {\n    \"pending\",\n    \"success\",\n    \"empty_confirmed\",\n    \"retryable_error\",\n    \"permanent_error\",\n    \"not_required\",\n}"
+      },
+      {
+        "line": 130,
+        "source": "QUALITY_STATUSES = {\n    \"pending\",\n    \"passed\",\n    \"warning\",\n    \"failed\",\n    \"not_applicable\",\n}"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 57,
+        "source": "raise RuntimeError(\"未找到项目根目录\")"
+      },
+      {
+        "line": 182,
+        "source": "raise TypeError(\"数据集缺少权威 Schema 字段。\") from error"
+      },
+      {
+        "line": 210,
+        "source": "raise FileNotFoundError(f\"{label}不存在：{table_path}\")"
+      },
+      {
+        "line": 226,
+        "source": "raise TypeError(f\"{label}物理字段、类型或 nullable 与权威契约不一致。\")"
+      },
+      {
+        "line": 228,
+        "source": "raise TypeError(f\"{label}表名、主键或分区 metadata 与权威契约不一致。\")"
+      },
+      {
+        "line": 242,
+        "source": "raise TypeError(f\"{label}存在物理字段、类型或 nullable 不一致的 fragment：{fragment.path}\")"
+      },
+      {
+        "line": 244,
+        "source": "raise TypeError(f\"{label}存在表身份 metadata 不一致的 fragment：{fragment.path}\")"
+      },
+      {
+        "line": 263,
+        "source": "raise"
+      },
+      {
+        "line": 283,
+        "source": "raise ValueError(f\"{context}外部市场日历主键不唯一。\")"
+      },
+      {
+        "line": 292,
+        "source": "raise ValueError(f\"{context}采集结果状态不在允许枚举中。\")"
+      },
+      {
+        "line": 294,
+        "source": "raise ValueError(f\"{context}质量状态不在允许枚举中。\")"
+      },
+      {
+        "line": 296,
+        "source": "raise ValueError(f\"{context}请求原因不得为空。\")"
+      },
+      {
+        "line": 298,
+        "source": "raise ValueError(f\"{context}质量原因不得为空。\")"
+      },
+      {
+        "line": 303,
+        "source": "raise ValueError(f\"{context}年月分区与观测日期不一致。\")"
+      },
+      {
+        "line": 305,
+        "source": "raise ValueError(f\"{context}正式下游产物数量不得为负。\")"
+      },
+      {
+        "line": 310,
+        "source": "raise ValueError(f\"{context}生意社原始页面请求实体必须为 ALL。\")"
+      },
+      {
+        "line": 315,
+        "source": "raise ValueError(f\"{context}生意社原始页面归档禁止 empty_confirmed。\")"
+      },
+      {
+        "line": 319,
+        "source": "raise ValueError(f\"{context}无需请求格点必须为 not_required。\")"
+      },
+      {
+        "line": 321,
+        "source": "raise ValueError(f\"{context}无需请求格点不得标记完成或缺失。\")"
+      },
+      {
+        "line": 323,
+        "source": "raise ValueError(f\"{context}无需请求格点的产物数必须为零。\")"
+      },
+      {
+        "line": 325,
+        "source": "raise ValueError(f\"{context}无需请求格点必须为 not_applicable。\")"
+      },
+      {
+        "line": 327,
+        "source": "raise ValueError(f\"{context}需请求格点不得标为 not_required。\")"
+      },
+      {
+        "line": 331,
+        "source": "raise ValueError(f\"{context}完成布尔值与采集结果状态不一致。\")"
+      },
+      {
+        "line": 334,
+        "source": "raise ValueError(f\"{context}完成格点缺少批次或完成时间。\")"
+      },
+      {
+        "line": 336,
+        "source": "raise ValueError(f\"{context}未完成格点不得具有完成时间。\")"
+      },
+      {
+        "line": 340,
+        "source": "raise ValueError(f\"{context}success 必须有正式产物且不得标记缺失。\")"
+      },
+      {
+        "line": 345,
+        "source": "raise ValueError(f\"{context}empty_confirmed 的事实计数必须为零。\")"
+      },
+      {
+        "line": 350,
+        "source": "raise ValueError(f\"{context}数据缺失只能来自确认空响应。\")"
+      },
+      {
+        "line": 363,
+        "source": "raise ValueError(\n                    f\"{context}生意社完成格点必须为 success + passed、产物数 1 且不缺失。\"\n                )"
+      },
+      {
+        "line": 371,
+        "source": "raise ValueError(f\"{context}已形成质检结论但缺少质检时间。\")"
+      },
+      {
+        "line": 373,
+        "source": "raise ValueError(f\"{context}updated_at 不得晚于当前 UTC 时间。\")"
+      },
+      {
+        "line": 394,
+        "source": "raise"
+      },
+      {
+        "line": 600,
+        "source": "raise"
+      },
+      {
+        "line": 650,
+        "source": "raise RawRequestError(\n                f\"retryable_error: 生意社连接失败；date={observation_date}。\"\n            ) from error"
+      },
+      {
+        "line": 662,
+        "source": "raise RawRequestError(\n                f\"{error_kind}: 生意社 HTTP {response.status_code}；\"\n                f\"date={observation_date}。\",\n                response_content=response_content,\n            )"
+      },
+      {
+        "line": 679,
+        "source": "raise"
+      },
+      {
+        "line": 711,
+        "source": "raise ValueError(f\"raw 管理路径越界：{managed_path}\")"
+      },
+      {
+        "line": 730,
+        "source": "raise ValueError(\"生意社 raw staging 正式格式或摘要复读失败。\")"
+      },
+      {
+        "line": 737,
+        "source": "raise"
+      },
+      {
+        "line": 764,
+        "source": "raise ValueError(\"生意社 raw 正式路径逐字节复读失败。\")"
+      },
+      {
+        "line": 784,
+        "source": "raise"
+      },
+      {
+        "line": 809,
+        "source": "raise ValueError(\"raw 失败证据路径越界。\")"
+      },
+      {
+        "line": 829,
+        "source": "raise"
+      },
+      {
+        "line": 889,
+        "source": "raise ValueError(f\"待完成 raw 格点不存在或无需请求：{observation_date}\")"
+      },
+      {
+        "line": 924,
+        "source": "raise"
+      },
+      {
+        "line": 944,
+        "source": "raise ValueError(\"失败状态必须是 retryable_error 或 permanent_error。\")"
+      },
+      {
+        "line": 955,
+        "source": "raise ValueError(f\"待失败 raw 格点不唯一：{observation_date}\")"
+      },
+      {
+        "line": 979,
+        "source": "raise"
+      },
+      {
+        "line": 1052,
+        "source": "raise ValueError(f\"数据集路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 1082,
+        "source": "raise ValueError(\"外部市场日历 staging 内容检查失败。\")"
+      },
+      {
+        "line": 1089,
+        "source": "raise"
+      },
+      {
+        "line": 1131,
+        "source": "raise ValueError(\"正式外部市场日历分区内容检查失败。\")"
+      },
+      {
+        "line": 1161,
+        "source": "raise"
+      },
+      {
+        "line": 1201,
+        "source": "raise click.UsageError(\"--start-date 与 --end-date 必须同时提供。\")"
+      },
+      {
+        "line": 1203,
+        "source": "raise click.UsageError(\n                \"显式指定日期时禁止写入 FUTURES_LAKE_ROOT 指向的正式湖；\"\n                \"请移除日期参数使用自动更新，或改用非正式测试湖。\"\n            )"
+      },
+      {
+        "line": 1211,
+        "source": "raise click.BadParameter(\"起始日期不得晚于结束日期。\")"
+      },
+      {
+        "line": 1363,
+        "source": "raise click.ClickException(str(error)) from error"
+      },
+      {
+        "line": 1406,
+        "source": "raise"
+      }
+    ]
+  },
+  {
+    "path": "02_Market_Data/a01_Collection/b03_External_Market_Data/c03_overseas_futures.py",
+    "sha256": "aba2e7787b2e7cbe884a856cad28acd9a6c322f7c37b29018500c68887ae1848",
+    "constants": [
+      {
+        "line": 97,
+        "source": "project_markers = [\".git\", \".env\", \"config/settings.py\"]"
+      },
+      {
+        "line": 198,
+        "source": "DATASET_NAME = \"overseas_futures\""
+      },
+      {
+        "line": 200,
+        "source": "GRID_COLUMNS = [\"snapshot_date\"]"
+      },
+      {
+        "line": 202,
+        "source": "SOURCE = \"JQData_finance_FUT_GLOBAL_DAILY\""
+      },
+      {
+        "line": 203,
+        "source": "JQDATA_RESULT_ROWS_LIMIT = 5000"
+      },
+      {
+        "line": 206,
+        "source": "JQDATA_FIELDS = [\n    \"id\",  # 财务库原始记录 ID。\n    \"code\",  # 境外期货品种代码。\n    \"name\",  # 境外期货品种名称。\n    \"day\",  # API 事实交易日。\n    \"open\",  # 开盘价。\n    \"close\",  # 收盘价。\n    \"low\",  # 最低价。\n    \"high\",  # 最高价。\n    \"volume\",  # 成交量。\n    \"change_pct\",  # 来源涨跌幅百分数值。\n    \"amplitude\",  # 来源振幅百分数值。\n    \"pre_close\",  # 前收价。\n]"
+      },
+      {
+        "line": 221,
+        "source": "FETCH_RESULT_STATUSES = {\n    \"pending\",\n    \"success\",\n    \"empty_confirmed\",\n    \"retryable_error\",\n    \"permanent_error\",\n    \"not_required\",\n}"
+      },
+      {
+        "line": 229,
+        "source": "QUALITY_STATUSES = {\n    \"pending\",\n    \"passed\",\n    \"warning\",\n    \"failed\",\n    \"not_applicable\",\n}"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 107,
+        "source": "raise RuntimeError(\"未找到项目根目录\")"
+      },
+      {
+        "line": 282,
+        "source": "raise TypeError(\"数据集缺少权威 Schema 字段。\") from error"
+      },
+      {
+        "line": 309,
+        "source": "raise FileNotFoundError(f\"{label}不存在：{table_path}\")"
+      },
+      {
+        "line": 325,
+        "source": "raise TypeError(f\"{label}物理字段、类型或 nullable 与权威契约不一致。\")"
+      },
+      {
+        "line": 327,
+        "source": "raise TypeError(f\"{label}表名、主键或分区 metadata 与权威契约不一致。\")"
+      },
+      {
+        "line": 342,
+        "source": "raise TypeError(f\"{label}存在物理字段、类型或 nullable 不一致的 fragment：{fragment.path}\")"
+      },
+      {
+        "line": 344,
+        "source": "raise TypeError(f\"{label}存在表身份 metadata 不一致的 fragment：{fragment.path}\")"
+      },
+      {
+        "line": 363,
+        "source": "raise"
+      },
+      {
+        "line": 400,
+        "source": "raise ValueError(f\"{context}外部市场日历主键不唯一。\")"
+      },
+      {
+        "line": 416,
+        "source": "raise ValueError(f\"{context}采集结果状态不在允许枚举中。\")"
+      },
+      {
+        "line": 418,
+        "source": "raise ValueError(f\"{context}质量状态不在允许枚举中。\")"
+      },
+      {
+        "line": 420,
+        "source": "raise ValueError(f\"{context}请求原因不得为空。\")"
+      },
+      {
+        "line": 422,
+        "source": "raise ValueError(f\"{context}质量原因不得为空。\")"
+      },
+      {
+        "line": 427,
+        "source": "raise ValueError(f\"{context}年月分区与观测日期不一致。\")"
+      },
+      {
+        "line": 429,
+        "source": "raise ValueError(f\"{context}实际记录数不得为负。\")"
+      },
+      {
+        "line": 431,
+        "source": "raise ValueError(f\"{context}境外期货请求实体必须为 ALL。\")"
+      },
+      {
+        "line": 435,
+        "source": "raise ValueError(f\"{context}无需请求格点必须为 not_required。\")"
+      },
+      {
+        "line": 437,
+        "source": "raise ValueError(f\"{context}无需请求格点不得标记完成或缺失。\")"
+      },
+      {
+        "line": 439,
+        "source": "raise ValueError(f\"{context}无需请求格点的事实计数必须为零。\")"
+      },
+      {
+        "line": 441,
+        "source": "raise ValueError(f\"{context}无需请求格点必须为 not_applicable。\")"
+      },
+      {
+        "line": 443,
+        "source": "raise ValueError(f\"{context}需请求格点不得标为 not_required。\")"
+      },
+      {
+        "line": 448,
+        "source": "raise ValueError(f\"{context}完成布尔值与采集结果状态不一致。\")"
+      },
+      {
+        "line": 451,
+        "source": "raise ValueError(f\"{context}完成格点缺少批次或完成时间。\")"
+      },
+      {
+        "line": 453,
+        "source": "raise ValueError(f\"{context}未完成格点不得具有完成时间。\")"
+      },
+      {
+        "line": 457,
+        "source": "raise ValueError(f\"{context}success 必须有正式事实且不得标记缺失。\")"
+      },
+      {
+        "line": 460,
+        "source": "raise ValueError(f\"{context}empty_confirmed 必须为零事实并标记缺失。\")"
+      },
+      {
+        "line": 462,
+        "source": "raise ValueError(f\"{context}数据缺失只能来自确认空响应。\")"
+      },
+      {
+        "line": 467,
+        "source": "raise ValueError(f\"{context}已形成质检结论但缺少质检时间。\")"
+      },
+      {
+        "line": 469,
+        "source": "raise ValueError(f\"{context}updated_at 不得晚于当前 UTC 时间。\")"
+      },
+      {
+        "line": 483,
+        "source": "raise"
+      },
+      {
+        "line": 543,
+        "source": "raise ValueError(f\"{context}{field_name} 非空时必须为有限数。\")"
+      },
+      {
+        "line": 550,
+        "source": "raise ValueError(f\"{context}境外期货事实主键不唯一。\")"
+      },
+      {
+        "line": 564,
+        "source": "raise ValueError(f\"{context}请求日期与 API day 不一致。\")"
+      },
+      {
+        "line": 566,
+        "source": "raise ValueError(f\"{context}JQData 原始记录 ID 不得为空。\")"
+      },
+      {
+        "line": 568,
+        "source": "raise ValueError(f\"{context}境外期货代码不得为空。\")"
+      },
+      {
+        "line": 570,
+        "source": "raise ValueError(f\"{context}非空境外期货名称不得为空白。\")"
+      },
+      {
+        "line": 572,
+        "source": "raise ValueError(f\"{context}事实来源不一致。\")"
+      },
+      {
+        "line": 577,
+        "source": "raise ValueError(f\"{context}年月分区与 API 交易日不一致。\")"
+      },
+      {
+        "line": 579,
+        "source": "raise ValueError(f\"{context}updated_at 不得晚于当前 UTC 时间。\")"
+      },
+      {
+        "line": 585,
+        "source": "raise ValueError(f\"{context}{field_name} 非空时必须为有限数。\")"
+      },
+      {
+        "line": 595,
+        "source": "raise ValueError(f\"{context}成交量非空时必须为有限非负数。\")"
+      },
+      {
+        "line": 598,
+        "source": "raise ValueError(f\"{context}涨跌幅非空时必须为有限数。\")"
+      },
+      {
+        "line": 604,
+        "source": "raise ValueError(f\"{context}振幅非空时必须为有限非负数。\")"
+      },
+      {
+        "line": 618,
+        "source": "raise"
+      },
+      {
+        "line": 719,
+        "source": "raise"
+      },
+      {
+        "line": 787,
+        "source": "raise"
+      },
+      {
+        "line": 839,
+        "source": "raise RuntimeError(\n                f\"{error_type}: JQData FUT_GLOBAL_DAILY 查询失败；date={snapshot_date}。\"\n            ) from error"
+      },
+      {
+        "line": 845,
+        "source": "raise RuntimeError(\n                f\"retryable_error: JQData FUT_GLOBAL_DAILY 返回 None；date={snapshot_date}。\"\n            )"
+      },
+      {
+        "line": 858,
+        "source": "raise"
+      },
+      {
+        "line": 895,
+        "source": "raise TypeError(\"schema_error: JQData 境外期货查询未返回 DataFrame。\")"
+      },
+      {
+        "line": 907,
+        "source": "raise ValueError(f\"schema_error: JQData 境外期货表缺列 {sorted(missing_columns)}。\")"
+      },
+      {
+        "line": 909,
+        "source": "raise ValueError(\n                \"schema_error: 单日响应达到 finance.run_query 的 5000 行上限，\"\n                \"不能证明结果完整。\"\n            )"
+      },
+      {
+        "line": 918,
+        "source": "raise ValueError(\"schema_error: JQData day 与待办请求日期不一致。\")"
+      },
+      {
+        "line": 922,
+        "source": "raise ValueError(\"schema_error: JQData id 含空值。\")"
+      },
+      {
+        "line": 925,
+        "source": "raise ValueError(\"schema_error: JQData id 含空白值。\")"
+      },
+      {
+        "line": 928,
+        "source": "raise ValueError(\"schema_error: JQData code 含空值。\")"
+      },
+      {
+        "line": 931,
+        "source": "raise ValueError(\"schema_error: JQData code 含空白值。\")"
+      },
+      {
+        "line": 935,
+        "source": "raise ValueError(\"schema_error: JQData name 的非空值不得为空白。\")"
+      },
+      {
+        "line": 961,
+        "source": "raise ValueError(\n                        f\"schema_error: JQData {field_name} 含非有限数。\"\n                    )"
+      },
+      {
+        "line": 967,
+        "source": "raise ValueError(\n                    f\"schema_error: JQData {field_name} 含非空非数值文本。\"\n                )"
+      },
+      {
+        "line": 1004,
+        "source": "raise"
+      },
+      {
+        "line": 1051,
+        "source": "raise ValueError(\"正式事实计数不得为负。\")"
+      },
+      {
+        "line": 1053,
+        "source": "raise ValueError(\"零事实格点不得带有 OHLC 关系 warning。\")"
+      },
+      {
+        "line": 1216,
+        "source": "raise"
+      },
+      {
+        "line": 1281,
+        "source": "raise"
+      },
+      {
+        "line": 1308,
+        "source": "raise ValueError(\"事实分区键不得为空。\")"
+      },
+      {
+        "line": 1357,
+        "source": "raise ValueError(\"待提交境外期货内容越出指定 Hive 叶分区。\")"
+      },
+      {
+        "line": 1371,
+        "source": "raise ValueError(f\"数据集路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 1421,
+        "source": "raise ValueError(\"境外期货 staging 完整分区内容检查失败。\")"
+      },
+      {
+        "line": 1429,
+        "source": "raise"
+      },
+      {
+        "line": 1471,
+        "source": "raise ValueError(\"确认空的正式事实叶仍然存在。\")"
+      },
+      {
+        "line": 1483,
+        "source": "raise ValueError(\"新建正式事实标记必须为零行。\")"
+      },
+      {
+        "line": 1488,
+        "source": "raise ValueError(\"正式境外期货完整分区内容检查失败。\")"
+      },
+      {
+        "line": 1508,
+        "source": "raise"
+      },
+      {
+        "line": 1552,
+        "source": "raise ValueError(\n                \"OHLC warning 日期必须属于本批正式复读格点：\"\n                f\"{sorted(unknown_warning_dates)}。\"\n            )"
+      },
+      {
+        "line": 1607,
+        "source": "raise"
+      },
+      {
+        "line": 1631,
+        "source": "raise ValueError(\"失败状态不在允许枚举中。\")"
+      },
+      {
+        "line": 1672,
+        "source": "raise"
+      },
+      {
+        "line": 1764,
+        "source": "raise ValueError(f\"数据集路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 1795,
+        "source": "raise ValueError(\"外部市场日历 staging 内容检查失败。\")"
+      },
+      {
+        "line": 1803,
+        "source": "raise"
+      },
+      {
+        "line": 1836,
+        "source": "raise ValueError(\"正式外部市场日历分区内容检查失败。\")"
+      },
+      {
+        "line": 1865,
+        "source": "raise"
+      },
+      {
+        "line": 1930,
+        "source": "raise click.UsageError(\"--start-date 与 --end-date 必须同时提供。\")"
+      },
+      {
+        "line": 1932,
+        "source": "raise click.UsageError(\n                \"显式指定日期时禁止写入 FUTURES_LAKE_ROOT 指向的正式湖；\"\n                \"请移除日期参数使用自动更新，或改用非正式测试湖。\"\n            )"
+      },
+      {
+        "line": 1940,
+        "source": "raise click.BadParameter(\"起始日期不得晚于结束日期。\")"
+      },
+      {
+        "line": 2137,
+        "source": "raise click.ClickException(message) from error"
+      },
+      {
+        "line": 2208,
+        "source": "raise"
+      }
+    ]
+  },
+  {
+    "path": "02_Market_Data/a01_Collection/b03_External_Market_Data/c04_external_index.py",
+    "sha256": "960cafe363eef7eb8b648fc43dd98a020965ebe43661560296583c3d43945200",
+    "constants": [
+      {
+        "line": 94,
+        "source": "project_markers = [\".git\", \".env\", \"config/settings.py\"]"
+      },
+      {
+        "line": 201,
+        "source": "DATASET_NAME = \"external_index\""
+      },
+      {
+        "line": 202,
+        "source": "GRID_COLUMNS = [\n    \"source_indicator_id\",  # Eastmoney 请求实体 ID。\n    \"observation_date\",  # 指数报告/观测日期。\n]"
+      },
+      {
+        "line": 214,
+        "source": "SOURCE = \"Eastmoney_RPT_INDUSTRY_INDEX\""
+      },
+      {
+        "line": 215,
+        "source": "EASTMONEY_ENDPOINT = \"https://datacenter-web.eastmoney.com/api/data/v1/get\""
+      },
+      {
+        "line": 216,
+        "source": "EASTMONEY_REPORT_NAME = \"RPT_INDUSTRY_INDEX\""
+      },
+      {
+        "line": 217,
+        "source": "EASTMONEY_PAGE_SIZE = 500"
+      },
+      {
+        "line": 218,
+        "source": "EASTMONEY_MAX_PAGES = 10_000"
+      },
+      {
+        "line": 221,
+        "source": "EASTMONEY_FIELDS = [\n    \"INDICATOR_ID\",  # Eastmoney 原始指标 ID。\n    \"INDICATOR_VALUE\",  # 指数观测值。\n    \"REPORT_DATE\",  # 指数报告/观测日期。\n]"
+      },
+      {
+        "line": 227,
+        "source": "FETCH_RESULT_STATUSES = {\n    \"pending\",\n    \"success\",\n    \"empty_confirmed\",\n    \"retryable_error\",\n    \"permanent_error\",\n    \"not_required\",\n}"
+      },
+      {
+        "line": 235,
+        "source": "QUALITY_STATUSES = {\n    \"pending\",\n    \"passed\",\n    \"warning\",\n    \"failed\",\n    \"not_applicable\",\n}"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 104,
+        "source": "raise RuntimeError(\"未找到项目根目录\")"
+      },
+      {
+        "line": 288,
+        "source": "raise TypeError(\"数据集缺少权威 Schema 字段。\") from error"
+      },
+      {
+        "line": 315,
+        "source": "raise FileNotFoundError(f\"{label}不存在：{table_path}\")"
+      },
+      {
+        "line": 331,
+        "source": "raise TypeError(f\"{label}物理字段、类型或 nullable 与权威契约不一致。\")"
+      },
+      {
+        "line": 333,
+        "source": "raise TypeError(f\"{label}表名、主键或分区 metadata 与权威契约不一致。\")"
+      },
+      {
+        "line": 348,
+        "source": "raise TypeError(f\"{label}存在物理字段、类型或 nullable 不一致的 fragment：{fragment.path}\")"
+      },
+      {
+        "line": 350,
+        "source": "raise TypeError(f\"{label}存在表身份 metadata 不一致的 fragment：{fragment.path}\")"
+      },
+      {
+        "line": 369,
+        "source": "raise"
+      },
+      {
+        "line": 408,
+        "source": "raise ValueError(f\"{context}外部市场日历主键不唯一。\")"
+      },
+      {
+        "line": 421,
+        "source": "raise ValueError(f\"{context}采集结果状态不在允许枚举中。\")"
+      },
+      {
+        "line": 423,
+        "source": "raise ValueError(f\"{context}质量状态不在允许枚举中。\")"
+      },
+      {
+        "line": 425,
+        "source": "raise ValueError(f\"{context}请求原因不得为空。\")"
+      },
+      {
+        "line": 427,
+        "source": "raise ValueError(f\"{context}质量原因不得为空。\")"
+      },
+      {
+        "line": 432,
+        "source": "raise ValueError(f\"{context}年月分区与观测日期不一致。\")"
+      },
+      {
+        "line": 434,
+        "source": "raise ValueError(f\"{context}实际记录数不得为负。\")"
+      },
+      {
+        "line": 439,
+        "source": "raise ValueError(f\"{context}外部指数请求实体未命中共享配置。\")"
+      },
+      {
+        "line": 444,
+        "source": "raise ValueError(f\"{context}外部指数单格点事实计数只能为 0 或 1。\")"
+      },
+      {
+        "line": 448,
+        "source": "raise ValueError(f\"{context}无需请求格点必须为 not_required。\")"
+      },
+      {
+        "line": 450,
+        "source": "raise ValueError(f\"{context}无需请求格点不得标记完成或缺失。\")"
+      },
+      {
+        "line": 452,
+        "source": "raise ValueError(f\"{context}无需请求格点的事实计数必须为零。\")"
+      },
+      {
+        "line": 454,
+        "source": "raise ValueError(f\"{context}无需请求格点必须为 not_applicable。\")"
+      },
+      {
+        "line": 456,
+        "source": "raise ValueError(f\"{context}需请求格点不得标为 not_required。\")"
+      },
+      {
+        "line": 464,
+        "source": "raise ValueError(f\"{context}完成布尔值与采集结果状态不一致。\")"
+      },
+      {
+        "line": 467,
+        "source": "raise ValueError(f\"{context}完成格点缺少批次或完成时间。\")"
+      },
+      {
+        "line": 469,
+        "source": "raise ValueError(f\"{context}未完成格点不得具有完成时间。\")"
+      },
+      {
+        "line": 473,
+        "source": "raise ValueError(f\"{context}success 必须有正式事实且不得标记缺失。\")"
+      },
+      {
+        "line": 476,
+        "source": "raise ValueError(f\"{context}empty_confirmed 必须为零事实并标记缺失。\")"
+      },
+      {
+        "line": 478,
+        "source": "raise ValueError(f\"{context}数据缺失只能来自确认空响应。\")"
+      },
+      {
+        "line": 483,
+        "source": "raise ValueError(f\"{context}已形成质检结论但缺少质检时间。\")"
+      },
+      {
+        "line": 485,
+        "source": "raise ValueError(f\"{context}updated_at 不得晚于当前 UTC 时间。\")"
+      },
+      {
+        "line": 499,
+        "source": "raise"
+      },
+      {
+        "line": 538,
+        "source": "raise ValueError(f\"{context}外部指数事实主键不唯一。\")"
+      },
+      {
+        "line": 553,
+        "source": "raise ValueError(f\"{context}Eastmoney 原始指标 ID 不得为空。\")"
+      },
+      {
+        "line": 556,
+        "source": "raise ValueError(f\"{context}原始指标 ID 未命中共享配置。\")"
+      },
+      {
+        "line": 558,
+        "source": "raise ValueError(f\"{context}项目指数代码与共享配置不一致。\")"
+      },
+      {
+        "line": 560,
+        "source": "raise ValueError(f\"{context}指数名称与共享配置不一致。\")"
+      },
+      {
+        "line": 562,
+        "source": "raise ValueError(f\"{context}指数分类与共享配置不一致。\")"
+      },
+      {
+        "line": 564,
+        "source": "raise ValueError(f\"{context}事实来源不一致。\")"
+      },
+      {
+        "line": 569,
+        "source": "raise ValueError(f\"{context}年月分区与指数观测日期不一致。\")"
+      },
+      {
+        "line": 571,
+        "source": "raise ValueError(f\"{context}指数观测日期不得晚于当前可见日期。\")"
+      },
+      {
+        "line": 573,
+        "source": "raise ValueError(f\"{context}updated_at 不得晚于当前 UTC 时间。\")"
+      },
+      {
+        "line": 575,
+        "source": "raise ValueError(f\"{context}指数观测值必须为有限数。\")"
+      },
+      {
+        "line": 589,
+        "source": "raise"
+      },
+      {
+        "line": 658,
+        "source": "raise"
+      },
+      {
+        "line": 739,
+        "source": "raise ValueError(\"待办日期未被上游 required 连续段完整覆盖。\")"
+      },
+      {
+        "line": 750,
+        "source": "raise"
+      },
+      {
+        "line": 808,
+        "source": "raise"
+      },
+      {
+        "line": 903,
+        "source": "raise RuntimeError(\n                    f\"{error_type}: Eastmoney HTTP 请求失败；\"\n                    f\"indicator={source_indicator_id}; page={page_number}; \"\n                    f\"status={status_code}。\"\n                ) from error"
+      },
+      {
+        "line": 909,
+        "source": "raise RuntimeError(\n                    \"retryable_error: Eastmoney 请求失败；\"\n                    f\"indicator={source_indicator_id}; page={page_number}。\"\n                ) from error"
+      },
+      {
+        "line": 918,
+        "source": "raise RuntimeError(\n                    \"retryable_error: Eastmoney 未返回有效 JSON；\"\n                    f\"indicator={source_indicator_id}; page={page_number}。\"\n                ) from error"
+      },
+      {
+        "line": 924,
+        "source": "raise RuntimeError(\"permanent_error: Eastmoney JSON 顶层必须为对象。\")"
+      },
+      {
+        "line": 931,
+        "source": "raise RuntimeError(\n                            \"retryable_error: Eastmoney 后续分页意外返回空响应。\"\n                        )"
+      },
+      {
+        "line": 956,
+        "source": "raise RuntimeError(\n                    f\"{error_type}: Eastmoney 返回失败；\"\n                    f\"indicator={source_indicator_id}; page={page_number}; \"\n                    f\"code={code}; message={message}。\"\n                )"
+      },
+      {
+        "line": 964,
+        "source": "raise RuntimeError(\"permanent_error: Eastmoney result 必须为对象。\")"
+      },
+      {
+        "line": 967,
+        "source": "raise RuntimeError(\"permanent_error: Eastmoney result.data 必须为列表。\")"
+      },
+      {
+        "line": 977,
+        "source": "raise RuntimeError(\n                        f\"permanent_error: Eastmoney {metadata_name} 类型非法。\"\n                    )"
+      },
+      {
+        "line": 986,
+        "source": "raise RuntimeError(\n                    f\"permanent_error: Eastmoney {metadata_name} 必须为整数。\"\n                )"
+      },
+      {
+        "line": 991,
+        "source": "raise RuntimeError(\"permanent_error: Eastmoney pages/count 不得为负。\")"
+      },
+      {
+        "line": 995,
+        "source": "raise RuntimeError(\"permanent_error: Eastmoney 空响应分页元数据不一致。\")"
+      },
+      {
+        "line": 1006,
+        "source": "raise RuntimeError(\"retryable_error: Eastmoney pages 与 count 不一致。\")"
+      },
+      {
+        "line": 1008,
+        "source": "raise RuntimeError(\"permanent_error: Eastmoney 总页数超过安全上限。\")"
+      },
+      {
+        "line": 1014,
+        "source": "raise RuntimeError(\"retryable_error: Eastmoney 分页元数据在请求期间漂移。\")"
+      },
+      {
+        "line": 1022,
+        "source": "raise RuntimeError(\"retryable_error: Eastmoney 当前页行数与分页元数据不一致。\")"
+      },
+      {
+        "line": 1035,
+        "source": "raise RuntimeError(\"retryable_error: Eastmoney 累计行数与 count 不一致。\")"
+      },
+      {
+        "line": 1046,
+        "source": "raise"
+      },
+      {
+        "line": 1106,
+        "source": "raise ValueError(\"permanent_error: Eastmoney data 元素必须为对象。\")"
+      },
+      {
+        "line": 1109,
+        "source": "raise ValueError(\n                    \"permanent_error: Eastmoney data 缺少字段 \"\n                    f\"{sorted(missing_fields)}。\"\n                )"
+      },
+      {
+        "line": 1116,
+        "source": "raise ValueError(\"permanent_error: Eastmoney INDICATOR_ID 不得为空。\")"
+      },
+      {
+        "line": 1119,
+        "source": "raise ValueError(\"permanent_error: Eastmoney 返回了非请求指标 ID。\")"
+      },
+      {
+        "line": 1124,
+        "source": "raise ValueError(\"permanent_error: Eastmoney REPORT_DATE 非法。\") from error"
+      },
+      {
+        "line": 1126,
+        "source": "raise ValueError(\"permanent_error: Eastmoney REPORT_DATE 不得为空。\")"
+      },
+      {
+        "line": 1129,
+        "source": "raise ValueError(\"permanent_error: Eastmoney 日期越出请求范围。\")"
+      },
+      {
+        "line": 1131,
+        "source": "raise ValueError(\"permanent_error: Eastmoney 日期晚于当前可见日期。\")"
+      },
+      {
+        "line": 1135,
+        "source": "raise ValueError(\"permanent_error: Eastmoney 跨页指标—日期键重复。\")"
+      },
+      {
+        "line": 1140,
+        "source": "raise ValueError(\"permanent_error: Eastmoney 指数值为空或类型非法。\")"
+      },
+      {
+        "line": 1144,
+        "source": "raise ValueError(\"permanent_error: Eastmoney 指数值不是数值。\") from error"
+      },
+      {
+        "line": 1146,
+        "source": "raise ValueError(\"permanent_error: Eastmoney 指数值必须为有限数。\")"
+      },
+      {
+        "line": 1185,
+        "source": "raise"
+      },
+      {
+        "line": 1228,
+        "source": "raise ValueError(\"外部指数正式事实的单个指标—日期格点必须恰好一行。\")"
+      },
+      {
+        "line": 1238,
+        "source": "raise ValueError(\"外部指数单个日历格点的正式事实计数只能为 0 或 1。\")"
+      },
+      {
+        "line": 1308,
+        "source": "raise ValueError(\"required 外部指数格点未命中共享请求实体配置。\")"
+      },
+      {
+        "line": 1382,
+        "source": "raise"
+      },
+      {
+        "line": 1445,
+        "source": "raise"
+      },
+      {
+        "line": 1472,
+        "source": "raise ValueError(\"事实分区键不得为空。\")"
+      },
+      {
+        "line": 1525,
+        "source": "raise ValueError(\"待提交外部指数内容越出指定 Hive 叶分区。\")"
+      },
+      {
+        "line": 1537,
+        "source": "raise ValueError(f\"数据集路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 1583,
+        "source": "raise ValueError(\"外部指数 staging 完整分区内容检查失败。\")"
+      },
+      {
+        "line": 1587,
+        "source": "raise"
+      },
+      {
+        "line": 1630,
+        "source": "raise ValueError(\"确认空的正式事实叶仍然存在。\")"
+      },
+      {
+        "line": 1642,
+        "source": "raise ValueError(\"新建正式事实标记必须为零行。\")"
+      },
+      {
+        "line": 1647,
+        "source": "raise ValueError(\"正式外部指数完整分区内容检查失败。\")"
+      },
+      {
+        "line": 1662,
+        "source": "raise"
+      },
+      {
+        "line": 1721,
+        "source": "raise ValueError(\"外部指数完成格点的正式事实计数只能为 0 或 1。\")"
+      },
+      {
+        "line": 1757,
+        "source": "raise"
+      },
+      {
+        "line": 1781,
+        "source": "raise ValueError(\"失败状态不在允许枚举中。\")"
+      },
+      {
+        "line": 1798,
+        "source": "raise ValueError(\"外部指数失败格点的正式事实计数只能为 0 或 1。\")"
+      },
+      {
+        "line": 1822,
+        "source": "raise"
+      },
+      {
+        "line": 1883,
+        "source": "raise ValueError(\"待提交外部指数日历格点未与日历主键一一对应。\")"
+      },
+      {
+        "line": 1916,
+        "source": "raise ValueError(f\"数据集路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 1943,
+        "source": "raise ValueError(\"外部市场日历 staging 内容检查失败。\")"
+      },
+      {
+        "line": 1947,
+        "source": "raise"
+      },
+      {
+        "line": 1980,
+        "source": "raise ValueError(\"正式外部市场日历分区内容检查失败。\")"
+      },
+      {
+        "line": 2003,
+        "source": "raise"
+      },
+      {
+        "line": 2068,
+        "source": "raise click.UsageError(\"--start-date 与 --end-date 必须同时提供。\")"
+      },
+      {
+        "line": 2070,
+        "source": "raise click.UsageError(\n                \"显式指定日期时禁止写入 FUTURES_LAKE_ROOT 指向的正式湖；\"\n                \"请移除日期参数使用自动更新，或改用非正式测试湖。\"\n            )"
+      },
+      {
+        "line": 2078,
+        "source": "raise click.BadParameter(\"起始日期不得晚于结束日期。\")"
+      },
+      {
+        "line": 2189,
+        "source": "raise RuntimeError(\"缺少 Eastmoney HTTP 会话。\")"
+      },
+      {
+        "line": 2239,
+        "source": "raise click.ClickException(message) from error"
+      },
+      {
+        "line": 2291,
+        "source": "raise RuntimeError(\n                        \"外部指数 API 精确待办计数与正式事实复读计数不一致。\"\n                    )"
+      },
+      {
+        "line": 2298,
+        "source": "raise RuntimeError(\"上游失效外部指数格点仍残留正式事实。\")"
+      },
+      {
+        "line": 2339,
+        "source": "raise"
+      }
+    ]
+  },
+  {
+    "path": "02_Market_Data/a01_Collection/b04_Macro_And_Interest_Rates/c01_macro_release_calendar.py",
+    "sha256": "6a3fc7a18f98674941e2e10633cf9f74868dd11525a5c277f0b87321fe633dd6",
+    "constants": [
+      {
+        "line": 98,
+        "source": "project_markers = [\".git\", \".env\", \"config/settings.py\"]"
+      },
+      {
+        "line": 194,
+        "source": "POLICY_COLUMNS = [\n    \"expected_available_date\",  # 项目规则推定的最早可用日。\n    \"is_fetch_required\",  # 当前是否已经进入事实采集水位。\n    \"requirement_reason\",  # 配置和可用日规则的版本化中文说明。\n]"
+      },
+      {
+        "line": 199,
+        "source": "STATE_COLUMNS = [\n    \"is_fetch_completed\",  # 事实请求、提交和正式复读是否完成。\n    \"fetch_result_status\",  # 最近一次事实采集结果。\n    \"is_data_missing\",  # 已确认对应事实格点为空。\n    \"actual_record_count\",  # 对应正式事实复读行数，只允许 0 或 1。\n    \"quality_status\",  # 格点综合质检状态。\n    \"quality_reason\",  # 质检结论中文说明。\n    \"fetch_run_id\",  # 最近一次事实采集批次号。\n    \"fetch_completed_at\",  # 最近一次事实完成时间。\n    \"quality_checked_at\",  # 最近一次事实质检时间。\n    \"updated_at\",  # 本行政策或状态最后变化时间。\n]"
+      },
+      {
+        "line": 212,
+        "source": "FETCH_RESULT_STATUSES = {\n    \"pending\",\n    \"success\",\n    \"empty_confirmed\",\n    \"retryable_error\",\n    \"permanent_error\",\n    \"not_required\",\n}"
+      },
+      {
+        "line": 220,
+        "source": "QUALITY_STATUSES = {\n    \"pending\",\n    \"passed\",\n    \"warning\",\n    \"failed\",\n    \"not_applicable\",\n}"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 108,
+        "source": "raise RuntimeError(\"未找到项目根目录\")"
+      },
+      {
+        "line": 285,
+        "source": "raise TypeError(\"数据集缺少权威 Schema 字段。\") from error"
+      },
+      {
+        "line": 371,
+        "source": "raise FileNotFoundError(f\"{label}不存在：{table_path}\")"
+      },
+      {
+        "line": 386,
+        "source": "raise TypeError(f\"{label}物理字段、顺序、类型或 nullable 与权威契约不兼容。\")"
+      },
+      {
+        "line": 392,
+        "source": "raise TypeError(f\"{label}表名、主键或分区 metadata 与权威契约不兼容。\")"
+      },
+      {
+        "line": 394,
+        "source": "raise TypeError(f\"{label}缺少契约版本 metadata。\")"
+      },
+      {
+        "line": 409,
+        "source": "raise TypeError(\n                    f\"{label}存在物理结构不兼容的 fragment：{fragment.path}\"\n                )"
+      },
+      {
+        "line": 416,
+        "source": "raise TypeError(f\"{label}存在表身份 metadata 不兼容的 fragment：{fragment.path}\")"
+      },
+      {
+        "line": 418,
+        "source": "raise TypeError(f\"{label} fragment 缺少契约版本：{fragment.path}\")"
+      },
+      {
+        "line": 438,
+        "source": "raise"
+      },
+      {
+        "line": 474,
+        "source": "raise TypeError(f\"{label} 契约版本与当前权威契约不一致。\")"
+      },
+      {
+        "line": 485,
+        "source": "raise"
+      },
+      {
+        "line": 530,
+        "source": "raise ValueError(f\"{context}宏观发布日历主键不唯一。\")"
+      },
+      {
+        "line": 539,
+        "source": "raise ValueError(f\"{context}dataset_name 不在权威枚举中。\")"
+      },
+      {
+        "line": 541,
+        "source": "raise ValueError(f\"{context}fetch_result_status 不在允许枚举中。\")"
+      },
+      {
+        "line": 543,
+        "source": "raise ValueError(f\"{context}quality_status 不在允许枚举中。\")"
+      },
+      {
+        "line": 545,
+        "source": "raise ValueError(f\"{context}requirement_reason 不得为空。\")"
+      },
+      {
+        "line": 547,
+        "source": "raise ValueError(f\"{context}quality_reason 不得为空。\")"
+      },
+      {
+        "line": 552,
+        "source": "raise ValueError(f\"{context}year/month 与报告/观测日期不一致。\")"
+      },
+      {
+        "line": 554,
+        "source": "raise ValueError(f\"{context}正式事实复读计数只允许 0 或 1。\")"
+      },
+      {
+        "line": 556,
+        "source": "raise ValueError(f\"{context}项目可用日不得早于报告/观测日期。\")"
+      },
+      {
+        "line": 558,
+        "source": "raise ValueError(f\"{context}updated_at 不得晚于当前 UTC 时间。\")"
+      },
+      {
+        "line": 563,
+        "source": "raise ValueError(\n                        f\"{context}{timestamp_name} 不得晚于当前 UTC 时间。\"\n                    )"
+      },
+      {
+        "line": 569,
+        "source": "raise ValueError(f\"{context}完成布尔值与采集结果状态不一致。\")"
+      },
+      {
+        "line": 576,
+        "source": "raise ValueError(f\"{context}完成格点缺少批次或审计时间。\")"
+      },
+      {
+        "line": 578,
+        "source": "raise ValueError(f\"{context}未完成格点不得具有完成时间。\")"
+      },
+      {
+        "line": 582,
+        "source": "raise ValueError(f\"{context}success 必须正式复读 1 行且不得缺失。\")"
+      },
+      {
+        "line": 585,
+        "source": "raise ValueError(f\"{context}确认空必须为 0 行且标记缺失。\")"
+      },
+      {
+        "line": 588,
+        "source": "raise ValueError(f\"{context}未完成状态不得具有事实行或缺失结论。\")"
+      },
+      {
+        "line": 593,
+        "source": "raise ValueError(f\"{context}系列未命中共享宏观配置：{key}\")"
+      },
+      {
+        "line": 595,
+        "source": "raise ValueError(\n                    f\"{context}{row['series_code']} 的报告/观测日不符合理论频率。\"\n                )"
+      },
+      {
+        "line": 604,
+        "source": "raise ValueError(\n                    f\"{context}{row['series_code']} 的项目可用日不符合版本化规则。\"\n                )"
+      },
+      {
+        "line": 613,
+        "source": "raise ValueError(\n                    f\"{context}{row['series_code']} 的调度原因与当前版本不一致。\"\n                )"
+      },
+      {
+        "line": 628,
+        "source": "raise ValueError(\n                        f\"{context}尚未到可用日格点的状态或审计值不自洽。\"\n                    )"
+      },
+      {
+        "line": 632,
+        "source": "raise ValueError(f\"{context}已到可用日格点不得标为 not_required。\")"
+      },
+      {
+        "line": 639,
+        "source": "raise ValueError(f\"{context}pending 格点状态不自洽。\")"
+      },
+      {
+        "line": 642,
+        "source": "raise ValueError(f\"{context}success 格点必须 passed 或 warning。\")"
+      },
+      {
+        "line": 645,
+        "source": "raise ValueError(f\"{context}确认空格点必须记录 warning。\")"
+      },
+      {
+        "line": 651,
+        "source": "raise ValueError(f\"{context}失败格点缺少 failed 结论或审计值。\")"
+      },
+      {
+        "line": 672,
+        "source": "raise"
+      },
+      {
+        "line": 835,
+        "source": "raise"
+      },
+      {
+        "line": 959,
+        "source": "raise"
+      },
+      {
+        "line": 1059,
+        "source": "raise ValueError(f\"数据集路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 1121,
+        "source": "raise ValueError(\"staging 触达行数与完整分区计划不一致。\")"
+      },
+      {
+        "line": 1123,
+        "source": "raise ValueError(\"metadata 迁移 staging 与完整期望表不一致。\")"
+      },
+      {
+        "line": 1138,
+        "source": "raise ValueError(\"staging 叶分区行数与期望不一致。\")"
+      },
+      {
+        "line": 1144,
+        "source": "raise ValueError(\"staging 叶分区内容与期望不一致。\")"
+      },
+      {
+        "line": 1152,
+        "source": "raise"
+      },
+      {
+        "line": 1198,
+        "source": "raise FileNotFoundError(\n                                \"staging 叶分区存在性与期望不一致：\"\n                                f\"{relative_path}\"\n                            )"
+      },
+      {
+        "line": 1225,
+        "source": "raise ValueError(\"正式宏观发布日历总行数与期望不一致。\")"
+      },
+      {
+        "line": 1227,
+        "source": "raise ValueError(\"正式宏观发布日历内容与期望不一致。\")"
+      },
+      {
+        "line": 1235,
+        "source": "raise"
+      },
+      {
+        "line": 1247,
+        "source": "raise"
+      },
+      {
+        "line": 1308,
+        "source": "raise click.UsageError(\"--start-date 与 --end-date 必须同时提供。\")"
+      },
+      {
+        "line": 1310,
+        "source": "raise click.UsageError(\n                \"显式指定日期时禁止写入 FUTURES_LAKE_ROOT 指向的正式湖；\"\n                \"请移除日期参数使用自动更新，或改用非正式测试湖。\"\n            )"
+      },
+      {
+        "line": 1329,
+        "source": "raise click.BadParameter(\"起始日期不得晚于结束日期。\")"
+      },
+      {
+        "line": 1334,
+        "source": "raise ValueError(\n                \"FUTURES_DATA_START_DATE 不得晚于北京时间当前日期。\"\n            )"
+      },
+      {
+        "line": 1396,
+        "source": "raise click.UsageError(\n                \"现有宏观发布日历需要契约版本或旧策略迁移；\"\n                \"请先移除日期参数执行一次完整自动迁移。\"\n            )"
+      },
+      {
+        "line": 1554,
+        "source": "raise"
+      }
+    ]
+  },
+  {
+    "path": "02_Market_Data/a01_Collection/b04_Macro_And_Interest_Rates/c02_interest_rate.py",
+    "sha256": "d7d44c8996623ab1ea1c04e16b1323c0fca0a370d4efdf2edd13f5149d1094de",
+    "constants": [
+      {
+        "line": 88,
+        "source": "project_markers = [\".git\", \".env\", \"config/settings.py\"]"
+      },
+      {
+        "line": 190,
+        "source": "DATASET_NAME = \"interest_rate\""
+      },
+      {
+        "line": 191,
+        "source": "SOURCE_NAME = \"Tushare_shibor\""
+      },
+      {
+        "line": 192,
+        "source": "SHIBOR_FIELDS = [\"date\"]"
+      },
+      {
+        "line": 215,
+        "source": "RATE_MIN_PERCENT = -100.0"
+      },
+      {
+        "line": 216,
+        "source": "RATE_MAX_PERCENT = 100.0"
+      },
+      {
+        "line": 218,
+        "source": "API_SUCCESS_REASON = (\n    \"Tushare pro.shibor 月度窗口请求完整；正式事实复读 1 行，\"\n    \"利率为有限数且位于 [-100, 100] 百分比范围。\"\n)"
+      },
+      {
+        "line": 222,
+        "source": "API_EMPTY_REASON = (\n    \"Tushare pro.shibor 月度窗口请求完整；对应精确系列—日期未返回有效值，\"\n    \"正式事实复读 0 行。\"\n)"
+      },
+      {
+        "line": 226,
+        "source": "STATE_REPAIR_REASON = (\n    \"正式 SHIBOR 事实已经完整复读 1 行；未调用 Tushare，\"\n    \"按正式事实修复宏观发布日历状态。\"\n)"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 98,
+        "source": "raise RuntimeError(\"未找到项目根目录\")"
+      },
+      {
+        "line": 210,
+        "source": "raise ValueError(\"共享宏观配置必须恰好提供 8 个 SHIBOR 系列。\")"
+      },
+      {
+        "line": 212,
+        "source": "raise ValueError(\"SHIBOR 系列来源必须统一为 Tushare pro.shibor。\")"
+      },
+      {
+        "line": 283,
+        "source": "raise TypeError(\"数据集缺少权威 Schema 字段。\") from error"
+      },
+      {
+        "line": 373,
+        "source": "raise FileNotFoundError(f\"{label}不存在：{table_path}\")"
+      },
+      {
+        "line": 389,
+        "source": "raise TypeError(f\"{label}物理字段、顺序、类型或 nullable 与权威契约不兼容。\")"
+      },
+      {
+        "line": 392,
+        "source": "raise TypeError(f\"{label}表名、主键或分区身份与权威契约不一致。\")"
+      },
+      {
+        "line": 406,
+        "source": "raise TypeError(\n                    f\"{label}存在物理结构不兼容的 fragment：{fragment.path}\"\n                )"
+      },
+      {
+        "line": 411,
+        "source": "raise TypeError(f\"{label}存在表身份不兼容的 fragment：{fragment.path}\")"
+      },
+      {
+        "line": 431,
+        "source": "raise"
+      },
+      {
+        "line": 479,
+        "source": "raise TypeError(f\"{label} Schema/metadata 与权威契约不一致。\")"
+      },
+      {
+        "line": 490,
+        "source": "raise"
+      },
+      {
+        "line": 529,
+        "source": "raise ValueError(f\"{context}宏观发布日历主键不唯一。\")"
+      },
+      {
+        "line": 531,
+        "source": "raise ValueError(f\"{context}只允许包含 interest_rate 日历行。\")"
+      },
+      {
+        "line": 539,
+        "source": "raise ValueError(f\"{context}SHIBOR 系列未命中共享配置。\")"
+      },
+      {
+        "line": 541,
+        "source": "raise ValueError(f\"{context}日历正式事实计数只允许 0 或 1。\")"
+      },
+      {
+        "line": 546,
+        "source": "raise ValueError(f\"{context}日历 year/month 与观测日不一致。\")"
+      },
+      {
+        "line": 548,
+        "source": "raise ValueError(f\"{context}日历 updated_at 不得晚于当前 UTC 时间。\")"
+      },
+      {
+        "line": 553,
+        "source": "raise ValueError(f\"{context}日历完成布尔值与结果状态不一致。\")"
+      },
+      {
+        "line": 558,
+        "source": "raise ValueError(f\"{context}success 日历格点必须对应正式事实 1 行。\")"
+      },
+      {
+        "line": 563,
+        "source": "raise ValueError(f\"{context}empty_confirmed 日历格点必须对应 0 行。\")"
+      },
+      {
+        "line": 568,
+        "source": "raise ValueError(f\"{context}未完成日历格点不得声明事实或缺失结论。\")"
+      },
+      {
+        "line": 588,
+        "source": "raise"
+      },
+      {
+        "line": 627,
+        "source": "raise ValueError(f\"{context}SHIBOR 事实主键不唯一。\")"
+      },
+      {
+        "line": 634,
+        "source": "raise ValueError(f\"{context}SHIBOR 系列未命中共享配置。\")"
+      },
+      {
+        "line": 636,
+        "source": "raise ValueError(f\"{context}SHIBOR 事实来源必须为 {SOURCE_NAME}。\")"
+      },
+      {
+        "line": 638,
+        "source": "raise ValueError(f\"{context}SHIBOR 利率必须为有限数。\")"
+      },
+      {
+        "line": 640,
+        "source": "raise ValueError(\n                    f\"{context}SHIBOR 利率越出 [-100, 100] 百分比硬边界。\"\n                )"
+      },
+      {
+        "line": 647,
+        "source": "raise ValueError(f\"{context}事实 year/month 与观测日不一致。\")"
+      },
+      {
+        "line": 649,
+        "source": "raise ValueError(f\"{context}事实 updated_at 不得晚于当前 UTC 时间。\")"
+      },
+      {
+        "line": 669,
+        "source": "raise"
+      },
+      {
+        "line": 730,
+        "source": "raise"
+      },
+      {
+        "line": 808,
+        "source": "raise"
+      },
+      {
+        "line": 896,
+        "source": "raise ValueError(\"单个 SHIBOR 格点正式事实计数只允许 0 或 1。\")"
+      },
+      {
+        "line": 963,
+        "source": "raise ValueError(\n                \"正式 SHIBOR 事实存在越出当前 required 上游水位的格点；\"\n                f\"不得静默删除或忽略：{sample}\"\n            )"
+      },
+      {
+        "line": 988,
+        "source": "raise ValueError(f\"SHIBOR 格点 {key} 的正式事实多于 1 行。\")"
+      },
+      {
+        "line": 1010,
+        "source": "raise"
+      },
+      {
+        "line": 1069,
+        "source": "raise ShiborRequestError(\n                \"permanent_error\",\n                \"TUSHARE_TOKEN 未配置。\",\n            )"
+      },
+      {
+        "line": 1084,
+        "source": "raise"
+      },
+      {
+        "line": 1148,
+        "source": "raise ShiborRequestError(\n                status,\n                f\"Tushare pro.shibor 请求失败：{error_text}\",\n            ) from error"
+      },
+      {
+        "line": 1155,
+        "source": "raise ShiborRequestError(\n                \"retryable_error\",\n                \"Tushare pro.shibor 返回 None。\",\n            )"
+      },
+      {
+        "line": 1160,
+        "source": "raise ShiborRequestError(\n                \"permanent_error\",\n                \"Tushare pro.shibor 返回对象不是 Pandas DataFrame。\",\n            )"
+      },
+      {
+        "line": 1174,
+        "source": "raise"
+      },
+      {
+        "line": 1222,
+        "source": "raise ValueError(\n                f\"Tushare pro.shibor 缺少必需列：{sorted(missing_columns)}\"\n            )"
+      },
+      {
+        "line": 1226,
+        "source": "raise ValueError(\"Tushare pro.shibor 返回超过官方单次 2000 行上限。\")"
+      },
+      {
+        "line": 1238,
+        "source": "raise ValueError(\"Tushare pro.shibor date 存在非法日期。\") from error"
+      },
+      {
+        "line": 1242,
+        "source": "raise ValueError(\"Tushare pro.shibor 返回重复日期。\")"
+      },
+      {
+        "line": 1247,
+        "source": "raise ValueError(\"Tushare pro.shibor 返回日期越出请求范围。\")"
+      },
+      {
+        "line": 1258,
+        "source": "raise ValueError(\n                            f\"Tushare pro.shibor {source_column} 存在布尔值。\"\n                        )"
+      },
+      {
+        "line": 1267,
+        "source": "raise ValueError(\n                            f\"Tushare pro.shibor {source_column} 存在非数值。\"\n                        ) from error"
+      },
+      {
+        "line": 1271,
+        "source": "raise ValueError(\n                            f\"Tushare pro.shibor {source_column} 存在 NaN/Inf。\"\n                        )"
+      },
+      {
+        "line": 1278,
+        "source": "raise ValueError(\n                            f\"Tushare pro.shibor {source_column} 越出 [-100, 100]。\"\n                        )"
+      },
+      {
+        "line": 1310,
+        "source": "raise ValueError(f\"待办系列未命中共享来源映射：{series_code}\")"
+      },
+      {
+        "line": 1357,
+        "source": "raise"
+      },
+      {
+        "line": 1400,
+        "source": "raise ValueError(\"触达 SHIBOR 格点越出指定事实叶分区。\")"
+      },
+      {
+        "line": 1436,
+        "source": "raise"
+      },
+      {
+        "line": 1498,
+        "source": "raise"
+      },
+      {
+        "line": 1551,
+        "source": "raise ValueError(f\"数据集路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 1573,
+        "source": "raise ValueError(\"SHIBOR staging 完整内容逐值复读失败。\")"
+      },
+      {
+        "line": 1580,
+        "source": "raise"
+      },
+      {
+        "line": 1617,
+        "source": "raise ValueError(\"正式 SHIBOR 完整内容逐值复读失败。\")"
+      },
+      {
+        "line": 1626,
+        "source": "raise"
+      },
+      {
+        "line": 1638,
+        "source": "raise"
+      },
+      {
+        "line": 1683,
+        "source": "raise ValueError(\"待提交 SHIBOR 内容越出指定事实叶分区。\")"
+      },
+      {
+        "line": 1695,
+        "source": "raise ValueError(f\"数据集路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 1717,
+        "source": "raise ValueError(\"SHIBOR staging 完整内容逐值复读失败。\")"
+      },
+      {
+        "line": 1724,
+        "source": "raise"
+      },
+      {
+        "line": 1771,
+        "source": "raise ValueError(\"确认空的正式 SHIBOR 事实叶仍然存在。\")"
+      },
+      {
+        "line": 1783,
+        "source": "raise ValueError(\"新建正式 SHIBOR 标记必须为零行。\")"
+      },
+      {
+        "line": 1788,
+        "source": "raise ValueError(\"正式 SHIBOR 完整内容逐值复读失败。\")"
+      },
+      {
+        "line": 1797,
+        "source": "raise"
+      },
+      {
+        "line": 1809,
+        "source": "raise"
+      },
+      {
+        "line": 1850,
+        "source": "raise ValueError(\"日历完成原因必须逐个覆盖正式复读格点。\")"
+      },
+      {
+        "line": 1868,
+        "source": "raise ValueError(f\"SHIBOR 格点 {key} 正式复读计数不是 0 或 1。\")"
+      },
+      {
+        "line": 1897,
+        "source": "raise"
+      },
+      {
+        "line": 1938,
+        "source": "raise ValueError(\"SHIBOR 失败状态只能是 retryable_error 或 permanent_error。\")"
+      },
+      {
+        "line": 1978,
+        "source": "raise"
+      },
+      {
+        "line": 2030,
+        "source": "raise ValueError(\"待提交宏观发布日历完整叶分区不得为空。\")"
+      },
+      {
+        "line": 2054,
+        "source": "raise ValueError(f\"日历路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 2087,
+        "source": "raise ValueError(\"宏观发布日历 staging 完整叶逐值复读失败。\")"
+      },
+      {
+        "line": 2094,
+        "source": "raise"
+      },
+      {
+        "line": 2113,
+        "source": "raise FileNotFoundError(\n                        f\"正式宏观发布日历缺少待回写完整叶：{relative_path}\"\n                    )"
+      },
+      {
+        "line": 2138,
+        "source": "raise ValueError(\"正式宏观发布日历完整叶逐值复读失败。\")"
+      },
+      {
+        "line": 2147,
+        "source": "raise"
+      },
+      {
+        "line": 2159,
+        "source": "raise"
+      },
+      {
+        "line": 2219,
+        "source": "raise click.UsageError(\"--start-date 与 --end-date 必须同时提供。\")"
+      },
+      {
+        "line": 2221,
+        "source": "raise click.UsageError(\n                \"显式指定日期时禁止写入 FUTURES_LAKE_ROOT 指向的正式湖；\"\n                \"请移除日期参数使用自动更新，或改用非正式测试湖。\"\n            )"
+      },
+      {
+        "line": 2232,
+        "source": "raise click.BadParameter(\"起始日期不得晚于结束日期。\")"
+      },
+      {
+        "line": 2252,
+        "source": "raise click.UsageError(\n                    \"现有 SHIBOR 事实 metadata 已过期；\"\n                    \"请先移除日期参数执行一次完整自动升级。\"\n                )"
+      },
+      {
+        "line": 2425,
+        "source": "raise ValueError(\n                    \"正式 SHIBOR 事实复读计数与完整 API 转换结果不一致。\"\n                )"
+      },
+      {
+        "line": 2454,
+        "source": "raise click.ClickException(\n                f\"{failed_window_count} 个 SHIBOR 月度窗口失败；\"\n                \"成功分区已提交，失败格点保持未完成。\"\n            )"
+      },
+      {
+        "line": 2479,
+        "source": "raise"
+      }
+    ]
+  },
+  {
+    "path": "02_Market_Data/a01_Collection/b04_Macro_And_Interest_Rates/c03_macro_release.py",
+    "sha256": "c21f7062f299ecfa1f18791ebbe201b63c96f95566bdbea41b997ccc3e315a77",
+    "constants": [
+      {
+        "line": 97,
+        "source": "project_markers = [\".git\", \".env\", \"config/settings.py\"]"
+      },
+      {
+        "line": 202,
+        "source": "DATASET_NAME = \"macro_release\""
+      },
+      {
+        "line": 203,
+        "source": "EASTMONEY_ENDPOINT = \"https://datacenter-web.eastmoney.com/api/data/v1/get\""
+      },
+      {
+        "line": 204,
+        "source": "EASTMONEY_PAGE_SIZE = 500"
+      },
+      {
+        "line": 205,
+        "source": "EASTMONEY_MAX_PAGES = 10_000"
+      },
+      {
+        "line": 217,
+        "source": "_series_by_report: dict[str, list[object]] = {}"
+      },
+      {
+        "line": 262,
+        "source": "API_SUCCESS_REASON = (\n    \"Eastmoney 宏观报告完整分页并通过结构、日期、唯一性与有限数校验；\"\n    \"正式事实复读 1 行。\"\n)"
+      },
+      {
+        "line": 266,
+        "source": "API_EMPTY_REASON = (\n    \"Eastmoney 宏观报告完整分页；对应精确系列—报告期未返回有效值，\"\n    \"正式事实复读 0 行。\"\n)"
+      },
+      {
+        "line": 270,
+        "source": "STATE_REPAIR_REASON = (\n    \"正式宏观发布事实已经完整复读 1 行；未调用 Eastmoney，\"\n    \"按正式事实修复宏观发布日历状态。\"\n)"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 107,
+        "source": "raise RuntimeError(\"未找到项目根目录\")"
+      },
+      {
+        "line": 236,
+        "source": "raise ValueError(\"共享宏观配置必须恰好提供 17 个唯一宏观系列。\")"
+      },
+      {
+        "line": 243,
+        "source": "raise ValueError(\"宏观系列必须恰好来自 CPI、PPI、PMI、GDP 四个报告。\")"
+      },
+      {
+        "line": 247,
+        "source": "raise ValueError(f\"{report_name} 的共享来源列存在重复。\")"
+      },
+      {
+        "line": 249,
+        "source": "raise ValueError(\"PPI 同比必须读取 Eastmoney BASE_SAME 原列。\")"
+      },
+      {
+        "line": 260,
+        "source": "raise ValueError(\"CPI/PPI 累计同比的 100 基准偏移配置不完整。\")"
+      },
+      {
+        "line": 331,
+        "source": "raise TypeError(\"数据集缺少权威 Schema 字段。\") from error"
+      },
+      {
+        "line": 417,
+        "source": "raise FileNotFoundError(f\"{label}不存在：{table_path}\")"
+      },
+      {
+        "line": 433,
+        "source": "raise TypeError(f\"{label}物理字段、顺序、类型或 nullable 与权威契约不兼容。\")"
+      },
+      {
+        "line": 436,
+        "source": "raise TypeError(f\"{label}表名、主键或分区身份与权威契约不一致。\")"
+      },
+      {
+        "line": 450,
+        "source": "raise TypeError(\n                    f\"{label}存在物理结构不兼容的 fragment：{fragment.path}\"\n                )"
+      },
+      {
+        "line": 455,
+        "source": "raise TypeError(f\"{label}存在表身份不兼容的 fragment：{fragment.path}\")"
+      },
+      {
+        "line": 475,
+        "source": "raise"
+      },
+      {
+        "line": 523,
+        "source": "raise TypeError(f\"{label} Schema/metadata 与权威契约不一致。\")"
+      },
+      {
+        "line": 534,
+        "source": "raise"
+      },
+      {
+        "line": 578,
+        "source": "raise ValueError(f\"{context}宏观发布日历主键不唯一。\")"
+      },
+      {
+        "line": 580,
+        "source": "raise ValueError(f\"{context}只允许包含 macro_release 日历行。\")"
+      },
+      {
+        "line": 588,
+        "source": "raise ValueError(f\"{context}宏观系列未命中共享配置。\")"
+      },
+      {
+        "line": 590,
+        "source": "raise ValueError(f\"{context}日历正式事实计数只允许 0 或 1。\")"
+      },
+      {
+        "line": 595,
+        "source": "raise ValueError(f\"{context}日历 year/month 与报告期不一致。\")"
+      },
+      {
+        "line": 597,
+        "source": "raise ValueError(f\"{context}日历 updated_at 不得晚于当前 UTC 时间。\")"
+      },
+      {
+        "line": 602,
+        "source": "raise ValueError(f\"{context}日历完成布尔值与结果状态不一致。\")"
+      },
+      {
+        "line": 607,
+        "source": "raise ValueError(f\"{context}success 日历格点必须对应正式事实 1 行。\")"
+      },
+      {
+        "line": 612,
+        "source": "raise ValueError(f\"{context}empty_confirmed 日历格点必须对应 0 行。\")"
+      },
+      {
+        "line": 617,
+        "source": "raise ValueError(f\"{context}未完成日历格点不得声明事实或缺失结论。\")"
+      },
+      {
+        "line": 637,
+        "source": "raise"
+      },
+      {
+        "line": 675,
+        "source": "raise ValueError(f\"{context}宏观事实 value 不得为空。\")"
+      },
+      {
+        "line": 679,
+        "source": "raise ValueError(f\"{context}宏观事实 value 不得为布尔值。\")"
+      },
+      {
+        "line": 687,
+        "source": "raise ValueError(f\"{context}宏观事实 value 必须为数值。\") from error"
+      },
+      {
+        "line": 695,
+        "source": "raise ValueError(f\"{context}宏观事实主键不唯一。\")"
+      },
+      {
+        "line": 702,
+        "source": "raise ValueError(f\"{context}宏观系列未命中共享配置。\")"
+      },
+      {
+        "line": 705,
+        "source": "raise ValueError(\n                    f\"{context}{row['series_code']} 来源必须为 {expected_source}。\"\n                )"
+      },
+      {
+        "line": 709,
+        "source": "raise ValueError(f\"{context}宏观事实 value 必须为有限数。\")"
+      },
+      {
+        "line": 711,
+        "source": "raise ValueError(f\"{context}可用日不得早于报告期。\")"
+      },
+      {
+        "line": 716,
+        "source": "raise ValueError(f\"{context}事实 year/month 与报告期不一致。\")"
+      },
+      {
+        "line": 718,
+        "source": "raise ValueError(f\"{context}事实 updated_at 不得晚于当前 UTC 时间。\")"
+      },
+      {
+        "line": 738,
+        "source": "raise"
+      },
+      {
+        "line": 799,
+        "source": "raise"
+      },
+      {
+        "line": 874,
+        "source": "raise"
+      },
+      {
+        "line": 967,
+        "source": "raise ValueError(\"单个宏观发布格点正式事实计数只允许 0 或 1。\")"
+      },
+      {
+        "line": 1031,
+        "source": "raise ValueError(\n                \"正式宏观发布事实存在越出当前 required 上游水位的格点；\"\n                f\"不得静默删除或忽略：{sample}\"\n            )"
+      },
+      {
+        "line": 1041,
+        "source": "raise ValueError(\n                    f\"正式宏观事实 {key} 的 available_date 与上游日历不一致。\"\n                )"
+      },
+      {
+        "line": 1058,
+        "source": "raise ValueError(f\"宏观发布格点 {key} 的正式事实多于 1 行。\")"
+      },
+      {
+        "line": 1087,
+        "source": "raise"
+      },
+      {
+        "line": 1174,
+        "source": "raise"
+      },
+      {
+        "line": 1224,
+        "source": "raise MacroReleaseRequestError(\n                \"permanent_error\",\n                f\"未知 Eastmoney 宏观报告：{report_name}\",\n            )"
+      },
+      {
+        "line": 1274,
+        "source": "raise MacroReleaseRequestError(\n                    status,\n                    \"Eastmoney HTTP 请求失败；\"\n                    f\"report={report_name}; page={page_number}; status={status_code}。\",\n                ) from error"
+      },
+      {
+        "line": 1280,
+        "source": "raise MacroReleaseRequestError(\n                    \"retryable_error\",\n                    \"Eastmoney 请求失败；\"\n                    f\"report={report_name}; page={page_number}。\",\n                ) from error"
+      },
+      {
+        "line": 1290,
+        "source": "raise MacroReleaseRequestError(\n                    \"retryable_error\",\n                    \"Eastmoney 未返回有效 JSON；\"\n                    f\"report={report_name}; page={page_number}。\",\n                ) from error"
+      },
+      {
+        "line": 1297,
+        "source": "raise MacroReleaseRequestError(\n                    \"permanent_error\",\n                    \"Eastmoney JSON 顶层必须为对象。\",\n                )"
+      },
+      {
+        "line": 1307,
+        "source": "raise MacroReleaseRequestError(\n                            \"retryable_error\",\n                            \"Eastmoney 后续分页意外返回空响应。\",\n                        )"
+      },
+      {
+        "line": 1333,
+        "source": "raise MacroReleaseRequestError(\n                    status,\n                    \"Eastmoney 返回失败；\"\n                    f\"report={report_name}; page={page_number}; \"\n                    f\"code={code_value}; message={message}。\",\n                )"
+      },
+      {
+        "line": 1342,
+        "source": "raise MacroReleaseRequestError(\n                    \"permanent_error\",\n                    \"Eastmoney result 必须为对象。\",\n                )"
+      },
+      {
+        "line": 1348,
+        "source": "raise MacroReleaseRequestError(\n                    \"permanent_error\",\n                    \"Eastmoney result.data 必须为列表。\",\n                )"
+      },
+      {
+        "line": 1358,
+        "source": "raise MacroReleaseRequestError(\n                        \"permanent_error\",\n                        f\"Eastmoney {metadata_name} 类型非法。\",\n                    )"
+      },
+      {
+        "line": 1368,
+        "source": "raise MacroReleaseRequestError(\n                    \"permanent_error\",\n                    f\"Eastmoney {metadata_name} 必须为整数。\",\n                )"
+      },
+      {
+        "line": 1374,
+        "source": "raise MacroReleaseRequestError(\n                    \"permanent_error\",\n                    \"Eastmoney pages/count 不得为负。\",\n                )"
+      },
+      {
+        "line": 1381,
+        "source": "raise MacroReleaseRequestError(\n                        \"permanent_error\",\n                        \"Eastmoney 空响应分页元数据不一致。\",\n                    )"
+      },
+      {
+        "line": 1395,
+        "source": "raise MacroReleaseRequestError(\n                    \"retryable_error\",\n                    \"Eastmoney pages 与 count 不一致。\",\n                )"
+      },
+      {
+        "line": 1400,
+        "source": "raise MacroReleaseRequestError(\n                    \"permanent_error\",\n                    \"Eastmoney 总页数超过安全上限。\",\n                )"
+      },
+      {
+        "line": 1410,
+        "source": "raise MacroReleaseRequestError(\n                    \"retryable_error\",\n                    \"Eastmoney 分页元数据在请求期间漂移。\",\n                )"
+      },
+      {
+        "line": 1421,
+        "source": "raise MacroReleaseRequestError(\n                    \"retryable_error\",\n                    \"Eastmoney 当前页行数与分页元数据不一致。\",\n                )"
+      },
+      {
+        "line": 1438,
+        "source": "raise MacroReleaseRequestError(\n                \"retryable_error\",\n                \"Eastmoney 累计行数与 count 不一致。\",\n            )"
+      },
+      {
+        "line": 1452,
+        "source": "raise"
+      },
+      {
+        "line": 1494,
+        "source": "raise ValueError(f\"未知 Eastmoney 宏观报告：{report_name}\")"
+      },
+      {
+        "line": 1499,
+        "source": "raise ValueError(f'{report_name} 的共享频率不唯一。')"
+      },
+      {
+        "line": 1505,
+        "source": "raise ValueError(\"Eastmoney data 元素必须为对象。\")"
+      },
+      {
+        "line": 1508,
+        "source": "raise ValueError(\n                    f\"Eastmoney {report_name} 缺少字段：{sorted(missing_fields)}\"\n                )"
+      },
+      {
+        "line": 1515,
+        "source": "raise ValueError(\"Eastmoney REPORT_DATE 非法。\") from error"
+      },
+      {
+        "line": 1517,
+        "source": "raise ValueError(\"Eastmoney REPORT_DATE 不得为空。\")"
+      },
+      {
+        "line": 1523,
+        "source": "raise ValueError(\"Eastmoney REPORT_DATE 越出请求范围。\")"
+      },
+      {
+        "line": 1525,
+        "source": "raise ValueError(\"Eastmoney REPORT_DATE 必须使用报告月 1 日编码。\")"
+      },
+      {
+        "line": 1533,
+        "source": "raise ValueError(\"Eastmoney GDP REPORT_DATE 不是季度末月份。\")"
+      },
+      {
+        "line": 1535,
+        "source": "raise ValueError(f\"{report_name} 使用了未知共享频率。\")"
+      },
+      {
+        "line": 1542,
+        "source": "raise ValueError(\"Eastmoney 跨页 REPORT_DATE 重复。\")"
+      },
+      {
+        "line": 1551,
+        "source": "raise ValueError(\n                        f\"Eastmoney {series.source_column} 存在布尔值。\"\n                    )"
+      },
+      {
+        "line": 1557,
+        "source": "raise ValueError(\n                        f\"Eastmoney {series.source_column} 不是数值。\"\n                    ) from error"
+      },
+      {
+        "line": 1561,
+        "source": "raise ValueError(\n                        f\"Eastmoney {series.source_column} 存在 NaN/Inf。\"\n                    )"
+      },
+      {
+        "line": 1566,
+        "source": "raise ValueError(\n                        f\"Eastmoney {series.source_column} 数值变换后不是有限数。\"\n                    )"
+      },
+      {
+        "line": 1599,
+        "source": "raise ValueError(f\"待办系列未命中当前报告映射：{series_code}\")"
+      },
+      {
+        "line": 1641,
+        "source": "raise"
+      },
+      {
+        "line": 1689,
+        "source": "raise ValueError(\"触达宏观发布格点越出指定事实叶分区。\")"
+      },
+      {
+        "line": 1725,
+        "source": "raise"
+      },
+      {
+        "line": 1784,
+        "source": "raise"
+      },
+      {
+        "line": 1835,
+        "source": "raise ValueError(f\"数据集路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 1857,
+        "source": "raise ValueError(\"宏观发布 staging 完整内容逐值复读失败。\")"
+      },
+      {
+        "line": 1864,
+        "source": "raise"
+      },
+      {
+        "line": 1901,
+        "source": "raise ValueError(\"正式 宏观发布 完整内容逐值复读失败。\")"
+      },
+      {
+        "line": 1910,
+        "source": "raise"
+      },
+      {
+        "line": 1922,
+        "source": "raise"
+      },
+      {
+        "line": 1972,
+        "source": "raise ValueError(\"待提交 宏观发布 内容越出指定事实叶分区。\")"
+      },
+      {
+        "line": 1984,
+        "source": "raise ValueError(f\"数据集路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 2006,
+        "source": "raise ValueError(\"宏观发布 staging 完整内容逐值复读失败。\")"
+      },
+      {
+        "line": 2013,
+        "source": "raise"
+      },
+      {
+        "line": 2061,
+        "source": "raise ValueError(\"确认空的正式 宏观发布 事实叶仍然存在。\")"
+      },
+      {
+        "line": 2073,
+        "source": "raise ValueError(\"新建正式 宏观发布 标记必须为零行。\")"
+      },
+      {
+        "line": 2078,
+        "source": "raise ValueError(\"正式 宏观发布 完整内容逐值复读失败。\")"
+      },
+      {
+        "line": 2087,
+        "source": "raise"
+      },
+      {
+        "line": 2099,
+        "source": "raise"
+      },
+      {
+        "line": 2142,
+        "source": "raise ValueError(\"日历完成原因必须逐个覆盖正式复读格点。\")"
+      },
+      {
+        "line": 2160,
+        "source": "raise ValueError(f\"宏观发布 格点 {key} 正式复读计数不是 0 或 1。\")"
+      },
+      {
+        "line": 2189,
+        "source": "raise"
+      },
+      {
+        "line": 2228,
+        "source": "raise ValueError(\"宏观发布 失败状态只能是 retryable_error 或 permanent_error。\")"
+      },
+      {
+        "line": 2268,
+        "source": "raise"
+      },
+      {
+        "line": 2319,
+        "source": "raise ValueError(\"待提交宏观发布日历完整叶分区不得为空。\")"
+      },
+      {
+        "line": 2338,
+        "source": "raise FileNotFoundError(f\"正式宏观发布日历缺少待回写完整叶：{relative_path}\")"
+      },
+      {
+        "line": 2346,
+        "source": "raise ValueError(f\"日历路径越出 silver 根目录：{managed_path}\")"
+      },
+      {
+        "line": 2379,
+        "source": "raise ValueError(\"宏观发布日历 staging 完整叶逐值复读失败。\")"
+      },
+      {
+        "line": 2386,
+        "source": "raise"
+      },
+      {
+        "line": 2425,
+        "source": "raise ValueError(\"正式宏观发布日历完整叶逐值复读失败。\")"
+      },
+      {
+        "line": 2434,
+        "source": "raise"
+      },
+      {
+        "line": 2446,
+        "source": "raise"
+      },
+      {
+        "line": 2504,
+        "source": "raise click.UsageError(\"--start-date 与 --end-date 必须同时提供。\")"
+      },
+      {
+        "line": 2506,
+        "source": "raise click.UsageError(\n                \"显式指定日期时禁止写入 FUTURES_LAKE_ROOT 指向的正式湖；\"\n                \"请移除日期参数使用自动更新，或改用非正式测试湖。\"\n            )"
+      },
+      {
+        "line": 2517,
+        "source": "raise click.BadParameter(\"起始日期不得晚于结束日期。\")"
+      },
+      {
+        "line": 2530,
+        "source": "raise click.UsageError(\n                    \"现有宏观发布事实 metadata 已过期；\"\n                    \"请先移除日期参数执行一次完整自动升级。\"\n                )"
+      },
+      {
+        "line": 2721,
+        "source": "raise ValueError(\n                        \"正式宏观发布事实复读计数与完整 API 转换结果不一致。\"\n                    )"
+      },
+      {
+        "line": 2751,
+        "source": "raise click.ClickException(\n                f\"{failed_window_count} 个 Eastmoney 宏观报告窗口失败；\"\n                \"成功分区已提交，失败格点保持未完成。\"\n            )"
+      },
+      {
+        "line": 2776,
+        "source": "raise"
+      }
+    ]
+  },
+  {
+    "path": "config/futures_lakehouse/__init__.py",
+    "sha256": "b47441f3bde6b2985de3293d07638dec9720f6a29e63e1349b0264b81e2f776f",
+    "constants": [],
+    "constraints": []
+  },
+  {
+    "path": "config/futures_lakehouse/external_market_entities.py",
+    "sha256": "716aecbc96732b7fb64efa5e546777d6e69358038d2d637c91247830b75a2ead",
+    "constants": [
+      {
+        "line": 19,
+        "source": "EXTERNAL_MARKET_ENTITY_CONFIG_VERSION = \"1.0.0\""
+      },
+      {
+        "line": 21,
+        "source": "DOMESTIC_SPOT_BASIS_ENTITY_CODE = \"ALL\""
+      },
+      {
+        "line": 22,
+        "source": "OVERSEAS_FUTURES_ENTITY_CODE = \"ALL\""
+      }
+    ],
+    "constraints": [
+      {
+        "line": 80,
+        "source": "raise ValueError(\"外部指数配置中的 Eastmoney INDICATOR_ID 不唯一。\")"
+      },
+      {
+        "line": 82,
+        "source": "raise ValueError(\"外部指数配置中的项目指数代码不唯一。\")"
+      },
+      {
+        "line": 89,
+        "source": "raise ValueError(\"外部指数配置存在 active_from 晚于 active_to 的记录。\")"
+      }
+    ]
+  },
+  {
+    "path": "config/futures_lakehouse/futures_fact_collection_policy.py",
+    "sha256": "72340af5b8e3dfd23c584cdc36d58684412303af573d44c6b760abc8fc1dbd95",
+    "constants": [],
+    "constraints": [
+      {
+        "line": 84,
+        "source": "raise RuntimeError(\n        \"国内期货事实采集白名单应包含 60 个交易所—品种组合，\"\n        f\"实际为 {len(FUTURES_FACT_VARIETY_PAIRS)} 个。\"\n    )"
+      }
+    ]
+  },
+  {
+    "path": "config/futures_lakehouse/futures_position_rank_special_cases.py",
+    "sha256": "e8b8cd11597a9ee8f197c95837e9d457a480c660cf29bf0c8b5bccb73b7cd91a",
+    "constants": [],
+    "constraints": []
+  },
+  {
+    "path": "config/futures_lakehouse/macro_release_entities.py",
+    "sha256": "4624f7157cd5f7819624784aba9486611541072a84942122e7feb32541725494",
+    "constants": [
+      {
+        "line": 26,
+        "source": "MACRO_RELEASE_CONFIG_VERSION = \"1.1.0\""
+      },
+      {
+        "line": 27,
+        "source": "AVAILABILITY_RULE_VERSION = \"availability-v1.0.0\""
+      },
+      {
+        "line": 403,
+        "source": "_EXPECTED_FREQUENCY_BY_RULE = {\n    \"same_day\": \"business_day\",\n    \"next_month_day_9_next_weekday\": \"month_end\",\n    \"month_end_february_march_4\": \"month_end\",\n    \"quarter_end_plus_16_days\": \"quarter_end\",\n}"
+      }
+    ],
+    "constraints": [
+      {
+        "line": 349,
+        "source": "raise ValueError(f\"未知宏观理论频率：{series.frequency}\")"
+      },
+      {
+        "line": 359,
+        "source": "raise ValueError(\n            f\"{series.series_code} 的报告/观测日期不符合 {series.frequency}：\"\n            f\"{report_date}\"\n        )"
+      },
+      {
+        "line": 384,
+        "source": "raise ValueError(f\"未知宏观可用日规则：{series.availability_rule}\")"
+      },
+      {
+        "line": 388,
+        "source": "raise ValueError(\"宏观系列配置存在重复的数据集类型—系列代码。\")"
+      },
+      {
+        "line": 392,
+        "source": "raise ValueError(\"宏观系列配置存在跨数据集重复的系列代码。\")"
+      },
+      {
+        "line": 397,
+        "source": "raise ValueError(\"宏观系列配置存在重复的来源 API—原列映射。\")"
+      },
+      {
+        "line": 399,
+        "source": "raise ValueError(\"宏观系列配置必须恰好包含 8 个 SHIBOR 系列。\")"
+      },
+      {
+        "line": 401,
+        "source": "raise ValueError(\"宏观系列配置必须恰好包含 17 个宏观发布系列。\")"
+      },
+      {
+        "line": 414,
+        "source": "raise ValueError(\n            f\"{configured_series.series_code} 的理论频率与可用日规则不匹配。\"\n        )"
+      },
+      {
+        "line": 422,
+        "source": "raise ValueError(\n            f\"{configured_series.series_code} 的 SHIBOR 数据集、频率、来源或数值变换不一致。\"\n        )"
+      },
+      {
+        "line": 429,
+        "source": "raise ValueError(\n            f\"{configured_series.series_code} 的宏观数据集、频率或来源不一致。\"\n        )"
+      },
+      {
+        "line": 433,
+        "source": "raise ValueError(\n            f\"{configured_series.series_code} 使用了未经约定的来源数值偏移。\"\n        )"
+      }
+    ]
+  },
+  {
+    "path": "config/data_contracts.py",
+    "sha256": "64a098d33d7bcf5281adb8c00037248c80a08333c767fe255bf82d318d71d7b9",
+    "constants": [],
+    "constraints": [
+      {
+        "line": 5580,
+        "source": "raise TypeError(f\"Arrow 类型 {arrow_type} 尚未登记 Pandas/Polars 映射。\")"
+      },
+      {
+        "line": 5596,
+        "source": "raise ValueError(f\"数据列与 Schema 不一致。期望 {schema.names}，实际 {actual_columns}。\")"
+      },
+      {
+        "line": 5605,
+        "source": "raise TypeError(f\"期望 pyarrow.Table，实际为 {type(table).__name__}。\")"
+      },
+      {
+        "line": 5615,
+        "source": "raise ValueError(f\"非空字段 {field.name!r} 包含空值。\")"
+      },
+      {
+        "line": 5622,
+        "source": "raise TypeError(f\"期望 pandas.DataFrame，实际为 {type(dataframe).__name__}。\")"
+      },
+      {
+        "line": 5631,
+        "source": "raise TypeError(f\"期望 polars.DataFrame，实际为 {type(dataframe).__name__}。\")"
+      },
+      {
+        "line": 5642,
+        "source": "raise TypeError(\"Pandas 类型与 Arrow Schema 映射不一致。\")"
+      },
+      {
+        "line": 5651,
+        "source": "raise TypeError(\"Polars 类型与 Arrow Schema 映射不一致。\")"
+      }
+    ]
+  },
+  {
+    "path": "config/jqdata_connection.py",
+    "sha256": "c4d6d241692b88a4cf9bf557e6a6cbf4869e92b8d446810956dec75d99cd7dbc",
+    "constants": [],
+    "constraints": [
+      {
+        "line": 89,
+        "source": "raise ValueError(\"JQDATA_ID/JQDATA_SECRET 未配置。\")"
+      }
+    ]
+  }
+]

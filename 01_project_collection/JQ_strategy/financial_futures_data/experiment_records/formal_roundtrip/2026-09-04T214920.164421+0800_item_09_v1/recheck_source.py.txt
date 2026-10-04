@@ -1,0 +1,95 @@
+import ast
+import contextlib
+import datetime as dt
+import hashlib
+import io
+import json
+import pathlib
+import sys
+import time
+from zoneinfo import ZoneInfo
+
+module_dir = pathlib.Path.cwd() / "financial_futures_data"
+notebook_path = module_dir / "plan_financial_futures_fetch.ipynb"
+database_path = module_dir / "data/warehouse/financial_futures.duckdb"
+notebook_bytes = notebook_path.read_bytes()
+notebook = json.loads(notebook_bytes)
+prepared_dir = module_dir / "experiment_records/formal_roundtrip/prepared_2026-09-04T213454.688871+0800_item_09_v1"
+prepared_notebook = json.loads((prepared_dir / "notebook_source.ipynb.txt").read_text(encoding="utf-8"))
+assert all(cell["source"] == notebook["cells"][index]["source"] for index, cell in enumerate(prepared_notebook["cells"]))
+assert all(not "".join(cell["source"]).strip() for cell in notebook["cells"][len(prepared_notebook["cells"]):])
+saved_code = "".join(notebook["cells"][19]["outputs"][1]["data"]["text/plain"])
+saved_code_sha256 = hashlib.sha256(saved_code.encode("utf-8")).hexdigest()
+assert saved_code_sha256 == hashlib.sha256((prepared_dir / "joinquant_cell_source.py.txt").read_bytes()).hexdigest()
+database_sha256_before = hashlib.sha256(database_path.read_bytes()).hexdigest()
+started_at = dt.datetime.now(ZoneInfo("Asia/Shanghai")).isoformat()
+started_clock = time.perf_counter()
+namespace = {"__name__": "__main__"}
+executed_cells = []
+with contextlib.redirect_stdout(io.StringIO()) as notebook_stdout:
+    for index, cell in enumerate(notebook["cells"]):
+        if cell["cell_type"] == "code" and "".join(cell["source"]).strip():
+            exec(compile("".join(cell["source"]), str(notebook_path) + "#cell-" + str(index), "exec"), namespace)
+            executed_cells.append(index)
+fetch_plan = namespace["fetch_plan"]
+assert fetch_plan.database_exists
+assert namespace["acceptance_contract_dates"] == (
+    ("IF2409.CCFX", dt.date(2024,6,28)), ("TF1303.CCFX", dt.date(2012,6,11)))
+assert fetch_plan.planned_source_requests_df.empty
+assert fetch_plan.planned_observations_df.empty
+assert fetch_plan.plan_payload["source_requests"] == []
+assert ast.parse(namespace["joinquant_code"]).body == []
+assert namespace["joinquant_code"] == "# 当前没有待拉取数据。无需运行聚宽，也不会覆盖已有文件。\n"
+pd = namespace["pd"]
+missing_blocks_df = fetch_plan.missing_blocks_df
+scope_mask = (
+    (missing_blocks_df["contract_code"].eq("IF2409.CCFX") & pd.to_datetime(missing_blocks_df["trading_date"]).dt.date.eq(dt.date(2024,6,28)))
+    | (missing_blocks_df["contract_code"].eq("TF1303.CCFX") & pd.to_datetime(missing_blocks_df["trading_date"]).dt.date.eq(dt.date(2012,6,11)))
+)
+scope_missing_df = missing_blocks_df.loc[scope_mask]
+assert len(scope_missing_df) == 3
+assert scope_missing_df["contract_code"].eq("TF1303.CCFX").all()
+assert scope_missing_df["actual_key_count"].sum() == 0
+assert scope_missing_df["data_missing_key_count"].sum() == 271
+assert scope_missing_df["source_confirmed_missing_key_count"].sum() == 271
+assert scope_missing_df["fetch_pending_key_count"].sum() == 0
+assert scope_missing_df["missing_state"].eq("source_confirmed_missing").all()
+minute_ranges_df = fetch_plan.minute_missing_ranges_df
+tf_ranges_df = minute_ranges_df.loc[minute_ranges_df["contract_code"].eq("TF1303.CCFX")
+    & pd.to_datetime(minute_ranges_df["trading_date"]).dt.date.eq(dt.date(2012,6,11))]
+assert len(tf_ranges_df) == 2
+assert tf_ranges_df["missing_key_count"].tolist() == [135,135]
+assert tf_ranges_df["missing_state"].eq("source_confirmed_missing").all()
+assert [value.isoformat() for value in tf_ranges_df["range_start_at"]] == [
+    "2012-06-11T09:16:00+08:00", "2012-06-11T13:01:00+08:00"]
+assert [value.isoformat() for value in tf_ranges_df["range_end_at"]] == [
+    "2012-06-11T11:30:00+08:00", "2012-06-11T15:15:00+08:00"]
+summary_by_frequency = fetch_plan.coverage_summary_df.set_index("bar_frequency")
+assert int(summary_by_frequency.loc["1d","present_key_count"]) == 1
+assert int(summary_by_frequency.loc["1m","present_key_count"]) == 240
+assert int(summary_by_frequency.loc["1d","source_confirmed_missing_key_count"]) == 1
+assert int(summary_by_frequency.loc["1m","source_confirmed_missing_key_count"]) == 270
+assert fetch_plan.coverage_summary_df["fetch_pending_key_count"].sum() > 0
+database_sha256_after = hashlib.sha256(database_path.read_bytes()).hexdigest()
+assert database_sha256_before == database_sha256_after
+assert notebook_path.read_bytes() == notebook_bytes
+local_api_modules = sorted(name for name in sys.modules if name.split(".")[0] in {"jqresearch","jqdata","jqdatasdk"})
+assert local_api_modules == []
+print(json.dumps({
+    "status": "passed", "started_at": started_at, "completed_at": dt.datetime.now(ZoneInfo("Asia/Shanghai")).isoformat(),
+    "elapsed_seconds": time.perf_counter()-started_clock, "python_executable": sys.executable,
+    "execution_mode": "Existing Notebook nonempty code cells in order in a fresh latitude interpreter; Notebook file outputs not rewritten.",
+    "executed_code_cell_indexes": executed_cells, "nonempty_code_cell_count": len(executed_cells),
+    "notebook_sha256": hashlib.sha256(notebook_bytes).hexdigest(), "notebook_sources_match_preparation": True,
+    "saved_generated_code_sha256": saved_code_sha256, "additional_user_empty_cells_preserved": len(notebook["cells"])-len(prepared_notebook["cells"]),
+    "as_of": fetch_plan.as_of, "latest_due_trading_date": fetch_plan.latest_due_trading_date,
+    "coverage_summary": fetch_plan.coverage_summary_df.to_dict("records"),
+    "acceptance_missing_blocks": scope_missing_df.to_dict("records"),
+    "acceptance_minute_missing_ranges": tf_ranges_df.to_dict("records"),
+    "planned_source_request_count": len(fetch_plan.planned_source_requests_df),
+    "planned_observation_count": len(fetch_plan.planned_observations_df),
+    "plan_payload": fetch_plan.plan_payload, "plan_sha256": fetch_plan.plan_sha256,
+    "generated_code": namespace["joinquant_code"],
+    "database_sha256_before": database_sha256_before, "database_sha256_after": database_sha256_after,
+    "database_unchanged": True, "local_joinquant_modules": local_api_modules
+}, ensure_ascii=False, sort_keys=True, default=lambda value: value.isoformat()))

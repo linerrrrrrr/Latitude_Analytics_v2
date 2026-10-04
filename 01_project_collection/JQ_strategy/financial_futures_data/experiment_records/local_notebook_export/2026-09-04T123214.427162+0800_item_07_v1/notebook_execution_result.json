@@ -1,0 +1,22 @@
+{
+  "started_at": "2026-09-04T12:33:26.911047+08:00",
+  "completed_at": "2026-09-04T12:34:26.645560+08:00",
+  "executed_notebook_code_cells": 10,
+  "extra_readonly_assertion_cell": true,
+  "elapsed_seconds": 59.735,
+  "code_characters": 932915,
+  "code_sha256": "510ddb1661fdff61b16298130e881f1d0a928eefe439a92b27cff62d346a912f",
+  "plan_sha256": "7bf1397f5b7cda0d0d404ffbc0c67185b281749917485f92a30af1a320de2ad3",
+  "source_request_count": 64,
+  "observation_count": 5992,
+  "checks": {
+    "fresh_kernel_execution": "passed",
+    "textarea_roundtrip": "passed",
+    "full_code_python36_syntax": "passed",
+    "embedded_plan_digest": "passed",
+    "no_local_research_api_import": "passed",
+    "database_not_created": "passed"
+  },
+  "outputs_written_to_notebook": false,
+  "temporary_kernel_directory_removed": true
+}

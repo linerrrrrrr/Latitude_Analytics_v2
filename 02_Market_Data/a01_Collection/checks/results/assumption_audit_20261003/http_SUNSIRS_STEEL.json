@@ -1,0 +1,70 @@
+{
+  "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=ALL&filter=%28INDICATOR_ID%3D%22EMI00662545%22%29&sortColumns=REPORT_DATE&sortTypes=-1&pageSize=3&pageNumber=1&source=WEB&client=WEB",
+  "http_status": 200,
+  "body": {
+    "version": "244e5080552d2a08a67960cbc76e28c7",
+    "result": {
+      "pages": 1539,
+      "data": [
+        {
+          "REPORT_DATE": "2026-10-02 00:00:00",
+          "INDICATOR_VALUE": 840,
+          "CHANGE_RATE": 0,
+          "CHANGERATE_3M": 0,
+          "CHANGERATE_6M": -0.23752969,
+          "CHANGERATE_1Y": -1.63934426,
+          "CHANGERATE_2Y": -5.29875986,
+          "CHANGERATE_3Y": -16.91394659,
+          "IS_NEWEST": "True",
+          "BOARD_CODE": "BK1226",
+          "BOARD_NAME": "普钢",
+          "CONCEPT_CODE": "BK0592",
+          "CONCEPT_NAME": "铁路基建",
+          "INDICATOR_ID": "EMI00662545",
+          "INDICATOR_NAME": "钢铁指数",
+          "RANK_LABEL": "P"
+        },
+        {
+          "REPORT_DATE": "2026-10-01 00:00:00",
+          "INDICATOR_VALUE": 840,
+          "CHANGE_RATE": 0,
+          "CHANGERATE_3M": 0,
+          "CHANGERATE_6M": -0.59171598,
+          "CHANGERATE_1Y": -1.63934426,
+          "CHANGERATE_2Y": -5.29875986,
+          "CHANGERATE_3Y": -16.91394659,
+          "IS_NEWEST": "False",
+          "BOARD_CODE": "BK1226",
+          "BOARD_NAME": "普钢",
+          "CONCEPT_CODE": "BK0592",
+          "CONCEPT_NAME": "铁路基建",
+          "INDICATOR_ID": "EMI00662545",
+          "INDICATOR_NAME": "钢铁指数",
+          "RANK_LABEL": "P"
+        },
+        {
+          "REPORT_DATE": "2026-09-30 00:00:00",
+          "INDICATOR_VALUE": 840,
+          "CHANGE_RATE": 0.11918951,
+          "CHANGERATE_3M": -0.35587189,
+          "CHANGERATE_6M": -0.70921986,
+          "CHANGERATE_1Y": -1.63934426,
+          "CHANGERATE_2Y": -5.29875986,
+          "CHANGERATE_3Y": -16.91394659,
+          "IS_NEWEST": "False",
+          "BOARD_CODE": "BK1226",
+          "BOARD_NAME": "普钢",
+          "CONCEPT_CODE": "BK0592",
+          "CONCEPT_NAME": "铁路基建",
+          "INDICATOR_ID": "EMI00662545",
+          "INDICATOR_NAME": "钢铁指数",
+          "RANK_LABEL": "P"
+        }
+      ],
+      "count": 4617
+    },
+    "success": true,
+    "message": "ok",
+    "code": 0
+  }
+}

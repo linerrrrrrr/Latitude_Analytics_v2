@@ -1,0 +1,79 @@
+import sys, pathlib, tempfile, os, json, datetime, hashlib, time, ast, copy
+import nbformat
+from nbclient import NotebookClient
+from jupyter_client import KernelManager
+root=pathlib.Path("financial_futures_data").resolve()
+database=root/"data/warehouse/financial_futures.duckdb"
+inbox=root/"data/inbox/JQ_FINANCIAL_FUTURES_TRANSFER.zip"
+before_db=hashlib.sha256(database.read_bytes()).hexdigest()
+before_zip=hashlib.sha256(inbox.read_bytes()).hexdigest()
+started=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).isoformat()
+nb=nbformat.read(root/"plan_financial_futures_fetch.ipynb",as_version=4)
+assert nb.cells[-1].cell_type=="code"
+assert "build_financial_futures_fetch_plan()" in nb.cells[9].source
+assert "acceptance_contract_dates" not in nb.cells[9].source
+for cell in nb.cells:
+ if cell.cell_type=="code": ast.parse(cell.source)
+summary_source="""
+print("ROUND_SUMMARY_JSON_BEGIN")
+assert pathlib.Path(sys.executable).resolve() == pathlib.Path(r'E:\\anaconda3\\envs\\latitude\\python.exe').resolve()
+assert not inbox_path.exists()
+assert fetch_plan.remaining_transfer_count == len(fetch_plan.transfer_schedule_df)
+assert fetch_plan.transfer_schedule_df.source_request_count.sum() == fetch_plan.remaining_source_request_count
+assert fetch_plan.transfer_schedule_df.expected_key_count.sum() == fetch_plan.coverage_summary_df.fetch_pending_key_count.sum()
+assert fetch_plan.plan_payload["source_requests"]
+assert len(joinquant_code)>100000
+import ast
+ast.parse(joinquant_code, feature_version=(3,6))
+print(json.dumps({
+  "python_executable":sys.executable,
+  "import_report":import_report,
+  "remaining_transfers":fetch_plan.remaining_transfer_count,
+  "remaining_source_requests":fetch_plan.remaining_source_request_count,
+  "current_sources":len(fetch_plan.planned_source_requests_df),
+  "current_observations":len(fetch_plan.planned_observations_df),
+  "calendar_is_current":fetch_plan.calendar_is_current,
+  "trade_calendar_through":str(fetch_plan.trade_calendar_through),
+  "latest_due_date":str(fetch_plan.latest_due_trading_date),
+  "due_market_date":str(fetch_plan.latest_due_market_trading_date),
+  "next_run_at":fetch_plan.next_run_at.isoformat(),
+  "coverage":fetch_plan.coverage_summary_df.to_dict("records"),
+  "code_characters":len(joinquant_code),
+  "code_sha256":hashlib.sha256(joinquant_code.encode("utf-8")).hexdigest(),
+  "plan_sha256":fetch_plan.plan_sha256,
+  "inbox_exists":inbox_path.exists()
+}, ensure_ascii=False))
+print("ROUND_SUMMARY_JSON_END")
+"""
+runs=[]
+with tempfile.TemporaryDirectory(prefix="jq_notebook_kernel_") as temporary:
+ os.environ["IPYTHONDIR"]=str(pathlib.Path(temporary)/"ipython")
+ os.environ["JUPYTER_RUNTIME_DIR"]=str(pathlib.Path(temporary)/"runtime")
+ km=KernelManager(kernel_name="python3")
+ km.kernel_spec.argv[0]=sys.executable
+ client=NotebookClient(nb,km=km,timeout=180,resources={"metadata":{"path":str(root)}})
+ with client.setup_kernel():
+  for round_number in (1,2):
+   t=time.monotonic()
+   for index,cell in enumerate(nb.cells):
+    client.execute_cell(cell,index)
+   stream="".join(o.get("text","") for o in nb.cells[-1].outputs if o.output_type=="stream")
+   summary=nbformat.v4.new_code_cell(summary_source)
+   nb.cells.append(summary)
+   client.execute_cell(summary,len(nb.cells)-1)
+   text="".join(o.get("text","") for o in summary.outputs if o.output_type=="stream")
+   parsed=json.loads(text.split("ROUND_SUMMARY_JSON_BEGIN\n",1)[1].split("\nROUND_SUMMARY_JSON_END",1)[0])
+   nb.cells.pop()
+   assert (parsed["import_report"] is None) == (round_number==2)
+   if round_number==1:
+    assert parsed["import_report"]["status"]=="already_imported"
+    assert parsed["import_report"]["inbox_deleted"]
+    assert not parsed["import_report"]["database_write_performed"]
+   runs.append({"round":round_number,"elapsed_seconds":time.monotonic()-t,"summary":parsed,"final_text":stream})
+   print("Round "+str(round_number)+" Run All passed",flush=True)
+assert hashlib.sha256(database.read_bytes()).hexdigest()==before_db
+assert not inbox.exists()
+print("INTEGRATION_JSON_BEGIN")
+print(json.dumps({"started_at":started,"completed_at":datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).isoformat(),"database_sha256_before":before_db,"database_sha256_after":hashlib.sha256(database.read_bytes()).hexdigest(),"consumed_zip_sha256":before_zip,"runs":runs,"notebook_outputs_saved":False,"remote_code_executed":False},ensure_ascii=False,indent=2))
+print("INTEGRATION_JSON_END")
+

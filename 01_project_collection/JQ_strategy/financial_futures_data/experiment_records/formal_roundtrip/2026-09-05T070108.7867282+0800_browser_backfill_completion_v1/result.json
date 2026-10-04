@@ -1,0 +1,54 @@
+{
+  "recorded_at": "2026-09-05T07:01:08.7867282+08:00",
+  "status": "current_known_scope_complete",
+  "session_continuation": {
+    "batch_count": 19,
+    "source_request_count": 235,
+    "successful_source_request_count": 235,
+    "failed_source_request_count": 0,
+    "successful_observation_count": 34485,
+    "daily_record_count": 0,
+    "minute_record_count": 4359090,
+    "download_bytes": 94229021
+  },
+  "final_state": {
+    "ordinary_pending_source_request_count": 0,
+    "estimated_remaining_transfer_count": 0,
+    "inbox_zip_exists": false,
+    "download_zip_exists": false,
+    "database_path": "data/warehouse/financial_futures.duckdb",
+    "database_table_counts": {
+      "fetch_observation": 205962,
+      "futures_daily": 68120,
+      "futures_minute": 17103870,
+      "ingest_batch": 81
+    },
+    "known_latest_expected_trading_date": "2026-08-28",
+    "natural_calendar_watermark": "2026-08-28",
+    "natural_ready_horizon": "2026-09-04",
+    "source_confirmed_missing_key_count": 144714,
+    "next_suggested_run_at": "2026-09-06T00:01:00+08:00",
+    "upstream_calendar_sync_required_for_latest_claim": true
+  },
+  "batches": [
+    {"plan_sha256":"9b05a60bc90df23aff21be100f78233417a884916918188007395777d5d2d70c","run_id":"02529810-1978-4445-a53c-7b2896e70b80","run_started_at":"2026-09-05T06:13:32.112565+08:00","published_at":"2026-09-05T06:13:51.361279+08:00","source_request_count":11,"successful_observation_count":1997,"minute_record_count":249375,"download_bytes":4887153,"download_sha256":"a55776b9cc57f4e9d58b136d25b26a9fc08bfdc179aad1128cf7e847915900b6"},
+    {"plan_sha256":"3e6ea12a355371b29b8449b1218f8f8461590baa84a407ff24f199d837ae27f3","run_id":"ea13756e-ac29-40e7-958f-261e7149fd53","run_started_at":"2026-09-05T06:16:06.565512+08:00","published_at":"2026-09-05T06:16:27.136250+08:00","source_request_count":13,"successful_observation_count":1990,"minute_record_count":246510,"download_bytes":5403223,"download_sha256":"24df59ebbd45c5cbcd68ad18f0d2f600ec6dd7446031d39b495da78228773902"},
+    {"plan_sha256":"27dc67983456ef7fa8f87a9bafdf5eaa0f702e3efcf9cdb808cbd1607a5bf1dc","run_id":"bb5c734b-fa82-49aa-84a5-a3938c2c5859","run_started_at":"2026-09-05T06:18:25.400546+08:00","published_at":"2026-09-05T06:18:46.396131+08:00","source_request_count":14,"successful_observation_count":2015,"minute_record_count":248445,"download_bytes":5032026,"download_sha256":"3ce3f802149dfb53279bcf52ba3b1005d7bb0e47d3b15a78ad78769e36d4f8e9"},
+    {"plan_sha256":"555d984f2f6b983d6df64b42fbe4ae3d10189d9bbd87a7a8e8f65a503a4e3717","run_id":"45fa9951-bc35-4709-ba01-458e4bb41dec","run_started_at":"2026-09-05T06:21:06.762594+08:00","published_at":"2026-09-05T06:21:28.095495+08:00","source_request_count":11,"successful_observation_count":2008,"minute_record_count":249390,"download_bytes":4974785,"download_sha256":"477e1cde4bab6589f8c1f436b25398bc0afd492302f37f800cef81a8e38abdef"},
+    {"plan_sha256":"ec7fc72b1a4726cb621118d83b163eefe80a5ef22617864288c076e8be8b916a","run_id":"620f3925-c923-4576-b89d-e73667543bcc","run_started_at":"2026-09-05T06:23:27.548212+08:00","published_at":"2026-09-05T06:23:49.724523+08:00","source_request_count":12,"successful_observation_count":1985,"minute_record_count":249735,"download_bytes":4689081,"download_sha256":"ee9efbf788c3b5c2f4645cac4c31655601505a03efe1ec48e2c7a6fef593bb97"},
+    {"plan_sha256":"bcf80845d182e03d26c3b20fb380f503a888f554e2ad80c670527e979ed6311d","run_id":"00dcc4f7-5255-4825-80a9-4acd9c3a6285","run_started_at":"2026-09-05T06:25:47.891401+08:00","published_at":"2026-09-05T06:26:08.422874+08:00","source_request_count":11,"successful_observation_count":1981,"minute_record_count":249585,"download_bytes":4779688,"download_sha256":"bc6a2242b8481d6db4bf1e28bc2f3cb9684a536b2a3ad86dcf7801e2044f95ed"},
+    {"plan_sha256":"72049f7abbd3e7dca5f15739755ffdc057cca055a5e65aa4f77b41cc4849c993","run_id":"e1a9535e-9d7c-4512-a3a7-4dc0124b9fc3","run_started_at":"2026-09-05T06:28:34.537464+08:00","published_at":"2026-09-05T06:28:55.542030+08:00","source_request_count":14,"successful_observation_count":1959,"minute_record_count":249915,"download_bytes":4868562,"download_sha256":"64f6712abff2295cbcb6ee077940e06d639a47d91af1918d13a71bfcbdd30009"},
+    {"plan_sha256":"b11ab531fc58a86d2e3d2cbb496ed0c2535f8e10bf5274fa27c36794a716e8d4","run_id":"d395ef03-5ec5-400e-86a6-d8cb494a4285","run_started_at":"2026-09-05T06:30:55.312640+08:00","published_at":"2026-09-05T06:31:16.082705+08:00","source_request_count":12,"successful_observation_count":1909,"minute_record_count":247230,"download_bytes":4550271,"download_sha256":"7860138477c8c7a0d63dbbe57043cf9f184bc87fe8fbe4d404b04a22c01b5a72"},
+    {"plan_sha256":"9461b3e18c6d9862578ea048e16c22669aefb589ea6659b693c3a184a6d45f74","run_id":"43521ece-7bad-469c-9a99-95c41763957c","run_started_at":"2026-09-05T06:33:22.622280+08:00","published_at":"2026-09-05T06:33:43.564060+08:00","source_request_count":17,"successful_observation_count":1872,"minute_record_count":249000,"download_bytes":5311408,"download_sha256":"705223b239e84420a4ff8fb24936ad7c7bfe122f7a659d9fff97b53ca617a6bc"},
+    {"plan_sha256":"7fd18c873533ee9dd6b69eb32c49fdd2aa67274a8d1a6954016196b087bd8358","run_id":"1d1f33f7-17b8-4687-b017-cc62458b9bcc","run_started_at":"2026-09-05T06:36:01.480527+08:00","published_at":"2026-09-05T06:36:22.248605+08:00","source_request_count":8,"successful_observation_count":1837,"minute_record_count":247995,"download_bytes":4669311,"download_sha256":"7a580ba1fd661456bf0dfed24d33436f09b584c2bb93bd9e6e5bd82f36dd6c59"},
+    {"plan_sha256":"4ff23659a898074c3bc78e98f88c2b7c7640e413ec3660bf61fd077c43fb9472","run_id":"86cd32e7-0637-437e-bf69-20416d989a8f","run_started_at":"2026-09-05T06:38:19.136008+08:00","published_at":"2026-09-05T06:38:40.263917+08:00","source_request_count":12,"successful_observation_count":1845,"minute_record_count":249075,"download_bytes":6434712,"download_sha256":"ea71f8fa63a2bb082c3b7fff4d1579658078213e9391b60d965c5b1840a6205b"},
+    {"plan_sha256":"83d42f87bc2a069fe23442878b6d10c17a29d439bb603953cf45bf9fea235343","run_id":"4cc4fe2d-b66c-4bcf-918b-f6c022595571","run_started_at":"2026-09-05T06:40:35.356274+08:00","published_at":"2026-09-05T06:40:56.209074+08:00","source_request_count":14,"successful_observation_count":1824,"minute_record_count":246240,"download_bytes":6046330,"download_sha256":"79a91935ad129f8a4575e4b497239f007589ce96c4a4178385fd6119e3173751"},
+    {"plan_sha256":"9710f4a27427ede68d98795ef735019181dd688a78fbfa864076418d5c88d791","run_id":"63256e98-8487-469e-a89a-e43e04fba663","run_started_at":"2026-09-05T06:43:17.234155+08:00","published_at":"2026-09-05T06:43:38.178645+08:00","source_request_count":14,"successful_observation_count":1849,"minute_record_count":249615,"download_bytes":5205743,"download_sha256":"6ffbc0827f9912817e82818f8e512a9ada438fb126952f80b8155e1d6922ea6b"},
+    {"plan_sha256":"c1d1c1953ed84663216382eac054afab6b98c6ca8b5559cc1daab905a3c047a4","run_id":"4ec7a3be-39f2-4705-a33d-06daa9819216","run_started_at":"2026-09-05T06:45:37.681461+08:00","published_at":"2026-09-05T06:45:58.560882+08:00","source_request_count":14,"successful_observation_count":1819,"minute_record_count":245565,"download_bytes":5353204,"download_sha256":"af835213d3ef0c9b3e6366ac1453cd2bae9b06326b976bc8d33db8710ece75b8"},
+    {"plan_sha256":"155822f7da144170ce848e1956122d445fa9cdd6026da456ef54ccfa92c583e7","run_id":"115634ed-f79a-4854-b874-685a74770168","run_started_at":"2026-09-05T06:47:59.523846+08:00","published_at":"2026-09-05T06:48:13.502553+08:00","source_request_count":11,"successful_observation_count":1830,"minute_record_count":151740,"download_bytes":4106920,"download_sha256":"ecd1682c35ed85e1f78e7f7996a8f21e19a468340ae23a46793948aa3c5a2d71"},
+    {"plan_sha256":"d2b866923d438e9b3768d98188b3d0c0fb896da924ec6cafc7e39f68bb0f921f","run_id":"2f16cc97-2452-4167-8a97-2cbaf61e25d3","run_started_at":"2026-09-05T06:50:32.981246+08:00","published_at":"2026-09-05T06:50:50.598765+08:00","source_request_count":15,"successful_observation_count":1849,"minute_record_count":201015,"download_bytes":5033234,"download_sha256":"5e33286b3dff0787b51c2e70a116438fb9385727ace6f816c7fefbd786e62912"},
+    {"plan_sha256":"2560bd636b915d12de9feecb72cf13de86586c74134f5d401b29ef2734a98458","run_id":"acc0b7d6-8164-4a65-bdd0-3f25dfcb70af","run_started_at":"2026-09-05T06:52:46.077213+08:00","published_at":"2026-09-05T06:53:06.994620+08:00","source_request_count":16,"successful_observation_count":1812,"minute_record_count":244620,"download_bytes":5888066,"download_sha256":"2c552ac7503b72cd557945a125f38462377a26a7326c62f8a114872ffd713a4a"},
+    {"plan_sha256":"d9f8ccc1b02c49a9fff1b19f24c75672ba7ef6060e2a60e9fcd88b8a5fdc3a57","run_id":"c8c891e1-a7e9-4e68-9120-d761c30d5ede","run_started_at":"2026-09-05T06:55:09.509530+08:00","published_at":"2026-09-05T06:55:30.424632+08:00","source_request_count":12,"successful_observation_count":1806,"minute_record_count":243810,"download_bytes":5829334,"download_sha256":"215b82b56deb6b724932b3aa656134bdda046c674c2363aafd0fc8cec1a226a0"},
+    {"plan_sha256":"223739b60b08de632de1daee270cfee951028758cc51a3f30af363109963d96d","run_id":"a894ce31-9bfb-4758-b7b0-b20f7c816a48","run_started_at":"2026-09-05T06:57:48.323463+08:00","published_at":"2026-09-05T06:57:52.722606+08:00","source_request_count":4,"successful_observation_count":298,"minute_record_count":40230,"download_bytes":1165970,"download_sha256":"380918260fe7e4311eb45d07be7d04382fe579a3c217658cacd5bddf9b68e888"}
+  ]
+}

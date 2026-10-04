@@ -1,0 +1,19 @@
+{
+  "completed_at": "2026-09-04T21:59:01.202622+08:00",
+  "daily_record_count": 1,
+  "database_path": "E:\\Latitude_Analytics_v2\\01_project_collection\\JQ_strategy\\financial_futures_data\\data\\warehouse\\financial_futures.duckdb",
+  "database_write_performed": false,
+  "failed_request_count": 0,
+  "file_bytes": 10008,
+  "file_sha256": "cc9e1a530ab75ab66f49a10f7acb058b47e824ae0669d18e2f7d00d630df7ec6",
+  "inbox_path": "E:\\Latitude_Analytics_v2\\01_project_collection\\JQ_strategy\\financial_futures_data\\data\\inbox\\JQ_FINANCIAL_FUTURES_TRANSFER.zip",
+  "minute_record_count": 240,
+  "publication_status": "complete",
+  "run_id": "7d96befe-e6ff-4efa-88a0-c9ec71f3d713",
+  "snapshot_path": "E:\\Latitude_Analytics_v2\\01_project_collection\\JQ_strategy\\financial_futures_data\\data\\staging\\cc9e1a530ab75ab66f49a10f7acb058b47e824ae0669d18e2f7d00d630df7ec6.zip",
+  "snapshot_retained": true,
+  "started_at": "2026-09-04T21:59:00.287476+08:00",
+  "status": "validated_not_imported",
+  "successful_request_count": 6,
+  "write_requested": false
+}

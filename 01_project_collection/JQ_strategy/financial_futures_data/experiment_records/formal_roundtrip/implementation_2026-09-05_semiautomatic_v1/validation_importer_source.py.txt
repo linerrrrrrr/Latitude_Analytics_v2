@@ -1,0 +1,124 @@
+import sys, pathlib, tempfile, hashlib, json, datetime, time, os
+from unittest.mock import patch
+sys.path.insert(0,str(pathlib.Path("financial_futures_data").resolve()))
+import import_financial_futures_file as imp
+import duckdb
+root=pathlib.Path("financial_futures_data").resolve()
+payload=(root/"data/inbox/JQ_FINANCIAL_FUTURES_TRANSFER.zip").read_bytes()
+started=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).isoformat()
+tests=[]
+def record(name, fn):
+ t=time.monotonic()
+ fn()
+ tests.append({"case":name,"status":"passed","elapsed_seconds":time.monotonic()-t})
+ print(name+": passed",flush=True)
+with tempfile.TemporaryDirectory(prefix="jq_semiautomatic_") as temporary:
+ temp_root=pathlib.Path(temporary).resolve()
+ def fixture(name,content=payload):
+  data_dir=temp_root/name
+  inbox=data_dir/"inbox"/imp.contract.TRANSFER_FIXED_FILE_NAME
+  inbox.parent.mkdir(parents=True)
+  inbox.write_bytes(content)
+  return data_dir,inbox
+ def database_counts(data_dir):
+  with duckdb.connect(str(data_dir/"warehouse/financial_futures.duckdb"),read_only=True) as db:
+   counts={t:db.execute("SELECT count(*) FROM "+t).fetchone()[0] for t in ("ingest_batch","fetch_observation","futures_daily","futures_minute")}
+  assert counts=={"ingest_batch":1,"fetch_observation":6,"futures_daily":1,"futures_minute":240},counts
+ def error_report(data_dir):
+  reports=list((data_dir/"staging").glob("error_*.json"))
+  assert reports
+  return json.loads(reports[-1].read_text(encoding="utf-8"))
+ def must_fail(data_dir):
+  try: imp.import_financial_futures_file(write=True,data_dir=data_dir)
+  except Exception: return error_report(data_dir)
+  raise AssertionError("Expected rejection")
+ def normal():
+  d,i=fixture("normal")
+  r=imp.import_financial_futures_file(write=True,data_dir=d)
+  assert r["status"]=="imported" and r["inbox_deleted"] and r["database_state_verified"]
+  assert r["rows_inserted_this_invocation"]=={"daily":1,"minute":240}
+  assert not i.exists() and not list((d/"staging").iterdir())
+  database_counts(d)
+  db=d/"warehouse/financial_futures.duckdb"
+  digest=hashlib.sha256(db.read_bytes()).hexdigest()
+  i.write_bytes(payload)
+  r=imp.import_financial_futures_file(write=True,data_dir=d)
+  assert r["status"]=="already_imported" and r["inbox_deleted"] and not r["database_write_performed"]
+  assert r["rows_inserted_this_invocation"]=={"daily":0,"minute":0}
+  assert not i.exists() and hashlib.sha256(db.read_bytes()).hexdigest()==digest
+  i.write_bytes(payload)
+  r=imp.import_financial_futures_file(write=False,data_dir=d)
+  assert not r["inbox_deleted"] and i.read_bytes()==payload and not r["database_write_performed"]
+  assert hashlib.sha256(db.read_bytes()).hexdigest()==digest
+ record("new_import_then_idempotent_delete_and_readonly_existing",normal)
+ def readonly_new():
+  d,i=fixture("readonly_new")
+  r=imp.import_financial_futures_file(write=False,data_dir=d)
+  assert r["status"]=="validated_not_imported" and not r["inbox_deleted"]
+  assert i.read_bytes()==payload and not (d/"warehouse/financial_futures.duckdb").exists()
+ record("readonly_new_retains_input",readonly_new)
+ def invalid():
+  d,i=fixture("invalid",b"not a zip")
+  r=must_fail(d)
+  assert i.read_bytes()==b"not a zip" and not r["database_write_performed"]
+  assert pathlib.Path(r["snapshot_path"]).exists()
+ record("invalid_zip_retains_evidence",invalid)
+ def failed_delete():
+  d,i=fixture("failed_delete")
+  original_unlink=pathlib.Path.unlink
+  def fail_consumed(path,*args,**kwargs):
+   if path.name.startswith(".consumed_inbox_"): raise PermissionError("injected deletion denied")
+   return original_unlink(path,*args,**kwargs)
+  with patch.object(pathlib.Path,"unlink",fail_consumed): r=must_fail(d)
+  assert r["commit_returned"] and r["database_state_verified"] and not r["inbox_deleted"]
+  assert pathlib.Path(r["snapshot_path"]).read_bytes()==payload
+  assert pathlib.Path(r["consumed_inbox_path"]).read_bytes()==payload
+  database_counts(d)
+ record("post_commit_delete_failure_retains_snapshot_and_consumed_file",failed_delete)
+ original_validate=imp.validate_transfer_snapshot
+ def changed_inbox():
+  d,i=fixture("changed_inbox")
+  def validate_then_change(snapshot):
+   value=original_validate(snapshot)
+   replacement=i.with_suffix(".new")
+   replacement.write_bytes(b"newer download")
+   os.replace(replacement,i)
+   return value
+  with patch.object(imp,"validate_transfer_snapshot",validate_then_change): r=must_fail(d)
+  assert i.read_bytes()==b"newer download" and not r["inbox_deleted"] and r["database_state_verified"]
+  assert pathlib.Path(r["snapshot_path"]).read_bytes()==payload
+  assert not list((d/"staging").glob(".consumed_inbox_*"))
+  database_counts(d)
+ record("replacement_after_snapshot_restored_without_deletion",changed_inbox)
+ def two_changes():
+  d,i=fixture("two_changes")
+  original_link=os.link
+  def validate_then_change(snapshot):
+   value=original_validate(snapshot)
+   replacement=i.with_suffix(".new")
+   replacement.write_bytes(b"newer download")
+   os.replace(replacement,i)
+   return value
+  def competing_download(source,target,*args,**kwargs):
+   if pathlib.Path(source).name.startswith(".consumed_inbox_"):
+    i.write_bytes(b"newest download")
+   return original_link(source,target,*args,**kwargs)
+  with patch.object(imp,"validate_transfer_snapshot",validate_then_change),patch.object(os,"link",competing_download):
+   r=must_fail(d)
+  assert i.read_bytes()==b"newest download"
+  assert pathlib.Path(r["consumed_inbox_path"]).read_bytes()==b"newer download"
+  assert pathlib.Path(r["snapshot_path"]).read_bytes()==payload
+  database_counts(d)
+ record("two_new_downloads_both_preserved",two_changes)
+ def failed_rename():
+  d,i=fixture("failed_rename")
+  with patch.object(os,"rename",side_effect=PermissionError("injected busy inbox")): r=must_fail(d)
+  assert i.read_bytes()==payload and pathlib.Path(r["snapshot_path"]).read_bytes()==payload and r["database_state_verified"]
+  r=imp.import_financial_futures_file(write=True,data_dir=d)
+  assert r["status"]=="already_imported" and not r["database_write_performed"] and r["inbox_deleted"]
+  database_counts(d)
+ record("busy_inbox_stop_then_explicit_idempotent_rerun",failed_rename)
+print("VALIDATION_JSON_BEGIN")
+print(json.dumps({"started_at":started,"completed_at":datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).isoformat(),"source_zip_sha256":hashlib.sha256(payload).hexdigest(),"cases":tests,"temporary_fixtures_removed":True},ensure_ascii=False,indent=2))
+print("VALIDATION_JSON_END")
+

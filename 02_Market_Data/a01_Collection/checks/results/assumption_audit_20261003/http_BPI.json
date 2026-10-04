@@ -1,0 +1,70 @@
+{
+  "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=ALL&filter=%28INDICATOR_ID%3D%22EMI00107665%22%29&sortColumns=REPORT_DATE&sortTypes=-1&pageSize=3&pageNumber=1&source=WEB&client=WEB",
+  "http_status": 200,
+  "body": {
+    "version": "4cb270788d936d977f2ec7e67536392e",
+    "result": {
+      "pages": 2279,
+      "data": [
+        {
+          "REPORT_DATE": "2026-10-02 00:00:00",
+          "INDICATOR_VALUE": 2372,
+          "CHANGE_RATE": -0.29424128,
+          "CHANGERATE_3M": 8.06378132,
+          "CHANGERATE_6M": 32.95964126,
+          "CHANGERATE_1Y": 40.77151335,
+          "CHANGERATE_2Y": 64.03872752,
+          "CHANGERATE_3Y": 40.85510689,
+          "IS_NEWEST": "True",
+          "BOARD_CODE": "BK0450",
+          "BOARD_NAME": "航运港口",
+          "CONCEPT_CODE": "BK0712",
+          "CONCEPT_NAME": "一带一路",
+          "INDICATOR_ID": "EMI00107665",
+          "INDICATOR_NAME": "巴拿马型运费指数(BPI)",
+          "RANK_LABEL": "H"
+        },
+        {
+          "REPORT_DATE": "2026-10-01 00:00:00",
+          "INDICATOR_VALUE": 2379,
+          "CHANGE_RATE": -0.20973154,
+          "CHANGERATE_3M": 9.27882407,
+          "CHANGERATE_6M": 35.32423208,
+          "CHANGERATE_1Y": 37.91304348,
+          "CHANGERATE_2Y": 64.52282158,
+          "CHANGERATE_3Y": 39.85890653,
+          "IS_NEWEST": "False",
+          "BOARD_CODE": "BK0450",
+          "BOARD_NAME": "航运港口",
+          "CONCEPT_CODE": "BK0712",
+          "CONCEPT_NAME": "一带一路",
+          "INDICATOR_ID": "EMI00107665",
+          "INDICATOR_NAME": "巴拿马型运费指数(BPI)",
+          "RANK_LABEL": "H"
+        },
+        {
+          "REPORT_DATE": "2026-09-30 00:00:00",
+          "INDICATOR_VALUE": 2384,
+          "CHANGE_RATE": -0.25104603,
+          "CHANGERATE_3M": 10.67780873,
+          "CHANGERATE_6M": 36.69724771,
+          "CHANGERATE_1Y": 34.23423423,
+          "CHANGERATE_2Y": 64.86860304,
+          "CHANGERATE_3Y": 40.15285126,
+          "IS_NEWEST": "False",
+          "BOARD_CODE": "BK0450",
+          "BOARD_NAME": "航运港口",
+          "CONCEPT_CODE": "BK0712",
+          "CONCEPT_NAME": "一带一路",
+          "INDICATOR_ID": "EMI00107665",
+          "INDICATOR_NAME": "巴拿马型运费指数(BPI)",
+          "RANK_LABEL": "H"
+        }
+      ],
+      "count": 6835
+    },
+    "success": true,
+    "message": "ok",
+    "code": 0
+  }
+}

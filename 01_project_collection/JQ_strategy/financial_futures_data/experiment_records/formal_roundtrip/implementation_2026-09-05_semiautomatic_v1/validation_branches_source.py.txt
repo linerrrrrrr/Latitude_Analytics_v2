@@ -1,0 +1,57 @@
+import sys,pathlib,json,hashlib,datetime,io,contextlib,tempfile
+from types import SimpleNamespace
+root=pathlib.Path("financial_futures_data").resolve()
+notebook=json.loads((root/"plan_financial_futures_fetch.ipynb").read_text(encoding="utf-8"))
+namespace={}
+exec("".join(notebook["cells"][1]["source"]),namespace)
+final_source="".join(notebook["cells"][-1]["source"])
+import_source="".join(notebook["cells"][7]["source"])
+pd=namespace["pd"]
+payload={"source_requests":[]}
+sha=hashlib.sha256(json.dumps(payload,ensure_ascii=False,sort_keys=True,separators=(",",":"),allow_nan=False).encode()).hexdigest()
+cases=[]
+for name,current,missing,confirmed,expected in [
+ ("all_facts_complete",True,0,0,"已完成：白名单数据库"),
+ ("known_source_gaps_not_falsely_complete",True,271,271,"不是全部行情齐全"),
+ ("stale_calendar_not_falsely_current",False,0,0,"不能判定已全量更新到最新")]:
+ plan=SimpleNamespace(plan_payload=payload,plan_sha256=sha,calendar_is_current=current,coverage_summary_df=pd.DataFrame([{"data_missing_key_count":missing,"source_confirmed_missing_key_count":confirmed}]),next_run_at=datetime.datetime(2026,9,6,0,1,tzinfo=datetime.timezone(datetime.timedelta(hours=8))),latest_due_market_trading_date=datetime.date(2026,9,4),trade_calendar_through=datetime.date(2026,9,4),latest_due_trading_date=datetime.date(2026,9,4))
+ namespace.update(fetch_plan=plan,round_ready_for_planning=True,joinquant_code="OLD")
+ output=io.StringIO()
+ with contextlib.redirect_stdout(output): exec(final_source,namespace)
+ assert expected in output.getvalue()
+ assert "2026-09-06 00:01:00" in output.getvalue()
+ assert namespace["joinquant_code"].startswith("# ")
+ assert "OLD" not in namespace["joinquant_code"]
+ cases.append({"case":name,"status":"passed","output":output.getvalue()})
+namespace.update(round_ready_for_planning=False,fetch_plan=plan)
+try: exec(final_source,namespace)
+except RuntimeError: cases.append({"case":"final_rejects_stale_plan_after_failed_import","status":"passed"})
+else: raise AssertionError("Must reject")
+with tempfile.TemporaryDirectory(prefix="jq_notebook_flow_") as tmp:
+ namespace["financial_futures_dir"]=pathlib.Path(tmp)
+ namespace["import_financial_futures_file"]=lambda **kw: (_ for _ in ()).throw(AssertionError("No file must not import"))
+ exec(import_source,namespace)
+ assert namespace["round_ready_for_planning"] and namespace["fetch_plan"] is None
+ cases.append({"case":"missing_zip_continues_to_planning","status":"passed"})
+ inbox=pathlib.Path(tmp)/"data/inbox"/namespace["local_contract"].TRANSFER_FIXED_FILE_NAME
+ inbox.parent.mkdir(parents=True)
+ inbox.write_bytes(b"invalid")
+ namespace.update(fetch_plan="stale",joinquant_code="stale")
+ def reject_import(**kw): raise ValueError("injected validation error")
+ namespace["import_financial_futures_file"]=reject_import
+ try: exec(import_source,namespace)
+ except ValueError: pass
+ else: raise AssertionError("Must stop")
+ assert not namespace["round_ready_for_planning"] and namespace["fetch_plan"] is None and namespace["joinquant_code"] is None
+ assert inbox.read_bytes()==b"invalid"
+ cases.append({"case":"failed_import_clears_old_code_and_prevents_planning","status":"passed"})
+ namespace["import_financial_futures_file"]=lambda **kw: {"inbox_deleted":True}
+ try: exec(import_source,namespace)
+ except RuntimeError: pass
+ else: raise AssertionError("Must reject a new file remaining at inbox")
+ assert not namespace["round_ready_for_planning"]
+ cases.append({"case":"another_download_blocks_new_plan","status":"passed"})
+print("BRANCH_JSON_BEGIN")
+print(json.dumps({"executed_at":datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).isoformat(),"cases":cases},ensure_ascii=False,indent=2))
+print("BRANCH_JSON_END")
+

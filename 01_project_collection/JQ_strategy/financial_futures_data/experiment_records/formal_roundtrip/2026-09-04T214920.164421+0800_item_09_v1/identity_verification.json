@@ -1,0 +1,480 @@
+{
+  "checked_at": "2026-09-04T21:59:51.587677+08:00",
+  "database_existed_before_import": false,
+  "file_bytes": 10008,
+  "file_sha256": "cc9e1a530ab75ab66f49a10f7acb058b47e824ae0669d18e2f7d00d630df7ec6",
+  "manifest": {
+    "daily_record_count": 1,
+    "environment": {
+      "jqdata_version": "1.33.38",
+      "numpy_version": "1.14.6",
+      "pandas_version": "0.23.4",
+      "python_version": "3.6.7"
+    },
+    "failed_request_count": 0,
+    "failed_requests": [],
+    "failed_source_request_count": 0,
+    "failed_source_requests": [],
+    "fixed_file_name": "JQ_FINANCIAL_FUTURES_TRANSFER.zip",
+    "format_id": "jq_financial_futures_transfer",
+    "generator_version": "financial_futures_joinquant_export_v1",
+    "market_time_zone": "Asia/Shanghai",
+    "members": {
+      "futures_daily.jsonl": {
+        "bytes": 288,
+        "record_count": 1,
+        "sha256": "cd561e62f065ddfe25127f08ea2df698907a48c5be68f8e3aac97e93614afec9"
+      },
+      "futures_minute.jsonl": {
+        "bytes": 75543,
+        "record_count": 240,
+        "sha256": "109f039c610bf1c4273a3dd5e9db220e15286c7a76fded5bf4c7d28b26857113"
+      },
+      "request_blocks.jsonl": {
+        "bytes": 9504,
+        "record_count": 6,
+        "sha256": "3e9e4af511c0992e47741f686766a6f695e91d69a13bc7590e5e5da14d4892f5"
+      }
+    },
+    "minute_record_count": 240,
+    "plan_sha256": "ddd915a9256c5499b04dc01bd1ad8f76c5e547880a03c6cfd9d1379e2429aafc",
+    "planned_request_count": 6,
+    "planner_version": "financial_futures_fetch_planner_v1",
+    "protocol_version": "1.0.0",
+    "publication_status": "complete",
+    "run_completed_at": "2026-09-04T21:49:21.257125+08:00",
+    "run_id": "7d96befe-e6ff-4efa-88a0-c9ec71f3d713",
+    "run_started_at": "2026-09-04T21:49:20.164421+08:00",
+    "source_api_module": "jqresearch.api",
+    "source_request_count": 4,
+    "successful_request_count": 6,
+    "successful_source_request_count": 4
+  },
+  "members": [
+    {
+      "bytes": 1376,
+      "compressed_bytes": 694,
+      "name": "manifest.json",
+      "sha256": "71423cf4440af3b12ec8dbac210bbec7335c4061ce6d9bcec9d5e935b098260d"
+    },
+    {
+      "bytes": 9504,
+      "compressed_bytes": 1900,
+      "name": "request_blocks.jsonl",
+      "sha256": "3e9e4af511c0992e47741f686766a6f695e91d69a13bc7590e5e5da14d4892f5"
+    },
+    {
+      "bytes": 288,
+      "compressed_bytes": 217,
+      "name": "futures_daily.jsonl",
+      "sha256": "cd561e62f065ddfe25127f08ea2df698907a48c5be68f8e3aac97e93614afec9"
+    },
+    {
+      "bytes": 75543,
+      "compressed_bytes": 6727,
+      "name": "futures_minute.jsonl",
+      "sha256": "109f039c610bf1c4273a3dd5e9db220e15286c7a76fded5bf4c7d28b26857113"
+    }
+  ],
+  "plan_sha256": "ddd915a9256c5499b04dc01bd1ad8f76c5e547880a03c6cfd9d1379e2429aafc",
+  "prepared_code_sha256": "195f1ee712974e4493be25d946e88c70d6eee622e6f55570cfe87b6cd03cfff7",
+  "python_executable": "E:\\anaconda3\\envs\\latitude\\python.exe",
+  "request_blocks": [
+    {
+      "actual": {
+        "duplicate_key_count": 0,
+        "extra_key_count": 0,
+        "first_key": "2024-06-28",
+        "key_count": 1,
+        "keys_sha256": "f1f59901d745d1c8ba1b908a958c82dd0dfb8741f6fa11a8e9149fda4a61c385",
+        "last_key": "2024-06-28",
+        "missing_key_count": 0,
+        "null_count_by_field": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "pre_close": 0,
+          "volume": 0
+        }
+      },
+      "bar_frequency": "1d",
+      "contract_code": "IF2409.CCFX",
+      "coverage_status": "complete",
+      "elapsed_seconds": 1.0414062142372131,
+      "error_message": null,
+      "error_type": null,
+      "expected": {
+        "first_key": "2024-06-28",
+        "key_count": 1,
+        "keys_sha256": "f1f59901d745d1c8ba1b908a958c82dd0dfb8741f6fa11a8e9149fda4a61c385",
+        "last_key": "2024-06-28"
+      },
+      "observation_eligible": true,
+      "observation_id": "d7c1f55f35fff4ab4adb226ca70036d762973b210939b8fecd8b509f6d15d449",
+      "quality_reason": "coverage=complete; ohlc_warning_count=0",
+      "quality_status": "passed",
+      "request_completed_at": "2026-09-04T21:49:21.205828+08:00",
+      "request_id": "5adfdcbf1126b6e7ab55cf903a265998f1a9b151b3aa4356e2012c7c168e7e10",
+      "request_ordinal": 1,
+      "request_started_at": "2026-09-04T21:49:20.164431+08:00",
+      "request_status": "success",
+      "response_validation_status": "passed",
+      "session_end_at": null,
+      "session_number": 0,
+      "session_start_at": null,
+      "source_fields": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "money",
+        "pre_close",
+        "open_interest"
+      ],
+      "source_frequency": "daily",
+      "source_parameters": {
+        "fill_paused": false,
+        "fq": null,
+        "panel": false,
+        "round": false,
+        "skip_paused": true
+      },
+      "source_request_id": "52fc8103c6e0975e95ac9ea39eda9d2799991146a268da70e01a7f39a951ee92",
+      "source_request_ordinal": 1,
+      "trading_date": "2024-06-28"
+    },
+    {
+      "actual": {
+        "duplicate_key_count": 0,
+        "extra_key_count": 0,
+        "first_key": null,
+        "key_count": 0,
+        "keys_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "last_key": null,
+        "missing_key_count": 1,
+        "null_count_by_field": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "pre_close": 0,
+          "volume": 0
+        }
+      },
+      "bar_frequency": "1d",
+      "contract_code": "TF1303.CCFX",
+      "coverage_status": "empty",
+      "elapsed_seconds": 0.0018625762313604355,
+      "error_message": null,
+      "error_type": null,
+      "expected": {
+        "first_key": "2012-06-11",
+        "key_count": 1,
+        "keys_sha256": "b07c8e2da56af4faafa2cb5192eec8543668eee93db5df44a4ee66c1f99b53c8",
+        "last_key": "2012-06-11"
+      },
+      "observation_eligible": true,
+      "observation_id": "b1bed2bddbd4703e96eb5396a0d0214ecc9b50493d24f5c21edb4bee2a5d09dd",
+      "quality_reason": "coverage=empty; ohlc_warning_count=0",
+      "quality_status": "warning",
+      "request_completed_at": "2026-09-04T21:49:21.210380+08:00",
+      "request_id": "b64f9f87fec4a610d10c950714a3b0e613bb829615a13d4e6247fe27eacefeae",
+      "request_ordinal": 2,
+      "request_started_at": "2026-09-04T21:49:21.208516+08:00",
+      "request_status": "success",
+      "response_validation_status": "passed",
+      "session_end_at": null,
+      "session_number": 0,
+      "session_start_at": null,
+      "source_fields": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "money",
+        "pre_close",
+        "open_interest"
+      ],
+      "source_frequency": "daily",
+      "source_parameters": {
+        "fill_paused": false,
+        "fq": null,
+        "panel": false,
+        "round": false,
+        "skip_paused": true
+      },
+      "source_request_id": "b0f16b491ee0b2e868b2342acffa8bdd3994bce9c576bd4ef20e9c42bd4f4b92",
+      "source_request_ordinal": 2,
+      "trading_date": "2012-06-11"
+    },
+    {
+      "actual": {
+        "duplicate_key_count": 0,
+        "extra_key_count": 0,
+        "first_key": "2024-06-28T09:31:00+08:00",
+        "key_count": 120,
+        "keys_sha256": "a8d58a11993a7bab734c2c02018f4ff817d4baa78948f856de82197eb209cb11",
+        "last_key": "2024-06-28T11:30:00+08:00",
+        "missing_key_count": 0,
+        "null_count_by_field": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        }
+      },
+      "bar_frequency": "1m",
+      "contract_code": "IF2409.CCFX",
+      "coverage_status": "complete",
+      "elapsed_seconds": 0.02327807992696762,
+      "error_message": null,
+      "error_type": null,
+      "expected": {
+        "first_key": "2024-06-28T09:31:00+08:00",
+        "key_count": 120,
+        "keys_sha256": "a8d58a11993a7bab734c2c02018f4ff817d4baa78948f856de82197eb209cb11",
+        "last_key": "2024-06-28T11:30:00+08:00"
+      },
+      "observation_eligible": true,
+      "observation_id": "9317508b28892960c60abf52c85a90849672def87fc919346ccc397379265a08",
+      "quality_reason": "coverage=complete; ohlc_warning_count=0",
+      "quality_status": "passed",
+      "request_completed_at": "2026-09-04T21:49:21.235037+08:00",
+      "request_id": "d8a028bd01d44edf75658faf9923db1e8ac2ef9f3fd6debc14fec7a25b8a903b",
+      "request_ordinal": 3,
+      "request_started_at": "2026-09-04T21:49:21.211760+08:00",
+      "request_status": "success",
+      "response_validation_status": "passed",
+      "session_end_at": "2024-06-28T11:30:00+08:00",
+      "session_number": 1,
+      "session_start_at": "2024-06-28T09:30:00+08:00",
+      "source_fields": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "money",
+        "open_interest"
+      ],
+      "source_frequency": "1m",
+      "source_parameters": {
+        "fill_paused": false,
+        "fq": null,
+        "panel": false,
+        "round": false,
+        "skip_paused": true
+      },
+      "source_request_id": "19f79595ea1fc28edb3c1329ebd8a4a9f9a667fb48ed4d65b8b57ef425f2bf55",
+      "source_request_ordinal": 3,
+      "trading_date": "2024-06-28"
+    },
+    {
+      "actual": {
+        "duplicate_key_count": 0,
+        "extra_key_count": 0,
+        "first_key": "2024-06-28T13:01:00+08:00",
+        "key_count": 120,
+        "keys_sha256": "be0c75a602a487ed15eb61b9bd0779145624727367d83a015639bb60ca681bd2",
+        "last_key": "2024-06-28T15:00:00+08:00",
+        "missing_key_count": 0,
+        "null_count_by_field": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        }
+      },
+      "bar_frequency": "1m",
+      "contract_code": "IF2409.CCFX",
+      "coverage_status": "complete",
+      "elapsed_seconds": 0.02327807992696762,
+      "error_message": null,
+      "error_type": null,
+      "expected": {
+        "first_key": "2024-06-28T13:01:00+08:00",
+        "key_count": 120,
+        "keys_sha256": "be0c75a602a487ed15eb61b9bd0779145624727367d83a015639bb60ca681bd2",
+        "last_key": "2024-06-28T15:00:00+08:00"
+      },
+      "observation_eligible": true,
+      "observation_id": "0e51aa0991b8e5174b0c329a4a066973459a7cbd39e781d1aa12250254031702",
+      "quality_reason": "coverage=complete; ohlc_warning_count=0",
+      "quality_status": "passed",
+      "request_completed_at": "2026-09-04T21:49:21.235037+08:00",
+      "request_id": "5976b7c694561b10f01c54709e6f7043dac1d0676c9bee6bcf2747a6c03a6c2b",
+      "request_ordinal": 4,
+      "request_started_at": "2026-09-04T21:49:21.211760+08:00",
+      "request_status": "success",
+      "response_validation_status": "passed",
+      "session_end_at": "2024-06-28T15:00:00+08:00",
+      "session_number": 2,
+      "session_start_at": "2024-06-28T13:00:00+08:00",
+      "source_fields": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "money",
+        "open_interest"
+      ],
+      "source_frequency": "1m",
+      "source_parameters": {
+        "fill_paused": false,
+        "fq": null,
+        "panel": false,
+        "round": false,
+        "skip_paused": true
+      },
+      "source_request_id": "19f79595ea1fc28edb3c1329ebd8a4a9f9a667fb48ed4d65b8b57ef425f2bf55",
+      "source_request_ordinal": 3,
+      "trading_date": "2024-06-28"
+    },
+    {
+      "actual": {
+        "duplicate_key_count": 0,
+        "extra_key_count": 0,
+        "first_key": null,
+        "key_count": 0,
+        "keys_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "last_key": null,
+        "missing_key_count": 135,
+        "null_count_by_field": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        }
+      },
+      "bar_frequency": "1m",
+      "contract_code": "TF1303.CCFX",
+      "coverage_status": "empty",
+      "elapsed_seconds": 0.004663703963160515,
+      "error_message": null,
+      "error_type": null,
+      "expected": {
+        "first_key": "2012-06-11T09:16:00+08:00",
+        "key_count": 135,
+        "keys_sha256": "93d8929d04c84bd4f0c5f2ee7d5efc22c57cf92363b2d2e9bc79d01fb54e7c5d",
+        "last_key": "2012-06-11T11:30:00+08:00"
+      },
+      "observation_eligible": true,
+      "observation_id": "3076725ff5e37a87d0b17f33d3dc3588f66111b9eae547057b4856c23c22067b",
+      "quality_reason": "coverage=empty; ohlc_warning_count=0",
+      "quality_status": "warning",
+      "request_completed_at": "2026-09-04T21:49:21.246660+08:00",
+      "request_id": "bb2bdd69ff2cbaf02d68df75f5696a51c63c55c09ac6136f45550553bc4702c5",
+      "request_ordinal": 5,
+      "request_started_at": "2026-09-04T21:49:21.241995+08:00",
+      "request_status": "success",
+      "response_validation_status": "passed",
+      "session_end_at": "2012-06-11T11:30:00+08:00",
+      "session_number": 1,
+      "session_start_at": "2012-06-11T09:15:00+08:00",
+      "source_fields": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "money",
+        "open_interest"
+      ],
+      "source_frequency": "1m",
+      "source_parameters": {
+        "fill_paused": false,
+        "fq": null,
+        "panel": false,
+        "round": false,
+        "skip_paused": true
+      },
+      "source_request_id": "f3fbcce6226aad63c168ef5493a8e3958c125150b2cbbdcc4c7489fa15f0e713",
+      "source_request_ordinal": 4,
+      "trading_date": "2012-06-11"
+    },
+    {
+      "actual": {
+        "duplicate_key_count": 0,
+        "extra_key_count": 0,
+        "first_key": null,
+        "key_count": 0,
+        "keys_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "last_key": null,
+        "missing_key_count": 135,
+        "null_count_by_field": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        }
+      },
+      "bar_frequency": "1m",
+      "contract_code": "TF1303.CCFX",
+      "coverage_status": "empty",
+      "elapsed_seconds": 0.004663703963160515,
+      "error_message": null,
+      "error_type": null,
+      "expected": {
+        "first_key": "2012-06-11T13:01:00+08:00",
+        "key_count": 135,
+        "keys_sha256": "2602f5404dedd144701b826399e269286d7b67a5f2ccb73ef19f3e887321590d",
+        "last_key": "2012-06-11T15:15:00+08:00"
+      },
+      "observation_eligible": true,
+      "observation_id": "8ccd82fd2f8b57534981bf290e235ab899e73f4730fd7eab14ad372d3f03fccf",
+      "quality_reason": "coverage=empty; ohlc_warning_count=0",
+      "quality_status": "warning",
+      "request_completed_at": "2026-09-04T21:49:21.246660+08:00",
+      "request_id": "514ddeeda51c365c286dd5b91632c6e8adf9a152df7ab75795bacb52f7b3b80b",
+      "request_ordinal": 6,
+      "request_started_at": "2026-09-04T21:49:21.241995+08:00",
+      "request_status": "success",
+      "response_validation_status": "passed",
+      "session_end_at": "2012-06-11T15:15:00+08:00",
+      "session_number": 2,
+      "session_start_at": "2012-06-11T13:00:00+08:00",
+      "source_fields": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "money",
+        "open_interest"
+      ],
+      "source_frequency": "1m",
+      "source_parameters": {
+        "fill_paused": false,
+        "fq": null,
+        "panel": false,
+        "round": false,
+        "skip_paused": true
+      },
+      "source_request_id": "f3fbcce6226aad63c168ef5493a8e3958c125150b2cbbdcc4c7489fa15f0e713",
+      "source_request_ordinal": 4,
+      "trading_date": "2012-06-11"
+    }
+  ],
+  "source_identity_limit": "Prepared code snapshot is linked; the returned report does not attest a source-code hash.",
+  "status": "passed"
+}

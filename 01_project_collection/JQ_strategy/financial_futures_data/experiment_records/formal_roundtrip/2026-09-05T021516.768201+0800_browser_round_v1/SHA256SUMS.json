@@ -1,0 +1,36 @@
+{
+  "recorded_at": "2026-09-05T02:18:24+08:00",
+  "algorithm": "SHA-256",
+  "files": [
+    {
+      "file": "analysis.md",
+      "bytes": 1614,
+      "sha256": "8a2fe524e2572f56dc897296f4f4b4f736f22e5659e162a3a060bf783e00f227"
+    },
+    {
+      "file": "browser_execution.json",
+      "bytes": 1488,
+      "sha256": "471fe42441e258bf6528f5b427d7d5757677dcc1c2e4730bdbe7e7a0fc480feb"
+    },
+    {
+      "file": "executed_source.py.txt",
+      "bytes": 1000505,
+      "sha256": "4f15bc6c448d7614b47d4ce49a429e69a5d53ed96548ef5b6b05e3ae5530b221"
+    },
+    {
+      "file": "local_cleanup.json",
+      "bytes": 452,
+      "sha256": "4a3cd19e80784d3d4384705a15fee0697d09889fa584aabbdc3f7bcd7ce4bd69"
+    },
+    {
+      "file": "raw_output.txt",
+      "bytes": 3335,
+      "sha256": "db5be153d707e6eee68c1093059b685cf41ce42e609bba743a49fa42709462cc"
+    },
+    {
+      "file": "result.json",
+      "bytes": 908,
+      "sha256": "ebecc23e0739a5a1be08aa539e704280d007aff8afcf47d5b632bc6a1fde3c8b"
+    }
+  ]
+}

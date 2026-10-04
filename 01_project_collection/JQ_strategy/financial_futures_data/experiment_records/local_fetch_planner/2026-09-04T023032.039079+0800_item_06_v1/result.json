@@ -1,0 +1,58 @@
+{
+  "started_at": "2026-09-04T02:30:32.039079+08:00",
+  "python_executable": "E:\\anaconda3\\envs\\latitude\\python.exe",
+  "duckdb_version": "1.5.4",
+  "checks": {
+    "python_syntax": "passed",
+    "invalid_database_schema_rejected": "passed",
+    "four_table_ddl": "passed",
+    "naive_as_of_rejected": "passed",
+    "documented_column_order_matches_ddl": "passed",
+    "readiness_boundary_inclusive_0001": "passed",
+    "unchanged_due_universe_plan_determinism": "passed",
+    "missing_database_not_created": "passed",
+    "all_not_yet_fetchable_empty_plan": "passed",
+    "synthetic_complete_partial_and_empty": "passed",
+    "minute_business_key_ignores_old_session_number": "passed",
+    "database_bytes_unchanged_after_readonly_plan": "passed"
+  },
+  "empty_database": {
+    "coverage": [
+      {
+        "bar_frequency": "1d",
+        "expected_due_block_count": 68654,
+        "expected_due_key_count": 68654,
+        "present_key_count": 0,
+        "data_missing_key_count": 68654,
+        "source_confirmed_missing_key_count": 0,
+        "fetch_pending_key_count": 68654,
+        "not_yet_fetchable_block_count": 0,
+        "planned_observation_count": 5992,
+        "planned_expected_key_count": 5992
+      },
+      {
+        "bar_frequency": "1m",
+        "expected_due_block_count": 137308,
+        "expected_due_key_count": 17248050,
+        "present_key_count": 0,
+        "data_missing_key_count": 17248050,
+        "source_confirmed_missing_key_count": 0,
+        "fetch_pending_key_count": 17248050,
+        "not_yet_fetchable_block_count": 0,
+        "planned_observation_count": 0,
+        "planned_expected_key_count": 0
+      }
+    ],
+    "planned_source_requests": 64,
+    "planned_observations": 5992,
+    "plan_sha256": "7bf1397f5b7cda0d0d404ffbc0c67185b281749917485f92a30af1a320de2ad3"
+  },
+  "synthetic": {
+    "present_minute_keys": 119,
+    "source_confirmed_missing_minute_keys": 121,
+    "single_missing_bar_at": "2024-06-28T10:00:00+08:00",
+    "target_missing_ranges": 2
+  },
+  "completed_at": "2026-09-04T02:31:37.498628+08:00",
+  "elapsed_seconds": 65.46
+}

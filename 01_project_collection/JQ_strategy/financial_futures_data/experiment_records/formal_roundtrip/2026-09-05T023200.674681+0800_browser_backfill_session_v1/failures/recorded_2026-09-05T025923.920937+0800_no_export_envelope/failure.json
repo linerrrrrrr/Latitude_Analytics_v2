@@ -1,0 +1,22 @@
+{
+  "calendar_is_current": false,
+  "database_sha256": "f2f50bff5942ec0d505bb7d7f7804e3473af2556518e4a1344275a3b1be1c988",
+  "download_exists": false,
+  "export_envelope_complete": false,
+  "fixed_zip_replaced": false,
+  "inbox_exists": false,
+  "joinquant_cell_state": "In [*]",
+  "joinquant_kernel_indicator": "idle",
+  "latest_visible_source_request": 38,
+  "planned_observation_count": 3984,
+  "planned_source_request_count": 38,
+  "plan_sha256": "47ef3421117cb03f0d44b06b03b0084d21c2a48ce907fa7021bfa6ec3f030578",
+  "recorded_at": "2026-09-05T02:59:23.920937+08:00",
+  "remote_report_run_started_at": null,
+  "source_bytes": 733757,
+  "source_file_name": "JQ_FINANCIAL_FUTURES_BROWSER_BATCH_20260905T024855.py",
+  "source_sha256": "db0bd73583c885fe02db89f0f2b4407871b7029f725ab097117c13617578ff08",
+  "status": "unpublished_kernel_interruption",
+  "successful_observation_evidence_created": false,
+  "visible_success_progress_count": 38
+}

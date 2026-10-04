@@ -1,0 +1,86 @@
+import asyncio, ast, base64, datetime, hashlib, html, json, os, pathlib, re, tempfile, time, zlib
+from unittest.mock import patch
+from zoneinfo import ZoneInfo
+import nbformat
+from nbclient import NotebookClient
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+started_at = datetime.datetime.now(ZoneInfo('Asia/Shanghai')).isoformat()
+started = time.perf_counter()
+notebook_path = pathlib.Path('plan_financial_futures_fetch.ipynb')
+notebook = nbformat.read(notebook_path, as_version=4)
+notebook_sha256 = hashlib.sha256(notebook_path.read_bytes()).hexdigest()
+planner_path = pathlib.Path('financial_futures_fetch_planner.py')
+planner_sha256 = hashlib.sha256(planner_path.read_bytes()).hexdigest()
+notebook.cells.append(nbformat.v4.new_code_cell("""
+assert 'jqresearch.api' not in sys.modules
+assert not (financial_futures_dir / 'data/warehouse/financial_futures.duckdb').exists()
+assert len(fetch_plan.planned_source_requests_df) == 4
+assert len(fetch_plan.planned_observations_df) == 6
+assert int(fetch_plan.planned_observations_df['expected_key_count'].sum()) == 512
+expected_coordinates = {('IF2409.CCFX', '2024-06-28'), ('TF1303.CCFX', '2012-06-11')}
+actual_coordinates = {(row['contract_code'], row['trading_date'])
+                      for source in fetch_plan.plan_payload['source_requests'] for row in source['observations']}
+assert actual_coordinates == expected_coordinates
+assert set(fetch_plan.planned_source_requests_df['bar_frequency']) == {'1d', '1m'}
+
+# Default selection must keep the same plan and coverage as before the scope option.
+baseline_plan = build_financial_futures_fetch_plan(
+    as_of=datetime.datetime(2026, 9, 4, 12, tzinfo=ZoneInfo('Asia/Shanghai')))
+assert baseline_plan.plan_sha256 == '7bf1397f5b7cda0d0d404ffbc0c67185b281749917485f92a30af1a320de2ad3'
+coverage_columns = [name for name in baseline_plan.coverage_summary_df.columns if not name.startswith('planned_')]
+assert baseline_plan.coverage_summary_df[coverage_columns].equals(fetch_plan.coverage_summary_df[coverage_columns])
+assert baseline_plan.missing_blocks_df.equals(fetch_plan.missing_blocks_df)
+empty_selection = build_financial_futures_fetch_plan(acceptance_contract_dates=())
+assert not empty_selection.plan_payload['source_requests']
+for invalid_scope in [
+    [('IF2409.CCFX', datetime.date(2024, 6, 28))],
+    (('IF2409.CCFX', '2024-06-28'),),
+    (('IF2409.CCFX', datetime.datetime(2024, 6, 28)),),
+    (('IF2409.CCFX', datetime.date(2024, 6, 28)),)*2,
+    (('IF9912.CCFX', datetime.date(2099, 12, 1)),),
+]:
+    try:
+        build_financial_futures_fetch_plan(acceptance_contract_dates=invalid_scope)
+    except (TypeError, ValueError):
+        pass
+    else:
+        raise AssertionError('invalid acceptance scope was accepted')
+assert not (financial_futures_dir / 'data/warehouse/financial_futures.duckdb').exists()
+"""))
+with tempfile.TemporaryDirectory(prefix='jq_item09_notebook_kernel_') as temporary_directory:
+    with patch.dict(os.environ, {'IPYTHONDIR':temporary_directory, 'JUPYTER_RUNTIME_DIR':temporary_directory,
+                                'PYTHONUTF8':'1', 'PYTHONDONTWRITEBYTECODE':'1'}):
+        client = NotebookClient(notebook, timeout=300, kernel_name='python3',
+                                resources={'metadata': {'path': str(pathlib.Path.cwd())}})
+        client.execute()
+final_outputs = notebook.cells[-2].outputs
+display_output = next(output['data'] for output in final_outputs if 'text/html' in output.get('data',{}))
+code = display_output['text/plain']
+code_box = html.unescape(re.search(r'<textarea[^>]*>(.*)</textarea>', display_output['text/html'],re.S).group(1))
+assert code_box == code
+syntax = ast.parse(code,feature_version=(3,6))
+base64_call = next(node for node in ast.walk(syntax) if isinstance(node,ast.Call)
+                  and isinstance(node.func,ast.Attribute) and node.func.attr=='b64decode')
+bundle = json.loads(zlib.decompress(base64.b64decode(ast.literal_eval(base64_call.args[0]))))
+canonical = lambda value:json.dumps(value,ensure_ascii=False,sort_keys=True,separators=(',',':'),allow_nan=False).encode('utf-8')
+assert hashlib.sha256(canonical(bundle['plan'])).hexdigest()==bundle['plan_sha256']
+assert hashlib.sha256(notebook_path.read_bytes()).hexdigest()==notebook_sha256
+assert hashlib.sha256(planner_path.read_bytes()).hexdigest()==planner_sha256
+report = {
+    'started_at':started_at, 'completed_at':datetime.datetime.now(ZoneInfo('Asia/Shanghai')).isoformat(),
+    'status':'prepared_awaiting_user_joinquant_execution',
+    'executed_notebook_code_cells':10, 'extra_readonly_assertion_cell':True,
+    'elapsed_seconds':round(time.perf_counter()-started,3),
+    'code_characters':len(code), 'code_sha256':hashlib.sha256(code.encode('utf-8')).hexdigest(),
+    'notebook_sha256':notebook_sha256,'planner_sha256':planner_sha256,
+    'plan_sha256':bundle['plan_sha256'], 'source_request_count':len(bundle['plan']['source_requests']),
+    'observation_count':sum(len(source['observations']) for source in bundle['plan']['source_requests']),
+    'expected_key_count':sum(row['expected_key_count'] for source in bundle['plan']['source_requests'] for row in source['observations']),
+    'checks':{name:'passed' for name in ['fresh_kernel_execution','textarea_roundtrip','python36_syntax',
+        'embedded_plan_digest','scope_has_daily_and_minute','scope_is_exactly_two_contract_dates',
+        'full_coverage_not_trimmed','normal_default_plan_unchanged','empty_scope_no_fallback',
+        'invalid_scopes_rejected','no_local_research_api_import','database_not_created']},
+    'outputs_written_to_notebook':False, 'temporary_kernel_directory_removed':True,
+    'real_joinquant_calls':0,
+}
+print(json.dumps({'report':report,'plan_payload':bundle['plan'],'joinquant_code':code},ensure_ascii=False))

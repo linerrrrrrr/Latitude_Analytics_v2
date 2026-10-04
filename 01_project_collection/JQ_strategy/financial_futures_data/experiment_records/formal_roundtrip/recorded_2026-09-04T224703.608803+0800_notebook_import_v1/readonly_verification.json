@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "verified_at": "2026-09-04T22:47:03.608803+08:00",
+  "verification_mode": "read-only follow-up; no repeated import",
+  "database_sha256": "71b6b4e972bb0d59bdb410bb5778ebeefa4b5371c782aa92ba89201e3d84ace0",
+  "inbox_sha256": "cc9e1a530ab75ab66f49a10f7acb058b47e824ae0669d18e2f7d00d630df7ec6",
+  "table_counts": {
+    "ingest_batch": 1,
+    "fetch_observation": 6,
+    "futures_daily": 1,
+    "futures_minute": 240
+  },
+  "importer_and_planner_unchanged": true,
+  "staging_runtime_files": [],
+  "new_notebook_import_cell_index": 22,
+  "new_notebook_section": 10,
+  "existing_user_output_and_empty_cell_retained": true,
+  "construction_item_10_not_started": true,
+  "notebook_sha256": "93dcb28419c8919140d718777a4568065814ec4ee9a885843a1ecfade107e6d6"
+}

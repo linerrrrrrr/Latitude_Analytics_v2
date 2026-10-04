@@ -1,0 +1,286 @@
+import pathlib
+fixture_path=pathlib.Path('financial_futures_data/experiment_records/local_notebook_export/2026-09-04T123214.427162+0800_item_07_v1/mock_validation_source.py.txt')
+fixture_source=fixture_path.read_text(encoding='utf-8').split('results=[]')[0]
+exec(fixture_source,globals())
+import copy
+import uuid
+import time
+import duckdb
+import import_financial_futures_file as importer
+importer_source_sha256=hashlib.sha256(pathlib.Path(importer.__file__).read_bytes()).hexdigest()
+validation_started_at=datetime.datetime.now(ZoneInfo('Asia/Shanghai')).isoformat()
+clock_started=time.perf_counter()
+original_dir=pathlib.Path.cwd()
+results=[]
+def record_case(name,**details):
+ results.append(dict(scenario=name,status='passed',**details))
+def write_package(scope,payload):
+ inbox=scope/'inbox';inbox.mkdir(parents=True,exist_ok=True)
+ fixed=inbox/local_contract.TRANSFER_FIXED_FILE_NAME
+ fixed.write_bytes(payload)
+ return fixed
+def get_database_counts(scope):
+ with duckdb.connect(str(scope/'warehouse'/'financial_futures.duckdb'),read_only=True) as connection:
+  connection.execute("SET TimeZone='Asia/Shanghai'")
+  return {name:connection.execute('SELECT count(*) FROM '+name).fetchone()[0] for name in local_contract.DATABASE_TABLE_COLUMNS}
+def failed_import(scope,*,write=True):
+ fixed=scope/'inbox'/local_contract.TRANSFER_FIXED_FILE_NAME
+ previous=fixed.read_bytes()
+ try: importer.import_financial_futures_file(write=write,data_dir=scope)
+ except Exception as error:
+  assert fixed.read_bytes()==previous
+  assert not (scope/'staging'/'import.lock').exists()
+  evidence=list((scope/'staging').glob('error_*.json'))
+  assert evidence
+  assert (scope/'staging'/(hashlib.sha256(previous).hexdigest()+'.zip')).is_file()
+  return error
+ raise AssertionError('invalid package was accepted')
+with tempfile.TemporaryDirectory(prefix='jq_importer_acceptance_') as directory:
+ root=pathlib.Path(directory)
+ packages={}
+ for scenario in ['complete','partial_and_empty','empty_index','ohlc_warning','api_failure','duplicate','extra_key','required_null','infinity','negative','boolean','wrong_columns','source_warning']:
+  scope=root/('source_'+scenario)
+  inbox=scope/'inbox';inbox.mkdir(parents=True)
+  os.chdir(inbox);calls.clear()
+  with contextlib.redirect_stdout(io.StringIO()):exec(export_code,{})
+  os.chdir(original_dir)
+  payload=(inbox/local_contract.TRANSFER_FIXED_FILE_NAME).read_bytes()
+  packages[scenario]=payload
+  outcome=importer.import_financial_futures_file(write=True,data_dir=scope)
+  assert outcome['status']=='imported' and outcome['database_write_performed'] is True
+  db=scope/'warehouse'/'financial_futures.duckdb'
+  original_digest=hashlib.sha256(db.read_bytes()).hexdigest()
+  repeat=importer.import_financial_futures_file(write=True,data_dir=scope)
+  assert repeat['status']=='already_imported' and repeat['database_write_performed'] is False
+  assert repeat['counts_scope']=='stored_batch_ledger_not_this_invocation'
+  assert hashlib.sha256(db.read_bytes()).hexdigest()==original_digest
+  assert not list((scope/'staging').iterdir())
+  if scenario=='partial_and_empty':
+   with duckdb.connect(str(db),read_only=True) as connection:
+    missing=connection.execute("SELECT sum(missing_key_count) FROM fetch_observation").fetchone()[0]
+    states=connection.execute("SELECT coverage_status, count(*) FROM fetch_observation GROUP BY coverage_status ORDER BY coverage_status").fetchall()
+    assert missing==121 and dict(states)=={'complete':3,'empty':1,'partial_missing':1}
+  if scenario=='ohlc_warning':
+   with duckdb.connect(str(db),read_only=True) as connection:
+    assert connection.execute("SELECT min(high) FROM futures_minute").fetchone()[0]==1
+    assert connection.execute("SELECT count(*) FROM fetch_observation WHERE quality_status='warning'").fetchone()[0]==1
+  if scenario in ['api_failure','duplicate','extra_key','required_null','infinity','negative','boolean','wrong_columns','source_warning']:
+   assert get_database_counts(scope)==dict(ingest_batch=1,fetch_observation=1,futures_daily=1,futures_minute=0)
+  record_case('source_'+scenario,counts=outcome['counts'],idempotent_database_bytes_unchanged=True)
+ base=packages['complete']
+ with zipfile.ZipFile(io.BytesIO(base)) as archive:
+  base_members={name:archive.read(name) for name in archive.namelist()}
+ base_manifest=json.loads(base_members['manifest.json'])
+ base_records={name:[json.loads(line) for line in payload.splitlines()] for name,payload in base_members.items() if name!='manifest.json'}
+ def repack(manifest=None,records=None,raw=None,member_order=None,compression=zipfile.ZIP_DEFLATED):
+  manifest=copy.deepcopy(base_manifest if manifest is None else manifest)
+  records=copy.deepcopy(base_records if records is None else records)
+  members={name:b''.join(canonical(row)+b'\n' for row in rows) for name,rows in records.items()}
+  manifest['members']={name:dict(bytes=len(payload),sha256=hashlib.sha256(payload).hexdigest(),record_count=len(records[name])) for name,payload in members.items()}
+  manifest['daily_record_count']=len(records['futures_daily.jsonl'])
+  manifest['minute_record_count']=len(records['futures_minute.jsonl'])
+  members['manifest.json']=canonical(manifest)
+  if raw:members.update(raw)
+  buffer=io.BytesIO()
+  with warnings.catch_warnings():
+   warnings.simplefilter('ignore',UserWarning)
+   with zipfile.ZipFile(buffer,'w',compression=compression) as archive:
+    for name in (member_order if member_order is not None else local_contract.TRANSFER_MEMBER_NAMES):
+     archive.writestr(name,members.get(name,b'not a member'))
+  return buffer.getvalue()
+ invalid={}
+ invalid['zip_extra_member']=repack(member_order=[*local_contract.TRANSFER_MEMBER_NAMES,'../outside.txt'])
+ invalid['zip_duplicate_member']=repack(member_order=[*local_contract.TRANSFER_MEMBER_NAMES,'manifest.json'])
+ invalid['zip_wrong_order']=repack(member_order=list(reversed(local_contract.TRANSFER_MEMBER_NAMES)))
+ invalid['zip_stored_not_deflated']=repack(compression=zipfile.ZIP_STORED)
+ invalid['zip_truncated']=base[:-10]
+ invalid['manifest_bom']=repack(raw={'manifest.json':b'\xef\xbb\xbf'+base_members['manifest.json']})
+ invalid['manifest_noncanonical']=repack(raw={'manifest.json':json.dumps(base_manifest,indent=2).encode()})
+ invalid['manifest_duplicate_key']=repack(raw={'manifest.json':b'{"run_id":"bad",'+base_members['manifest.json'][1:]})
+ invalid['jsonl_no_lf']=repack(raw={'futures_daily.jsonl':base_members['futures_daily.jsonl'].rstrip(b'\n')})
+ invalid['jsonl_blank_line']=repack(raw={'futures_daily.jsonl':base_members['futures_daily.jsonl']+b'\n'})
+ invalid['member_digest_mismatch']=repack(raw={'futures_daily.jsonl':base_members['futures_daily.jsonl'].replace(b'100.0',b'101.0')})
+ for name,key,value in [('wrong_fixed_name','fixed_file_name','JQ_FINANCIAL_FUTURES_TRANSFER_PROBE.zip'),('wrong_protocol','protocol_version','0.0.1'),('bool_counter','successful_request_count',True),('wrong_counter','successful_request_count',99),('wrong_plan_hash','plan_sha256','0'*64),('wrong_failed_summary','failed_requests',[{}]),('naive_run_time','run_started_at',base_manifest['run_started_at'][:-6]),('future_run_time','run_completed_at','2999-01-01T00:00:00+08:00')]:
+  manifest=copy.deepcopy(base_manifest);manifest[key]=value;invalid[name]=repack(manifest=manifest)
+ for name,index,key,value in [('bool_ordinal',0,'request_ordinal',True),('bad_request_identity',0,'request_id','0'*64),('bad_source_identity',0,'source_request_id','0'*64),('wrong_source_group',1,'source_request_ordinal',1),('bool_session',1,'session_number',True),('bad_observation_identity',0,'observation_id','0'*64),('wrong_minute_offset',1,'session_start_at','2024-06-28T09:30:00+00:00'),('wrong_source_fields',0,'source_fields',['close']),('bool_observation',0,'observation_eligible',1),('hidden_quality_warning',1,'quality_status','warning')]:
+  rows=copy.deepcopy(base_records);rows['request_blocks.jsonl'][index][key]=value;invalid[name]=repack(records=rows)
+ rows=copy.deepcopy(base_records);rows['request_blocks.jsonl'][0]['actual']['null_count_by_field']['pre_close']=0;invalid['wrong_null_evidence']=repack(records=rows)
+ rows=copy.deepcopy(base_records);rows['request_blocks.jsonl'][1]['actual']['keys_sha256']='0'*64;invalid['wrong_actual_digest']=repack(records=rows)
+ rows=copy.deepcopy(base_records);rows['request_blocks.jsonl'][1]['expected']['key_count']=True;invalid['bool_expected_count']=repack(records=rows)
+ rows=copy.deepcopy(base_records);rows['futures_minute.jsonl'].insert(1,dict(rows['futures_minute.jsonl'][0]));invalid['duplicate_equal_business_key']=repack(records=rows)
+ rows=copy.deepcopy(base_records);rows['futures_minute.jsonl'].reverse();invalid['unsorted_business_keys']=repack(records=rows)
+ for name,field,value in [('bool_price','open',True),('null_required','open',None),('negative_quantity','volume',-1),('numeric_string','open','3'),('nonrepresentable_double','money',2**53+1),('wrong_key','bar_at','2024-06-28T09:30:00+08:00'),('wrong_session','session_number',2),('wrong_day','trading_date','2024-06-27'),('unknown_observation','observation_id','0'*64)]:
+  rows=copy.deepcopy(base_records);rows['futures_minute.jsonl'][0][field]=value;invalid[name]=repack(records=rows)
+ rows=copy.deepcopy(base_records);rows['futures_minute.jsonl'].pop(1);invalid['missing_record_evidence']=repack(records=rows)
+ for name,payload in invalid.items():
+  scope=root/name;write_package(scope,payload)
+  error=failed_import(scope)
+  assert not (scope/'warehouse'/'financial_futures.duckdb').exists()
+  record_case(name,error_type=type(error).__name__,error_message=str(error),no_database_created=True,snapshot_retained=True)
+ # Explicit validation mode and digest snapshot reuse.
+ scope=root/'validate_only';write_package(scope,base)
+ outcome=importer.import_financial_futures_file(data_dir=scope)
+ assert outcome['status']=='validated_not_imported' and not (scope/'warehouse'/'financial_futures.duckdb').exists()
+ outcome=importer.import_financial_futures_file(write=True,data_dir=scope)
+ assert outcome['status']=='imported' and not list((scope/'staging').iterdir())
+ record_case('validation_then_identical_snapshot_reuse')
+ # Same business values from another immutable source observation; retain original first_observation_id.
+ def another_run(*,money=None):
+  manifest=copy.deepcopy(base_manifest);manifest['run_id']=str(uuid.uuid4())
+  rows=copy.deepcopy(base_records);mapping={}
+  for block in rows['request_blocks.jsonl']:
+   old=block['observation_id'];new=hashlib.sha256((manifest['run_id']+'\n'+block['request_id']).encode()).hexdigest()
+   mapping[old]=new;block['observation_id']=new
+  for name in ['futures_daily.jsonl','futures_minute.jsonl']:
+   for row in rows[name]:row['observation_id']=mapping[row['observation_id']]
+  if money is not None:rows['futures_daily.jsonl'][0]['money']=money
+  return repack(manifest=manifest,records=rows)
+ scope=root/'source_complete'
+ before_counts=get_database_counts(scope)
+ write_package(scope,another_run())
+ outcome=importer.import_financial_futures_file(write=True,data_dir=scope)
+ assert outcome['counts']=={'daily_existing_equal_count':1,'daily_inserted_count':0,'minute_existing_equal_count':480,'minute_inserted_count':0}
+ after_counts=get_database_counts(scope)
+ assert after_counts==dict(ingest_batch=2,fetch_observation=10,futures_daily=1,futures_minute=480)
+ record_case('equal_business_values_preserve_first_observation')
+ write_package(scope,another_run(money=101))
+ error=failed_import(scope)
+ assert '冲突' in str(error) and get_database_counts(scope)==after_counts
+ record_case('cross_batch_value_conflict_all_four_tables_unchanged')
+ manifest=copy.deepcopy(base_manifest);manifest['environment']['jqdata_version']='another-environment'
+ write_package(scope,repack(manifest=manifest))
+ error=failed_import(scope)
+ assert 'run_id' in str(error) and get_database_counts(scope)==after_counts
+ record_case('same_run_id_different_file_rejected')
+ # Inject a write failure after batch + observations + daily writes, before minute writes.
+ original_connect=importer.duckdb.connect
+ class FailingConnection:
+  def __init__(self,connection):self.connection=connection
+  def __getattr__(self,name):return getattr(self.connection,name)
+  def execute(self,query,*args,**kwargs):
+   if query.startswith('INSERT INTO futures_minute'):raise RuntimeError('injected minute insert failure')
+   return self.connection.execute(query,*args,**kwargs)
+ def fail_connect(*args,**kwargs):
+  connection=original_connect(*args,**kwargs)
+  return connection if kwargs.get('read_only') else FailingConnection(connection)
+ for name,scope in [('first_database_transaction_rollback',root/'rollback_first'),('existing_database_transaction_rollback',root/'source_complete')]:
+  previous=get_database_counts(scope) if (scope/'warehouse'/'financial_futures.duckdb').exists() else None
+  write_package(scope,another_run())
+  importer.duckdb.connect=fail_connect
+  try:error=failed_import(scope)
+  finally:importer.duckdb.connect=original_connect
+  assert 'injected minute insert' in str(error)
+  if previous is None:assert not (scope/'warehouse'/'financial_futures.duckdb').exists()
+  else:assert get_database_counts(scope)==previous
+  record_case(name,no_committed_partial_batch=True)
+ # Atomic install must never replace a database; an install failure keeps a verified candidate.
+ scope=root/'install_failure';write_package(scope,base)
+ original_link=importer.os.link
+ def fail_database_link(source,destination,*args,**kwargs):
+  if pathlib.Path(destination).name=='financial_futures.duckdb':raise OSError('injected installation failure')
+  return original_link(source,destination,*args,**kwargs)
+ importer.os.link=fail_database_link
+ try:error=failed_import(scope)
+ finally:importer.os.link=original_link
+ assert not (scope/'warehouse'/'financial_futures.duckdb').exists()
+ assert list((scope/'staging').glob('.database_*.duckdb'))
+ record_case('first_database_install_failure_preserves_candidate_and_snapshot')
+ # A post-COMMIT read-back failure is NOT reported as a rollback.
+ scope=root/'source_complete';write_package(scope,another_run())
+ previous=get_database_counts(scope);readonly_calls=0
+ def fail_postcommit_connect(*args,**kwargs):
+  global readonly_calls
+  if kwargs.get('read_only'):
+   readonly_calls+=1
+   if readonly_calls==2:raise OSError('injected postcommit readback failure')
+  return original_connect(*args,**kwargs)
+ importer.duckdb.connect=fail_postcommit_connect
+ try:error=failed_import(scope)
+ finally:importer.duckdb.connect=original_connect
+ assert get_database_counts(scope)['ingest_batch']==previous['ingest_batch']+1
+ latest_error=max((scope/'staging').glob('error_*.json'),key=lambda p:p.name)
+ assert json.loads(latest_error.read_text())['commit_returned'] is True
+ outcome=importer.import_financial_futures_file(write=True,data_dir=scope)
+ assert outcome['status']=='already_imported'
+ record_case('postcommit_failure_retained_and_next_run_verified_idempotent')
+ # An altered inbox after the snapshot does not change what gets imported.
+ scope=root/'inbox_replaced_after_snapshot';fixed=write_package(scope,base)
+ original_validate=importer.validate_transfer_snapshot
+ def replace_inbox_after_snapshot(snapshot_path):
+  fixed.write_bytes(b'user replaced file after snapshot')
+  return original_validate(snapshot_path)
+ importer.validate_transfer_snapshot=replace_inbox_after_snapshot
+ try:outcome=importer.import_financial_futures_file(write=True,data_dir=scope)
+ finally:importer.validate_transfer_snapshot=original_validate
+ assert outcome['file_sha256']==hashlib.sha256(base).hexdigest()
+ assert fixed.read_bytes()==b'user replaced file after snapshot'
+ record_case('inbox_replacement_does_not_change_frozen_input')
+ scope=root/'snapshot_collision';write_package(scope,base)
+ (scope/'staging').mkdir();collision=scope/'staging'/(hashlib.sha256(base).hexdigest()+'.zip');collision.write_bytes(b'wrong-existing-snapshot')
+ error=failed_import(scope)
+ assert collision.read_bytes()==b'wrong-existing-snapshot' and list((scope/'staging').glob('.inbox_*.tmp'))
+ record_case('snapshot_collision_never_overwritten')
+ scope=root/'existing_lock';write_package(scope,base)
+ (scope/'staging').mkdir();lock=scope/'staging'/'import.lock';lock.write_text('another importer')
+ try:importer.import_financial_futures_file(write=True,data_dir=scope)
+ except FileExistsError:pass
+ else:raise AssertionError('second importer accepted')
+ assert lock.read_text()=='another importer'
+ record_case('single_writer_lock_not_removed_by_second_process')
+ scope=root/'probe_only';(scope/'inbox').mkdir(parents=True)
+ (scope/'inbox'/'JQ_FINANCIAL_FUTURES_TRANSFER_PROBE.zip').write_bytes(base)
+ try:importer.import_financial_futures_file(write=True,data_dir=scope)
+ except FileNotFoundError:pass
+ else:raise AssertionError('probe accepted')
+ record_case('probe_filename_never_accepted')
+ # Full same-hash rechecks reject corrupted committed facts, observations and ledgers.
+ for name,statement in [
+  ('idempotence_detects_changed_fact','UPDATE futures_daily SET money=money+1'),
+  ('idempotence_detects_missing_fact',"DELETE FROM futures_minute WHERE bar_at = (SELECT min(bar_at) FROM futures_minute)"),
+  ('idempotence_detects_changed_observation',"UPDATE fetch_observation SET elapsed_seconds=elapsed_seconds+1"),
+  ('idempotence_detects_changed_ledger',"UPDATE ingest_batch SET daily_inserted_count=0, daily_existing_equal_count=1")]:
+  scope=root/name;write_package(scope,base);importer.import_financial_futures_file(write=True,data_dir=scope)
+  try:
+   with duckdb.connect(str(scope/'warehouse'/'financial_futures.duckdb')) as connection:
+    connection.execute("SET TimeZone='Asia/Shanghai'");connection.execute(statement)
+  except duckdb.ConstraintException as error:
+   record_case(name+'_corruption_attempt_blocked_by_foreign_keys',error_message=str(error))
+  else:
+   error=failed_import(scope)
+   record_case(name,error_message=str(error))
+ # Same hash no longer depends on the current calendar; new hashes always do.
+ scope=root/'source_partial_and_empty';write_package(scope,packages['partial_and_empty'])
+ original_calendar=importer.validate_requested_calendar
+ def reject_calendar(*args):raise ValueError('injected revised calendar')
+ importer.validate_requested_calendar=reject_calendar
+ try:
+  assert importer.import_financial_futures_file(write=True,data_dir=scope)['status']=='already_imported'
+  write_package(scope,another_run());error=failed_import(scope)
+  assert 'revised calendar' in str(error)
+ finally:importer.validate_requested_calendar=original_calendar
+ record_case('old_batch_replay_and_new_batch_calendar_boundary')
+ bad_blocks=copy.deepcopy(base_records['request_blocks.jsonl'])
+ for block in bad_blocks:block['contract_code']='IF9912.CCFX'
+ try:original_calendar(bad_blocks)
+ except ValueError:pass
+ else:raise AssertionError('invented future contract passed official calendar')
+ record_case('official_calendar_rejects_unlisted_contract')
+ # Direct importer-to-planner integration on a temporary DB; official lake remains read only.
+ scope=root/'source_partial_and_empty'
+ from financial_futures_fetch_planner import build_financial_futures_fetch_plan
+ fetch_plan=build_financial_futures_fetch_plan(as_of=datetime.datetime(2024,6,29,12,tzinfo=ZoneInfo('Asia/Shanghai')),database_path=scope/'warehouse'/'financial_futures.duckdb')
+ covered=fetch_plan.missing_blocks_df
+ selected=covered.loc[(covered['contract_code']=='IF2409.CCFX') & (covered['trading_date']==datetime.date(2024,6,28)) & (covered['bar_frequency']=='1m')]
+ assert int(selected['data_missing_key_count'].sum())==121
+ assert int(selected['source_confirmed_missing_key_count'].sum())==121
+ assert int(selected['fetch_pending_key_count'].sum())==0
+ record_case('imported_partial_observations_planner_integration',rows=selected.to_dict('records'))
+ assert not (original_dir/'financial_futures_data'/'data'/'warehouse'/'financial_futures.duckdb').exists()
+ os.chdir(original_dir)
+assert hashlib.sha256(pathlib.Path(importer.__file__).read_bytes()).hexdigest()==importer_source_sha256
+print(json.dumps(dict(importer_source_sha256=importer_source_sha256,started_at=validation_started_at,completed_at=datetime.datetime.now(ZoneInfo('Asia/Shanghai')).isoformat(),
+ elapsed_seconds=round(time.perf_counter()-clock_started,3),python_executable=sys.executable,
+ duckdb_version=duckdb.__version__,pandas_version=pd.__version__,numpy_version=np.__version__,
+ fixture_source_path=str(fixture_path),fixture_source_sha256=hashlib.sha256(fixture_source.encode()).hexdigest(),
+ scenarios=results,scenario_count=len(results),real_joinquant_calls=0,formal_database_created=False,
+ temporary_test_directory_removed=True),ensure_ascii=False,indent=2,default=str))

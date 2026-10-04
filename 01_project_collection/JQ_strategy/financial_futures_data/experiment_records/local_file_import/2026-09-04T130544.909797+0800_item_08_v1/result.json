@@ -1,0 +1,629 @@
+{
+  "importer_source_sha256": "b16cc64d02f89d46ebb89b84e496c9a3e23370891f989fa18c98c1871def7000",
+  "started_at": "2026-09-04T13:05:44.909797+08:00",
+  "completed_at": "2026-09-04T13:07:27.805742+08:00",
+  "elapsed_seconds": 102.897,
+  "python_executable": "E:\\anaconda3\\envs\\latitude\\python.exe",
+  "duckdb_version": "1.5.4",
+  "pandas_version": "3.0.1",
+  "numpy_version": "2.4.3",
+  "fixture_source_path": "financial_futures_data\\experiment_records\\local_notebook_export\\2026-09-04T123214.427162+0800_item_07_v1\\mock_validation_source.py.txt",
+  "fixture_source_sha256": "6e7b8a96703b85f2a2471d6ce7e69c468922a0b919cc2ace66e68a704aec02f4",
+  "scenarios": [
+    {
+      "scenario": "source_complete",
+      "status": "passed",
+      "counts": {
+        "daily_existing_equal_count": 0,
+        "daily_inserted_count": 1,
+        "minute_existing_equal_count": 0,
+        "minute_inserted_count": 480
+      },
+      "idempotent_database_bytes_unchanged": true
+    },
+    {
+      "scenario": "source_partial_and_empty",
+      "status": "passed",
+      "counts": {
+        "daily_existing_equal_count": 0,
+        "daily_inserted_count": 1,
+        "minute_existing_equal_count": 0,
+        "minute_inserted_count": 359
+      },
+      "idempotent_database_bytes_unchanged": true
+    },
+    {
+      "scenario": "source_empty_index",
+      "status": "passed",
+      "counts": {
+        "daily_existing_equal_count": 0,
+        "daily_inserted_count": 1,
+        "minute_existing_equal_count": 0,
+        "minute_inserted_count": 240
+      },
+      "idempotent_database_bytes_unchanged": true
+    },
+    {
+      "scenario": "source_ohlc_warning",
+      "status": "passed",
+      "counts": {
+        "daily_existing_equal_count": 0,
+        "daily_inserted_count": 1,
+        "minute_existing_equal_count": 0,
+        "minute_inserted_count": 480
+      },
+      "idempotent_database_bytes_unchanged": true
+    },
+    {
+      "scenario": "source_api_failure",
+      "status": "passed",
+      "counts": {
+        "daily_existing_equal_count": 0,
+        "daily_inserted_count": 1,
+        "minute_existing_equal_count": 0,
+        "minute_inserted_count": 0
+      },
+      "idempotent_database_bytes_unchanged": true
+    },
+    {
+      "scenario": "source_duplicate",
+      "status": "passed",
+      "counts": {
+        "daily_existing_equal_count": 0,
+        "daily_inserted_count": 1,
+        "minute_existing_equal_count": 0,
+        "minute_inserted_count": 0
+      },
+      "idempotent_database_bytes_unchanged": true
+    },
+    {
+      "scenario": "source_extra_key",
+      "status": "passed",
+      "counts": {
+        "daily_existing_equal_count": 0,
+        "daily_inserted_count": 1,
+        "minute_existing_equal_count": 0,
+        "minute_inserted_count": 0
+      },
+      "idempotent_database_bytes_unchanged": true
+    },
+    {
+      "scenario": "source_required_null",
+      "status": "passed",
+      "counts": {
+        "daily_existing_equal_count": 0,
+        "daily_inserted_count": 1,
+        "minute_existing_equal_count": 0,
+        "minute_inserted_count": 0
+      },
+      "idempotent_database_bytes_unchanged": true
+    },
+    {
+      "scenario": "source_infinity",
+      "status": "passed",
+      "counts": {
+        "daily_existing_equal_count": 0,
+        "daily_inserted_count": 1,
+        "minute_existing_equal_count": 0,
+        "minute_inserted_count": 0
+      },
+      "idempotent_database_bytes_unchanged": true
+    },
+    {
+      "scenario": "source_negative",
+      "status": "passed",
+      "counts": {
+        "daily_existing_equal_count": 0,
+        "daily_inserted_count": 1,
+        "minute_existing_equal_count": 0,
+        "minute_inserted_count": 0
+      },
+      "idempotent_database_bytes_unchanged": true
+    },
+    {
+      "scenario": "source_boolean",
+      "status": "passed",
+      "counts": {
+        "daily_existing_equal_count": 0,
+        "daily_inserted_count": 1,
+        "minute_existing_equal_count": 0,
+        "minute_inserted_count": 0
+      },
+      "idempotent_database_bytes_unchanged": true
+    },
+    {
+      "scenario": "source_wrong_columns",
+      "status": "passed",
+      "counts": {
+        "daily_existing_equal_count": 0,
+        "daily_inserted_count": 1,
+        "minute_existing_equal_count": 0,
+        "minute_inserted_count": 0
+      },
+      "idempotent_database_bytes_unchanged": true
+    },
+    {
+      "scenario": "source_source_warning",
+      "status": "passed",
+      "counts": {
+        "daily_existing_equal_count": 0,
+        "daily_inserted_count": 1,
+        "minute_existing_equal_count": 0,
+        "minute_inserted_count": 0
+      },
+      "idempotent_database_bytes_unchanged": true
+    },
+    {
+      "scenario": "zip_extra_member",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "ZIP 成员集合/顺序错误，拒绝探针、额外或重复成员",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "zip_duplicate_member",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "ZIP 成员集合/顺序错误，拒绝探针、额外或重复成员",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "zip_wrong_order",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "ZIP 成员集合/顺序错误，拒绝探针、额外或重复成员",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "zip_stored_not_deflated",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "拒绝目录、加密、链接或非 DEFLATE 成员：manifest.json",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "zip_truncated",
+      "status": "passed",
+      "error_type": "BadZipFile",
+      "error_message": "File is not a zip file",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "manifest_bom",
+      "status": "passed",
+      "error_type": "JSONDecodeError",
+      "error_message": "Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "manifest_noncanonical",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "manifest 不是 canonical UTF-8 对象",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "manifest_duplicate_key",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "manifest 不是 canonical UTF-8 对象",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "jsonl_no_lf",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "JSONL 行过长或缺少 LF：futures_daily.jsonl",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "jsonl_blank_line",
+      "status": "passed",
+      "error_type": "JSONDecodeError",
+      "error_message": "Expecting value: line 2 column 1 (char 1)",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "member_digest_mismatch",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "manifest 成员字段、字节数、摘要或记录数不符",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "wrong_fixed_name",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "manifest 稳定标识/版本不符",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "wrong_protocol",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "manifest 稳定标识/版本不符",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "bool_counter",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "计数必须是非负整数而非 bool：successful_request_count",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "wrong_counter",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "manifest 的成功/失败状态、计数或摘要列表不一致",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "wrong_plan_hash",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "完整计划 SHA-256 不匹配",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "wrong_failed_summary",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "manifest 的成功/失败状态、计数或摘要列表不一致",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "naive_run_time",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "非法协议时间：'2026-09-04T13:05:44.930687'",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "future_run_time",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "运行时间倒置或位于本地未来",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "bool_ordinal",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "观察块序号非连续一基顺序",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "bad_request_identity",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "观察身份不符或重复",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "bad_source_identity",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "来源请求身份与重建计划不符",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "wrong_source_group",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "同一实际来源请求的状态/时间/身份不一致",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "bool_session",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "Session 编号必须是整数",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "bad_observation_identity",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "观察身份不符或重复",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "wrong_minute_offset",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "非法协议时间：'2024-06-28T09:30:00+00:00'",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "wrong_source_fields",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "来源频率、字段或参数不符",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "bool_observation",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "observation_eligible 必须是 bool",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "hidden_quality_warning",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "行情复算的实际键/空值/覆盖/质量证据与观察不一致",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "wrong_null_evidence",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "行情复算的实际键/空值/覆盖/质量证据与观察不一致",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "wrong_actual_digest",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "行情复算的实际键/空值/覆盖/质量证据与观察不一致",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "bool_expected_count",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "理论键数量、首尾或摘要与边界不一致",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "duplicate_equal_business_key",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "文件内行情重复或非严格升序，不能静默折叠",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "unsorted_business_keys",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "文件内行情重复或非严格升序，不能静默折叠",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "bool_price",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "行情值非法或不能无损表示为 DOUBLE：open",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "null_required",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "行情值非法或不能无损表示为 DOUBLE：open",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "negative_quantity",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "行情值非法或不能无损表示为 DOUBLE：volume",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "numeric_string",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "行情值非法或不能无损表示为 DOUBLE：open",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "nonrepresentable_double",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "行情值非法或不能无损表示为 DOUBLE：money",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "wrong_key",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "行情键不在精确理论集合内",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "wrong_session",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "分钟 Session 归属错误",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "wrong_day",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "行情的观察、合约、频率或交易日归属错误",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "unknown_observation",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "行情引用未知观察",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "missing_record_evidence",
+      "status": "passed",
+      "error_type": "ValueError",
+      "error_message": "行情复算的实际键/空值/覆盖/质量证据与观察不一致",
+      "no_database_created": true,
+      "snapshot_retained": true
+    },
+    {
+      "scenario": "validation_then_identical_snapshot_reuse",
+      "status": "passed"
+    },
+    {
+      "scenario": "equal_business_values_preserve_first_observation",
+      "status": "passed"
+    },
+    {
+      "scenario": "cross_batch_value_conflict_all_four_tables_unchanged",
+      "status": "passed"
+    },
+    {
+      "scenario": "same_run_id_different_file_rejected",
+      "status": "passed"
+    },
+    {
+      "scenario": "first_database_transaction_rollback",
+      "status": "passed",
+      "no_committed_partial_batch": true
+    },
+    {
+      "scenario": "existing_database_transaction_rollback",
+      "status": "passed",
+      "no_committed_partial_batch": true
+    },
+    {
+      "scenario": "first_database_install_failure_preserves_candidate_and_snapshot",
+      "status": "passed"
+    },
+    {
+      "scenario": "postcommit_failure_retained_and_next_run_verified_idempotent",
+      "status": "passed"
+    },
+    {
+      "scenario": "inbox_replacement_does_not_change_frozen_input",
+      "status": "passed"
+    },
+    {
+      "scenario": "snapshot_collision_never_overwritten",
+      "status": "passed"
+    },
+    {
+      "scenario": "single_writer_lock_not_removed_by_second_process",
+      "status": "passed"
+    },
+    {
+      "scenario": "probe_filename_never_accepted",
+      "status": "passed"
+    },
+    {
+      "scenario": "idempotence_detects_changed_fact",
+      "status": "passed",
+      "error_message": "库内业务值/观察冲突，整批拒绝：futures_daily ('IF2409.CCFX', datetime.date(2024, 6, 28))"
+    },
+    {
+      "scenario": "idempotence_detects_missing_fact",
+      "status": "passed",
+      "error_message": "已提交批次缺少事实或观察：futures_minute"
+    },
+    {
+      "scenario": "idempotence_detects_changed_observation_corruption_attempt_blocked_by_foreign_keys",
+      "status": "passed",
+      "error_message": "Constraint Error: Violates foreign key constraint because key \"first_observation_id: ed8d0819eb19e424483d0fa1524604f58aa73c1bea53fc3f0a97ac9799842f93\" is still referenced by a foreign key in a different table. If this is an unexpected constraint violation, please refer to our foreign key limitations in the documentation"
+    },
+    {
+      "scenario": "idempotence_detects_changed_ledger",
+      "status": "passed",
+      "error_message": "既有账本首次插入计数与事实引用不符"
+    },
+    {
+      "scenario": "old_batch_replay_and_new_batch_calendar_boundary",
+      "status": "passed"
+    },
+    {
+      "scenario": "official_calendar_rejects_unlisted_contract",
+      "status": "passed"
+    },
+    {
+      "scenario": "imported_partial_observations_planner_integration",
+      "status": "passed",
+      "rows": [
+        {
+          "bar_frequency": "1m",
+          "contract_code": "IF2409.CCFX",
+          "underlying_code": "IF",
+          "trading_date": "2024-06-28",
+          "session_number": 1,
+          "session_start_at": "2024-06-28 09:30:00+08:00",
+          "session_end_at": "2024-06-28 11:30:00+08:00",
+          "expected_key_count": 120,
+          "actual_key_count": 119,
+          "observed_expected_key_count": 120,
+          "data_missing_key_count": 1,
+          "source_confirmed_missing_key_count": 1,
+          "fetch_pending_key_count": 0,
+          "missing_state": "source_confirmed_missing"
+        },
+        {
+          "bar_frequency": "1m",
+          "contract_code": "IF2409.CCFX",
+          "underlying_code": "IF",
+          "trading_date": "2024-06-28",
+          "session_number": 2,
+          "session_start_at": "2024-06-28 13:00:00+08:00",
+          "session_end_at": "2024-06-28 15:00:00+08:00",
+          "expected_key_count": 120,
+          "actual_key_count": 0,
+          "observed_expected_key_count": 120,
+          "data_missing_key_count": 120,
+          "source_confirmed_missing_key_count": 120,
+          "fetch_pending_key_count": 0,
+          "missing_state": "source_confirmed_missing"
+        }
+      ]
+    }
+  ],
+  "scenario_count": 76,
+  "real_joinquant_calls": 0,
+  "formal_database_created": false,
+  "temporary_test_directory_removed": true
+}

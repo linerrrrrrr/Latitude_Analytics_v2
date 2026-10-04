@@ -1,0 +1,70 @@
+{
+  "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=ALL&filter=%28INDICATOR_ID%3D%22EMI00135903%22%29&sortColumns=REPORT_DATE&sortTypes=-1&pageSize=3&pageNumber=1&source=WEB&client=WEB",
+  "http_status": 200,
+  "body": {
+    "version": "204ef63d210ebc14e5a54f87d12b0271",
+    "result": {
+      "pages": 1127,
+      "data": [
+        {
+          "REPORT_DATE": "2026-09-30 00:00:00",
+          "INDICATOR_VALUE": 24106.5,
+          "CHANGE_RATE": -0.31633792,
+          "CHANGERATE_3M": 7.15428724,
+          "CHANGERATE_6M": -1.90441311,
+          "CHANGERATE_1Y": 16.49591649,
+          "CHANGERATE_2Y": 18.65478798,
+          "CHANGERATE_3Y": 22.26561509,
+          "IS_NEWEST": "True",
+          "BOARD_CODE": "BK1287",
+          "BOARD_NAME": "工业金属",
+          "CONCEPT_CODE": "BK0695",
+          "CONCEPT_NAME": "小金属",
+          "INDICATOR_ID": "EMI00135903",
+          "INDICATOR_NAME": "有色金属指数:铝",
+          "RANK_LABEL": "G"
+        },
+        {
+          "REPORT_DATE": "2026-09-29 00:00:00",
+          "INDICATOR_VALUE": 24183,
+          "CHANGE_RATE": -0.30506658,
+          "CHANGERATE_3M": 5.432271,
+          "CHANGERATE_6M": 1.67546091,
+          "CHANGERATE_1Y": 17.03811252,
+          "CHANGERATE_2Y": 19.46351825,
+          "CHANGERATE_3Y": 22.65361499,
+          "IS_NEWEST": "False",
+          "BOARD_CODE": "BK1287",
+          "BOARD_NAME": "工业金属",
+          "CONCEPT_CODE": "BK0695",
+          "CONCEPT_NAME": "小金属",
+          "INDICATOR_ID": "EMI00135903",
+          "INDICATOR_NAME": "有色金属指数:铝",
+          "RANK_LABEL": "G"
+        },
+        {
+          "REPORT_DATE": "2026-09-28 00:00:00",
+          "INDICATOR_VALUE": 24257,
+          "CHANGE_RATE": -0.3102846,
+          "CHANGERATE_3M": 5.99982521,
+          "CHANGERATE_6M": 1.9865879,
+          "CHANGERATE_1Y": 16.93783595,
+          "CHANGERATE_2Y": 19.82907672,
+          "CHANGERATE_3Y": 23.02893516,
+          "IS_NEWEST": "False",
+          "BOARD_CODE": "BK1287",
+          "BOARD_NAME": "工业金属",
+          "CONCEPT_CODE": "BK0695",
+          "CONCEPT_NAME": "小金属",
+          "INDICATOR_ID": "EMI00135903",
+          "INDICATOR_NAME": "有色金属指数:铝",
+          "RANK_LABEL": "G"
+        }
+      ],
+      "count": 3381
+    },
+    "success": true,
+    "message": "ok",
+    "code": 0
+  }
+}

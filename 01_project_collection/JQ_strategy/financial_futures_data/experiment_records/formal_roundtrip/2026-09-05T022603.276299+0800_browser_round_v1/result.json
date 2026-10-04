@@ -1,0 +1,21 @@
+{
+  "daily_record_count": 6580,
+  "download_instruction": {
+    "action": "手动下载该文件并覆盖本地 data/inbox/ 下同名文件；保留本段完整输出。",
+    "expected_bytes": 1502633,
+    "expected_sha256": "565712e30e69ae2148377ffe9a0c54707fb7b98ff0105e038ca5291766b59829",
+    "file_name": "JQ_FINANCIAL_FUTURES_TRANSFER.zip",
+    "file_path": "/home/jquser/JQ_FINANCIAL_FUTURES_TRANSFER.zip"
+  },
+  "failed_observation_count": 0,
+  "failed_source_requests": [],
+  "minute_record_count": 0,
+  "plan_sha256": "cbb4e23eb7cf66dcef7cd6409407916fc03dcd752feaf5e42a4f3d1f84493b1b",
+  "publication_status": "complete",
+  "published_at": "2026-09-05T02:26:05.587012+08:00",
+  "run_id": "0d677aae-2402-4664-9c35-cce43c1a3c2a",
+  "run_started_at": "2026-09-05T02:26:03.276299+08:00",
+  "source_request_count": 64,
+  "successful_observation_count": 6580,
+  "successful_source_request_count": 64
+}

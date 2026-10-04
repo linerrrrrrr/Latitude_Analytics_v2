@@ -1,0 +1,70 @@
+{
+  "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=ALL&filter=%28INDICATOR_ID%3D%22EMI00107667%22%29&sortColumns=REPORT_DATE&sortTypes=-1&pageSize=3&pageNumber=1&source=WEB&client=WEB",
+  "http_status": 200,
+  "body": {
+    "version": "fba64150211d9a5bb088b92eeb5a4101",
+    "result": {
+      "pages": 1696,
+      "data": [
+        {
+          "REPORT_DATE": "2026-10-02 00:00:00",
+          "INDICATOR_VALUE": 1789,
+          "CHANGE_RATE": -0.2787068,
+          "CHANGERATE_3M": 6.80597015,
+          "CHANGERATE_6M": 46.16013072,
+          "CHANGERATE_1Y": 22.87087912,
+          "CHANGERATE_2Y": 36.98315467,
+          "CHANGERATE_3Y": 41.64687253,
+          "IS_NEWEST": "True",
+          "BOARD_CODE": "BK0450",
+          "BOARD_NAME": "航运港口",
+          "CONCEPT_CODE": "BK0712",
+          "CONCEPT_NAME": "一带一路",
+          "INDICATOR_ID": "EMI00107667",
+          "INDICATOR_NAME": "超灵便型船运价指数(BSI)",
+          "RANK_LABEL": "H"
+        },
+        {
+          "REPORT_DATE": "2026-10-01 00:00:00",
+          "INDICATOR_VALUE": 1794,
+          "CHANGE_RATE": -0.16694491,
+          "CHANGERATE_3M": 7.23251644,
+          "CHANGERATE_6M": 48.38709677,
+          "CHANGERATE_1Y": 22.29038855,
+          "CHANGERATE_2Y": 37.36600306,
+          "CHANGERATE_3Y": 40.59561129,
+          "IS_NEWEST": "False",
+          "BOARD_CODE": "BK0450",
+          "BOARD_NAME": "航运港口",
+          "CONCEPT_CODE": "BK0712",
+          "CONCEPT_NAME": "一带一路",
+          "INDICATOR_ID": "EMI00107667",
+          "INDICATOR_NAME": "超灵便型船运价指数(BSI)",
+          "RANK_LABEL": "H"
+        },
+        {
+          "REPORT_DATE": "2026-09-30 00:00:00",
+          "INDICATOR_VALUE": 1797,
+          "CHANGE_RATE": 0,
+          "CHANGERATE_3M": 7.79844031,
+          "CHANGERATE_6M": 49.50083195,
+          "CHANGERATE_1Y": 21.99592668,
+          "CHANGERATE_2Y": 37.5957121,
+          "CHANGERATE_3Y": 40.830721,
+          "IS_NEWEST": "False",
+          "BOARD_CODE": "BK0450",
+          "BOARD_NAME": "航运港口",
+          "CONCEPT_CODE": "BK0712",
+          "CONCEPT_NAME": "一带一路",
+          "INDICATOR_ID": "EMI00107667",
+          "INDICATOR_NAME": "超灵便型船运价指数(BSI)",
+          "RANK_LABEL": "H"
+        }
+      ],
+      "count": 5086
+    },
+    "success": true,
+    "message": "ok",
+    "code": 0
+  }
+}

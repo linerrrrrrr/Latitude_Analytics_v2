@@ -1,0 +1,70 @@
+{
+  "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=ALL&filter=%28INDICATOR_ID%3D%22EMI00662539%22%29&sortColumns=REPORT_DATE&sortTypes=-1&pageSize=3&pageNumber=1&source=WEB&client=WEB",
+  "http_status": 200,
+  "body": {
+    "version": "af284188005998beab86db16710a254e",
+    "result": {
+      "pages": 1539,
+      "data": [
+        {
+          "REPORT_DATE": "2026-10-02 00:00:00",
+          "INDICATOR_VALUE": 1306,
+          "CHANGE_RATE": 0.07662835,
+          "CHANGERATE_3M": 36.46812957,
+          "CHANGERATE_6M": 28.79684418,
+          "CHANGERATE_1Y": 57.7294686,
+          "CHANGERATE_2Y": 45.59643255,
+          "CHANGERATE_3Y": 23.44045369,
+          "IS_NEWEST": "True",
+          "BOARD_CODE": "BK1274",
+          "BOARD_NAME": "炼化及贸易",
+          "CONCEPT_CODE": "BK0512",
+          "CONCEPT_NAME": "化工原料",
+          "INDICATOR_ID": "EMI00662539",
+          "INDICATOR_NAME": "能源指数",
+          "RANK_LABEL": "L"
+        },
+        {
+          "REPORT_DATE": "2026-10-01 00:00:00",
+          "INDICATOR_VALUE": 1305,
+          "CHANGE_RATE": 0,
+          "CHANGERATE_3M": 36.07924922,
+          "CHANGERATE_6M": 29.85074627,
+          "CHANGERATE_1Y": 57.60869565,
+          "CHANGERATE_2Y": 45.48494983,
+          "CHANGERATE_3Y": 23.34593573,
+          "IS_NEWEST": "False",
+          "BOARD_CODE": "BK1274",
+          "BOARD_NAME": "炼化及贸易",
+          "CONCEPT_CODE": "BK0512",
+          "CONCEPT_NAME": "化工原料",
+          "INDICATOR_ID": "EMI00662539",
+          "INDICATOR_NAME": "能源指数",
+          "RANK_LABEL": "L"
+        },
+        {
+          "REPORT_DATE": "2026-09-30 00:00:00",
+          "INDICATOR_VALUE": 1305,
+          "CHANGE_RATE": -0.53353659,
+          "CHANGERATE_3M": 35.0931677,
+          "CHANGERATE_6M": 28.57142857,
+          "CHANGERATE_1Y": 57.60869565,
+          "CHANGERATE_2Y": 45.48494983,
+          "CHANGERATE_3Y": 23.34593573,
+          "IS_NEWEST": "False",
+          "BOARD_CODE": "BK1274",
+          "BOARD_NAME": "炼化及贸易",
+          "CONCEPT_CODE": "BK0512",
+          "CONCEPT_NAME": "化工原料",
+          "INDICATOR_ID": "EMI00662539",
+          "INDICATOR_NAME": "能源指数",
+          "RANK_LABEL": "L"
+        }
+      ],
+      "count": 4617
+    },
+    "success": true,
+    "message": "ok",
+    "code": 0
+  }
+}

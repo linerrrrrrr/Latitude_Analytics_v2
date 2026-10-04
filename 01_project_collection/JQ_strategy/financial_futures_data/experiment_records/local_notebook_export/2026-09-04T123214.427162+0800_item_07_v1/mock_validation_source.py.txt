@@ -1,0 +1,188 @@
+import ast, base64, builtins, contextlib, datetime, hashlib, html, io, json, os, pathlib, sys, tempfile, types, warnings, zipfile, zlib
+from zoneinfo import ZoneInfo
+import nbformat
+import numpy as np
+import pandas as pd
+sys.path.insert(0, str(pathlib.Path('financial_futures_data').resolve()))
+import financial_futures_collection_policy as collection_policy
+import financial_futures_local_contract as local_contract
+from financial_futures_fetch_planner import FETCH_PLANNER_VERSION
+
+started_at = datetime.datetime.now(ZoneInfo('Asia/Shanghai')).isoformat()
+notebook = nbformat.read('financial_futures_data/plan_financial_futures_fetch.ipynb', as_version=4)
+namespace = {'json':json, 'hashlib':hashlib, 'base64':base64, 'zlib':zlib, 'html':html,
+             'collection_policy':collection_policy, 'local_contract':local_contract,
+             'FETCH_PLANNER_VERSION':FETCH_PLANNER_VERSION, 'display':lambda *a,**k: None}
+exec(notebook.cells[-3].source, namespace)
+canonical = lambda value: json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':'), allow_nan=False).encode('utf-8')
+sha = lambda value: hashlib.sha256(canonical(value)).hexdigest()
+plan = dict(format_id=local_contract.TRANSFER_FORMAT_ID, protocol_version=local_contract.TRANSFER_PROTOCOL_VERSION, generator_version=local_contract.TRANSFER_GENERATOR_VERSION, planner_version=FETCH_PLANNER_VERSION, market_time_zone='Asia/Shanghai', source_requests=[])
+ordinal = 0
+for source_ordinal, (code, frequency) in enumerate([('IF2409.CCFX','1d'), ('IF2409.CCFX','1m'), ('IH2409.CCFX','1m')],1):
+    observations = []
+    for session_number in ([0] if frequency == '1d' else [1,2]):
+        ordinal += 1
+        begin = None if session_number == 0 else '2024-06-28T09:30:00+08:00' if session_number == 1 else '2024-06-28T13:00:00+08:00'
+        end = None if session_number == 0 else '2024-06-28T11:30:00+08:00' if session_number == 1 else '2024-06-28T15:00:00+08:00'
+        keys = ['2024-06-28'] if frequency=='1d' else [key.isoformat(timespec='seconds') for key in pd.date_range(pd.Timestamp(begin)+pd.Timedelta(minutes=1), pd.Timestamp(end),freq='min')]
+        identity = dict(bar_frequency=frequency, contract_code=code, expected_key_count=len(keys), expected_keys_sha256=sha(keys), session_end_at=end,session_number=session_number,session_start_at=begin,trading_date='2024-06-28')
+        observations.append(dict(request_id=sha(identity),request_ordinal=ordinal,**identity))
+    fields = list(local_contract.JOINQUANT_DAILY_SOURCE_FIELDS if frequency=='1d' else local_contract.JOINQUANT_MINUTE_SOURCE_FIELDS)
+    identity = dict(bar_frequency=frequency,contract_code=code,observation_request_ids=[row['request_id'] for row in observations],source_end_at='2024-06-28' if frequency=='1d' else '2024-06-28T15:00:00+08:00',source_fields=fields,source_frequency='daily' if frequency=='1d' else '1m',source_parameters=dict(local_contract.TRANSFER_SOURCE_PARAMETERS),source_start_at='2024-06-28' if frequency=='1d' else '2024-06-28T09:31:00+08:00')
+    plan['source_requests'].append(dict(source_request_id=sha(identity),source_request_ordinal=source_ordinal,**identity,observations=observations))
+
+def generate_code(plan_value):
+    namespace['fetch_plan'] = types.SimpleNamespace(plan_payload=plan_value, plan_sha256=sha(plan_value))
+    with contextlib.redirect_stdout(io.StringIO()):
+        exec(notebook.cells[-1].source, namespace)
+    return namespace['joinquant_code']
+
+export_code = generate_code(plan)
+ast.parse(export_code,feature_version=(3,6))
+tree = ast.parse(export_code)
+assert not [node.func.id for node in ast.walk(tree) if isinstance(node,ast.Call) and isinstance(node.func,ast.Name) and node.func.id in vars(builtins)]
+research = types.ModuleType('jqresearch')
+research.__path__ = []
+api = types.ModuleType('jqresearch.api')
+research.api = api
+jqdata = types.ModuleType('jqdata')
+jqdata.__version__ = '1.33.38-mock'
+sys.modules.update({'jqresearch':research,'jqresearch.api':api,'jqdata':jqdata})
+scenario = None
+calls = []
+def get_price(code, **kwargs):
+    calls.append((code,kwargs))
+    if scenario == 'first_api_failure' or (scenario == 'api_failure' and len(calls)==2):
+        raise RuntimeError('synthetic API failure')
+    if kwargs['frequency'] == 'daily':
+        index = pd.DatetimeIndex(['2024-06-28'])
+    else:
+        index = pd.date_range('2024-06-28 09:31','2024-06-28 11:30',freq='min').append(pd.date_range('2024-06-28 13:01','2024-06-28 15:00',freq='min'))
+    fields=kwargs['fields']
+    values={'open':3.0,'high':4.0,'low':2.0,'close':3.0,'volume':10.0,'money':100.0,'open_interest':20.0,'pre_close':np.nan}
+    frame=pd.DataFrame({field:[values[field]]*len(index) for field in fields},index=index)
+    if kwargs['frequency']=='1m' and code=='IF2409.CCFX':
+        if scenario == 'partial_and_empty':
+            frame=frame.loc[(frame.index < pd.Timestamp('2024-06-28 13:00')) & (frame.index != pd.Timestamp('2024-06-28 10:00'))]
+        elif scenario == 'empty_index':
+            frame=pd.DataFrame({field:pd.Series(dtype='float64') for field in fields}, index=pd.Index([],dtype='float64'))
+        elif scenario == 'duplicate':
+            frame=pd.concat([frame.iloc[:1],frame])
+        elif scenario == 'extra_key':
+            extra=frame.iloc[:1].copy()
+            extra.index=pd.DatetimeIndex(['2024-06-28 09:30'])
+            frame=pd.concat([extra,frame])
+        elif scenario in ('required_null','infinity','negative','boolean'):
+            field='volume' if scenario in ('negative','boolean') else 'open'
+            value={'required_null':np.nan,'infinity':np.inf,'negative':-1.0,'boolean':True}[scenario]
+            frame[field]=frame[field].astype(object)
+            frame.iloc[0,frame.columns.get_loc(field)]=value
+        elif scenario=='wrong_columns':
+            frame=frame.drop(columns=['open'])
+        elif scenario=='source_warning':
+            warnings.warn('synthetic possible truncation warning',RuntimeWarning)
+        elif scenario=='ohlc_warning':
+            frame.iloc[0,frame.columns.get_loc('high')]=1.0
+    return frame
+api.get_price=get_price
+results=[]
+original_dir=pathlib.Path.cwd()
+with tempfile.TemporaryDirectory(prefix='jq_notebook_export_validation_') as folder:
+    os.chdir(folder)
+    fixed=pathlib.Path(local_contract.TRANSFER_FIXED_FILE_NAME)
+    for scenario in ['complete','partial_and_empty','empty_index','ohlc_warning','api_failure','duplicate','extra_key','required_null','infinity','negative','boolean','wrong_columns','source_warning','first_api_failure','serialization_failure','replace_failure','plan_tamper','empty_plan']:
+        calls.clear()
+        fixed.write_bytes(b'previous-user-file')
+        code=export_code
+        if scenario=='plan_tamper':
+            tampered=json.loads(json.dumps(plan))
+            tampered['source_requests'][0]['source_request_id']='0'*64
+            code=generate_code(tampered)
+        if scenario=='empty_plan':
+            empty_plan=dict(plan,source_requests=[])
+            code=generate_code(empty_plan)
+        original_dumps=json.dumps
+        original_replace=os.replace
+        if scenario=='serialization_failure':
+            def failing_dumps(value,*args,**kwargs):
+                if isinstance(value,dict) and 'run_id' in value and 'members' in value:
+                    raise TypeError('synthetic serialization failure')
+                return original_dumps(value,*args,**kwargs)
+            json.dumps=failing_dumps
+        if scenario=='replace_failure':
+            def failing_replace(*args,**kwargs):
+                raise PermissionError('synthetic atomic replace failure')
+            os.replace=failing_replace
+        captured=io.StringIO()
+        error=None
+        polluted={name:(lambda *args,**kwargs: (_ for _ in ()).throw(AssertionError('unqualified builtin used'))) for name in ['all','any','sum','len','str','int','float','list','dict','set','open','sorted','zip','enumerate','range','min','max','isinstance','getattr','type','print']}
+        try:
+            with contextlib.redirect_stdout(captured):
+                exec(code,polluted)
+        except Exception as failure:
+            error=type(failure).__name__+': '+str(failure)
+        finally:
+            json.dumps=original_dumps
+            os.replace=original_replace
+        preservation=scenario in ('first_api_failure','serialization_failure','replace_failure','plan_tamper','empty_plan')
+        if preservation:
+            assert fixed.read_bytes()==b'previous-user-file',(scenario,error)
+            assert 'download_instruction' not in captured.getvalue()
+            assert (error is None)==(scenario=='empty_plan'),(scenario,error)
+            if scenario in ('plan_tamper','empty_plan'):
+                assert len(calls)==0
+            assert not list(pathlib.Path('.').glob('.*.tmp'))
+            results.append({'scenario':scenario,'status':'passed','api_calls':len(calls),'old_file_preserved':True})
+            continue
+        assert error is None,(scenario,error)
+        with zipfile.ZipFile(fixed) as archive:
+            assert archive.namelist()==list(local_contract.TRANSFER_MEMBER_NAMES)
+            assert archive.testzip() is None
+            payloads={name:archive.read(name) for name in archive.namelist()}
+        manifest=json.loads(payloads['manifest.json'])
+        assert canonical(manifest)==payloads['manifest.json']
+        assert set(manifest)==set(local_contract.TRANSFER_MANIFEST_KEYS)
+        for name in local_contract.TRANSFER_MEMBER_NAMES[1:]:
+            assert hashlib.sha256(payloads[name]).hexdigest()==manifest['members'][name]['sha256']
+            assert len(payloads[name])==manifest['members'][name]['bytes']
+            assert len(payloads[name].splitlines())==manifest['members'][name]['record_count']
+        blocks=[json.loads(line) for line in payloads['request_blocks.jsonl'].splitlines()]
+        daily=[json.loads(line) for line in payloads['futures_daily.jsonl'].splitlines()]
+        minute=[json.loads(line) for line in payloads['futures_minute.jsonl'].splitlines()]
+        assert len(blocks)==5 and daily[0]['previous_close'] is None
+        assert all(set(row)==set(local_contract.TRANSFER_REQUEST_BLOCK_KEYS) for row in blocks)
+        failed_case=scenario in ('api_failure','duplicate','extra_key','required_null','infinity','negative','boolean','wrong_columns','source_warning')
+        if failed_case:
+            assert len(calls)==2
+            assert manifest['publication_status']=='partial'
+            assert manifest['failed_source_request_count']==2
+            assert manifest['failed_request_count']==4
+            assert len(minute)==0
+            assert manifest['failed_source_requests'][1]['error_type']=='NotExecuted'
+        else:
+            assert len(calls)==3 and manifest['publication_status']=='complete'
+            if scenario=='partial_and_empty':
+                assert blocks[1]['coverage_status']=='partial_missing'
+                assert blocks[1]['actual']['missing_key_count']==1
+                assert blocks[2]['coverage_status']=='empty'
+                assert blocks[2]['actual']['missing_key_count']==120
+                assert len(minute)==359
+            elif scenario=='empty_index':
+                assert blocks[1]['coverage_status']==blocks[2]['coverage_status']=='empty'
+                assert len(minute)==240
+            else:
+                assert len(minute)==480
+                if scenario=='ohlc_warning':
+                    assert blocks[1]['quality_status']=='warning'
+                    assert minute[0]['high']==1.0
+        results.append({'scenario':scenario,'status':'passed','api_calls':len(calls),'publication_status':manifest['publication_status'],'daily_rows':len(daily),'minute_rows':len(minute)})
+    scenario='complete'
+    with contextlib.redirect_stdout(io.StringIO()):
+        exec(export_code,{})
+    old_hash=hashlib.sha256(fixed.read_bytes()).hexdigest()
+    with contextlib.redirect_stdout(io.StringIO()):
+        exec(export_code,{})
+    assert hashlib.sha256(fixed.read_bytes()).hexdigest()!=old_hash
+    results.append({'scenario':'same_name_atomic_overwrite_with_new_run_id','status':'passed'})
+    os.chdir(original_dir)
+print(json.dumps({'started_at':started_at,'completed_at':datetime.datetime.now(ZoneInfo('Asia/Shanghai')).isoformat(),'environment':{'python_executable':sys.executable,'pandas':pd.__version__,'numpy':np.__version__},'python36_syntax':'passed','qualified_builtin_ast_check':'passed','scenarios':results,'real_joinquant_calls':0,'temporary_test_directory_removed':True},ensure_ascii=False,indent=2))

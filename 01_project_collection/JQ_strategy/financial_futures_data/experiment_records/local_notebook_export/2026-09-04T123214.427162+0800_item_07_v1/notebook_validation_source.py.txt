@@ -1,0 +1,38 @@
+import asyncio, ast, base64, datetime, hashlib, html, json, os, pathlib, re, tempfile, time, zlib
+from unittest.mock import patch
+from zoneinfo import ZoneInfo
+import nbformat
+from nbclient import NotebookClient
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+started_at = datetime.datetime.now(ZoneInfo('Asia/Shanghai')).isoformat()
+started = time.perf_counter()
+notebook = nbformat.read('plan_financial_futures_fetch.ipynb', as_version=4)
+notebook.cells.append(nbformat.v4.new_code_cell("assert 'jqresearch.api' not in sys.modules\nassert not (financial_futures_dir / 'data/warehouse/financial_futures.duckdb').exists()"))
+with tempfile.TemporaryDirectory(prefix='jq_notebook_kernel_') as temporary_directory:
+    with patch.dict(os.environ, {'IPYTHONDIR':temporary_directory, 'JUPYTER_RUNTIME_DIR':temporary_directory, 'PYTHONUTF8':'1', 'PYTHONDONTWRITEBYTECODE':'1'}):
+        client = NotebookClient(notebook, timeout=180, kernel_name='python3', resources={'metadata': {'path': str(pathlib.Path.cwd())}})
+        client.execute()
+final_outputs = notebook.cells[-2].outputs
+display_output = next(output['data'] for output in final_outputs if 'text/html' in output.get('data',{}))
+code = display_output['text/plain']
+code_box = html.unescape(re.search(r'<textarea[^>]*>(.*)</textarea>', display_output['text/html'],re.S).group(1))
+assert code_box == code
+syntax = ast.parse(code,feature_version=(3,6))
+base64_call = next(node for node in ast.walk(syntax) if isinstance(node,ast.Call) and isinstance(node.func,ast.Attribute) and node.func.attr=='b64decode')
+bundle = json.loads(zlib.decompress(base64.b64decode(ast.literal_eval(base64_call.args[0]))))
+plan_bytes = json.dumps(bundle['plan'],ensure_ascii=False,sort_keys=True,separators=(',',':'),allow_nan=False).encode('utf-8')
+assert hashlib.sha256(plan_bytes).hexdigest()==bundle['plan_sha256']
+source_count = len(bundle['plan']['source_requests'])
+observation_count = sum(len(source['observations']) for source in bundle['plan']['source_requests'])
+assert source_count==64 and observation_count==5992
+print(json.dumps({
+    'started_at':started_at, 'completed_at':datetime.datetime.now(ZoneInfo('Asia/Shanghai')).isoformat(),
+    'executed_notebook_code_cells':10, 'extra_readonly_assertion_cell':True,
+    'elapsed_seconds':round(time.perf_counter()-started,3),
+    'code_characters':len(code), 'code_sha256':hashlib.sha256(code.encode('utf-8')).hexdigest(),
+    'plan_sha256':bundle['plan_sha256'], 'source_request_count':source_count,
+    'observation_count':observation_count, 'checks':{
+        'fresh_kernel_execution':'passed','textarea_roundtrip':'passed','full_code_python36_syntax':'passed',
+        'embedded_plan_digest':'passed','no_local_research_api_import':'passed','database_not_created':'passed'},
+    'outputs_written_to_notebook':False, 'temporary_kernel_directory_removed':True
+},ensure_ascii=True,indent=2))

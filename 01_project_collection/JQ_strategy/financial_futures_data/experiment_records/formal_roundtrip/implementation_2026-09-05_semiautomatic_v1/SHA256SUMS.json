@@ -1,0 +1,97 @@
+{
+  "recorded_at": "2026-09-05T01:18:00.276025+08:00",
+  "algorithm": "SHA-256",
+  "paths_relative_to": "financial_futures_data",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 60350,
+      "sha256": "b9202f2643737d1142e416263bfc4b3358c1f454c5bc779ce5fc9f22e1a170fa"
+    },
+    {
+      "path": "README.md",
+      "bytes": 39881,
+      "sha256": "90786f960888babd38e1931eaa0c1a99740e01ebda75c7d8eb1f45370adc1396"
+    },
+    {
+      "path": "financial_futures_collection_policy.py",
+      "bytes": 2260,
+      "sha256": "c5fbc64dacee82317ee8867b78ffd1b068083dc32ec19446ab8054daf2549cef"
+    },
+    {
+      "path": "financial_futures_local_contract.py",
+      "bytes": 14070,
+      "sha256": "e5eea10d3e8a5a3a7ffb857b0122d6fbda47bf8bf4d20b8f67fe47da5c41f954"
+    },
+    {
+      "path": "financial_futures_fetch_planner.py",
+      "bytes": 47507,
+      "sha256": "3cd78a673e1aa5f64f2956244e7a7f9587252bfa901f2f4ef3eb0cee542c783b"
+    },
+    {
+      "path": "import_financial_futures_file.py",
+      "bytes": 54157,
+      "sha256": "e330a5eb018ea0ab33dbafdb013b9a0e00d59a4a101f020c7d4f828652a12285"
+    },
+    {
+      "path": "plan_financial_futures_fetch.ipynb",
+      "bytes": 63419,
+      "sha256": "5c2a890711e4f36340253d520f8538f5cc8f78ed88074558a73e905424595653"
+    },
+    {
+      "path": "experiment_records/formal_roundtrip/implementation_2026-09-05_semiautomatic_v1/analysis.md",
+      "bytes": 3933,
+      "sha256": "ca754ea726ca3fe0484397c533c7c22cace69167cb342a033fa0c1a36b854331"
+    },
+    {
+      "path": "experiment_records/formal_roundtrip/implementation_2026-09-05_semiautomatic_v1/branch_results.json",
+      "bytes": 1994,
+      "sha256": "0f3be1d01d5beb99d9be6cf818fd22ab90ccb0a40f7438c5f46729a763849faf"
+    },
+    {
+      "path": "experiment_records/formal_roundtrip/implementation_2026-09-05_semiautomatic_v1/financial_futures_fetch_planner.py.txt",
+      "bytes": 47507,
+      "sha256": "3cd78a673e1aa5f64f2956244e7a7f9587252bfa901f2f4ef3eb0cee542c783b"
+    },
+    {
+      "path": "experiment_records/formal_roundtrip/implementation_2026-09-05_semiautomatic_v1/import_financial_futures_file.py.txt",
+      "bytes": 54157,
+      "sha256": "e330a5eb018ea0ab33dbafdb013b9a0e00d59a4a101f020c7d4f828652a12285"
+    },
+    {
+      "path": "experiment_records/formal_roundtrip/implementation_2026-09-05_semiautomatic_v1/notebook_before.ipynb.txt",
+      "bytes": 154483,
+      "sha256": "e5d394f01e6092702ae6aff6cd38b57241c0955342cf0d9f357cba77de3580c2"
+    },
+    {
+      "path": "experiment_records/formal_roundtrip/implementation_2026-09-05_semiautomatic_v1/plan_financial_futures_fetch.ipynb.txt",
+      "bytes": 63419,
+      "sha256": "5c2a890711e4f36340253d520f8538f5cc8f78ed88074558a73e905424595653"
+    },
+    {
+      "path": "experiment_records/formal_roundtrip/implementation_2026-09-05_semiautomatic_v1/planner_results.json",
+      "bytes": 10164,
+      "sha256": "d310a71093a6171c6ea338d2bf03d398b47cffd58a9cbfe72cd9867bdb44685f"
+    },
+    {
+      "path": "experiment_records/formal_roundtrip/implementation_2026-09-05_semiautomatic_v1/validation_branches_source.py.txt",
+      "bytes": 3754,
+      "sha256": "a2df1d9a88806e42b359af5ff3ff90697f07007d4aa77e3accb1caf979e29e19"
+    },
+    {
+      "path": "experiment_records/formal_roundtrip/implementation_2026-09-05_semiautomatic_v1/validation_importer_source.py.txt",
+      "bytes": 6521,
+      "sha256": "92475864655f4958b1790739c13e62f9ae4bdb65f0eec06dbcac9452064de999"
+    },
+    {
+      "path": "experiment_records/formal_roundtrip/implementation_2026-09-05_semiautomatic_v1/validation_notebook_source.py.txt",
+      "bytes": 4473,
+      "sha256": "5c05680f0b8fc322934e68a909142dcdf327f37b4254e9385a89e1959d5bc60b"
+    },
+    {
+      "path": "experiment_records/formal_roundtrip/implementation_2026-09-05_semiautomatic_v1/verification.json",
+      "bytes": 2565,
+      "sha256": "57b538800b7c1e003e851fad54ba493ff10f651b7b752d8c53a821e2379c976a"
+    }
+  ]
+}

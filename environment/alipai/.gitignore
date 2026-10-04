@@ -1,0 +1,3 @@
+/results/**/smoke_result.json
+/results/**/capabilities_result.json
+/results/**/*.tmp

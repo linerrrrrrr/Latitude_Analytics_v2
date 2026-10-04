@@ -1,0 +1,807 @@
+JQ_FINANCIAL_FUTURES_PROBE_ROUND_01_BEGIN
+{
+  "callables": {
+    "attribute_history": {
+      "available": true,
+      "declared_module": "jqresearch.api",
+      "repr": "<function attribute_history at 0x7f38ba95f378>",
+      "signature": "(security, count, unit='1d', fields=['open', 'close', 'high', 'low', 'volume', 'money'], skip_paused=True, df=True, fq='pre')"
+    },
+    "get_all_securities": {
+      "available": true,
+      "declared_module": "jqresearch.api",
+      "repr": "<function get_all_securities at 0x7f38ba95f950>",
+      "signature": "(types=[], date=None)"
+    },
+    "get_bars": {
+      "available": true,
+      "declared_module": "jqresearch.api",
+      "repr": "<function get_bars at 0x7f38ba95f400>",
+      "signature": "(security, count, unit='1d', fields=('date', 'open', 'high', 'low', 'close'), include_now=False, end_dt=None, fq_ref_date=1, df=False)"
+    },
+    "get_extras": {
+      "available": true,
+      "declared_module": "jqresearch.api",
+      "repr": "<function get_extras at 0x7f38ba95f510>",
+      "signature": "(info, security_list, start_date=None, end_date='2015-12-31', df=True, count=None)"
+    },
+    "get_price": {
+      "available": true,
+      "declared_module": "jqresearch.api",
+      "repr": "<function get_price at 0x7f38ba95f268>",
+      "signature": "(security, start_date=None, end_date=None, frequency='daily', fields=None, skip_paused=False, fq='pre', count=None, panel=True, fill_paused=True, round=True)"
+    },
+    "get_security_info": {
+      "available": true,
+      "declared_module": "jqresearch.api",
+      "repr": "<function get_security_info at 0x7f38ba95f9d8>",
+      "signature": "(code, date=None)"
+    },
+    "get_ticks": {
+      "available": true,
+      "declared_module": "jqresearch.api",
+      "repr": "<function get_ticks at 0x7f38ba95f488>",
+      "signature": "(security, end_dt, start_dt=None, count=None, fields=('time', 'current', 'high', 'low', 'volume', 'money'), skip=True, df=False)"
+    },
+    "history": {
+      "available": true,
+      "declared_module": "jqresearch.api",
+      "repr": "<function history at 0x7f38ba95f2f0>",
+      "signature": "(count, unit='1d', field='avg', security_list=None, df=True, skip_paused=False, fq='pre')"
+    }
+  },
+  "cases": [
+    {
+      "case": "recent_security_info",
+      "elapsed_seconds": 4.5e-05,
+      "result": {
+        "attributes": {
+          "code": "IF2409.CCFX",
+          "display_name": "沪深300指数期货",
+          "end_date": "2024-09-20",
+          "name": "IF2409",
+          "parent": null,
+          "start_date": "2024-01-22",
+          "type": "futures"
+        },
+        "python_type": "Security",
+        "repr": "Security(code=IF2409.CCFX)"
+      },
+      "status": "ok"
+    },
+    {
+      "case": "early_tf_security_info",
+      "elapsed_seconds": 1.3e-05,
+      "result": {
+        "attributes": {
+          "code": "TF1303.CCFX",
+          "display_name": "5年期国债期货",
+          "end_date": "2013-03-08",
+          "name": "TF1303",
+          "parent": null,
+          "start_date": "2012-06-11",
+          "type": "futures"
+        },
+        "python_type": "Security",
+        "repr": "Security(code=TF1303.CCFX)"
+      },
+      "status": "ok"
+    },
+    {
+      "case": "recent_daily_baseline",
+      "elapsed_seconds": 0.002994,
+      "result": {
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "pre_close",
+          "open_interest"
+        ],
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "pre_close": "float64",
+          "volume": "float64"
+        },
+        "index": {
+          "dtype": "datetime64[ns]",
+          "duplicate_count": 0,
+          "first": "2024-06-28T00:00:00",
+          "last": "2024-06-28T00:00:00",
+          "names": [
+            null
+          ],
+          "python_type": "DatetimeIndex",
+          "timezone": "None"
+        },
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "pre_close": 0,
+          "volume": 0
+        },
+        "preview": [
+          {
+            "__index__": "2024-06-28T00:00:00",
+            "close": 3422.0,
+            "high": 3450.8,
+            "low": 3410.2,
+            "money": 24884451960.0,
+            "open": 3412.0,
+            "open_interest": 113011.0,
+            "pre_close": 3415.8,
+            "volume": 24156.0
+          }
+        ],
+        "python_type": "DataFrame",
+        "shape": [
+          1,
+          8
+        ]
+      },
+      "status": "ok"
+    },
+    {
+      "case": "recent_daily_extended_kwargs",
+      "elapsed_seconds": 0.001558,
+      "result": {
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "pre_close",
+          "open_interest"
+        ],
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "pre_close": "float64",
+          "volume": "float64"
+        },
+        "index": {
+          "dtype": "datetime64[ns]",
+          "duplicate_count": 0,
+          "first": "2024-06-28T00:00:00",
+          "last": "2024-06-28T00:00:00",
+          "names": [
+            null
+          ],
+          "python_type": "DatetimeIndex",
+          "timezone": "None"
+        },
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "pre_close": 0,
+          "volume": 0
+        },
+        "preview": [
+          {
+            "__index__": "2024-06-28T00:00:00",
+            "close": 3422.0,
+            "high": 3450.8,
+            "low": 3410.2,
+            "money": 24884451960.0,
+            "open": 3412.0,
+            "open_interest": 113011.0,
+            "pre_close": 3415.8,
+            "volume": 24156.0
+          }
+        ],
+        "python_type": "DataFrame",
+        "shape": [
+          1,
+          8
+        ]
+      },
+      "status": "ok"
+    },
+    {
+      "case": "recent_daily_multi_panel_false",
+      "elapsed_seconds": 0.002334,
+      "result": {
+        "columns": [
+          "time",
+          "code",
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "pre_close",
+          "open_interest"
+        ],
+        "dtypes": {
+          "close": "float64",
+          "code": "object",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "pre_close": "float64",
+          "time": "datetime64[ns]",
+          "volume": "float64"
+        },
+        "index": {
+          "dtype": "int64",
+          "duplicate_count": 0,
+          "first": 0,
+          "last": 1,
+          "names": [
+            null
+          ],
+          "python_type": "RangeIndex",
+          "timezone": "None"
+        },
+        "null_counts": {
+          "close": 0,
+          "code": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "pre_close": 0,
+          "time": 0,
+          "volume": 0
+        },
+        "preview": [
+          {
+            "__index__": 0,
+            "close": 3422.0,
+            "code": "IF2409.CCFX",
+            "high": 3450.8,
+            "low": 3410.2,
+            "money": 24884451960.0,
+            "open": 3412.0,
+            "open_interest": 113011.0,
+            "pre_close": 3415.8,
+            "time": "2024-06-28T00:00:00",
+            "volume": 24156.0
+          },
+          {
+            "__index__": 1,
+            "close": 2360.6,
+            "code": "IH2409.CCFX",
+            "high": 2374.4,
+            "low": 2347.6,
+            "money": 10426008540.0,
+            "open": 2347.6,
+            "open_interest": 53729.0,
+            "pre_close": 2354.0,
+            "time": "2024-06-28T00:00:00",
+            "volume": 14702.0
+          }
+        ],
+        "python_type": "DataFrame",
+        "returned_codes": [
+          "IF2409.CCFX",
+          "IH2409.CCFX"
+        ],
+        "shape": [
+          2,
+          10
+        ]
+      },
+      "status": "ok"
+    },
+    {
+      "case": "recent_settlement",
+      "elapsed_seconds": 0.001656,
+      "result": {
+        "columns": [
+          "IF2409.CCFX",
+          "IH2409.CCFX"
+        ],
+        "dtypes": {
+          "IF2409.CCFX": "float64",
+          "IH2409.CCFX": "float64"
+        },
+        "index": {
+          "dtype": "datetime64[ns]",
+          "duplicate_count": 0,
+          "first": "2024-06-28T00:00:00",
+          "last": "2024-06-28T00:00:00",
+          "names": [
+            null
+          ],
+          "python_type": "DatetimeIndex",
+          "timezone": "None"
+        },
+        "null_counts": {
+          "IF2409.CCFX": 0,
+          "IH2409.CCFX": 0
+        },
+        "preview": [
+          {
+            "IF2409.CCFX": 3423.6,
+            "IH2409.CCFX": 2361.4,
+            "__index__": "2024-06-28T00:00:00"
+          }
+        ],
+        "python_type": "DataFrame",
+        "shape": [
+          1,
+          2
+        ]
+      },
+      "status": "ok"
+    },
+    {
+      "case": "recent_positions",
+      "elapsed_seconds": 0.00151,
+      "result": {
+        "columns": [
+          "IF2409.CCFX",
+          "IH2409.CCFX"
+        ],
+        "dtypes": {
+          "IF2409.CCFX": "float64",
+          "IH2409.CCFX": "float64"
+        },
+        "index": {
+          "dtype": "datetime64[ns]",
+          "duplicate_count": 0,
+          "first": "2024-06-28T00:00:00",
+          "last": "2024-06-28T00:00:00",
+          "names": [
+            null
+          ],
+          "python_type": "DatetimeIndex",
+          "timezone": "None"
+        },
+        "null_counts": {
+          "IF2409.CCFX": 0,
+          "IH2409.CCFX": 0
+        },
+        "preview": [
+          {
+            "IF2409.CCFX": 113011.0,
+            "IH2409.CCFX": 53729.0,
+            "__index__": "2024-06-28T00:00:00"
+          }
+        ],
+        "python_type": "DataFrame",
+        "shape": [
+          1,
+          2
+        ]
+      },
+      "status": "ok"
+    },
+    {
+      "case": "recent_minute_exact_morning_session",
+      "elapsed_seconds": 0.007414,
+      "result": {
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "open_interest"
+        ],
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "volume": "float64"
+        },
+        "index": {
+          "dtype": "datetime64[ns]",
+          "duplicate_count": 0,
+          "first": "2024-06-28T09:31:00",
+          "last": "2024-06-28T11:30:00",
+          "names": [
+            null
+          ],
+          "python_type": "DatetimeIndex",
+          "timezone": "None"
+        },
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        },
+        "preview": [
+          {
+            "__index__": "2024-06-28T09:31:00",
+            "close": 3420.0,
+            "high": 3421.4,
+            "low": 3410.2,
+            "money": 533882400.0,
+            "open": 3412.0,
+            "open_interest": 111604.0,
+            "volume": 521.0
+          },
+          {
+            "__index__": "2024-06-28T09:32:00",
+            "close": 3426.8,
+            "high": 3427.8,
+            "low": 3419.8,
+            "money": 439795560.0,
+            "open": 3420.0,
+            "open_interest": 111386.0,
+            "volume": 428.0
+          },
+          {
+            "__index__": "2024-06-28T11:29:00",
+            "close": 3439.0,
+            "high": 3439.2,
+            "low": 3438.2,
+            "money": 29917080.0,
+            "open": 3438.8,
+            "open_interest": 110636.0,
+            "volume": 29.0
+          },
+          {
+            "__index__": "2024-06-28T11:30:00",
+            "close": 3440.0,
+            "high": 3440.2,
+            "low": 3438.6,
+            "money": 85646940.0,
+            "open": 3439.2,
+            "open_interest": 110634.0,
+            "volume": 83.0
+          }
+        ],
+        "python_type": "DataFrame",
+        "shape": [
+          120,
+          7
+        ]
+      },
+      "status": "ok"
+    },
+    {
+      "case": "recent_minute_widened_morning_session",
+      "elapsed_seconds": 0.005111,
+      "result": {
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "open_interest"
+        ],
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "volume": "float64"
+        },
+        "index": {
+          "dtype": "datetime64[ns]",
+          "duplicate_count": 0,
+          "first": "2024-06-28T09:31:00",
+          "last": "2024-06-28T11:30:00",
+          "names": [
+            null
+          ],
+          "python_type": "DatetimeIndex",
+          "timezone": "None"
+        },
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        },
+        "preview": [
+          {
+            "__index__": "2024-06-28T09:31:00",
+            "close": 3420.0,
+            "high": 3421.4,
+            "low": 3410.2,
+            "money": 533882400.0,
+            "open": 3412.0,
+            "open_interest": 111604.0,
+            "volume": 521.0
+          },
+          {
+            "__index__": "2024-06-28T09:32:00",
+            "close": 3426.8,
+            "high": 3427.8,
+            "low": 3419.8,
+            "money": 439795560.0,
+            "open": 3420.0,
+            "open_interest": 111386.0,
+            "volume": 428.0
+          },
+          {
+            "__index__": "2024-06-28T11:29:00",
+            "close": 3439.0,
+            "high": 3439.2,
+            "low": 3438.2,
+            "money": 29917080.0,
+            "open": 3438.8,
+            "open_interest": 110636.0,
+            "volume": 29.0
+          },
+          {
+            "__index__": "2024-06-28T11:30:00",
+            "close": 3440.0,
+            "high": 3440.2,
+            "low": 3438.6,
+            "money": 85646940.0,
+            "open": 3439.2,
+            "open_interest": 110634.0,
+            "volume": 83.0
+          }
+        ],
+        "python_type": "DataFrame",
+        "shape": [
+          120,
+          7
+        ]
+      },
+      "status": "ok"
+    },
+    {
+      "case": "recent_minute_date_only",
+      "elapsed_seconds": 0.003162,
+      "result": {
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "open_interest"
+        ],
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "volume": "float64"
+        },
+        "index": {
+          "dtype": "float64",
+          "duplicate_count": 0,
+          "first": null,
+          "last": null,
+          "names": [
+            null
+          ],
+          "python_type": "Float64Index",
+          "timezone": "None"
+        },
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        },
+        "preview": [],
+        "python_type": "DataFrame",
+        "shape": [
+          0,
+          7
+        ]
+      },
+      "status": "ok"
+    },
+    {
+      "case": "early_tf_daily",
+      "elapsed_seconds": 0.001193,
+      "result": {
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "pre_close",
+          "open_interest"
+        ],
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "pre_close": "float64",
+          "volume": "float64"
+        },
+        "index": {
+          "dtype": "float64",
+          "duplicate_count": 0,
+          "first": null,
+          "last": null,
+          "names": [
+            null
+          ],
+          "python_type": "Float64Index",
+          "timezone": "None"
+        },
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "pre_close": 0,
+          "volume": 0
+        },
+        "preview": [],
+        "python_type": "DataFrame",
+        "shape": [
+          0,
+          8
+        ]
+      },
+      "status": "ok"
+    },
+    {
+      "case": "early_tf_minute_all_sessions",
+      "elapsed_seconds": 0.022723,
+      "result": {
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "open_interest"
+        ],
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "volume": "float64"
+        },
+        "index": {
+          "dtype": "float64",
+          "duplicate_count": 0,
+          "first": null,
+          "last": null,
+          "names": [
+            null
+          ],
+          "python_type": "Float64Index",
+          "timezone": "None"
+        },
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        },
+        "preview": [],
+        "python_type": "DataFrame",
+        "shape": [
+          0,
+          7
+        ]
+      },
+      "status": "ok"
+    }
+  ],
+  "environment": {
+    "local_timezone": "CST",
+    "modules": {
+      "jqdata": {
+        "available": true,
+        "version": "1.33.38"
+      },
+      "jqresearch.api": {
+        "available": true,
+        "file": "/opt/conda/lib/python3.6/site-packages/jqresearch/api.py",
+        "import_error": null
+      },
+      "numpy": {
+        "available": true,
+        "version": "1.14.6"
+      },
+      "pandas": {
+        "available": true,
+        "version": "0.23.4"
+      },
+      "pyarrow": {
+        "available": false,
+        "error_message": "No module named 'pyarrow'",
+        "error_type": "ModuleNotFoundError"
+      }
+    },
+    "platform": "Linux-5.4.256-1.el7.elrepo.x86_64-x86_64-with-debian-stretch-sid",
+    "python_implementation": "CPython",
+    "python_version": "3.6.7 |Anaconda, Inc.| (default, Oct 23 2018, 19:16:44) \n[GCC 7.3.0]"
+  },
+  "local_calendar_expectations": {
+    "early_tf": {
+      "contract": "TF1303.CCFX",
+      "daily_expected_rows": 1,
+      "minute_sessions": [
+        {
+          "expected_rows": 135,
+          "interval": "(2012-06-11 09:15:00, 2012-06-11 11:30:00]",
+          "session_number": 1
+        },
+        {
+          "expected_rows": 135,
+          "interval": "(2012-06-11 13:00:00, 2012-06-11 15:15:00]",
+          "session_number": 2
+        }
+      ],
+      "trading_date": "2012-06-11"
+    },
+    "recent": {
+      "contract": "IF2409.CCFX",
+      "daily_expected_rows": 1,
+      "minute_sessions": [
+        {
+          "expected_rows": 120,
+          "interval": "(2024-06-28 09:30:00, 2024-06-28 11:30:00]",
+          "session_number": 1
+        },
+        {
+          "expected_rows": 120,
+          "interval": "(2024-06-28 13:00:00, 2024-06-28 15:00:00]",
+          "session_number": 2
+        }
+      ],
+      "trading_date": "2024-06-28"
+    }
+  },
+  "probe_version": "joinquant_financial_futures_round_01_v4",
+  "run_started_at": "2026-09-03T12:35:47.489279+08:00"
+}
+JQ_FINANCIAL_FUTURES_PROBE_ROUND_01_END

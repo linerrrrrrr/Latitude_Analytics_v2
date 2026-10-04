@@ -1,0 +1,22 @@
+[
+  {
+    "path": "E:\\Latitude_Analytics_v2\\01_project_collection\\JQ_strategy\\financial_futures_data\\import_financial_futures_file.py",
+    "sha256": "b16cc64d02f89d46ebb89b84e496c9a3e23370891f989fa18c98c1871def7000"
+  },
+  {
+    "path": "E:\\Latitude_Analytics_v2\\01_project_collection\\JQ_strategy\\financial_futures_data\\financial_futures_collection_policy.py",
+    "sha256": "c5fbc64dacee82317ee8867b78ffd1b068083dc32ec19446ab8054daf2549cef"
+  },
+  {
+    "path": "E:\\Latitude_Analytics_v2\\01_project_collection\\JQ_strategy\\financial_futures_data\\financial_futures_local_contract.py",
+    "sha256": "e5eea10d3e8a5a3a7ffb857b0122d6fbda47bf8bf4d20b8f67fe47da5c41f954"
+  },
+  {
+    "path": "E:\\Latitude_Analytics_v2\\01_project_collection\\JQ_strategy\\financial_futures_data\\financial_futures_fetch_planner.py",
+    "sha256": "f4e47419c104c8abd2c671c9a10fdfe17e1794f5909f56472daba48571e76426"
+  },
+  {
+    "path": "E:\\Latitude_Analytics_v2\\01_project_collection\\JQ_strategy\\financial_futures_data\\plan_financial_futures_fetch.ipynb",
+    "sha256": "5707c39cbb9f24e469c86f7e63556f6505746f9c13466debd89804f029d0e51e"
+  }
+]

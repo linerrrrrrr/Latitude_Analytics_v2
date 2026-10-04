@@ -1,0 +1,566 @@
+
+# 在聚宽研究 Notebook 的干净内核中，整段粘贴到一个单元格执行。
+# 本段只使用内嵌计划；不读取本地磁盘、账号或凭据，不做业务自动重试。
+def _run_jq_financial_futures_export():
+    import builtins as py_builtins
+    import base64
+    import datetime
+    import hashlib
+    import io
+    import json
+    import math
+    import numbers
+    import os
+    import platform
+    import re
+    import tempfile
+    import time
+    import uuid
+    import warnings
+    import zipfile
+    import zlib
+    import numpy as np
+    import pandas as pd
+    import jqdata
+    import jqresearch.api as jq_api
+
+    bundle = json.loads(zlib.decompress(base64.b64decode(
+        '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'
+    )).decode("utf-8"))
+    plan = bundle["plan"]
+    contract = bundle["contract"]
+    market_zone = datetime.timezone(datetime.timedelta(hours=8))
+
+    def canonical_bytes(value):
+        return json.dumps(value, ensure_ascii=False, sort_keys=True,
+                          separators=(",", ":"), allow_nan=False).encode("utf-8")
+
+    def canonical_sha256(value):
+        return hashlib.sha256(canonical_bytes(value)).hexdigest()
+
+    def now_text():
+        return datetime.datetime.now(market_zone).isoformat()
+
+    def expected_keys_for_observation(observation):
+        trading_date = datetime.datetime.strptime(observation["trading_date"], "%Y-%m-%d")
+        if trading_date.strftime("%Y-%m-%d") != observation["trading_date"]:
+            raise py_builtins.ValueError("交易日不是 canonical 日期")
+        if observation["bar_frequency"] == "1d":
+            if (observation["session_number"] != 0
+                    or observation["session_start_at"] is not None
+                    or observation["session_end_at"] is not None):
+                raise py_builtins.ValueError("日线观察块结构错误")
+            keys = [observation["trading_date"]]
+        else:
+            if (py_builtins.type(observation["session_number"]) is not py_builtins.int
+                    or not 0 < observation["session_number"] <= 127):
+                raise py_builtins.ValueError("分钟 Session 编号错误")
+            first = datetime.datetime.strptime(
+                observation["session_start_at"], "%Y-%m-%dT%H:%M:%S+08:00")
+            last = datetime.datetime.strptime(
+                observation["session_end_at"], "%Y-%m-%dT%H:%M:%S+08:00")
+            if first.second or last.second or first >= last:
+                raise py_builtins.ValueError("分钟边界反向或不在整分钟")
+            count = py_builtins.int((last - first).total_seconds() / 60)
+            if count > contract["max_source_keys"]:
+                raise py_builtins.ValueError("单观察块超过来源请求容量")
+            keys = [(first + datetime.timedelta(minutes=offset)).strftime(
+                "%Y-%m-%dT%H:%M:%S+08:00")
+                for offset in py_builtins.range(1, count + 1)]
+        if (py_builtins.type(observation["expected_key_count"]) is not py_builtins.int
+                or py_builtins.len(keys) != observation["expected_key_count"]
+                or canonical_sha256(keys) != observation["expected_keys_sha256"]):
+            raise py_builtins.ValueError("理论键数或摘要不匹配")
+        ready_at = (trading_date + datetime.timedelta(days=1)).replace(
+            hour=contract["ready_hour"], minute=contract["ready_minute"],
+            tzinfo=market_zone)
+        if datetime.datetime.now(market_zone) < ready_at:
+            raise py_builtins.ValueError("计划含尚未就绪的交易日")
+        return keys
+
+    def key_summary(keys):
+        return {"key_count": py_builtins.len(keys),
+                "first_key": keys[0] if keys else None,
+                "last_key": keys[-1] if keys else None,
+                "keys_sha256": canonical_sha256(keys)}
+
+    # 在任何 API 调用或文件写入前验证整份计划及全部边界。
+    if py_builtins.set(plan) != {
+            "format_id", "protocol_version", "generator_version",
+            "planner_version", "market_time_zone", "source_requests"}:
+        raise py_builtins.ValueError("计划顶层字段不匹配")
+    for name in ("format_id", "protocol_version", "generator_version",
+                 "planner_version", "market_time_zone"):
+        if plan[name] != contract[name]:
+            raise py_builtins.ValueError("计划版本或标识不匹配: " + name)
+    if canonical_sha256(plan) != bundle["plan_sha256"]:
+        raise py_builtins.ValueError("完整计划摘要不一致，请重新复制")
+    sources = plan["source_requests"]
+    if not sources or py_builtins.len(sources) > contract["max_source_requests"]:
+        raise py_builtins.ValueError("计划为空或超过来源请求数上限")
+    source_ids = py_builtins.set()
+    expected_by_request = {}
+    source_ranges = {}
+    observation_ordinal = 0
+    total_expected_count = 0
+    for source_ordinal, source in py_builtins.enumerate(sources, 1):
+        if py_builtins.set(source) != {
+                "source_request_id", "source_request_ordinal", "bar_frequency",
+                "contract_code", "observation_request_ids", "source_end_at",
+                "source_fields", "source_frequency", "source_parameters",
+                "source_start_at", "observations"}:
+            raise py_builtins.ValueError("来源请求字段错误")
+        source_identity = {key: value for key, value in source.items()
+                           if key not in ("source_request_id", "source_request_ordinal", "observations")}
+        source_id = source["source_request_id"]
+        if (source_id in source_ids or canonical_sha256(source_identity) != source_id
+                or source["source_request_ordinal"] != source_ordinal):
+            raise py_builtins.ValueError("来源请求身份、序号或唯一性错误")
+        source_ids.add(source_id)
+        match = re.fullmatch(r"([A-Z]+)([0-9]{4})\.CCFX", source["contract_code"])
+        if (match is None or match.group(1) not in contract["underlying_codes"]
+                or match.group(2) in ("8888", "9998", "9999")):
+            raise py_builtins.ValueError("非白名单固定月份合约")
+        frequency = source["bar_frequency"]
+        if frequency not in ("1d", "1m"):
+            raise py_builtins.ValueError("不支持的频率")
+        if (source["source_fields"] != contract["source_fields"][frequency]
+                or source["source_frequency"] != ("daily" if frequency == "1d" else "1m")
+                or source["source_parameters"] != contract["source_parameters"]):
+            raise py_builtins.ValueError("来源字段、频率或参数错误")
+        if not source["observations"]:
+            raise py_builtins.ValueError("来源请求没有观察块")
+        source_keys = []
+        observation_ids = []
+        for observation in source["observations"]:
+            observation_ordinal += 1
+            if py_builtins.set(observation) != {
+                    "request_id", "request_ordinal", "bar_frequency", "contract_code",
+                    "expected_key_count", "expected_keys_sha256", "session_end_at",
+                    "session_number", "session_start_at", "trading_date"}:
+                raise py_builtins.ValueError("观察块字段错误")
+            identity = {key: value for key, value in observation.items()
+                        if key not in ("request_id", "request_ordinal")}
+            request_id = observation["request_id"]
+            if (request_id in expected_by_request
+                    or canonical_sha256(identity) != request_id
+                    or observation["request_ordinal"] != observation_ordinal
+                    or observation["contract_code"] != source["contract_code"]
+                    or observation["bar_frequency"] != frequency):
+                raise py_builtins.ValueError("观察身份、序号或来源归属错误")
+            keys = expected_keys_for_observation(observation)
+            source_keys.extend(keys)
+            observation_ids.append(request_id)
+            expected_by_request[request_id] = key_summary(keys)
+        if (source["observation_request_ids"] != observation_ids
+                or source_keys != py_builtins.sorted(py_builtins.set(source_keys))
+                or source["source_start_at"] != source_keys[0]
+                or source["source_end_at"] != source_keys[-1]
+                or py_builtins.len(source_keys) > contract["max_source_keys"]):
+            raise py_builtins.ValueError("来源请求边界、键顺序或容量错误")
+        range_key = (frequency, source["contract_code"])
+        intervals = source_ranges.setdefault(range_key, [])
+        for first, last in intervals:
+            if source_keys[0] <= last and first <= source_keys[-1]:
+                raise py_builtins.ValueError("来源请求范围重叠")
+        intervals.append((source_keys[0], source_keys[-1]))
+        total_expected_count += py_builtins.len(source_keys)
+    if (total_expected_count > contract["max_transfer_keys"]
+            or observation_ordinal > contract["max_observations"]):
+        raise py_builtins.ValueError("计划超过单文件容量")
+
+    run_id = py_builtins.str(uuid.uuid4())
+    run_started_at = now_text()
+    request_blocks = []
+    daily_records = []
+    minute_records = []
+    failed_sources = []
+    stop_reason = None
+    for source in sources:
+        started_at = now_text()
+        started_clock = time.perf_counter()
+        completed_at = None
+        elapsed_seconds = 0.0
+        request_status = "not_executed" if stop_reason else "error"
+        block_rows = []
+        staged_daily = []
+        staged_minute = []
+        expected_owner = {}
+        source_error_type = None
+        source_error_message = None
+        for observation in source["observations"]:
+            request_id = observation["request_id"]
+            observation_id = hashlib.sha256(
+                (run_id + "\n" + request_id).encode("utf-8")).hexdigest()
+            block_row = {
+                "observation_id": observation_id,
+                "source_request_id": source["source_request_id"],
+                "source_request_ordinal": source["source_request_ordinal"],
+                "request_id": request_id, "request_ordinal": observation["request_ordinal"],
+                "contract_code": observation["contract_code"],
+                "bar_frequency": observation["bar_frequency"],
+                "trading_date": observation["trading_date"],
+                "session_number": observation["session_number"],
+                "session_start_at": observation["session_start_at"],
+                "session_end_at": observation["session_end_at"],
+                "source_frequency": source["source_frequency"],
+                "source_fields": source["source_fields"],
+                "source_parameters": source["source_parameters"],
+                "expected": expected_by_request[request_id], "actual": None,
+                "request_status": request_status, "response_validation_status": "not_run",
+                "coverage_status": None, "observation_eligible": False,
+                "quality_status": "failed", "quality_reason": "",
+                "request_started_at": started_at, "request_completed_at": started_at,
+                "elapsed_seconds": 0.0, "error_type": None, "error_message": None,
+            }
+            block_rows.append(block_row)
+            for key in expected_keys_for_observation(observation):
+                expected_owner[key] = block_row
+        actual_keys_by_request = {row["request_id"]: [] for row in block_rows}
+        null_counts_by_request = {
+            row["request_id"]: {field: 0 for field in source["source_fields"]}
+            for row in block_rows}
+        ohlc_warning_counts = {row["request_id"]: 0 for row in block_rows}
+        try:
+            if stop_reason:
+                raise py_builtins.RuntimeError("未执行：前一个来源请求失败；" + stop_reason)
+            start_parameter = source["source_start_at"]
+            end_parameter = source["source_end_at"]
+            if source["bar_frequency"] == "1m":
+                start_parameter = start_parameter[:19].replace("T", " ")
+                end_parameter = end_parameter[:19].replace("T", " ")
+            with warnings.catch_warnings(record=True) as caught_warnings:
+                warnings.simplefilter("always")
+                response_df = jq_api.get_price(
+                    source["contract_code"], start_date=start_parameter,
+                    end_date=end_parameter, frequency=source["source_frequency"],
+                    fields=source["source_fields"], **source["source_parameters"])
+            completed_at = now_text()
+            elapsed_seconds = time.perf_counter() - started_clock
+            request_status = "success"
+            if (not py_builtins.isinstance(response_df, pd.DataFrame)
+                    or py_builtins.list(response_df.columns) != source["source_fields"]):
+                raise py_builtins.ValueError("响应不是具有精确来源字段的 DataFrame")
+            # 聚宽实测空表使用 Float64Index；仅非空表要求无时区 DatetimeIndex。
+            if py_builtins.len(response_df) and (
+                    not py_builtins.isinstance(response_df.index, pd.DatetimeIndex)
+                    or response_df.index.tz is not None):
+                raise py_builtins.ValueError("非空响应索引不是实测的无时区 DatetimeIndex")
+            response_keys = []
+            for timestamp in response_df.index:
+                if pd.isnull(timestamp):
+                    raise py_builtins.ValueError("行情索引含 NaT")
+                timestamp = pd.Timestamp(timestamp)
+                if timestamp.second or timestamp.microsecond or timestamp.nanosecond:
+                    raise py_builtins.ValueError("行情键不在整分钟")
+                if source["bar_frequency"] == "1d":
+                    if timestamp.hour or timestamp.minute:
+                        raise py_builtins.ValueError("日线键带有非零时刻")
+                    response_keys.append(timestamp.strftime("%Y-%m-%d"))
+                else:
+                    response_keys.append(timestamp.strftime("%Y-%m-%dT%H:%M:%S+08:00"))
+            validation_errors = []
+            if response_keys != py_builtins.sorted(py_builtins.set(response_keys)):
+                validation_errors.append("响应键重复或不严格升序")
+            if caught_warnings:
+                validation_errors.append("来源发出警告，不能证明无截顶：" + "; ".join(
+                    py_builtins.str(item.message) for item in caught_warnings))
+            extra_count = 0
+            for key, values in py_builtins.zip(
+                    response_keys, response_df.itertuples(index=False, name=None)):
+                if key not in expected_owner:
+                    extra_count += 1
+                    continue
+                block = expected_owner[key]
+                request_id = block["request_id"]
+                actual_keys_by_request[request_id].append(key)
+                parsed_values = {}
+                row_errors = []
+                for field, value in py_builtins.zip(source["source_fields"], values):
+                    if py_builtins.isinstance(value, np.generic):
+                        value = value.item()
+                    target_field = "previous_close" if field == "pre_close" else field
+                    if value is None or pd.isnull(value):
+                        null_counts_by_request[request_id][field] += 1
+                        if field == "pre_close":
+                            parsed_values[target_field] = None
+                        else:
+                            row_errors.append(field + " 缺失")
+                        continue
+                    if (py_builtins.isinstance(value, py_builtins.bool)
+                            or not py_builtins.isinstance(value, numbers.Real)):
+                        row_errors.append(field + " 类型错误")
+                        continue
+                    value = py_builtins.float(value)
+                    if (not math.isfinite(value)
+                            or (field in ("volume", "money", "open_interest") and value < 0)):
+                        row_errors.append(field + " 非有限值或负数量")
+                        continue
+                    parsed_values[target_field] = value
+                if row_errors:
+                    if py_builtins.len(validation_errors) < 10:
+                        validation_errors.append(key + ": " + ", ".join(row_errors))
+                    continue
+                if (parsed_values["high"] < py_builtins.max(
+                        parsed_values["open"], parsed_values["low"], parsed_values["close"])
+                        or parsed_values["low"] > py_builtins.min(
+                            parsed_values["open"], parsed_values["high"], parsed_values["close"])):
+                    ohlc_warning_counts[request_id] += 1
+                record = {"observation_id": block["observation_id"],
+                          "contract_code": block["contract_code"],
+                          "trading_date": block["trading_date"]}
+                record.update(parsed_values)
+                if source["bar_frequency"] == "1d":
+                    staged_daily.append(record)
+                else:
+                    record["bar_at"] = key
+                    record["session_number"] = block["session_number"]
+                    staged_minute.append(record)
+            if extra_count:
+                validation_errors.append("来源响应含计划外键：" + py_builtins.str(extra_count))
+            for block in block_rows:
+                request_id = block["request_id"]
+                keys = actual_keys_by_request[request_id]
+                actual = key_summary(keys)
+                actual.update({
+                    "duplicate_key_count": py_builtins.len(keys) - py_builtins.len(py_builtins.set(keys)),
+                    "missing_key_count": block["expected"]["key_count"] - py_builtins.len(py_builtins.set(keys)),
+                    "extra_key_count": 0,
+                    "null_count_by_field": null_counts_by_request[request_id],
+                })
+                block["actual"] = actual
+            if validation_errors:
+                raise py_builtins.ValueError("; ".join(validation_errors))
+            for block in block_rows:
+                actual_count = block["actual"]["key_count"]
+                expected_count = block["expected"]["key_count"]
+                coverage = ("complete" if actual_count == expected_count
+                            else "empty" if actual_count == 0 else "partial_missing")
+                ohlc_warning_count = ohlc_warning_counts[block["request_id"]]
+                block.update({
+                    "coverage_status": coverage, "observation_eligible": True,
+                    "response_validation_status": "passed",
+                    "quality_status": "warning" if coverage != "complete" or ohlc_warning_count else "passed",
+                    "quality_reason": "coverage=" + coverage + "; ohlc_warning_count=" + py_builtins.str(ohlc_warning_count),
+                })
+            daily_records.extend(staged_daily)
+            minute_records.extend(staged_minute)
+        except py_builtins.Exception as error:
+            source_error_type = "NotExecuted" if stop_reason else py_builtins.type(error).__name__
+            source_error_message = py_builtins.str(error)
+            if stop_reason is None:
+                stop_reason = source_error_type + ": " + source_error_message
+            failed_sources.append({
+                "source_request_id": source["source_request_id"],
+                "source_request_ordinal": source["source_request_ordinal"],
+                "error_type": source_error_type, "error_message": source_error_message,
+            })
+            for block in block_rows:
+                block.update({
+                    "observation_eligible": False, "coverage_status": None,
+                    "quality_status": "failed", "quality_reason": source_error_message,
+                    "response_validation_status": "failed" if request_status == "success" else "not_run",
+                    "error_type": source_error_type, "error_message": source_error_message,
+                })
+        if completed_at is None:
+            completed_at = now_text()
+            elapsed_seconds = (time.perf_counter() - started_clock
+                               if request_status != "not_executed" else 0.0)
+        for block in block_rows:
+            block.update({"request_status": request_status,
+                          "request_started_at": started_at, "request_completed_at": completed_at,
+                          "elapsed_seconds": elapsed_seconds})
+        request_blocks.extend(block_rows)
+        py_builtins.print("source {}/{} {} {}: {}".format(
+            source["source_request_ordinal"], py_builtins.len(sources), source["contract_code"],
+            source["bar_frequency"], source_error_type or "success"), flush=True)
+
+    successful_source_count = py_builtins.len(sources) - py_builtins.len(failed_sources)
+    if successful_source_count == 0:
+        raise py_builtins.RuntimeError(
+            "没有可提交的成功来源请求；未触碰旧固定文件，不要下载旧文件。首个错误：" + stop_reason)
+    daily_records.sort(key=lambda row: (row["contract_code"], row["trading_date"]))
+    minute_records.sort(key=lambda row: (row["contract_code"], row["bar_at"]))
+    failed_requests = [{
+        "source_request_id": row["source_request_id"], "request_id": row["request_id"],
+        "error_type": row["error_type"], "error_message": row["error_message"]
+    } for row in request_blocks if not row["observation_eligible"]]
+
+    # 独立复核观察与行情成员的键、引用、数量和摘要，再允许序列化与写文件。
+    block_by_observation = {row["observation_id"]: row for row in request_blocks}
+    if py_builtins.len(block_by_observation) != py_builtins.len(request_blocks):
+        raise py_builtins.ValueError("重复 observation_id")
+    record_keys_by_observation = {key: [] for key in block_by_observation}
+    for frequency, records, field_names in (
+            ("1d", daily_records, contract["daily_record_keys"]),
+            ("1m", minute_records, contract["minute_record_keys"])):
+        previous_key = None
+        for row in records:
+            if py_builtins.set(row) != py_builtins.set(field_names):
+                raise py_builtins.ValueError("行情成员字段不匹配")
+            block = block_by_observation[row["observation_id"]]
+            key = row["trading_date"] if frequency == "1d" else row["bar_at"]
+            compound_key = (row["contract_code"], key)
+            if previous_key is not None and compound_key <= previous_key:
+                raise py_builtins.ValueError("行情成员全局重复键或排序错误")
+            previous_key = compound_key
+            if (not block["observation_eligible"] or block["bar_frequency"] != frequency
+                    or row["contract_code"] != block["contract_code"]
+                    or row["trading_date"] != block["trading_date"]
+                    or (frequency == "1m" and row["session_number"] != block["session_number"])):
+                raise py_builtins.ValueError("行情成员观察引用错误")
+            record_keys_by_observation[block["observation_id"]].append(key)
+    for block in request_blocks:
+        if py_builtins.set(block) != py_builtins.set(contract["request_block_keys"]):
+            raise py_builtins.ValueError("观察成员字段不匹配")
+        if block["expected"] != expected_by_request[block["request_id"]]:
+            raise py_builtins.ValueError("观察理论键证据与计划不一致")
+        keys = record_keys_by_observation[block["observation_id"]]
+        if block["observation_eligible"]:
+            if (block["request_status"] != "success" or block["response_validation_status"] != "passed"
+                    or key_summary(keys) != {key: block["actual"][key] for key in key_summary(keys)}
+                    or block["actual"]["duplicate_key_count"] != 0
+                    or block["actual"]["extra_key_count"] != 0
+                    or block["actual"]["missing_key_count"] != block["expected"]["key_count"] - py_builtins.len(keys)):
+                raise py_builtins.ValueError("成功观察与行情成员不一致")
+        elif keys:
+            raise py_builtins.ValueError("失败观察残留行情记录")
+
+    member_records = {
+        "request_blocks.jsonl": request_blocks,
+        "futures_daily.jsonl": daily_records,
+        "futures_minute.jsonl": minute_records,
+    }
+    payloads = {}
+    member_manifest = {}
+    for name in contract["member_names"][1:]:
+        records = member_records[name]
+        payload = b"".join(canonical_bytes(row) + b"\n" for row in records)
+        decoded_count = 0
+        for original_row, line in py_builtins.zip(records, io.BytesIO(payload)):
+            decoded_row = json.loads(line.decode("utf-8"))
+            if decoded_row != original_row or canonical_bytes(decoded_row) + b"\n" != line:
+                raise py_builtins.ValueError("JSONL 编码复读不一致: " + name)
+            decoded_count += 1
+        if decoded_count != py_builtins.len(records):
+            raise py_builtins.ValueError("JSONL 复读记录数不一致: " + name)
+        payloads[name] = payload
+        member_manifest[name] = {"bytes": py_builtins.len(payload),
+                                 "sha256": hashlib.sha256(payload).hexdigest(),
+                                 "record_count": py_builtins.len(records)}
+    manifest = {
+        "format_id": contract["format_id"], "protocol_version": contract["protocol_version"],
+        "fixed_file_name": contract["fixed_file_name"], "generator_version": contract["generator_version"],
+        "planner_version": contract["planner_version"], "plan_sha256": bundle["plan_sha256"],
+        "run_id": run_id, "run_started_at": run_started_at, "run_completed_at": now_text(),
+        "market_time_zone": contract["market_time_zone"], "source_api_module": contract["source_api_module"],
+        "environment": {"python_version": platform.python_version(),
+                        "pandas_version": pd.__version__, "numpy_version": np.__version__,
+                        "jqdata_version": py_builtins.str(py_builtins.getattr(jqdata, "__version__", "unknown"))},
+        "publication_status": "partial" if failed_sources else "complete",
+        "source_request_count": py_builtins.len(sources),
+        "successful_source_request_count": successful_source_count,
+        "failed_source_request_count": py_builtins.len(failed_sources),
+        "planned_request_count": py_builtins.len(request_blocks),
+        "successful_request_count": py_builtins.len(request_blocks) - py_builtins.len(failed_requests),
+        "failed_request_count": py_builtins.len(failed_requests),
+        "daily_record_count": py_builtins.len(daily_records), "minute_record_count": py_builtins.len(minute_records),
+        "failed_source_requests": failed_sources, "failed_requests": failed_requests,
+        "members": member_manifest,
+    }
+    if py_builtins.set(manifest) != py_builtins.set(contract["manifest_keys"]):
+        raise py_builtins.ValueError("Manifest 字段不匹配")
+    manifest_payload = canonical_bytes(manifest)
+    if canonical_bytes(json.loads(manifest_payload.decode("utf-8"))) != manifest_payload:
+        raise py_builtins.ValueError("Manifest 编码复读不一致")
+    payloads["manifest.json"] = manifest_payload
+    package_buffer = io.BytesIO()
+    with zipfile.ZipFile(package_buffer, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        for name in contract["member_names"]:
+            archive.writestr(name, payloads[name])
+    package_bytes = package_buffer.getvalue()
+
+    def validate_package_bytes(value):
+        with zipfile.ZipFile(io.BytesIO(value), "r") as archive:
+            if (archive.namelist() != contract["member_names"]
+                    or archive.testzip() is not None):
+                raise py_builtins.ValueError("ZIP 成员或 CRC 错误")
+            for info in archive.infolist():
+                if (info.compress_type != zipfile.ZIP_DEFLATED or info.flag_bits & 1
+                        or archive.read(info.filename) != payloads[info.filename]):
+                    raise py_builtins.ValueError("ZIP 成员字节、压缩或加密状态错误")
+
+    validate_package_bytes(package_bytes)
+    package_sha256 = hashlib.sha256(package_bytes).hexdigest()
+    fixed_path = os.path.abspath(contract["fixed_file_name"])
+    if os.path.islink(fixed_path) or (os.path.exists(fixed_path) and not os.path.isfile(fixed_path)):
+        raise py_builtins.RuntimeError("固定输出路径不是普通文件，拒绝覆盖")
+    temporary_path = None
+    try:
+        descriptor, temporary_path = tempfile.mkstemp(
+            prefix="." + contract["fixed_file_name"] + ".", suffix=".tmp", dir=os.getcwd())
+        with os.fdopen(descriptor, "wb") as handle:
+            handle.write(package_bytes)
+            handle.flush()
+            os.fsync(handle.fileno())
+        with py_builtins.open(temporary_path, "rb") as handle:
+            temporary_bytes = handle.read()
+        validate_package_bytes(temporary_bytes)
+        if temporary_bytes != package_bytes:
+            raise py_builtins.ValueError("临时文件与内存字节不一致")
+        os.replace(temporary_path, fixed_path)
+        temporary_path = None
+        with py_builtins.open(fixed_path, "rb") as handle:
+            final_bytes = handle.read()
+        validate_package_bytes(final_bytes)
+        if final_bytes != package_bytes:
+            raise py_builtins.ValueError("固定文件与内存字节不一致")
+    finally:
+        if temporary_path is not None and os.path.isfile(temporary_path):
+            os.remove(temporary_path)
+    report = {
+        "run_id": run_id, "run_started_at": run_started_at, "published_at": now_text(),
+        "plan_sha256": bundle["plan_sha256"], "publication_status": manifest["publication_status"],
+        "source_request_count": manifest["source_request_count"],
+        "successful_source_request_count": successful_source_count,
+        "failed_source_requests": failed_sources,
+        "successful_observation_count": manifest["successful_request_count"],
+        "failed_observation_count": manifest["failed_request_count"],
+        "daily_record_count": py_builtins.len(daily_records),
+        "minute_record_count": py_builtins.len(minute_records),
+        "download_instruction": {
+            "file_name": contract["fixed_file_name"], "file_path": fixed_path,
+            "expected_bytes": py_builtins.len(final_bytes), "expected_sha256": package_sha256,
+            "action": "手动下载该文件并覆盖本地 data/inbox/ 下同名文件；保留本段完整输出。",
+        },
+    }
+    py_builtins.print("JQ_FINANCIAL_FUTURES_EXPORT_V1_BEGIN")
+    py_builtins.print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True, allow_nan=False))
+    py_builtins.print("JQ_FINANCIAL_FUTURES_EXPORT_V1_END")
+
+_run_jq_financial_futures_export()

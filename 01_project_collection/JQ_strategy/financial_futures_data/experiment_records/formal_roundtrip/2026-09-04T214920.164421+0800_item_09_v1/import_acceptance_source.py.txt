@@ -1,0 +1,72 @@
+import datetime as dt
+import hashlib
+import json
+import pathlib
+import sys
+from zoneinfo import ZoneInfo
+import duckdb
+
+project_dir = pathlib.Path.cwd()
+module_dir = project_dir / "financial_futures_data"
+sys.path.insert(0, str(module_dir))
+from import_financial_futures_file import import_financial_futures_file
+
+record_dir = module_dir / "experiment_records/formal_roundtrip/2026-09-04T214920.164421+0800_item_09_v1"
+remote_report = json.loads((record_dir / "decoded_report.json").read_text(encoding="utf-8"))
+expected_sha256 = remote_report["download_instruction"]["expected_sha256"]
+inbox_path = module_dir / "data/inbox/JQ_FINANCIAL_FUTURES_TRANSFER.zip"
+database_path = module_dir / "data/warehouse/financial_futures.duckdb"
+assert pathlib.Path(sys.prefix).name.lower() == "latitude"
+assert hashlib.sha256(inbox_path.read_bytes()).hexdigest() == expected_sha256
+assert not database_path.exists()
+started_at = dt.datetime.now(ZoneInfo("Asia/Shanghai")).isoformat()
+import_result = import_financial_futures_file(write=True)
+print("IMPORT_RESULT " + json.dumps(import_result, ensure_ascii=False, sort_keys=True), flush=True)
+assert import_result["status"] == "imported" and import_result["database_write_performed"] is True
+assert import_result["file_sha256"] == expected_sha256
+assert import_result["run_id"] == remote_report["run_id"]
+database_sha256_before_repeat = hashlib.sha256(database_path.read_bytes()).hexdigest()
+repeat_result = import_financial_futures_file(write=True)
+print("REPEAT_RESULT " + json.dumps(repeat_result, ensure_ascii=False, sort_keys=True), flush=True)
+assert repeat_result["status"] == "already_imported" and repeat_result["database_write_performed"] is False
+database_sha256_after_repeat = hashlib.sha256(database_path.read_bytes()).hexdigest()
+assert database_sha256_after_repeat == database_sha256_before_repeat
+connection = duckdb.connect(str(database_path), read_only=True)
+try:
+    connection.execute("SET TimeZone = 'Asia/Shanghai'")
+    table_counts = {name: connection.execute("SELECT count(*) FROM " + name).fetchone()[0]
+                    for name in ("ingest_batch", "fetch_observation", "futures_daily", "futures_minute")}
+    assert table_counts == {"ingest_batch": 1, "fetch_observation": 6, "futures_daily": 1, "futures_minute": 240}
+    observation_cursor = connection.execute("""SELECT contract_code, bar_frequency, trading_date, session_number,
+        expected_key_count, actual_key_count, missing_key_count, coverage_status, quality_status, quality_reason
+        FROM fetch_observation ORDER BY request_ordinal""")
+    observations = [dict(zip([column[0] for column in observation_cursor.description], row)) for row in observation_cursor.fetchall()]
+    assert [(row["coverage_status"], row["quality_status"]) for row in observations] == [
+        ("complete", "passed"), ("empty", "warning"), ("complete", "passed"),
+        ("complete", "passed"), ("empty", "warning"), ("empty", "warning")]
+    batch_cursor = connection.execute("SELECT * EXCLUDE (manifest_json) FROM ingest_batch")
+    batch_ledger = [dict(zip([column[0] for column in batch_cursor.description], row)) for row in batch_cursor.fetchall()]
+    minute_cursor = connection.execute("""SELECT contract_code, trading_date, session_number, count(*) AS row_count,
+        min(bar_at) AS first_bar_at, max(bar_at) AS last_bar_at
+        FROM futures_minute GROUP BY ALL ORDER BY contract_code,trading_date,session_number""")
+    minute_sessions = [dict(zip([column[0] for column in minute_cursor.description], row)) for row in minute_cursor.fetchall()]
+finally:
+    connection.close()
+assert hashlib.sha256(database_path.read_bytes()).hexdigest() == database_sha256_after_repeat
+assert hashlib.sha256(inbox_path.read_bytes()).hexdigest() == expected_sha256
+remaining_staging_files = sorted(path.name for path in (module_dir / "data/staging").iterdir() if path.name != ".gitignore")
+assert remaining_staging_files == []
+source_hashes = {name: hashlib.sha256((module_dir / name).read_bytes()).hexdigest()
+                 for name in ("import_financial_futures_file.py", "financial_futures_fetch_planner.py",
+                              "financial_futures_local_contract.py", "financial_futures_collection_policy.py",
+                              "plan_financial_futures_fetch.ipynb")}
+print("ACCEPTANCE_RESULT " + json.dumps({
+    "status": "passed", "started_at": started_at, "completed_at": dt.datetime.now(ZoneInfo("Asia/Shanghai")).isoformat(),
+    "python_executable": sys.executable, "duckdb_version": duckdb.__version__,
+    "import_result": import_result, "repeat_result": repeat_result, "table_counts": table_counts,
+    "database_sha256_before_repeat": database_sha256_before_repeat, "database_sha256_after_repeat": database_sha256_after_repeat,
+    "database_bytes": database_path.stat().st_size, "database_bytes_unchanged_by_repeat_and_readonly_queries": True,
+    "batch_ledger": batch_ledger, "observations": observations, "minute_sessions": minute_sessions,
+    "remaining_staging_files": remaining_staging_files, "inbox_retained_and_unchanged": True,
+    "source_hashes": source_hashes
+}, ensure_ascii=False, sort_keys=True, default=lambda value: value.isoformat()))

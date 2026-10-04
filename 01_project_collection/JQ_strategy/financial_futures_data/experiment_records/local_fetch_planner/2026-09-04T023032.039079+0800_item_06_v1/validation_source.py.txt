@@ -1,0 +1,115 @@
+import ast, datetime, hashlib, json, pathlib, sys, tempfile, uuid
+from zoneinfo import ZoneInfo
+import duckdb
+import pandas as pd
+sys.path.insert(0, str(pathlib.Path('financial_futures_data').resolve()))
+import financial_futures_fetch_planner as planner
+import financial_futures_local_contract as contract
+zone = ZoneInfo('Asia/Shanghai')
+started_at = datetime.datetime.now(zone)
+report = {'started_at': started_at.isoformat(), 'python_executable': sys.executable, 'duckdb_version': duckdb.__version__, 'checks': {}}
+for source_path in pathlib.Path('financial_futures_data').glob('*.py'):
+    ast.parse(source_path.read_text(encoding='utf-8'))
+report['checks']['python_syntax'] = 'passed'
+with duckdb.connect(':memory:') as connection:
+    try:
+        contract.validate_database_schema(connection)
+    except ValueError:
+        report['checks']['invalid_database_schema_rejected'] = 'passed'
+    else:
+        raise AssertionError('empty schema was accepted')
+    for statement in contract.database_create_table_statements():
+        connection.execute(statement)
+    contract.validate_database_schema(connection)
+report['checks']['four_table_ddl'] = 'passed'
+try:
+    planner.build_financial_futures_fetch_plan(as_of=datetime.datetime(2026, 9, 4))
+except ValueError:
+    report['checks']['naive_as_of_rejected'] = 'passed'
+else:
+    raise AssertionError('naive time was accepted')
+
+contract_text = pathlib.Path('financial_futures_data/AGENTS.md').read_text(encoding='utf-8')
+for table_name, column_specs in contract.DATABASE_TABLE_COLUMNS.items():
+    prefix = '\n' + chr(96) + table_name + chr(96) + ' '
+    section = contract_text.split(prefix, 1)[1]
+    rows = section.split('| 字段 | DuckDB 类型 | 可空 | 语义 |', 1)[1].split('\n\n', 1)[0].splitlines()[2:]
+    documented_names = [row.split(chr(96))[1] for row in rows if row.startswith('| ' + chr(96))]
+    assert documented_names == [spec[0] for spec in column_specs], (table_name, documented_names)
+report['checks']['documented_column_order_matches_ddl'] = 'passed'
+print('Quick checks passed.', flush=True)
+
+before = planner.build_financial_futures_fetch_plan(as_of=datetime.datetime(2026,9,4,0,0,tzinfo=zone))
+assert before.latest_due_trading_date == datetime.date(2026,9,2)
+assert not before.database_exists
+assert len(before.planned_source_requests_df) == 64
+assert len(before.planned_observations_df) == 5992
+assert not pathlib.Path('financial_futures_data/data/warehouse/financial_futures.duckdb').exists()
+report['empty_database'] = {'coverage': before.coverage_summary_df.to_dict(orient='records'), 'planned_source_requests': len(before.planned_source_requests_df), 'planned_observations': len(before.planned_observations_df), 'plan_sha256': before.plan_sha256}
+print('Before-00:01 real-lake plan passed.', flush=True)
+after = planner.build_financial_futures_fetch_plan(as_of=datetime.datetime(2026,9,4,0,1,tzinfo=zone))
+assert after.latest_due_trading_date == datetime.date(2026,9,3)
+assert before.plan_sha256 == after.plan_sha256
+report['checks']['readiness_boundary_inclusive_0001'] = 'passed'
+report['checks']['unchanged_due_universe_plan_determinism'] = 'passed'
+report['checks']['missing_database_not_created'] = 'passed'
+print('At-00:01 real-lake plan and deterministic hash passed.', flush=True)
+empty = planner.build_financial_futures_fetch_plan(as_of=datetime.datetime(2010,4,16,0,0,tzinfo=zone))
+assert empty.coverage_summary_df['expected_due_key_count'].sum() == 0
+assert len(empty.not_yet_fetchable_blocks_df) == 205962
+assert empty.plan_payload['source_requests'] == []
+assert 'source_request_id' in empty.planned_source_requests_df.columns
+assert 'request_id' in empty.planned_observations_df.columns
+report['checks']['all_not_yet_fetchable_empty_plan'] = 'passed'
+print('All-not-yet-fetchable plan passed.', flush=True)
+
+with tempfile.TemporaryDirectory(prefix='jq_planner_validation_') as temporary_directory:
+    database_path = pathlib.Path(temporary_directory) / 'synthetic.duckdb'
+    with duckdb.connect(str(database_path)) as connection:
+        connection.execute("SET TimeZone='Asia/Shanghai'")
+        for statement in contract.database_create_table_statements():
+            connection.execute(statement)
+        batch = dict(file_sha256='a'*64, run_id=str(uuid.uuid4()), plan_sha256='b'*64, protocol_version=contract.TRANSFER_PROTOCOL_VERSION, generator_version=contract.TRANSFER_GENERATOR_VERSION, fixed_file_name=contract.TRANSFER_FIXED_FILE_NAME, file_bytes=1, manifest_sha256='c'*64, publication_status='complete', run_started_at='2026-09-04T00:01:00+08:00', run_completed_at='2026-09-04T00:01:01+08:00', source_request_count=3, successful_source_request_count=3, failed_source_request_count=0, planned_request_count=3, successful_request_count=3, failed_request_count=0, daily_record_count=1, minute_record_count=119, daily_inserted_count=1, daily_existing_equal_count=0, minute_inserted_count=119, minute_existing_equal_count=0, manifest_json='{}', imported_at='2026-09-04T00:02:00+08:00')
+        batch_columns = [spec[0] for spec in contract.DATABASE_TABLE_COLUMNS['ingest_batch']]
+        connection.execute('INSERT INTO ingest_batch VALUES (' + ','.join('?' for _ in batch_columns) + ')', [batch[name] for name in batch_columns])
+        observation_columns = [spec[0] for spec in contract.DATABASE_TABLE_COLUMNS['fetch_observation']]
+        observations = [
+            ('d'*64, '1d', 0, None, None, 1, 1),
+            ('e'*64, '1m', 9, '2024-06-28T09:30:00+08:00', '2024-06-28T11:30:00+08:00', 120, 119),
+            ('f'*64, '1m', 2, '2024-06-28T13:00:00+08:00', '2024-06-28T15:00:00+08:00', 120, 0),
+        ]
+        for ordinal, (oid, frequency, session, begin, end, expected, actual) in enumerate(observations, 1):
+            observation = dict(observation_id=oid, file_sha256='a'*64, source_request_id=str(ordinal)*64, source_request_ordinal=ordinal, request_id=str(ordinal+3)*64, request_ordinal=ordinal, contract_code='IF2409.CCFX', bar_frequency=frequency, trading_date='2024-06-28', session_number=session, session_start_at=begin, session_end_at=end, expected_key_count=expected, expected_keys_sha256='b'*64, actual_key_count=actual, actual_keys_sha256='c'*64, missing_key_count=expected-actual, coverage_status=('complete' if actual == expected else 'empty' if actual == 0 else 'partial_missing'), quality_status=('passed' if actual == expected else 'warning'), quality_reason='synthetic validation', request_started_at=batch['run_started_at'], request_completed_at=batch['run_completed_at'], elapsed_seconds=1.0)
+            connection.execute('INSERT INTO fetch_observation VALUES (' + ','.join('?' for _ in observation_columns) + ')', [observation[name] for name in observation_columns])
+        connection.execute('INSERT INTO futures_daily VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', ['IF2409.CCFX', '2024-06-28'] + [1.0]*8 + ['d'*64])
+        minute_rows = []
+        for minute_at in pd.date_range('2024-06-28 09:31:00', '2024-06-28 11:30:00', freq='min', tz='Asia/Shanghai'):
+            if minute_at.strftime('%H:%M') == '10:00':
+                continue
+            minute_rows.append(['IF2409.CCFX', minute_at.to_pydatetime(), datetime.date(2024,6,28), 9] + [1.0]*7 + ['e'*64])
+        connection.executemany('INSERT INTO futures_minute VALUES (' + ','.join('?' for _ in minute_rows[0]) + ')', minute_rows)
+    before_digest = hashlib.sha256(database_path.read_bytes()).hexdigest()
+    synthetic = planner.build_financial_futures_fetch_plan(as_of=datetime.datetime(2026,9,4,0,1,tzinfo=zone), database_path=database_path)
+    after_digest = hashlib.sha256(database_path.read_bytes()).hexdigest()
+    assert before_digest == after_digest
+    minute_summary = synthetic.coverage_summary_df.set_index('bar_frequency').loc['1m']
+    assert int(minute_summary['present_key_count']) == 119
+    assert int(minute_summary['source_confirmed_missing_key_count']) == 121
+    ranges = synthetic.minute_missing_ranges_df
+    target = ranges.loc[ranges['contract_code'].eq('IF2409.CCFX') & ranges['trading_date'].eq(datetime.date(2024,6,28))]
+    assert len(target) == 2
+    single = target.loc[target['session_number'].eq(1)].iloc[0]
+    assert single['range_start_at'].strftime('%H:%M') == '10:00'
+    assert single['range_end_at'] == single['range_start_at']
+    assert int(single['missing_key_count']) == 1
+    assert target['missing_key_count'].sum() == 121
+    assert set(target['missing_state']) == {'source_confirmed_missing'}
+    report['checks']['synthetic_complete_partial_and_empty'] = 'passed'
+    report['checks']['minute_business_key_ignores_old_session_number'] = 'passed'
+    report['checks']['database_bytes_unchanged_after_readonly_plan'] = 'passed'
+    report['synthetic'] = {'present_minute_keys': 119, 'source_confirmed_missing_minute_keys': 121, 'single_missing_bar_at': single['range_start_at'].isoformat(), 'target_missing_ranges': len(target)}
+report['completed_at'] = datetime.datetime.now(zone).isoformat()
+report['elapsed_seconds'] = round((datetime.datetime.fromisoformat(report['completed_at']) - started_at).total_seconds(), 3)
+print('LOCAL_FETCH_PLANNER_VALIDATION_BEGIN')
+print(json.dumps(report, ensure_ascii=False, indent=2))
+print('LOCAL_FETCH_PLANNER_VALIDATION_END')

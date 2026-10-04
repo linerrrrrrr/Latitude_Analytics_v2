@@ -1,0 +1,9 @@
+from import_financial_futures_file import import_financial_futures_file
+
+# 显式运行本格即提交下载文件；复用正式入口，不调用 shell。
+fetch_plan = None
+joinquant_code = None
+import_report = None
+import_report = import_financial_futures_file(write=True)
+print(json.dumps(import_report, ensure_ascii=False, indent=2, sort_keys=True))
+print("入库检查完成。请重新运行第 3—9 节，更新缺失名单和聚宽代码；不要使用前面的旧输出。")

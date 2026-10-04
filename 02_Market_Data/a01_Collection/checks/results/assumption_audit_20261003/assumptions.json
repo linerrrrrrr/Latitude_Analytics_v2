@@ -1,0 +1,859 @@
+{
+  "count": 106,
+  "statuses": {
+    "限定通过": 36,
+    "已证伪": 32,
+    "证据不足": 31,
+    "项目规则": 7
+  },
+  "items": [
+    {
+      "id": "A001",
+      "scope": "共享",
+      "claim": "正式湖由统一配置定位",
+      "status": "限定通过",
+      "evidence": "E01：实际目录与 settings.futures_lake_root 一致，17 张表均存在。",
+      "closure_or_limit": "只证明当前环境定位；不证明表内数据正确。"
+    },
+    {
+      "id": "A002",
+      "scope": "共享",
+      "claim": "17 张表存在即可视为业务就绪",
+      "status": "已证伪",
+      "evidence": "E01/E03：会员表仅零行 marker，132215 个 required 格点仍全部完成。",
+      "closure_or_limit": "表存在、数据存在、业务覆盖必须分别验收。"
+    },
+    {
+      "id": "A003",
+      "scope": "共享",
+      "claim": "Schema 字段名称已经得到来源语义确认",
+      "status": "已证伪",
+      "evidence": "E03：previous_close 反例；GDP 的累计与当季含义也未在系列名中分清。",
+      "closure_or_limit": "每项含义必须有独立来源证据。"
+    },
+    {
+      "id": "A004",
+      "scope": "共享",
+      "claim": "物理类型与当前契约兼容",
+      "status": "限定通过",
+      "evidence": "E09：17表全部39678个Parquet页脚，字段/类型/nullable/表身份兼容，marker零行。",
+      "closure_or_limit": "没有解码全量数据页；类型兼容不证明字段语义，版本差异单列。"
+    },
+    {
+      "id": "A005",
+      "scope": "共享",
+      "claim": "所有历史文件主键唯一、数值合法",
+      "status": "证据不足",
+      "evidence": "E01 只全量计数与日历投影；事实按有界样本比较。",
+      "closure_or_limit": "需逐分区全历史键值审计，尤其 5.27 亿行分钟事实。"
+    },
+    {
+      "id": "A006",
+      "scope": "共享",
+      "claim": "正式复读、摘要和事务成功能证明来源业务正确",
+      "status": "已证伪",
+      "evidence": "E03/E04：错误业务前提可以通过持久化验收。",
+      "closure_or_limit": "事务证明保存过程，来源含义另行证明。"
+    },
+    {
+      "id": "A007",
+      "scope": "共享",
+      "claim": "raw 摘要与归档字节相符",
+      "status": "限定通过",
+      "evidence": "E03：全部 4068 组 response/sha256，189509289 字节，无不一致。",
+      "closure_or_limit": "没有外部原始签名；只证明当前本地文件与本地摘要相符。"
+    },
+    {
+      "id": "A008",
+      "scope": "共享",
+      "claim": "clean 历史无需日常反复扫描",
+      "status": "项目规则",
+      "evidence": "湖仓 AGENTS、各入口 clean/dirty 边界。",
+      "closure_or_limit": "正常运行的性能和信任规则；不代表历史错误不需要专项审计。"
+    },
+    {
+      "id": "A009",
+      "scope": "共享",
+      "claim": "19 个 Python 与 Notebook 完整同步",
+      "status": "限定通过",
+      "evidence": "E05：full 检查 19/19 通过。",
+      "closure_or_limit": "只证明双轨同源；共同包含的错误仍会同步。"
+    },
+    {
+      "id": "A010",
+      "scope": "共享",
+      "claim": "v2 解释器和本次所用依赖可运行",
+      "status": "限定通过",
+      "evidence": "E01、真实 JQData/Tushare/HTTP 探测及 E04。",
+      "closure_or_limit": "当前环境与账号；不是所有平台或未来版本保证。"
+    },
+    {
+      "id": "A011",
+      "scope": "共享",
+      "claim": "60 个交易所—品种白名单就是全部市场宇宙",
+      "status": "项目规则",
+      "evidence": "共享事实政策及 E04；维度宇宙独立于事实白名单。",
+      "closure_or_limit": "未采某品种可能是政策，不可解释成交易所无数据。"
+    },
+    {
+      "id": "A012",
+      "scope": "共享",
+      "claim": "一个交易所样本足以验证其他交易所",
+      "status": "证据不足",
+      "evidence": "E03：不同交易所返回范围和单位并不统一，单个样本不能提供跨域证明。",
+      "closure_or_limit": "每个来源、交易所、数据族需分别建立覆盖证据。"
+    },
+    {
+      "id": "A013",
+      "scope": "b01/c01",
+      "claim": "JQData 交易日与湖日历一致",
+      "status": "限定通过",
+      "evidence": "E02/E03：2025 年 1—2 月 36 个交易日，集合一致。",
+      "closure_or_limit": "未独立核对所有年份和交易所公告。"
+    },
+    {
+      "id": "A014",
+      "scope": "b01/c01",
+      "claim": "中国期货统一交易日历适用于该日历维度",
+      "status": "证据不足",
+      "evidence": "来源是 JQData get_trade_days；样本与湖一致。",
+      "closure_or_limit": "供应商内部一致不替代多交易所历年公告核对。"
+    },
+    {
+      "id": "A015",
+      "scope": "b01/c01",
+      "claim": "20:00 截止就是所有下游实际数据就绪时刻",
+      "status": "已证伪",
+      "evidence": "E08：CPI/GDP 实际发布日期独立；外部市场还有各自时区。",
+      "closure_or_limit": "20:00 只能是项目水位规则，不能泛化为来源发布承诺。"
+    },
+    {
+      "id": "A016",
+      "scope": "b01/c01",
+      "claim": "显式日期不得写正式湖",
+      "status": "限定通过",
+      "evidence": "E04 写入门禁测试。",
+      "closure_or_limit": "测试覆盖的入口调用形式；当前没有执行正式写入。"
+    },
+    {
+      "id": "A017",
+      "scope": "b01/c02",
+      "claim": "get_all_securities(date=None) 能提供历史合约目录",
+      "status": "限定通过",
+      "evidence": "E02：本次返回 10795 条，包括已到期合约。",
+      "closure_or_limit": "目录是否遗漏历史合约未获交易所独立全目录证明。"
+    },
+    {
+      "id": "A018",
+      "scope": "b01/c02",
+      "claim": "8888/9998/9999 是需排除的连续或指数标识",
+      "status": "项目规则",
+      "evidence": "E07 与目录转换；E04 事实政策测试。",
+      "closure_or_limit": "其他未来供应商编码仍需重新验证。"
+    },
+    {
+      "id": "A019",
+      "scope": "b01/c02",
+      "claim": "上市日至退市日闭区间产生有效合约数",
+      "status": "限定通过",
+      "evidence": "E03：2025-02-14 独立展开得到 82 个品种，数量逐项与湖一致。",
+      "closure_or_limit": "只验证该日与同一供应商目录；不证明历史日期准确。"
+    },
+    {
+      "id": "A020",
+      "scope": "b01/c02",
+      "claim": "当前目录能重建当时已知的合约宇宙",
+      "status": "证据不足",
+      "evidence": "E02 是当前拉取的历史目录，未保存逐日发布版本。",
+      "closure_or_limit": "回测若要求当时可知，需历史目录版本或公告。"
+    },
+    {
+      "id": "A021",
+      "scope": "b01/c03",
+      "claim": "get_futures_info 的 multiplier/tick_size 可直接对应湖字段",
+      "status": "限定通过",
+      "evidence": "E03：7 合约数值与湖一致。",
+      "closure_or_limit": "未核对历史规则变更和所有品种。"
+    },
+    {
+      "id": "A022",
+      "scope": "b01/c03",
+      "claim": "trade_time 可映射夜盘跨午夜及日盘会话",
+      "status": "限定通过",
+      "evidence": "E03：7 合约 2025-02-14 共 2835 个分钟端点完全一致。",
+      "closure_or_limit": "不覆盖节假日停夜盘、临时调整和全历史规则。"
+    },
+    {
+      "id": "A023",
+      "scope": "b01/c03",
+      "claim": "夜盘自然日期属于下一交易日",
+      "status": "限定通过",
+      "evidence": "E03：2 月 13 日夜盘与 14 日日盘聚合匹配对应日 K。",
+      "closure_or_limit": "周末长假等边界另需真实样本。"
+    },
+    {
+      "id": "A024",
+      "scope": "b01/c03",
+      "claim": "所有历史 trade_time 区间完整且正确",
+      "status": "证据不足",
+      "evidence": "只探测 7 合约；未逐条对照交易所历史安排。",
+      "closure_or_limit": "需抽取每个规则变更及假日边界的独立公告和分钟样本。"
+    },
+    {
+      "id": "A025",
+      "scope": "b01/c03",
+      "claim": "空 trade_time 足以跳过合约并推进水位",
+      "status": "证据不足",
+      "evidence": "E07：存在空规则跳过与水位逻辑。",
+      "closure_or_limit": "缺少“确实无会话”和“供应商字段缺失”的区分证据。"
+    },
+    {
+      "id": "A026",
+      "scope": "b01/c03",
+      "claim": "list/delist、夜盘会话和规则日期互相吻合",
+      "status": "限定通过",
+      "evidence": "E03 的 7 合约会话；当前未发现样本越界。",
+      "closure_or_limit": "历史长停牌、到期最后一天等未验证。"
+    },
+    {
+      "id": "A027",
+      "scope": "b01/c04",
+      "claim": "1 分钟端点采用会话起点后一分至终点",
+      "status": "限定通过",
+      "evidence": "E03：2835 个真实端点，无额外端点或缺端点。",
+      "closure_or_limit": "有效于本次样本；不能推出每个理论端点应有成交。"
+    },
+    {
+      "id": "A028",
+      "scope": "b01/c04",
+      "claim": "expected_bar_count 是理论网格数",
+      "status": "限定通过",
+      "evidence": "E03：会话独立展开与真实样本对齐。",
+      "closure_or_limit": "理论数量不是 API 行数的无条件保证。"
+    },
+    {
+      "id": "A029",
+      "scope": "b01/c04",
+      "claim": "理论会话一定实际开市",
+      "status": "证据不足",
+      "evidence": "c07 专门处理可疑会话，本身说明理论会话需要业务证据。",
+      "closure_or_limit": "节假日停夜盘等需要逐边界验证。"
+    },
+    {
+      "id": "A030",
+      "scope": "b01/c04",
+      "claim": "日历状态继承可在规则变化时自动识别所有语义变化",
+      "status": "证据不足",
+      "evidence": "E07 有版本/签名比较，但未对所有历史语义变更做反事实测试。",
+      "closure_or_limit": "版本号或签名未变化的错误前提不会自动失效。"
+    },
+    {
+      "id": "A031",
+      "scope": "b01/c05",
+      "claim": "日线 OHLC、volume、money、open_interest 正确传递",
+      "status": "限定通过",
+      "evidence": "E03：7 合约两天 14 行，7 项数值逐值一致。",
+      "closure_or_limit": "只证明供应商值传递；不证明交易所值或单/双边历史口径。"
+    },
+    {
+      "id": "A032",
+      "scope": "b01/c05",
+      "claim": "pre_close 就是上一交易日实际收盘价",
+      "status": "已证伪",
+      "evidence": "E03：7/7 合约 pre_close 等于昨结而非昨收；9 月 13287 个可比湖行中 11017 行不同于前一已存收盘价。",
+      "closure_or_limit": "必须修订来源语义、契约和新写字段；本审计未改写数据。"
+    },
+    {
+      "id": "A033",
+      "scope": "b01/c05",
+      "claim": "新增昨收、结算及变化字段已覆盖全部历史",
+      "status": "已证伪",
+      "evidence": "E03：2076956 行中 2050937 行属旧来源；previous_close/settlement 仅 26019 非空。",
+      "closure_or_limit": "这是已声明的迁移边界，不是新发现的迁移损坏；消费者不能假设全历史有值。"
+    },
+    {
+      "id": "A034",
+      "scope": "b01/c05",
+      "claim": "extras 前移一条就是上一有效交易日结算和持仓",
+      "status": "证据不足",
+      "evidence": "当前代码如此派生；本次历史湖样本相关字段为迁移空值。",
+      "closure_or_limit": "需对上市首日、长停牌及前置查询边界做真实样本验证。"
+    },
+    {
+      "id": "A035",
+      "scope": "b01/c05",
+      "claim": "45 天前置窗口总能找到上一有效值",
+      "status": "证据不足",
+      "evidence": "E07：固定回溯长度。",
+      "closure_or_limit": "长停牌和稀疏历史没有充分证据；不得把缺前值说成来源本无前值。"
+    },
+    {
+      "id": "A036",
+      "scope": "b01/c05",
+      "claim": "has_market_data 表示当天有成交",
+      "status": "已证伪",
+      "evidence": "E03 湖样本存在 OHLC 有值但 volume/money/OI 为 0 且 has_market_data=true。",
+      "closure_or_limit": "它表示来源有市场数据行；不得用作有成交标志。"
+    },
+    {
+      "id": "A037",
+      "scope": "b01/c05",
+      "claim": "价格、成交额、数量跨全历史单位恒定",
+      "status": "证据不足",
+      "evidence": "字段 metadata 与供应商说明；7 合约样本不足以验证历史制度变化。",
+      "closure_or_limit": "需按交易所、品种和制度时期核对单位及单双边口径。"
+    },
+    {
+      "id": "A038",
+      "scope": "b01/c06",
+      "claim": "分钟各度量、时间戳和交易日归属可对应来源",
+      "status": "限定通过",
+      "evidence": "E03：2835 行与湖逐值匹配，7 合约会话集合一致。",
+      "closure_or_limit": "普通交易日样本；未覆盖所有夜盘边界和 DST 无关的境外时间。"
+    },
+    {
+      "id": "A039",
+      "scope": "b01/c06",
+      "claim": "API 成功且行数不足仍可保存事实并标 warning",
+      "status": "项目规则",
+      "evidence": "采集 README 与 E07。",
+      "closure_or_limit": "completed 是完成本次处理，不意味着分钟数据完整。"
+    },
+    {
+      "id": "A040",
+      "scope": "b01/c06",
+      "claim": "已完成分钟会话就没有缺数",
+      "status": "已证伪",
+      "evidence": "E01：已完成状态包含 warning；另有 missing_bar 表 8951963 行。",
+      "closure_or_limit": "必须同时读取缺失与质量状态；此总数不是本次重新推导的缺数。"
+    },
+    {
+      "id": "A041",
+      "scope": "b01/c06",
+      "claim": "API 空响应总能证明该会话未交易",
+      "status": "证据不足",
+      "evidence": "未对所有空会话建立交易所停市证据。",
+      "closure_or_limit": "空返回、无成交、服务缺漏必须分别验证。"
+    },
+    {
+      "id": "A042",
+      "scope": "b01/c06",
+      "claim": "异常 OHLC 应保留原值并发出质量信号",
+      "status": "项目规则",
+      "evidence": "E04 相关门禁/保留测试与 E07。",
+      "closure_or_limit": "保留不代表这些异常可直接用于收益或波动率研究。"
+    },
+    {
+      "id": "A043",
+      "scope": "b01/c07",
+      "claim": "完整会话分钟聚合可核对日 K",
+      "status": "限定通过",
+      "evidence": "E03：7 合约 OHLC、volume、末值 OI 全部一致。",
+      "closure_or_limit": "成交额单列；共同来源一致不是独立交易所证明。"
+    },
+    {
+      "id": "A044",
+      "scope": "b01/c07",
+      "claim": "日线成交额总等于分钟成交额之和",
+      "status": "已证伪",
+      "evidence": "E03：MA2505 2025-02-14 日线 15630896480、分钟合计 15636340720，差 5444240，超过现有相对容差。",
+      "closure_or_limit": "属于供应商跨频率差异；本审计没有确定哪一个数值正确。"
+    },
+    {
+      "id": "A045",
+      "scope": "b01/c07",
+      "claim": "聚合相符就能证明所有历史会话安排正确",
+      "status": "证据不足",
+      "evidence": "相符只约束聚合结果；该入口只处理选择范围内可疑会话。",
+      "closure_or_limit": "零成交会话、抵消误差与其他日期仍需独立证据。"
+    },
+    {
+      "id": "A046",
+      "scope": "b01/c07",
+      "claim": "半个 tick 的价格容差与金额容差可通用",
+      "status": "项目规则",
+      "evidence": "E07：PRICE_TOLERANCE_FACTOR=0.5、MONEY_RTOL=1e-6 等。",
+      "closure_or_limit": "工程阈值，需按来源精度解释；不是外部事实。"
+    },
+    {
+      "id": "A047",
+      "scope": "b01/c08",
+      "claim": "缺失明细等于选中已完成会话的理论端点减实存端点",
+      "status": "限定通过",
+      "evidence": "代码边界及本次 2835 端点零差样本。",
+      "closure_or_limit": "没有全量重跑 5.27 亿分钟与 8951963 条缺失明细。"
+    },
+    {
+      "id": "A048",
+      "scope": "b01/c08",
+      "claim": "缺失表为空就能证明分钟值正确",
+      "status": "已证伪",
+      "evidence": "键缺失检查不检查 OHLC/成交额；E03 的 MA 跨频率反例。",
+      "closure_or_limit": "键存在、值正确和时间可用性需分别检查。"
+    },
+    {
+      "id": "A049",
+      "scope": "b01/c08",
+      "claim": "全量分钟质检应加入日常 18 项默认批次",
+      "status": "项目规则",
+      "evidence": "operations 明确 c08 人工选择与确认。",
+      "closure_or_limit": "用户选择范围决定执行；本审计未启动该生产批次。"
+    },
+    {
+      "id": "A050",
+      "scope": "b02/c01",
+      "claim": "事实白名单也能证明交易所报告来源支持范围",
+      "status": "已证伪",
+      "evidence": "会员表全部空；上期所原文有分类汇总，而排名 API 样本只有 top20。",
+      "closure_or_limit": "采集选择政策不能替代逐数据族覆盖矩阵。"
+    },
+    {
+      "id": "A051",
+      "scope": "b02/c01",
+      "claim": "报告日期—交易所—品种格点正确继承完成状态",
+      "status": "证据不足",
+      "evidence": "E01 全量状态可读；继承状态本身不证明来源有效。",
+      "closure_or_limit": "错误“确认空”需失效规则，不能只比较旧计数。"
+    },
+    {
+      "id": "A052",
+      "scope": "b02/c01",
+      "claim": "expected_record_count 是真实业务预期行数",
+      "status": "证据不足",
+      "evidence": "排名、会员、仓单多对多且来源支持范围未独立证明。",
+      "closure_or_limit": "必须说明按哪种来源和粒度计算期望；零期望不能自证正常。"
+    },
+    {
+      "id": "A053",
+      "scope": "b02/c01a",
+      "claim": "冻结坏载荷指纹对应已存原始证据",
+      "status": "限定通过",
+      "evidence": "E03：官方 response.dat 哈希与旁文件一致；E04 精确特殊案例测试。",
+      "closure_or_limit": "仅该案例，不能据此校准其他载荷。"
+    },
+    {
+      "id": "A054",
+      "scope": "b02/c01a",
+      "claim": "第三种未知载荷会被拒绝而非套用校准",
+      "status": "限定通过",
+      "evidence": "E04 test_third_payload_is_rejected 等通过。",
+      "closure_or_limit": "模拟异常路径证明；不代表未来所有异常已知。"
+    },
+    {
+      "id": "A055",
+      "scope": "b02/c01a",
+      "claim": "排名校准同时解决会员类别汇总",
+      "status": "已证伪",
+      "evidence": "E03：原文含 RANK=-1/0 类别汇总，会员 silver 仍零行。",
+      "closure_or_limit": "校准 top20 与提取会员分类是两个数据任务。"
+    },
+    {
+      "id": "A056",
+      "scope": "b02/c02",
+      "claim": "JQData 排名接口包含可直接分类的会员类型汇总",
+      "status": "已证伪",
+      "evidence": "E02/E03：au1306 同日 JQData 60 条 rank1..20；交易所原文另有 -1/0 汇总。",
+      "closure_or_limit": "当前来源边界不能支持该会员事实产品；不能推广成交易所没有汇总。"
+    },
+    {
+      "id": "A057",
+      "scope": "b02/c02",
+      "claim": "rank_type 是期货公司/非期货公司会员类型",
+      "status": "已证伪",
+      "evidence": "E02：501001/501002/501003 表示成交/多头/空头排名类别。",
+      "closure_or_limit": "排名指标类别与参与者类别必须分开。"
+    },
+    {
+      "id": "A058",
+      "scope": "b02/c02",
+      "claim": "会员分类汇总也满足 rank 1..20",
+      "status": "已证伪",
+      "evidence": "E03：官方分类汇总 rank=-1 和 0；E07 在分类前限制 1..20。",
+      "closure_or_limit": "即使直接接入官方行，现有验证边界也不兼容。"
+    },
+    {
+      "id": "A059",
+      "scope": "b02/c02",
+      "claim": "会员事实零行就是来源本来没有会员数据",
+      "status": "已证伪",
+      "evidence": "E03 官方正样本与 132215 个 completed/empty 格点对照。",
+      "closure_or_limit": "必须区分来源不支持、解析未识别、未发布和经证明确实为空。"
+    },
+    {
+      "id": "A060",
+      "scope": "b02/c02",
+      "claim": "成交、多头、空头排名可按合约和会员名透视",
+      "status": "限定通过",
+      "evidence": "E03：360 条来源排名对应 203 行 silver，排名/值/增量均匹配。",
+      "closure_or_limit": "6 合约单日；不验证会员重名、改名及跨交易所实体同一性。"
+    },
+    {
+      "id": "A061",
+      "scope": "b02/c02",
+      "claim": "达到接口上限时拆日期即可避免截断",
+      "status": "限定通过",
+      "evidence": "E04：到限拆分、单日到限失败测试通过。",
+      "closure_or_limit": "未用真实极端单日载荷证明接口总量/排序始终稳定。"
+    },
+    {
+      "id": "A062",
+      "scope": "b02/c02",
+      "claim": "完全相同的重复载荷可合并并保留 warning",
+      "status": "限定通过",
+      "evidence": "E04 重复、冲突、warning 持久化测试。",
+      "closure_or_limit": "重复是否本身反映供应商业务错误仍需独立核对。"
+    },
+    {
+      "id": "A063",
+      "scope": "b02/c02",
+      "claim": "模拟 rank=1、member_name=期货公司可证明真实会员链路",
+      "status": "已证伪",
+      "evidence": "E04 测试构造与 E03 官方 -1/0、JQ top20 返回不一致。",
+      "closure_or_limit": "应以真实来源正样本建立端到端验收。"
+    },
+    {
+      "id": "A064",
+      "scope": "b02/c03",
+      "claim": "仓单数量、变化和单位可逐值保存",
+      "status": "限定通过",
+      "evidence": "E03：5 个请求品种合计 92 行与 silver 一致。",
+      "closure_or_limit": "未证明供应商数值等同官方每个仓库公告。"
+    },
+    {
+      "id": "A065",
+      "scope": "b02/c03",
+      "claim": "仓单数跨品种可直接相加比较",
+      "status": "已证伪",
+      "evidence": "E02/E03 保留来源 unit，存在不同计量单位；契约未统一换算。",
+      "closure_or_limit": "使用前按各品种仓单单位和交割规则解释。"
+    },
+    {
+      "id": "A066",
+      "scope": "b02/c03",
+      "claim": "warehouse_name 能作历史稳定仓库实体 ID",
+      "status": "证据不足",
+      "evidence": "当前使用名称作为键的一部分；未核对更名、分仓、重复名。",
+      "closure_or_limit": "需要按交易所历史名称映射验证身份。"
+    },
+    {
+      "id": "A067",
+      "scope": "b02/c03",
+      "claim": "仓单空响应已经覆盖所有交易所的真实空业务条件",
+      "status": "证据不足",
+      "evidence": "E01 有 19161 个确认空格点；本次只验证有数据样本。",
+      "closure_or_limit": "来源支持矩阵与空值原因仍需逐类建立。"
+    },
+    {
+      "id": "A068",
+      "scope": "b03/c01",
+      "claim": "普通工作日覆盖所有外部指数发布日",
+      "status": "已证伪",
+      "evidence": "E06 生意社指数自然日样本 121 对普通工作日 87。",
+      "closure_or_limit": "weekday 只是项目采样；若要求完整来源必须使用实际发布日集合。"
+    },
+    {
+      "id": "A069",
+      "scope": "b03/c01",
+      "claim": "海外期货日期可由中国自然日和工作日统一推断",
+      "status": "证据不足",
+      "evidence": "E02/E03 只核对单日供应商 snapshot。",
+      "closure_or_limit": "需交易所时区、节日、结算和供应商归属日证据。"
+    },
+    {
+      "id": "A070",
+      "scope": "b03/c01",
+      "claim": "有效期配置已证明每个指标的真实起止日期",
+      "status": "证据不足",
+      "evidence": "TIN ID 仍活跃但无数据；其他起点未独立逐项查证。",
+      "closure_or_limit": "19 个 ID 各自建立首末观测和命名证据。"
+    },
+    {
+      "id": "A071",
+      "scope": "b03/c02",
+      "claim": "生意社原文归档成功等于字节保存成功",
+      "status": "限定通过",
+      "evidence": "E03：4067 份生意社原文的摘要全部一致。",
+      "closure_or_limit": "当前正式产品只负责 raw，不生产基差 silver。"
+    },
+    {
+      "id": "A072",
+      "scope": "b03/c02",
+      "claim": "HTTP 200 与 raw passed 证明网页业务内容有效",
+      "status": "已证伪",
+      "evidence": "正式契约允许任意 HTTP200 正文；E06 明确与业务诊断分开。",
+      "closure_or_limit": "这是错误的状态解读，不是要求擅自改变 raw 归档合同。"
+    },
+    {
+      "id": "A073",
+      "scope": "b03/c02",
+      "claim": "页面现期差一定可作为可交割套利基差",
+      "status": "证据不足",
+      "evidence": "E06 页面说明价格/品质/干湿吨等有差异。",
+      "closure_or_limit": "需规格、合约、单位、地点匹配；未进行全量 HTML 业务解析。"
+    },
+    {
+      "id": "A074",
+      "scope": "b03/c02",
+      "claim": "所有历史 raw 页面日期与内容正确",
+      "status": "证据不足",
+      "evidence": "本轮全量哈希未校验每页标题/日期/内容。",
+      "closure_or_limit": "需独立只读页面内容审计；不能将哈希通过升级为内容通过。"
+    },
+    {
+      "id": "A075",
+      "scope": "b03/c03",
+      "claim": "境外期货来源 23 行可映射到当日事实",
+      "status": "限定通过",
+      "evidence": "E03：23 行价量/变化/名称一致。",
+      "closure_or_limit": "样本 snapshot=2025-02-14。"
+    },
+    {
+      "id": "A076",
+      "scope": "b03/c03",
+      "claim": "供应商代码一定代表特定到期月份真实合约",
+      "status": "证据不足",
+      "evidence": "E02 返回 AHD 等供应商代码，未包含到期年月规则。",
+      "closure_or_limit": "需每个代码的连续/指数/真实合约定义及换月方法。"
+    },
+    {
+      "id": "A077",
+      "scope": "b03/c03",
+      "claim": "snapshot_date 就是市场当地实际交易日",
+      "status": "证据不足",
+      "evidence": "当前按来源 day 保存，尚无多时区独立证据。",
+      "closure_or_limit": "供应商日期标签不等于已证明的本地交易时间。"
+    },
+    {
+      "id": "A078",
+      "scope": "b03/c03",
+      "claim": "零成交量意味着市场无成交",
+      "status": "证据不足",
+      "evidence": "本次部分来源 volume=0；无法区分未提供与真实零。",
+      "closure_or_limit": "需来源列说明及独立交易所样本。"
+    },
+    {
+      "id": "A079",
+      "scope": "b03/c04",
+      "claim": "全部 19 个配置 ID 当前都可用",
+      "status": "已证伪",
+      "evidence": "E02：18 个非空，TIN code9201；E08 锡页面不存在。",
+      "closure_or_limit": "不能把锡市场存在误作该供应商 ID 可用。"
+    },
+    {
+      "id": "A080",
+      "scope": "b03/c04",
+      "claim": "EMI00064805 已证明是新华中国铁矿石指数",
+      "status": "证据不足",
+      "evidence": "E02/E08 页面仅“铁矿石指数:综合”；E06 指出新华频率不同。",
+      "closure_or_limit": "需要供应商元数据确认，不能根据项目变量名作证明。"
+    },
+    {
+      "id": "A081",
+      "scope": "b03/c04",
+      "claim": "一次完整分页空响应可以永久确认该日期为空",
+      "status": "已证伪",
+      "evidence": "E03：8 指数 2026-09-28 completed/empty，当前返回真值且湖缺行。",
+      "closure_or_limit": "本次未保存当时完整响应，不能确定原因为延迟、回补还是原请求差错。"
+    },
+    {
+      "id": "A082",
+      "scope": "b03/c04",
+      "claim": "外部指数原值与标识正确传入湖",
+      "status": "限定通过",
+      "evidence": "E03：34 个可比来源行中 26 行存在且值/ID 一致，另 8 行缺失单列。",
+      "closure_or_limit": "来源身份、指数算法和被排除日期不在这个通过范围内。"
+    },
+    {
+      "id": "A083",
+      "scope": "b03/c04",
+      "claim": "WTI_CONC 换月、复权和指数方法已知",
+      "status": "证据不足",
+      "evidence": "E02 只确认供应商“美原油指数 CONC”返回。",
+      "closure_or_limit": "需要该供应商连续方法，不能拿 CME 单合约说明替代。"
+    },
+    {
+      "id": "A084",
+      "scope": "b03/c04",
+      "claim": "Mysteel/生意社所有配置名称、基期、权重均已核准",
+      "status": "证据不足",
+      "evidence": "API 指标名只支持有限身份识别；E06 已列归属疑点。",
+      "closure_or_limit": "每个 ID 对应发布方方法和单位需独立文档。"
+    },
+    {
+      "id": "A085",
+      "scope": "b03/c04",
+      "claim": "HTTP200 总是请求成功",
+      "status": "已证伪",
+      "evidence": "本次审计自己的四个错误日期 filter 收到 HTTP200/code9501。",
+      "closure_or_limit": "必须检查业务 envelope；这四次不是生产代码失败证据。"
+    },
+    {
+      "id": "A086",
+      "scope": "b04/c01",
+      "claim": "weekday<5 等于 SHIBOR 发布日历",
+      "status": "已证伪",
+      "evidence": "E03：2025-02-08 周六来源有八期限，湖与日历都没有。",
+      "closure_or_limit": "需业务日/调休发布日历；也要排除工作日节假日。"
+    },
+    {
+      "id": "A087",
+      "scope": "b04/c01",
+      "claim": "expected_available_date 不早于真正公开时刻",
+      "status": "已证伪",
+      "evidence": "E03/E08：2025-09 CPI 湖 10-09/官方10-15；GDP 湖10-16/官方10-20。",
+      "closure_or_limit": "规则计算本身一致，但不得作为严格当时可用日期。"
+    },
+    {
+      "id": "A088",
+      "scope": "b04/c01",
+      "claim": "same_day 足以表达 SHIBOR 当日可用性",
+      "status": "证据不足",
+      "evidence": "配置只到日期；E06 官方11:00与转发12:00存在日内区别。",
+      "closure_or_limit": "需明确研究截止时刻；日期列不能保证上午已知。"
+    },
+    {
+      "id": "A089",
+      "scope": "b04/c01",
+      "claim": "25 个系列映射在日历和事实共用",
+      "status": "限定通过",
+      "evidence": "E07 权威配置 8 SHIBOR、17 宏观；E03 来源列样本逐值比较。",
+      "closure_or_limit": "共享同一配置可避免漂移，不能证明共享前提正确。"
+    },
+    {
+      "id": "A090",
+      "scope": "b04/c02",
+      "claim": "SHIBOR 的八期限值可无损映射",
+      "status": "限定通过",
+      "evidence": "E03：18 个被接纳日期共144值与来源一致；周六8值缺失另列。",
+      "closure_or_limit": "未与 CFETS 全历史独立逐值比对。"
+    },
+    {
+      "id": "A091",
+      "scope": "b04/c02",
+      "claim": "空查询可以区分节假日和当天尚未更新",
+      "status": "证据不足",
+      "evidence": "没有来源发布时间/空原因字段；日内早采问题仍可能进入确认空。",
+      "closure_or_limit": "本轮没有证明现有2440个空格点全错或全对。"
+    },
+    {
+      "id": "A092",
+      "scope": "b04/c02",
+      "claim": "利率字段单位是百分比，非小数比例",
+      "status": "限定通过",
+      "evidence": "共享配置与 Tushare 文档口径一致，本次值例如1.865。",
+      "closure_or_limit": "若计算收益须显式除100；未核对所有历史异常值。"
+    },
+    {
+      "id": "A093",
+      "scope": "b04/c03",
+      "claim": "CPI/PPI 累计指数减100得到累计同比百分比",
+      "status": "限定通过",
+      "evidence": "E02/E03：340 个宏观来源值按配置映射均与湖一致；CPI 官方2025-09累计-0.1作旁证。",
+      "closure_or_limit": "只验证已抓取20期/报告；全历史单位变化仍需独立核对。"
+    },
+    {
+      "id": "A094",
+      "scope": "b04/c03",
+      "claim": "GDP_YOY 的5.2表示2025年第三季度单季同比",
+      "status": "已证伪",
+      "evidence": "E02 TIME=第1-3季度；E08 官方前三季度5.2，第三季度单季4.8。",
+      "closure_or_limit": "已存数值可解释为累计同比；命名/说明需明确，不能当季使用。"
+    },
+    {
+      "id": "A095",
+      "scope": "b04/c03",
+      "claim": "report_date 是实际发布日期",
+      "status": "已证伪",
+      "evidence": "来源月1日被归一至月末/季末；E08 实际公布时间另在下月。",
+      "closure_or_limit": "报告期、发布日期、供应商可得时刻必须区分。"
+    },
+    {
+      "id": "A096",
+      "scope": "b04/c03",
+      "claim": "当前返回的历史数值就是当时首次公布版本",
+      "status": "证据不足",
+      "evidence": "无 vintage/realtime 版本键；E02 GDP历史金额与首次公告金额不同。",
+      "closure_or_limit": "不能做严格实时历史重建；需要保存首次发布与修订版本。"
+    },
+    {
+      "id": "A097",
+      "scope": "b04/c03",
+      "claim": "所有宏观空格点都已发生了错误确认空",
+      "status": "证据不足",
+      "evidence": "E01 当前宏观事实2866格点为成功，没有以该风险推断已发生空丢失。",
+      "closure_or_limit": "已证实 available_date 过早；空冻结仍须实际运行证据，不能混为一谈。"
+    },
+    {
+      "id": "A098",
+      "scope": "运维与验收",
+      "claim": "完成状态应在正式提交后发布",
+      "status": "限定通过",
+      "evidence": "E04 事务及 worker 失败注入；E07 提交阶段规则。",
+      "closure_or_limit": "只证明选定控制路径，不证明已提交业务前提正确。"
+    },
+    {
+      "id": "A099",
+      "scope": "运维与验收",
+      "claim": "错误码、配额、中断会阻止后续阶段",
+      "status": "限定通过",
+      "evidence": "E04 BackgroundWorkerTests 通过。",
+      "closure_or_limit": "业务 HTTP 自身已有 Retry；不能宣传成每次网络请求只尝试一次。"
+    },
+    {
+      "id": "A100",
+      "scope": "运维与验收",
+      "claim": "监控退出、租约过期、发布失败会停业务并留证",
+      "status": "限定通过",
+      "evidence": "E04 monitor/lease/status/lock 失败注入通过。",
+      "closure_or_limit": "临时进程与文件系统场景；不是所有系统崩溃的证明。"
+    },
+    {
+      "id": "A101",
+      "scope": "运维与验收",
+      "claim": "共享路径事务在已测异常后恢复原目标",
+      "status": "限定通过",
+      "evidence": "E04 StagedPathTransactionTests，通过安装/正式验收失败等分支。",
+      "closure_or_limit": "断电、介质故障、外部进程破坏未验证；不承诺跨全部独立事务原子性。"
+    },
+    {
+      "id": "A102",
+      "scope": "运维与验收",
+      "claim": "整个批次中任何阶段失败会回滚此前全部成功阶段",
+      "status": "已证伪",
+      "evidence": "E07 明确部分入口事实和日历独立提交、此前成功叶保留。",
+      "closure_or_limit": "这是明确事务边界；恢复必须按实际提交组分析。"
+    },
+    {
+      "id": "A103",
+      "scope": "运维与验收",
+      "claim": "83项测试和19个完整导出检查通过就证明数据正确",
+      "status": "已证伪",
+      "evidence": "E04/E05 全部通过与 E03 多个真实反例同时成立。",
+      "closure_or_limit": "业务验收需要来源正样本、负样本、身份及时间语义。"
+    },
+    {
+      "id": "A104",
+      "scope": "运维与验收",
+      "claim": "旧审计发现的问题已全部形成修复闭环",
+      "status": "已证伪",
+      "evidence": "E06 的 TIN/铁矿身份/静态可用日问题仍能在当前配置和湖中复现。",
+      "closure_or_limit": "诊断文档未被接纳为生产修改；需明确问题负责人、门禁及关闭证据。"
+    },
+    {
+      "id": "A105",
+      "scope": "运维与验收",
+      "claim": "“确认空”有充分的业务排除证据",
+      "status": "已证伪",
+      "evidence": "会员来源不支持与外部指数后返数都进入同一 empty_confirmed。",
+      "closure_or_limit": "来源无能力、尚未发布、暂时缺失和确实不适用不能共用永久完成证明。"
+    },
+    {
+      "id": "A106",
+      "scope": "共享",
+      "claim": "全部历史文件已采用当前schema_version",
+      "status": "已证伪",
+      "evidence": "E09：报告日历2815片为1.3.0、36片为1.4.0；仓单5708片为1.2.0、110片为1.3.0。",
+      "closure_or_limit": "物理结构兼容；这不是损坏结论。旧版本语义迁移与消费者兼容需按入口边界处理。"
+    }
+  ]
+}

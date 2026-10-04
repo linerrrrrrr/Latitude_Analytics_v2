@@ -1,0 +1,26 @@
+{
+  "recorded_at": "2026-10-03",
+  "method": "Codex in-app browser; direct navigation and visible accessibility tree; read-only. Recorded date, not exact observation timestamps.",
+  "pages": [
+    {
+      "url": "https://data.eastmoney.com/cjsj/hyzs_list_EMI00135906.html",
+      "finding": "页面显示不存在或已删除。与 http_MYSTEEL_TIN.json 的 9201 相符；随后页面可能自动跳推广，未与推广交互。",
+      "evidence_file": "http_MYSTEEL_TIN.json"
+    },
+    {
+      "url": "https://data.eastmoney.com/cjsj/hyzs_list_EMI00064805.html",
+      "finding": "标题是财经数据/铁矿石指数:综合；历史表可见 2026-09-30、09-29、09-28。不能从标题证明新华身份。",
+      "evidence_file": "http_XINHUA_IRON_ORE.json"
+    },
+    {
+      "url": "https://www.stats.gov.cn/sj/zxfb/202510/t20251015_1961521.html",
+      "finding": "2025年9月CPI发布稿；页面时间2025-10-15 09:30；全国同比-0.3%、环比0.1%、1—9月平均同比-0.1%。",
+      "evidence_file": "independent_comparisons.json#macro_availability_counterexamples"
+    },
+    {
+      "url": "https://www.stats.gov.cn/zwfwck/sjfb/202510/t20251020_1961612.html",
+      "finding": "页面发布时间2025-10-20 10:00；前三季度GDP累计同比5.2%，第三季度单季同比4.8%。",
+      "evidence_file": "macro_RPT_ECONOMY_GDP.json"
+    }
+  ]
+}

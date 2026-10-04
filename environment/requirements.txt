@@ -1,0 +1,98 @@
+# Project runtime: Python 3.13, Conda environment latitude_env_v2.
+# From repository root: python -m pip install -r environment/requirements.txt
+# Rebuild order and the alipai NumPy exception: environment/README.md.
+akshare==1.18.30
+arch==8.0.0
+beautifulsoup4==4.14.3
+bs4==0.0.2
+click>=8.1,<9
+dill==0.4.0
+duckdb==1.5.4
+hydra-core==1.3.7
+importnb==2023.11.1
+ipykernel==7.2.0
+ipython==9.10.0
+ipywidgets==8.1.8
+jieba==0.42.1
+jqdatasdk==1.9.8
+lightgbm==4.6.0
+llvmlite==0.47.0
+lxml==6.0.2
+matplotlib==3.10.8
+MetaTrader5==5.0.5735
+mlflow==3.16.1
+nbconvert==7.17.0
+nbformat==5.10.4
+networkx==3.6.1
+numba==0.65.1
+numpy==2.4.3
+omegaconf==2.3.1
+openai==2.30.0
+openpyxl==3.1.5
+optuna==4.7.0
+pandas==3.0.1
+panel==1.8.7
+pillow==12.2.0
+plotly==6.3.0
+polars==1.35.2
+psutil==7.2.2
+PyMuPDF==1.27.2.3
+PyMySQL==1.1.2
+PySide6==6.11.2
+pyarrow==24.0.0
+pytz==2025.2
+PyWavelets==1.9.0
+requests==2.32.5
+scikit-learn==1.8.0
+scipy==1.17.1
+seaborn==0.13.2
+shap==0.49.1
+snownlp==0.12.3
+SQLAlchemy==2.0.47
+ssqueezepy==0.6.6
+statsmodels==0.14.6
+sympy==1.14.0
+thriftpy2==0.4.20
+tqdm==4.67.3
+tsfresh==0.21.2
+tushare==1.4.24
+vectorizedsampleentropy==0.0.3.post1
+vmdpy==0.2
+widgetsnbextension==4.0.15
+wordcloud==1.9.4
+xlrd==2.0.2
+xlwings==0.33.16
+
+# alipai 0.4.13 runtime dependencies; NumPy/requests/tqdm are pinned above.
+# Install SDK separately AFTER this file: python -m pip install --no-deps alipai==0.4.13
+# Its published numpy<2 constraint remains an explicit pip-check exception.
+addict==2.4.0
+aiohttp==3.14.3
+alibabacloud-credentials==1.0.12
+alibabacloud-endpoint-util==0.0.4
+alibabacloud-openapi-util==0.2.4
+alibabacloud-sts20150401==1.2.0
+alibabacloud-tea-openapi==0.4.6
+alibabacloud-tea-util==0.3.15
+aliyun-python-sdk-core==2.16.1
+backoff==1.11.1
+Deprecated==1.3.1
+eas-prediction==0.36
+oss2==2.19.1
+prompt-toolkit==3.0.52
+# eas-prediction requires protobuf<=3.20.3; retain this bound with MLflow installed.
+protobuf==3.20.3
+pydantic==2.13.4
+pyodps==0.13.2
+pyOpenSSL==26.4.0
+PyYAML==6.0.3
+semantic-version==2.10.0
+six==1.17.0
+
+# GPU / deep learning related dependencies
+# These are used by VAE / PyTorch Lightning notebooks and may require choosing
+# a CPU or CUDA-specific install command manually.
+# torch==2.11.0+cu130
+# torchaudio==2.11.0+cu130
+# torchvision==0.26.0+cu130
+# pytorch-lightning==2.6.1

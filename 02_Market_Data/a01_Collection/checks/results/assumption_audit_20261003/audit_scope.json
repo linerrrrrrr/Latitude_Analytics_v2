@@ -1,0 +1,9 @@
+{
+  "checked_at": "2026-10-03T15:15:58.924831+08:00",
+  "lake_root": "E:\\Latitude_Analytics_v2\\02_Market_Data\\a02_Lake",
+  "source_files": 26,
+  "stable_tables": 17,
+  "business_entries": 19,
+  "lake_writes": false,
+  "scope": "19 collection entries, 17 stable silver tables, raw, shared configs, completion and operations assumptions; not research strategy correctness"
+}

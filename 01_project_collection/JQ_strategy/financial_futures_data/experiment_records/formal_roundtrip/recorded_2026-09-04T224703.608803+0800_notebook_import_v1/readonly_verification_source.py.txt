@@ -1,0 +1,49 @@
+import ast
+import datetime as dt
+import hashlib
+import json
+import pathlib
+from zoneinfo import ZoneInfo
+import duckdb
+
+module_dir = pathlib.Path.cwd() / "financial_futures_data"
+notebook_path = module_dir / "plan_financial_futures_fetch.ipynb"
+notebook = json.loads(notebook_path.read_text(encoding="utf-8"))
+for cell in notebook["cells"]:
+    if cell["cell_type"] == "code":
+        ast.parse("".join(cell["source"]))
+assert notebook["cells"][22]["id"] == "jq-local-import-run"
+import_source = "".join(notebook["cells"][22]["source"])
+assert "import_financial_futures_file(write=True)" in import_source
+assert all(token not in import_source for token in ("subprocess", "get_ipython", "os.system", "powershell", "%run"))
+assert "".join(notebook["cells"][20]["source"]) == ""
+assert notebook["cells"][20]["id"] == "2ba9096529c98ac0"
+assert [cell.get("execution_count") for cell in notebook["cells"][:21] if cell["cell_type"] == "code"] == list(range(1,11)) + [None]
+database_path = module_dir / "data/warehouse/financial_futures.duckdb"
+inbox_path = module_dir / "data/inbox/JQ_FINANCIAL_FUTURES_TRANSFER.zip"
+database_sha256 = hashlib.sha256(database_path.read_bytes()).hexdigest()
+inbox_sha256 = hashlib.sha256(inbox_path.read_bytes()).hexdigest()
+assert database_sha256 == "71b6b4e972bb0d59bdb410bb5778ebeefa4b5371c782aa92ba89201e3d84ace0"
+assert inbox_sha256 == "cc9e1a530ab75ab66f49a10f7acb058b47e824ae0669d18e2f7d00d630df7ec6"
+connection = duckdb.connect(str(database_path), read_only=True)
+try:
+    connection.execute("SET TimeZone='Asia/Shanghai'")
+    counts = {name: connection.execute("SELECT count(*) FROM " + name).fetchone()[0]
+              for name in ("ingest_batch","fetch_observation","futures_daily","futures_minute")}
+finally:
+    connection.close()
+assert counts == {"ingest_batch":1,"fetch_observation":6,"futures_daily":1,"futures_minute":240}
+assert hashlib.sha256(database_path.read_bytes()).hexdigest() == database_sha256
+assert sorted(path.name for path in (module_dir / "data/staging").iterdir()) == [".gitignore"]
+assert hashlib.sha256((module_dir / "import_financial_futures_file.py").read_bytes()).hexdigest() == "b16cc64d02f89d46ebb89b84e496c9a3e23370891f989fa18c98c1871def7000"
+assert hashlib.sha256((module_dir / "financial_futures_fetch_planner.py").read_bytes()).hexdigest() == "65768b3405871b89ec93475fdf6bcf015a90d73f15d22f7eb2f2e0be00ee7df7"
+readme = (module_dir / "README.md").read_text(encoding="utf-8")
+assert chr(96)*3+"powershell" not in readme
+assert "- [ ] 10．执行初始全量回补并冻结日常操作说明" in readme
+print(json.dumps({"status":"passed","verified_at":dt.datetime.now(ZoneInfo("Asia/Shanghai")).isoformat(),
+    "verification_mode":"read-only follow-up; no repeated import",
+    "database_sha256":database_sha256,"inbox_sha256":inbox_sha256,"table_counts":counts,
+    "importer_and_planner_unchanged":True,"staging_runtime_files":[],
+    "new_notebook_import_cell_index":22,"new_notebook_section":10,
+    "existing_user_output_and_empty_cell_retained":True,"construction_item_10_not_started":True,
+    "notebook_sha256":hashlib.sha256(notebook_path.read_bytes()).hexdigest()},ensure_ascii=False,indent=2))

@@ -1,0 +1,8 @@
+{
+  "executable": "E:\\anaconda3\\envs\\latitude_env_v2\\python.exe",
+  "version": "3.13.15 | packaged by Anaconda, Inc. | (main, Aug 14 2026, 17:17:48) [MSC v.1942 64 bit (AMD64)]",
+  "numpy": "2.4.3",
+  "pandas": "3.0.1",
+  "polars": "1.35.2",
+  "pyarrow": "24.0.0"
+}

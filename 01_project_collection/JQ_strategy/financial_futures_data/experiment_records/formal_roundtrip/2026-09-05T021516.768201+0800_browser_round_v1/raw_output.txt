@@ -1,0 +1,88 @@
+source 1/64 IM2402.CCFX 1d: success
+source 2/64 IC2401.CCFX 1d: success
+source 3/64 IF2401.CCFX 1d: success
+source 4/64 IH2401.CCFX 1d: success
+source 5/64 IM2401.CCFX 1d: success
+source 6/64 IC2312.CCFX 1d: success
+source 7/64 IF2312.CCFX 1d: success
+source 8/64 IH2312.CCFX 1d: success
+source 9/64 IM2312.CCFX 1d: success
+source 10/64 T2312.CCFX 1d: success
+source 11/64 TF2312.CCFX 1d: success
+source 12/64 TL2312.CCFX 1d: success
+source 13/64 TS2312.CCFX 1d: success
+source 14/64 IC2311.CCFX 1d: success
+source 15/64 IF2311.CCFX 1d: success
+source 16/64 IH2311.CCFX 1d: success
+source 17/64 IM2311.CCFX 1d: success
+source 18/64 IC2310.CCFX 1d: success
+source 19/64 IF2310.CCFX 1d: success
+source 20/64 IH2310.CCFX 1d: success
+source 21/64 IM2310.CCFX 1d: success
+source 22/64 IC2309.CCFX 1d: success
+source 23/64 IF2309.CCFX 1d: success
+source 24/64 IH2309.CCFX 1d: success
+source 25/64 IM2309.CCFX 1d: success
+source 26/64 T2309.CCFX 1d: success
+source 27/64 TF2309.CCFX 1d: success
+source 28/64 TL2309.CCFX 1d: success
+source 29/64 TS2309.CCFX 1d: success
+source 30/64 IC2308.CCFX 1d: success
+source 31/64 IF2308.CCFX 1d: success
+source 32/64 IH2308.CCFX 1d: success
+source 33/64 IM2308.CCFX 1d: success
+source 34/64 IC2307.CCFX 1d: success
+source 35/64 IF2307.CCFX 1d: success
+source 36/64 IH2307.CCFX 1d: success
+source 37/64 IM2307.CCFX 1d: success
+source 38/64 IC2306.CCFX 1d: success
+source 39/64 IF2306.CCFX 1d: success
+source 40/64 IH2306.CCFX 1d: success
+source 41/64 IM2306.CCFX 1d: success
+source 42/64 T2306.CCFX 1d: success
+source 43/64 TF2306.CCFX 1d: success
+source 44/64 TL2306.CCFX 1d: success
+source 45/64 TS2306.CCFX 1d: success
+source 46/64 IC2305.CCFX 1d: success
+source 47/64 IF2305.CCFX 1d: success
+source 48/64 IH2305.CCFX 1d: success
+source 49/64 IM2305.CCFX 1d: success
+source 50/64 IC2304.CCFX 1d: success
+source 51/64 IF2304.CCFX 1d: success
+source 52/64 IH2304.CCFX 1d: success
+source 53/64 IM2304.CCFX 1d: success
+source 54/64 IC2303.CCFX 1d: success
+source 55/64 IF2303.CCFX 1d: success
+source 56/64 IH2303.CCFX 1d: success
+source 57/64 IM2303.CCFX 1d: success
+source 58/64 T2303.CCFX 1d: success
+source 59/64 TF2303.CCFX 1d: success
+source 60/64 TS2303.CCFX 1d: success
+source 61/64 IC2302.CCFX 1d: success
+source 62/64 IF2302.CCFX 1d: success
+source 63/64 IH2302.CCFX 1d: success
+source 64/64 IM2302.CCFX 1d: success
+JQ_FINANCIAL_FUTURES_EXPORT_V1_BEGIN
+{
+  "daily_record_count": 6395,
+  "download_instruction": {
+    "action": "手动下载该文件并覆盖本地 data/inbox/ 下同名文件；保留本段完整输出。",
+    "expected_bytes": 1463121,
+    "expected_sha256": "a960e16887f6c97131959fad02df1c06ed5263bbe354cadb1e8424ca51074df3",
+    "file_name": "JQ_FINANCIAL_FUTURES_TRANSFER.zip",
+    "file_path": "/home/jquser/JQ_FINANCIAL_FUTURES_TRANSFER.zip"
+  },
+  "failed_observation_count": 0,
+  "failed_source_requests": [],
+  "minute_record_count": 0,
+  "plan_sha256": "7cb286af8e802027de0be24262100519ab589055ec0aa97340ac9a912513ab1e",
+  "publication_status": "complete",
+  "published_at": "2026-09-05T02:15:19.047001+08:00",
+  "run_id": "1e03d616-9590-473c-8053-11aca6cc94ef",
+  "run_started_at": "2026-09-05T02:15:16.768201+08:00",
+  "source_request_count": 64,
+  "successful_observation_count": 6395,
+  "successful_source_request_count": 64
+}
+JQ_FINANCIAL_FUTURES_EXPORT_V1_END
+

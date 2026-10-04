@@ -1,0 +1,153 @@
+{
+  "started_at": "2026-09-04T12:32:14.427162+08:00",
+  "completed_at": "2026-09-04T12:32:15.767241+08:00",
+  "environment": {
+    "python_executable": "E:\\anaconda3\\envs\\latitude\\python.exe",
+    "pandas": "3.0.1",
+    "numpy": "2.4.3"
+  },
+  "python36_syntax": "passed",
+  "qualified_builtin_ast_check": "passed",
+  "scenarios": [
+    {
+      "scenario": "complete",
+      "status": "passed",
+      "api_calls": 3,
+      "publication_status": "complete",
+      "daily_rows": 1,
+      "minute_rows": 480
+    },
+    {
+      "scenario": "partial_and_empty",
+      "status": "passed",
+      "api_calls": 3,
+      "publication_status": "complete",
+      "daily_rows": 1,
+      "minute_rows": 359
+    },
+    {
+      "scenario": "empty_index",
+      "status": "passed",
+      "api_calls": 3,
+      "publication_status": "complete",
+      "daily_rows": 1,
+      "minute_rows": 240
+    },
+    {
+      "scenario": "ohlc_warning",
+      "status": "passed",
+      "api_calls": 3,
+      "publication_status": "complete",
+      "daily_rows": 1,
+      "minute_rows": 480
+    },
+    {
+      "scenario": "api_failure",
+      "status": "passed",
+      "api_calls": 2,
+      "publication_status": "partial",
+      "daily_rows": 1,
+      "minute_rows": 0
+    },
+    {
+      "scenario": "duplicate",
+      "status": "passed",
+      "api_calls": 2,
+      "publication_status": "partial",
+      "daily_rows": 1,
+      "minute_rows": 0
+    },
+    {
+      "scenario": "extra_key",
+      "status": "passed",
+      "api_calls": 2,
+      "publication_status": "partial",
+      "daily_rows": 1,
+      "minute_rows": 0
+    },
+    {
+      "scenario": "required_null",
+      "status": "passed",
+      "api_calls": 2,
+      "publication_status": "partial",
+      "daily_rows": 1,
+      "minute_rows": 0
+    },
+    {
+      "scenario": "infinity",
+      "status": "passed",
+      "api_calls": 2,
+      "publication_status": "partial",
+      "daily_rows": 1,
+      "minute_rows": 0
+    },
+    {
+      "scenario": "negative",
+      "status": "passed",
+      "api_calls": 2,
+      "publication_status": "partial",
+      "daily_rows": 1,
+      "minute_rows": 0
+    },
+    {
+      "scenario": "boolean",
+      "status": "passed",
+      "api_calls": 2,
+      "publication_status": "partial",
+      "daily_rows": 1,
+      "minute_rows": 0
+    },
+    {
+      "scenario": "wrong_columns",
+      "status": "passed",
+      "api_calls": 2,
+      "publication_status": "partial",
+      "daily_rows": 1,
+      "minute_rows": 0
+    },
+    {
+      "scenario": "source_warning",
+      "status": "passed",
+      "api_calls": 2,
+      "publication_status": "partial",
+      "daily_rows": 1,
+      "minute_rows": 0
+    },
+    {
+      "scenario": "first_api_failure",
+      "status": "passed",
+      "api_calls": 1,
+      "old_file_preserved": true
+    },
+    {
+      "scenario": "serialization_failure",
+      "status": "passed",
+      "api_calls": 3,
+      "old_file_preserved": true
+    },
+    {
+      "scenario": "replace_failure",
+      "status": "passed",
+      "api_calls": 3,
+      "old_file_preserved": true
+    },
+    {
+      "scenario": "plan_tamper",
+      "status": "passed",
+      "api_calls": 0,
+      "old_file_preserved": true
+    },
+    {
+      "scenario": "empty_plan",
+      "status": "passed",
+      "api_calls": 0,
+      "old_file_preserved": true
+    },
+    {
+      "scenario": "same_name_atomic_overwrite_with_new_run_id",
+      "status": "passed"
+    }
+  ],
+  "real_joinquant_calls": 0,
+  "temporary_test_directory_removed": true
+}

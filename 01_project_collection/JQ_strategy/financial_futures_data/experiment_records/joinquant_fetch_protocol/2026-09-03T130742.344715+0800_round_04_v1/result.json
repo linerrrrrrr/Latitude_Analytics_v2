@@ -1,0 +1,99 @@
+{
+  "download_instruction": {
+    "action": "从聚宽文件面板手动下载该固定名称 ZIP，并将原文件与本段完整输出一起返回。",
+    "expected_bytes": 13546,
+    "expected_sha256": "6302a8035b761332ee0dbfb70041995b19a64ec992b4a744d938f60ed6782c65",
+    "file_name": "JQ_FINANCIAL_FUTURES_TRANSFER_PROBE.zip"
+  },
+  "elapsed_seconds": 0.08413,
+  "environment": {
+    "local_timezone": "CST",
+    "platform": "Linux-5.4.256-1.el7.elrepo.x86_64-x86_64-with-debian-stretch-sid",
+    "python_implementation": "CPython",
+    "python_version": "3.6.7 |Anaconda, Inc.| (default, Oct 23 2018, 19:16:44) \n[GCC 7.3.0]",
+    "working_directory": "/home/jquser",
+    "zip_deflated_available": true
+  },
+  "final_validation": {
+    "compression_reduced_size": true,
+    "final_file_bytes": 13546,
+    "final_file_sha256": "6302a8035b761332ee0dbfb70041995b19a64ec992b4a744d938f60ed6782c65",
+    "fixed_file_exists": true,
+    "manifest_matches_latest": true,
+    "matches_latest_in_memory_bytes": true,
+    "old_and_latest_sha256_differ": true,
+    "old_write_matches_in_memory_bytes": true,
+    "payload_sha256_from_disk": "a7f477f2ee58cc2a55adef0092443bba2f6f6e884888fecff4dc111e969fc7c2",
+    "payload_sha256_matches_manifest": true,
+    "temp_file_exists": false,
+    "zip_member_details": [
+      {
+        "compressed_bytes": 268,
+        "compression_type": 8,
+        "crc32": 2259334073,
+        "name": "manifest.json",
+        "uncompressed_bytes": 440
+      },
+      {
+        "compressed_bytes": 13052,
+        "compression_type": 8,
+        "crc32": 2710981090,
+        "name": "payload.jsonl",
+        "uncompressed_bytes": 262890
+      }
+    ],
+    "zip_member_names": [
+      "manifest.json",
+      "payload.jsonl"
+    ],
+    "zip_test_bad_member": null
+  },
+  "fixed_file_name": "JQ_FINANCIAL_FUTURES_TRANSFER_PROBE.zip",
+  "fixed_file_path": "/home/jquser/JQ_FINANCIAL_FUTURES_TRANSFER_PROBE.zip",
+  "preexisting_fixed_file": {
+    "bytes": null,
+    "exists": false,
+    "sha256": null
+  },
+  "probe_version": "joinquant_financial_futures_round_04_v1",
+  "run_id": "f8c86686-01e6-41be-a277-b6403d901f1a",
+  "run_started_at": "2026-09-03T13:07:42.344715+08:00",
+  "status": "ok",
+  "steps": [
+    {
+      "compression_reduced_size": true,
+      "latest_deflated_bytes": 13546,
+      "latest_deflated_sha256": "6302a8035b761332ee0dbfb70041995b19a64ec992b4a744d938f60ed6782c65",
+      "latest_stored_bytes": 263556,
+      "old_package_bytes": 13613,
+      "old_package_sha256": "0ea1b9ba8ebdbeb2a6d3ff754bdbf0f100e181f496319bade6a8c7ac94b440e1",
+      "status": "ok",
+      "step": "build_packages_in_memory"
+    },
+    {
+      "disk_identity": {
+        "bytes": 13613,
+        "exists": true,
+        "sha256": "0ea1b9ba8ebdbeb2a6d3ff754bdbf0f100e181f496319bade6a8c7ac94b440e1"
+      },
+      "status": "ok",
+      "step": "write_old_content_to_fixed_name"
+    },
+    {
+      "disk_identity": {
+        "bytes": 13546,
+        "exists": true,
+        "sha256": "6302a8035b761332ee0dbfb70041995b19a64ec992b4a744d938f60ed6782c65"
+      },
+      "status": "ok",
+      "step": "write_and_verify_latest_temp_file"
+    },
+    {
+      "status": "ok",
+      "step": "atomic_replace_fixed_name",
+      "temp_exists_after_replace": false
+    }
+  ],
+  "temp_cleanup": "not_present",
+  "temp_file_name": ".JQ_FINANCIAL_FUTURES_TRANSFER_PROBE.zip.tmp"
+}

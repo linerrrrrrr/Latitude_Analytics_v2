@@ -1,0 +1,345 @@
+{
+  "finalized_at": "2026-10-03T15:16:46.852834+08:00",
+  "lake_writes": false,
+  "source_hash_changes_since_audit_start": [],
+  "files": [
+    {
+      "file": "all_parquet_footer_audit.json",
+      "bytes": 6325,
+      "sha256": "f81dbfa1e727563a8e7370497a62e7507c6e64ad3e905f1c28b4b547fabd0bde"
+    },
+    {
+      "file": "all_parquet_footer_first_pass.json",
+      "bytes": 7384,
+      "sha256": "79a195761845c9fc7a6ecd68d2b4552b3d6022ad0c370c7c73a98c3455206042"
+    },
+    {
+      "file": "assumptions.json",
+      "bytes": 37543,
+      "sha256": "43fcaaa338d38695351da773189ca9d05127db035761f0ae96af04997764ee8c"
+    },
+    {
+      "file": "audit_scope.json",
+      "bytes": 383,
+      "sha256": "4ac5ba3e64d7dba6a88ed9fdae1c6b2aff81a97557e73bfbfb5e14117a0d875c"
+    },
+    {
+      "file": "browser_observations.json",
+      "bytes": 1370,
+      "sha256": "9d761f663c58dab7324b7db5c5c874c0858ca1621a527f4b9622f39910e59001"
+    },
+    {
+      "file": "CHECKLIST.md",
+      "bytes": 29913,
+      "sha256": "a7d36b9ab9d7ecbbf13c0d4ec3694f02cda453af4bf9c960c49cc329f762e30d"
+    },
+    {
+      "file": "eastmoney_robots.json",
+      "bytes": 170,
+      "sha256": "0d596f50798e9bb61886b138d9a8c34db1900a05d449520de939d49eaa15e2a6"
+    },
+    {
+      "file": "field_evidence_inventory.json",
+      "bytes": 260110,
+      "sha256": "a9bbc33511eeb93999226aef1b354c760e18d7800a3602f0f43429dad1b3d874"
+    },
+    {
+      "file": "FIELDS.md",
+      "bytes": 27439,
+      "sha256": "6e62f80bb0e7717f8202e4d214216770ff891943c3fe1971326676db5f2e11eb"
+    },
+    {
+      "file": "http_BCI.json",
+      "bytes": 2427,
+      "sha256": "80d8a4b9af976fb0b9b6836f81a61b22fc7c48f61fd6ec49d20358d4611cd228"
+    },
+    {
+      "file": "http_BCTI.json",
+      "bytes": 2441,
+      "sha256": "091797c71fcc1fb2e1214f69fa1c352b1941384571743e4953ff77bed4adc428"
+    },
+    {
+      "file": "http_BDI.json",
+      "bytes": 2446,
+      "sha256": "5d978454c9ac6754ce0999c19088f2fe98dc7aaf28857e6318a05905b83d865b"
+    },
+    {
+      "file": "http_BDTI.json",
+      "bytes": 2416,
+      "sha256": "6f26892d972a10fe6f4c55d958dacf699442d62d5c22a24a203f402aff0ddfc5"
+    },
+    {
+      "file": "http_BPI.json",
+      "bytes": 2437,
+      "sha256": "d63e665c32c79eb7c307228e96d0de5b6c3c4b184ca379f5b99b667bda26d93b"
+    },
+    {
+      "file": "http_BSI.json",
+      "bytes": 2431,
+      "sha256": "31ed31a19dba001e60a738a7f2e465258ebdd0c65b9563c16d004898ec15b1af"
+    },
+    {
+      "file": "http_MYSTEEL_ALUMINUM.json",
+      "bytes": 2405,
+      "sha256": "4960d5ea76317083e72544dcb32a623e786db3d1d69da9bbc16cf60fa47cb5e1"
+    },
+    {
+      "file": "http_MYSTEEL_COKE.json",
+      "bytes": 2375,
+      "sha256": "e78be706e828d97b1aaae566f06f8ebbd5d9399d8824e7c8bb7d4e288a704323"
+    },
+    {
+      "file": "http_MYSTEEL_COPPER.json",
+      "bytes": 2414,
+      "sha256": "3b1463de5e4a1d264abcb400cc30c598a1da7e8324ceb43bfc8344bdaf0ff0b3"
+    },
+    {
+      "file": "http_MYSTEEL_LEAD.json",
+      "bytes": 2415,
+      "sha256": "397d9cad30aa7988238b9787e36fae9042cb1a131454b3980a52c930bb8d758e"
+    },
+    {
+      "file": "http_MYSTEEL_NICKEL.json",
+      "bytes": 2423,
+      "sha256": "098a1cd8e98b802ba70f446396b2be933c4d60c583ef453febe91c879438382c"
+    },
+    {
+      "file": "http_MYSTEEL_STEEL_COMPOSITE.json",
+      "bytes": 2389,
+      "sha256": "c07cbaa8ff35933946a31106d7f633107bc8536d3013e06d22671fb6087040e7"
+    },
+    {
+      "file": "http_MYSTEEL_TIN.json",
+      "bytes": 394,
+      "sha256": "97f688698e1fb66d0206b6fce8ff3db0f6872a8541f2f6aee4576671b35600f7"
+    },
+    {
+      "file": "http_MYSTEEL_ZINC.json",
+      "bytes": 2415,
+      "sha256": "6f15c646e3d4e2ecdefc43fe77c3bc9cfd58a474cfd0f90b63f6f46d081653b1"
+    },
+    {
+      "file": "http_probe_manifest.json",
+      "bytes": 13510,
+      "sha256": "4fc59878f168586d45d3254139d764cce088a0aa12c4a48472162f15670a7860"
+    },
+    {
+      "file": "http_RPT_ECONOMY_CPI.json",
+      "bytes": 453,
+      "sha256": "5b3564c1014ebfa1a109d0e3e77d94957aadbc13f057cf73c6eeec5218fcaa29"
+    },
+    {
+      "file": "http_RPT_ECONOMY_GDP.json",
+      "bytes": 453,
+      "sha256": "a102c87ccd6b185b75661f56b9da682b92defef3e1447f0228982790a9fc1431"
+    },
+    {
+      "file": "http_RPT_ECONOMY_PMI.json",
+      "bytes": 453,
+      "sha256": "0f696e3b8daf9df9a37950c82ea556b49d5b964c7c03d740c79b5b79a512a468"
+    },
+    {
+      "file": "http_RPT_ECONOMY_PPI.json",
+      "bytes": 453,
+      "sha256": "f4ec7f85869093f327eae88ce284c68ccd98c2c549cdc7c7b05b19cbeb0c04b1"
+    },
+    {
+      "file": "http_SUNSIRS_ENERGY.json",
+      "bytes": 2384,
+      "sha256": "04625028a91aaf97ee8cfceb7931fb6bf529b06c30066e6f414b8140947fe218"
+    },
+    {
+      "file": "http_SUNSIRS_NONFERROUS.json",
+      "bytes": 2352,
+      "sha256": "c54e9bfb5b6a12556db21804430afc603258919c1c987f52d4ab495e1c3697e1"
+    },
+    {
+      "file": "http_SUNSIRS_STEEL.json",
+      "bytes": 2329,
+      "sha256": "414280fce8053f06ea6762be3878c2f8dc3b47b390cd38123496f9d9810d7e4c"
+    },
+    {
+      "file": "http_WTI_CONC.json",
+      "bytes": 2419,
+      "sha256": "2a8004aba0a5a292db15630d6acf978355fc7bd1325afaf65f8357b95adb20a8"
+    },
+    {
+      "file": "http_XINHUA_IRON_ORE.json",
+      "bytes": 2411,
+      "sha256": "81bd417c42562c74bb327a9534bd279b6232ec7c2e058d2b9f526480f0b5891f"
+    },
+    {
+      "file": "independent_comparisons.json",
+      "bytes": 124206,
+      "sha256": "d7930ca3a58e4701ea64f9f7dafb5d90185cd2c0151177c22e20251602fa83ab"
+    },
+    {
+      "file": "independent_comparisons_run.txt",
+      "bytes": 6668,
+      "sha256": "c24b6a3736565bae59e7d5fe5003b88fb4ef6b5dee4a2524e7e66a0ce8da8041"
+    },
+    {
+      "file": "jqdata_contract_info.json",
+      "bytes": 1776,
+      "sha256": "2776672f6cee9227383b9eed93ece98909033d2c8fb308d6fdf0e3fc4092091f"
+    },
+    {
+      "file": "jqdata_daily.json",
+      "bytes": 4532,
+      "sha256": "e1c61b19e559065ec3535276b3caefd0016d5b090af2f0fffb8cf4b33860f38c"
+    },
+    {
+      "file": "jqdata_futures_catalog.json",
+      "bytes": 2174103,
+      "sha256": "b26eb7c327279e9bf79f73ebb75811adcc0ed7fbfe794bc17ee55fdee2723dfa"
+    },
+    {
+      "file": "jqdata_futures_positions.json",
+      "bytes": 945,
+      "sha256": "ed3e4bfb56ca8506e88e10c233c5b857bb466818d9c48801ad2fc801a9f75212"
+    },
+    {
+      "file": "jqdata_futures_sett_price.json",
+      "bytes": 917,
+      "sha256": "9af2413aec7dd821250ef8f5ca46d1253bdd8c5ee03e326366c1ad4a86df53d9"
+    },
+    {
+      "file": "jqdata_minute.json",
+      "bytes": 732758,
+      "sha256": "d76e2fc5baf7c5b2a1f48aa08d707eab47178b7ff2d8f81c901326c7c684a4c3"
+    },
+    {
+      "file": "jqdata_overseas.json",
+      "bytes": 7699,
+      "sha256": "cc5c5451610d806329f19c6a8a517f69819cd82b7d3c6630098839e5b70fe67a"
+    },
+    {
+      "file": "jqdata_privileges.json",
+      "bytes": 393,
+      "sha256": "477dcdc8b817cfabf3a87324960070f08bd71aea1b53398fcc0536e15d5fd88a"
+    },
+    {
+      "file": "jqdata_probe_manifest.json",
+      "bytes": 6240,
+      "sha256": "57fc336d054934a318f5da6f12371e6d74b9707291b20995ce9d4ea2aafcbe12"
+    },
+    {
+      "file": "jqdata_rank.json",
+      "bytes": 153416,
+      "sha256": "05268a3c9cad969b6402f5372f626da984b8545af418ac37d9b91d3dd211eafb"
+    },
+    {
+      "file": "jqdata_rank_au1306.json",
+      "bytes": 25794,
+      "sha256": "6dcb2272f584da06d7b1b6a8f51ffc869979bb0b834697ce914584fe3afc1f61"
+    },
+    {
+      "file": "jqdata_trade_days.json",
+      "bytes": 578,
+      "sha256": "49ed09133e5c29d485b631ba26c0bb1fffa25111ca79e2068c76f705b59e9508"
+    },
+    {
+      "file": "jqdata_warehouse.json",
+      "bytes": 34257,
+      "sha256": "c209f19c5e9259826e8cac83e61c96a9c1c2be0f43464954da15d830a167b2c1"
+    },
+    {
+      "file": "lake_inventory.json",
+      "bytes": 147652,
+      "sha256": "5a2c0dcb8fb8f3dae247d23aab8248bf234e5d8e70b092057e0fbfc95bd9181f"
+    },
+    {
+      "file": "lake_inventory_run.txt",
+      "bytes": 1396,
+      "sha256": "6094f04510d7fc656d3fc4fc354d5455e226dfb23027cc79f91c62e9b71a3b63"
+    },
+    {
+      "file": "macro_probe_manifest.json",
+      "bytes": 2155,
+      "sha256": "50793752c911be677a8e1f73548b47ef3bf9ab3ed751063a7f793d99d9bb55e4"
+    },
+    {
+      "file": "macro_RPT_ECONOMY_CPI.json",
+      "bytes": 10525,
+      "sha256": "385bfa00fa839af028eef747d5e9391f261eb9cbedd309bfca77aaa3e069a13f"
+    },
+    {
+      "file": "macro_RPT_ECONOMY_GDP.json",
+      "bytes": 8294,
+      "sha256": "1b1d4fc042a8c1e1a9c47784e3ca9b82ee76b140f41632123e5e1b3f48e1dbeb"
+    },
+    {
+      "file": "macro_RPT_ECONOMY_PMI.json",
+      "bytes": 5092,
+      "sha256": "a76a281d2e9a9f3a418759f5f22920b74af0eac1a1c1c5897093463089eef758"
+    },
+    {
+      "file": "macro_RPT_ECONOMY_PPI.json",
+      "bytes": 4282,
+      "sha256": "efb2ad45064efd19825bc0dd2e2f0de68f46c0579ff95a5df0f03cb6e0bc21a0"
+    },
+    {
+      "file": "notebook_export_check.txt",
+      "bytes": 29008,
+      "sha256": "fe3e73104a9880023683a8473bc1b5e3611cecb8f6863d0903ba41462ed9ec4f"
+    },
+    {
+      "file": "README.md",
+      "bytes": 14385,
+      "sha256": "689a39ff0102882b5c9354e95c85e16b6c53fbd4b5d5e0d2f6191787ba83f0d5"
+    },
+    {
+      "file": "schema_inventory.json",
+      "bytes": 269625,
+      "sha256": "d215696d83fdc2badc1958ce338b754227fdd03abc8a59b63883c1277f1e4c14"
+    },
+    {
+      "file": "shibor_feb2025.json",
+      "bytes": 4112,
+      "sha256": "7e00c41b8e08e0c7cd6ee789bac997bf1b1ebf731e923e85c9f832cf3b04ba4f"
+    },
+    {
+      "file": "shibor_probe_manifest.json",
+      "bytes": 429,
+      "sha256": "973a1299b41636be1aa3ae4d93690c451fb15d56a4800b2a61657d79aab9d979"
+    },
+    {
+      "file": "source_inventory.json",
+      "bytes": 224063,
+      "sha256": "f1185d282a464872bf5ddaa5eb78c39d5adbd37ad60f3f56dd96112a2f708cc5"
+    },
+    {
+      "file": "targeted_tests.txt",
+      "bytes": 14472,
+      "sha256": "603dfdd91c0155aafb0d8f3daed2b0606cfaf819e803e3f759018fad511f1126"
+    }
+  ],
+  "audit_scripts": [
+    {
+      "path": "00_draft_collection_02/scripts/audit_collection_assumptions_20261003.py",
+      "sha256": "9321a15caa71ebc0e29fba872d4b2b664e91b8a69325922bb18e8f70d5d451c5"
+    },
+    {
+      "path": "00_draft_collection_02/scripts/probe_collection_sources_20261003.py",
+      "sha256": "13e6803c972489735474a8b6b617fb4faa6402a04d887ae579d548e2c3328523"
+    },
+    {
+      "path": "00_draft_collection_02/scripts/verify_collection_evidence_20261003.py",
+      "sha256": "c57bff3e39e3ac4a4c34ede2cf6ff6a27518a58654ef4b088e6cba9ff2a93359"
+    },
+    {
+      "path": "00_draft_collection_02/scripts/audit_all_parquet_schemas_20261003.py",
+      "sha256": "064cd2f65a5bd160dc07730a2c4d9fdc5d804693a74764bcb398ec4af2918e7a"
+    },
+    {
+      "path": "00_draft_collection_02/scripts/render_assumption_audit_20261003.py",
+      "sha256": "4f33758c35a8894da238337c30d874b239e3b614e42bc2b4fee78b507441a82e"
+    }
+  ],
+  "final_validation": {
+    "local_links": "passed",
+    "json_parse": "passed",
+    "all_table_row_and_file_counts_match_independent_footer_audit": true,
+    "assumption_scopes_include_all_19_entries": true
+  }
+}

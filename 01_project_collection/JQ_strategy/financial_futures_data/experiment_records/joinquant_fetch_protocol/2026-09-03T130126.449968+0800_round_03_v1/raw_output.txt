@@ -1,0 +1,1234 @@
+JQ_FINANCIAL_FUTURES_PROBE_ROUND_03_BEGIN
+{
+  "cases": [
+    {
+      "case": "lifecycle_single_request",
+      "elapsed_seconds": 1.383279,
+      "peak_rss_after": 204072,
+      "peak_rss_before": 142572,
+      "result": {
+        "canonical_frame_sha256": "1ea6d69089455d2e3bb5049ff2b73bf122769d9d034c690fc2c088d5740962cf",
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "open_interest"
+        ],
+        "dataframe_memory_bytes": 2472960,
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "volume": "float64"
+        },
+        "index": {
+          "count": 38640,
+          "dtype": "datetime64[ns]",
+          "duplicate_count": 0,
+          "first": "2024-01-22T09:31:00",
+          "last": "2024-09-20T15:00:00",
+          "names": [
+            null
+          ],
+          "python_type": "DatetimeIndex",
+          "sha256": "49b2ab5361dcf3574cde3c17958394a60832d7753d8c49ab42f826612b7f3c04",
+          "timezone": "None",
+          "values": null,
+          "values_omitted": true
+        },
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        },
+        "preview": [
+          {
+            "__index__": "2024-01-22T09:31:00",
+            "close": 3205.0,
+            "high": 3220.0,
+            "low": 3200.2,
+            "money": 69264480.0,
+            "open": 3220.0,
+            "open_interest": 69.0,
+            "volume": 72.0
+          },
+          {
+            "__index__": "2024-01-22T09:32:00",
+            "close": 3203.8,
+            "high": 3207.6,
+            "low": 3202.0,
+            "money": 52862400.0,
+            "open": 3205.0,
+            "open_interest": 123.0,
+            "volume": 55.0
+          },
+          {
+            "__index__": "2024-09-20T14:59:00",
+            "close": 3185.0,
+            "high": 3185.0,
+            "low": 3184.8,
+            "money": 136629780.0,
+            "open": 3184.8,
+            "open_interest": 18552.0,
+            "volume": 143.0
+          },
+          {
+            "__index__": "2024-09-20T15:00:00",
+            "close": 3185.0,
+            "high": 3185.2,
+            "low": 3184.8,
+            "money": 118480320.0,
+            "open": 3185.0,
+            "open_interest": 18462.0,
+            "volume": 124.0
+          }
+        ],
+        "python_type": "DataFrame",
+        "shape": [
+          38640,
+          7
+        ]
+      },
+      "status": "ok",
+      "warnings": []
+    },
+    {
+      "case": "month_2024_01",
+      "elapsed_seconds": 0.023058,
+      "peak_rss_after": 204072,
+      "peak_rss_before": 204072,
+      "result": {
+        "canonical_frame_sha256": "bf210d5862808c648cd9787cc17f4cea52e6542fc63e9f7568659b0424d03910",
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "open_interest"
+        ],
+        "dataframe_memory_bytes": 122880,
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "volume": "float64"
+        },
+        "index": {
+          "count": 1920,
+          "dtype": "datetime64[ns]",
+          "duplicate_count": 0,
+          "first": "2024-01-22T09:31:00",
+          "last": "2024-01-31T15:00:00",
+          "names": [
+            null
+          ],
+          "python_type": "DatetimeIndex",
+          "sha256": "6e3fe60c150d959d7434033696e7b0aeadcac65c76fce98888b55f5a526b00ed",
+          "timezone": "None",
+          "values": null,
+          "values_omitted": true
+        },
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        },
+        "preview": [
+          {
+            "__index__": "2024-01-22T09:31:00",
+            "close": 3205.0,
+            "high": 3220.0,
+            "low": 3200.2,
+            "money": 69264480.0,
+            "open": 3220.0,
+            "open_interest": 69.0,
+            "volume": 72.0
+          },
+          {
+            "__index__": "2024-01-22T09:32:00",
+            "close": 3203.8,
+            "high": 3207.6,
+            "low": 3202.0,
+            "money": 52862400.0,
+            "open": 3205.0,
+            "open_interest": 123.0,
+            "volume": 55.0
+          },
+          {
+            "__index__": "2024-01-31T14:59:00",
+            "close": 3145.6,
+            "high": 3146.2,
+            "low": 3143.8,
+            "money": 17928180.0,
+            "open": 3144.8,
+            "open_interest": 15573.0,
+            "volume": 19.0
+          },
+          {
+            "__index__": "2024-01-31T15:00:00",
+            "close": 3144.0,
+            "high": 3146.0,
+            "low": 3144.0,
+            "money": 22643280.0,
+            "open": 3146.0,
+            "open_interest": 15585.0,
+            "volume": 24.0
+          }
+        ],
+        "python_type": "DataFrame",
+        "shape": [
+          1920,
+          7
+        ]
+      },
+      "status": "ok",
+      "warnings": []
+    },
+    {
+      "case": "month_2024_02",
+      "elapsed_seconds": 0.035311,
+      "peak_rss_after": 204072,
+      "peak_rss_before": 204072,
+      "result": {
+        "canonical_frame_sha256": "d9f0cef59348eb097e00f991ff1ad98730c5fd78628622fc9c2a2b27b48d4003",
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "open_interest"
+        ],
+        "dataframe_memory_bytes": 230400,
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "volume": "float64"
+        },
+        "index": {
+          "count": 3600,
+          "dtype": "datetime64[ns]",
+          "duplicate_count": 0,
+          "first": "2024-02-01T09:31:00",
+          "last": "2024-02-29T15:00:00",
+          "names": [
+            null
+          ],
+          "python_type": "DatetimeIndex",
+          "sha256": "9220703c1e71d03881fbab20fa8d3967e64ca520f944a4ec6e3495eb3fc0c66e",
+          "timezone": "None",
+          "values": null,
+          "values_omitted": true
+        },
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        },
+        "preview": [
+          {
+            "__index__": "2024-02-01T09:31:00",
+            "close": 3138.6,
+            "high": 3143.6,
+            "low": 3127.0,
+            "money": 101608740.0,
+            "open": 3133.0,
+            "open_interest": 15546.0,
+            "volume": 108.0
+          },
+          {
+            "__index__": "2024-02-01T09:32:00",
+            "close": 3136.8,
+            "high": 3139.2,
+            "low": 3134.8,
+            "money": 70579680.0,
+            "open": 3138.0,
+            "open_interest": 15533.0,
+            "volume": 75.0
+          },
+          {
+            "__index__": "2024-02-29T14:59:00",
+            "close": 3467.8,
+            "high": 3468.2,
+            "low": 3462.8,
+            "money": 150806160.0,
+            "open": 3465.2,
+            "open_interest": 39683.0,
+            "volume": 145.0
+          },
+          {
+            "__index__": "2024-02-29T15:00:00",
+            "close": 3467.8,
+            "high": 3468.8,
+            "low": 3467.2,
+            "money": 74906280.0,
+            "open": 3467.8,
+            "open_interest": 39713.0,
+            "volume": 72.0
+          }
+        ],
+        "python_type": "DataFrame",
+        "shape": [
+          3600,
+          7
+        ]
+      },
+      "status": "ok",
+      "warnings": []
+    },
+    {
+      "case": "month_2024_03",
+      "elapsed_seconds": 0.045848,
+      "peak_rss_after": 204072,
+      "peak_rss_before": 204072,
+      "result": {
+        "canonical_frame_sha256": "65533e96d519be2c27543936678c0ba9e1a5c2eef587b144e3237e20fd67a50b",
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "open_interest"
+        ],
+        "dataframe_memory_bytes": 322560,
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "volume": "float64"
+        },
+        "index": {
+          "count": 5040,
+          "dtype": "datetime64[ns]",
+          "duplicate_count": 0,
+          "first": "2024-03-01T09:31:00",
+          "last": "2024-03-29T15:00:00",
+          "names": [
+            null
+          ],
+          "python_type": "DatetimeIndex",
+          "sha256": "b34647e04ad37c371f1a6f73d737a71957aeba516cd6f50ac546bec81ed2992a",
+          "timezone": "None",
+          "values": null,
+          "values_omitted": true
+        },
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        },
+        "preview": [
+          {
+            "__index__": "2024-03-01T09:31:00",
+            "close": 3465.0,
+            "high": 3466.6,
+            "low": 3460.8,
+            "money": 200544840.0,
+            "open": 3466.0,
+            "open_interest": 39685.0,
+            "volume": 193.0
+          },
+          {
+            "__index__": "2024-03-01T09:32:00",
+            "close": 3466.6,
+            "high": 3468.6,
+            "low": 3464.4,
+            "money": 102955980.0,
+            "open": 3464.8,
+            "open_interest": 39682.0,
+            "volume": 99.0
+          },
+          {
+            "__index__": "2024-03-29T14:59:00",
+            "close": 3468.2,
+            "high": 3468.2,
+            "low": 3467.4,
+            "money": 45774600.0,
+            "open": 3467.6,
+            "open_interest": 50067.0,
+            "volume": 44.0
+          },
+          {
+            "__index__": "2024-03-29T15:00:00",
+            "close": 3467.6,
+            "high": 3468.4,
+            "low": 3467.0,
+            "money": 40571340.0,
+            "open": 3467.8,
+            "open_interest": 50080.0,
+            "volume": 39.0
+          }
+        ],
+        "python_type": "DataFrame",
+        "shape": [
+          5040,
+          7
+        ]
+      },
+      "status": "ok",
+      "warnings": []
+    },
+    {
+      "case": "month_2024_04",
+      "elapsed_seconds": 0.137481,
+      "peak_rss_after": 204072,
+      "peak_rss_before": 204072,
+      "result": {
+        "canonical_frame_sha256": "2bb764483d52d9d8ae03299e8da2eb2029d2a9b2f5da4c2645b5f2e6bf29081e",
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "open_interest"
+        ],
+        "dataframe_memory_bytes": 307200,
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "volume": "float64"
+        },
+        "index": {
+          "count": 4800,
+          "dtype": "datetime64[ns]",
+          "duplicate_count": 0,
+          "first": "2024-04-01T09:31:00",
+          "last": "2024-04-30T15:00:00",
+          "names": [
+            null
+          ],
+          "python_type": "DatetimeIndex",
+          "sha256": "0b71e8edad58521fb5eb99e327eb3cdb4b16a0460a348336f9f3a0c3173740cd",
+          "timezone": "None",
+          "values": null,
+          "values_omitted": true
+        },
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        },
+        "preview": [
+          {
+            "__index__": "2024-04-01T09:31:00",
+            "close": 3494.4,
+            "high": 3498.6,
+            "low": 3483.6,
+            "money": 311338200.0,
+            "open": 3490.6,
+            "open_interest": 49998.0,
+            "volume": 297.0
+          },
+          {
+            "__index__": "2024-04-01T09:32:00",
+            "close": 3500.2,
+            "high": 3500.2,
+            "low": 3494.6,
+            "money": 223555020.0,
+            "open": 3494.6,
+            "open_interest": 49883.0,
+            "volume": 213.0
+          },
+          {
+            "__index__": "2024-04-30T14:59:00",
+            "close": 3563.0,
+            "high": 3563.8,
+            "low": 3562.4,
+            "money": 90858240.0,
+            "open": 3563.0,
+            "open_interest": 70504.0,
+            "volume": 85.0
+          },
+          {
+            "__index__": "2024-04-30T15:00:00",
+            "close": 3564.8,
+            "high": 3564.8,
+            "low": 3563.0,
+            "money": 138977040.0,
+            "open": 3563.0,
+            "open_interest": 70545.0,
+            "volume": 130.0
+          }
+        ],
+        "python_type": "DataFrame",
+        "shape": [
+          4800,
+          7
+        ]
+      },
+      "status": "ok",
+      "warnings": []
+    },
+    {
+      "case": "month_2024_05",
+      "elapsed_seconds": 0.044434,
+      "peak_rss_after": 204072,
+      "peak_rss_before": 204072,
+      "result": {
+        "canonical_frame_sha256": "1fa0a55539dbe9db66b20127ba9354ed41cd2f8781fb6e6cfbe88a852ebcf4a9",
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "open_interest"
+        ],
+        "dataframe_memory_bytes": 307200,
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "volume": "float64"
+        },
+        "index": {
+          "count": 4800,
+          "dtype": "datetime64[ns]",
+          "duplicate_count": 0,
+          "first": "2024-05-06T09:31:00",
+          "last": "2024-05-31T15:00:00",
+          "names": [
+            null
+          ],
+          "python_type": "DatetimeIndex",
+          "sha256": "255fcc35cd7fac665b505852705bf2c1ab3ee0a0ea66b0f586158bbf03b324ba",
+          "timezone": "None",
+          "values": null,
+          "values_omitted": true
+        },
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        },
+        "preview": [
+          {
+            "__index__": "2024-05-06T09:31:00",
+            "close": 3616.0,
+            "high": 3623.2,
+            "low": 3615.4,
+            "money": 1082779920.0,
+            "open": 3618.0,
+            "open_interest": 70378.0,
+            "volume": 997.0
+          },
+          {
+            "__index__": "2024-05-06T09:32:00",
+            "close": 3614.4,
+            "high": 3616.0,
+            "low": 3612.4,
+            "money": 401215020.0,
+            "open": 3615.8,
+            "open_interest": 70256.0,
+            "volume": 370.0
+          },
+          {
+            "__index__": "2024-05-31T14:59:00",
+            "close": 3533.2,
+            "high": 3534.4,
+            "low": 3533.0,
+            "money": 130388040.0,
+            "open": 3534.0,
+            "open_interest": 89886.0,
+            "volume": 123.0
+          },
+          {
+            "__index__": "2024-05-31T15:00:00",
+            "close": 3537.0,
+            "high": 3537.0,
+            "low": 3533.2,
+            "money": 174949680.0,
+            "open": 3533.4,
+            "open_interest": 89976.0,
+            "volume": 165.0
+          }
+        ],
+        "python_type": "DataFrame",
+        "shape": [
+          4800,
+          7
+        ]
+      },
+      "status": "ok",
+      "warnings": []
+    },
+    {
+      "case": "month_2024_06",
+      "elapsed_seconds": 0.042864,
+      "peak_rss_after": 204072,
+      "peak_rss_before": 204072,
+      "result": {
+        "canonical_frame_sha256": "d7331ef2fdc8c107ce61d387907a63ba230cdb0763f20e056973a1ad86f519a6",
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "open_interest"
+        ],
+        "dataframe_memory_bytes": 291840,
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "volume": "float64"
+        },
+        "index": {
+          "count": 4560,
+          "dtype": "datetime64[ns]",
+          "duplicate_count": 0,
+          "first": "2024-06-03T09:31:00",
+          "last": "2024-06-28T15:00:00",
+          "names": [
+            null
+          ],
+          "python_type": "DatetimeIndex",
+          "sha256": "04205fbf80cd08dd740024519b6be1b1b7365df1cf67d577d2994bf064761358",
+          "timezone": "None",
+          "values": null,
+          "values_omitted": true
+        },
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        },
+        "preview": [
+          {
+            "__index__": "2024-06-03T09:31:00",
+            "close": 3527.0,
+            "high": 3540.0,
+            "low": 3525.8,
+            "money": 523138560.0,
+            "open": 3540.0,
+            "open_interest": 89774.0,
+            "volume": 494.0
+          },
+          {
+            "__index__": "2024-06-03T09:32:00",
+            "close": 3523.4,
+            "high": 3527.4,
+            "low": 3522.2,
+            "money": 352093740.0,
+            "open": 3527.4,
+            "open_interest": 89711.0,
+            "volume": 333.0
+          },
+          {
+            "__index__": "2024-06-28T14:59:00",
+            "close": 3423.0,
+            "high": 3424.4,
+            "low": 3423.0,
+            "money": 102714960.0,
+            "open": 3424.2,
+            "open_interest": 112928.0,
+            "volume": 100.0
+          },
+          {
+            "__index__": "2024-06-28T15:00:00",
+            "close": 3422.0,
+            "high": 3423.2,
+            "low": 3421.6,
+            "money": 167348640.0,
+            "open": 3423.0,
+            "open_interest": 113011.0,
+            "volume": 163.0
+          }
+        ],
+        "python_type": "DataFrame",
+        "shape": [
+          4560,
+          7
+        ]
+      },
+      "status": "ok",
+      "warnings": []
+    },
+    {
+      "case": "month_2024_07",
+      "elapsed_seconds": 0.049554,
+      "peak_rss_after": 204072,
+      "peak_rss_before": 204072,
+      "result": {
+        "canonical_frame_sha256": "05ae356dd2fc1c263c0b3d081a545d5ff14eaa1728fb250594c198316c3b87c4",
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "open_interest"
+        ],
+        "dataframe_memory_bytes": 353280,
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "volume": "float64"
+        },
+        "index": {
+          "count": 5520,
+          "dtype": "datetime64[ns]",
+          "duplicate_count": 0,
+          "first": "2024-07-01T09:31:00",
+          "last": "2024-07-31T15:00:00",
+          "names": [
+            null
+          ],
+          "python_type": "DatetimeIndex",
+          "sha256": "cd8ad7d56e72a3c02465dc98511d21922c92491352cdbb64b4b4a34740c60cda",
+          "timezone": "None",
+          "values": null,
+          "values_omitted": true
+        },
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        },
+        "preview": [
+          {
+            "__index__": "2024-07-01T09:31:00",
+            "close": 3423.8,
+            "high": 3429.0,
+            "low": 3422.0,
+            "money": 458359080.0,
+            "open": 3422.2,
+            "open_interest": 112769.0,
+            "volume": 446.0
+          },
+          {
+            "__index__": "2024-07-01T09:32:00",
+            "close": 3426.2,
+            "high": 3427.6,
+            "low": 3421.2,
+            "money": 249612300.0,
+            "open": 3423.8,
+            "open_interest": 112682.0,
+            "volume": 243.0
+          },
+          {
+            "__index__": "2024-07-31T14:59:00",
+            "close": 3439.8,
+            "high": 3440.2,
+            "low": 3439.2,
+            "money": 225986580.0,
+            "open": 3440.2,
+            "open_interest": 107676.0,
+            "volume": 219.0
+          },
+          {
+            "__index__": "2024-07-31T15:00:00",
+            "close": 3441.0,
+            "high": 3442.2,
+            "low": 3439.4,
+            "money": 318904140.0,
+            "open": 3439.6,
+            "open_interest": 107751.0,
+            "volume": 309.0
+          }
+        ],
+        "python_type": "DataFrame",
+        "shape": [
+          5520,
+          7
+        ]
+      },
+      "status": "ok",
+      "warnings": []
+    },
+    {
+      "case": "month_2024_08",
+      "elapsed_seconds": 0.047388,
+      "peak_rss_after": 204072,
+      "peak_rss_before": 204072,
+      "result": {
+        "canonical_frame_sha256": "0c22fe916e4067be53ce0e504d2bf2214c94d568295ccb3a80eb8605abea74d6",
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "open_interest"
+        ],
+        "dataframe_memory_bytes": 337920,
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "volume": "float64"
+        },
+        "index": {
+          "count": 5280,
+          "dtype": "datetime64[ns]",
+          "duplicate_count": 0,
+          "first": "2024-08-01T09:31:00",
+          "last": "2024-08-30T15:00:00",
+          "names": [
+            null
+          ],
+          "python_type": "DatetimeIndex",
+          "sha256": "da48eae1ab768ddfef4d5aa7b27f3aad01182fc44572f97056da6d2255c2b233",
+          "timezone": "None",
+          "values": null,
+          "values_omitted": true
+        },
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        },
+        "preview": [
+          {
+            "__index__": "2024-08-01T09:31:00",
+            "close": 3447.2,
+            "high": 3447.2,
+            "low": 3441.2,
+            "money": 895903500.0,
+            "open": 3442.0,
+            "open_interest": 107355.0,
+            "volume": 867.0
+          },
+          {
+            "__index__": "2024-08-01T09:32:00",
+            "close": 3450.2,
+            "high": 3451.6,
+            "low": 3446.6,
+            "money": 578272500.0,
+            "open": 3446.6,
+            "open_interest": 107224.0,
+            "volume": 559.0
+          },
+          {
+            "__index__": "2024-08-30T14:59:00",
+            "close": 3321.0,
+            "high": 3321.2,
+            "low": 3320.2,
+            "money": 656503260.0,
+            "open": 3320.4,
+            "open_interest": 138002.0,
+            "volume": 659.0
+          },
+          {
+            "__index__": "2024-08-30T15:00:00",
+            "close": 3322.4,
+            "high": 3322.8,
+            "low": 3320.2,
+            "money": 848011020.0,
+            "open": 3320.8,
+            "open_interest": 138353.0,
+            "volume": 851.0
+          }
+        ],
+        "python_type": "DataFrame",
+        "shape": [
+          5280,
+          7
+        ]
+      },
+      "status": "ok",
+      "warnings": []
+    },
+    {
+      "case": "month_2024_09",
+      "elapsed_seconds": 0.031188,
+      "peak_rss_after": 204072,
+      "peak_rss_before": 204072,
+      "result": {
+        "canonical_frame_sha256": "61017160d9a3e690d0f9b3130544a16c3e98dfec41dfdc535a437b9e0d6e5027",
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "open_interest"
+        ],
+        "dataframe_memory_bytes": 199680,
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "volume": "float64"
+        },
+        "index": {
+          "count": 3120,
+          "dtype": "datetime64[ns]",
+          "duplicate_count": 0,
+          "first": "2024-09-02T09:31:00",
+          "last": "2024-09-20T15:00:00",
+          "names": [
+            null
+          ],
+          "python_type": "DatetimeIndex",
+          "sha256": "b23f60897e167e9e7b718153de3415d15def2c29c690416136e7bd2415269931",
+          "timezone": "None",
+          "values": null,
+          "values_omitted": true
+        },
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        },
+        "preview": [
+          {
+            "__index__": "2024-09-02T09:31:00",
+            "close": 3312.2,
+            "high": 3313.2,
+            "low": 3307.2,
+            "money": 2403577980.0,
+            "open": 3309.0,
+            "open_interest": 136816.0,
+            "volume": 2420.0
+          },
+          {
+            "__index__": "2024-09-02T09:32:00",
+            "close": 3312.4,
+            "high": 3312.4,
+            "low": 3309.4,
+            "money": 1107579360.0,
+            "open": 3312.2,
+            "open_interest": 136053.0,
+            "volume": 1115.0
+          },
+          {
+            "__index__": "2024-09-20T14:59:00",
+            "close": 3185.0,
+            "high": 3185.0,
+            "low": 3184.8,
+            "money": 136629780.0,
+            "open": 3184.8,
+            "open_interest": 18552.0,
+            "volume": 143.0
+          },
+          {
+            "__index__": "2024-09-20T15:00:00",
+            "close": 3185.0,
+            "high": 3185.2,
+            "low": 3184.8,
+            "money": 118480320.0,
+            "open": 3185.0,
+            "open_interest": 18462.0,
+            "volume": 124.0
+          }
+        ],
+        "python_type": "DataFrame",
+        "shape": [
+          3120,
+          7
+        ]
+      },
+      "status": "ok",
+      "warnings": []
+    },
+    {
+      "case": "invalid_contract_code",
+      "elapsed_seconds": 8.4e-05,
+      "error_message": "找不到标的NOT_A_REAL_CONTRACT.CCFX",
+      "error_type": "ParamsError",
+      "peak_rss_after": 204072,
+      "peak_rss_before": 204072,
+      "status": "error",
+      "warnings": []
+    },
+    {
+      "case": "invalid_field",
+      "elapsed_seconds": 0.000148,
+      "error_message": "field必须是['open', 'close', 'high', 'low', 'volume', 'money', 'avg', 'high_limit', 'low_limit', 'pre_close', 'paused', 'factor', 'open_interest']中的一个",
+      "error_type": "AssertionError",
+      "peak_rss_after": 204072,
+      "peak_rss_before": 204072,
+      "status": "error",
+      "warnings": []
+    },
+    {
+      "case": "invalid_frequency",
+      "elapsed_seconds": 8.5e-05,
+      "error_message": "invalid literal for int() with base 10: 'not_a_frequenc'",
+      "error_type": "ValueError",
+      "peak_rss_after": 204072,
+      "peak_rss_before": 204072,
+      "status": "error",
+      "warnings": []
+    },
+    {
+      "case": "reversed_interval",
+      "elapsed_seconds": 0.006184,
+      "peak_rss_after": 204072,
+      "peak_rss_before": 204072,
+      "result": {
+        "canonical_frame_sha256": "012b70a6e6f0d780e2143db0a496f14b71262a74eb3c3cd3200a0ae7c9765123",
+        "columns": [
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "money",
+          "open_interest"
+        ],
+        "dataframe_memory_bytes": 0,
+        "dtypes": {
+          "close": "float64",
+          "high": "float64",
+          "low": "float64",
+          "money": "float64",
+          "open": "float64",
+          "open_interest": "float64",
+          "volume": "float64"
+        },
+        "index": {
+          "count": 0,
+          "dtype": "float64",
+          "duplicate_count": 0,
+          "first": null,
+          "last": null,
+          "names": [
+            null
+          ],
+          "python_type": "Float64Index",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "timezone": "None",
+          "values": [],
+          "values_omitted": false
+        },
+        "null_counts": {
+          "close": 0,
+          "high": 0,
+          "low": 0,
+          "money": 0,
+          "open": 0,
+          "open_interest": 0,
+          "volume": 0
+        },
+        "preview": [],
+        "python_type": "DataFrame",
+        "shape": [
+          0,
+          7
+        ]
+      },
+      "status": "ok",
+      "warnings": []
+    }
+  ],
+  "coordinates": {
+    "minute_fields": [
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "money",
+      "open_interest"
+    ],
+    "month_windows": [
+      {
+        "end_at": "2024-01-31 23:59:59",
+        "label": "2024-01",
+        "start_at": "2024-01-22 00:00:00"
+      },
+      {
+        "end_at": "2024-02-29 23:59:59",
+        "label": "2024-02",
+        "start_at": "2024-02-01 00:00:00"
+      },
+      {
+        "end_at": "2024-03-31 23:59:59",
+        "label": "2024-03",
+        "start_at": "2024-03-01 00:00:00"
+      },
+      {
+        "end_at": "2024-04-30 23:59:59",
+        "label": "2024-04",
+        "start_at": "2024-04-01 00:00:00"
+      },
+      {
+        "end_at": "2024-05-31 23:59:59",
+        "label": "2024-05",
+        "start_at": "2024-05-01 00:00:00"
+      },
+      {
+        "end_at": "2024-06-30 23:59:59",
+        "label": "2024-06",
+        "start_at": "2024-06-01 00:00:00"
+      },
+      {
+        "end_at": "2024-07-31 23:59:59",
+        "label": "2024-07",
+        "start_at": "2024-07-01 00:00:00"
+      },
+      {
+        "end_at": "2024-08-31 23:59:59",
+        "label": "2024-08",
+        "start_at": "2024-08-01 00:00:00"
+      },
+      {
+        "end_at": "2024-09-20 23:59:59",
+        "label": "2024-09",
+        "start_at": "2024-09-01 00:00:00"
+      }
+    ],
+    "target_contract": "IF2409.CCFX",
+    "target_end_at": "2024-09-20 23:59:59",
+    "target_start_at": "2024-01-22 00:00:00"
+  },
+  "environment": {
+    "jqresearch_api_available": true,
+    "jqresearch_import_error": null,
+    "local_timezone": "CST",
+    "numpy_version": "1.14.6",
+    "pandas_version": "0.23.4",
+    "peak_rss_at_start": 142572,
+    "peak_rss_unit": "KiB on Linux; platform-defined otherwise",
+    "platform": "Linux-5.4.256-1.el7.elrepo.x86_64-x86_64-with-debian-stretch-sid",
+    "python_implementation": "CPython",
+    "python_version": "3.6.7 |Anaconda, Inc.| (default, Oct 23 2018, 19:16:44) \n[GCC 7.3.0]",
+    "resource_import_error": null,
+    "resource_module_available": true
+  },
+  "probe_version": "joinquant_financial_futures_round_03_v1",
+  "quota_counter_candidates": {
+    "get_api_usage": {
+      "available": false,
+      "python_type": "NoneType"
+    },
+    "get_data_usage": {
+      "available": false,
+      "python_type": "NoneType"
+    },
+    "get_query_count": {
+      "available": false,
+      "python_type": "NoneType"
+    }
+  },
+  "request_attempt_count": 14,
+  "resource_after_cleanup": {
+    "garbage_collected_object_count": 28,
+    "peak_rss": 218576
+  },
+  "resource_after_requests": {
+    "peak_rss": 218576,
+    "retained_dataframe_count": 11,
+    "retained_dataframe_memory_bytes": 4945920
+  },
+  "run_started_at": "2026-09-03T13:01:26.449968+08:00",
+  "whole_vs_month_chunks": {
+    "all_values_equal": true,
+    "available": true,
+    "chunked_canonical_sha256": "1ea6d69089455d2e3bb5049ff2b73bf122769d9d034c690fc2c088d5740962cf",
+    "chunked_duplicate_count": 0,
+    "chunked_only_keys_first_20": [],
+    "chunked_row_count": 38640,
+    "indexes_equal_in_order": true,
+    "largest_month_row_count": 5520,
+    "returned_rows_by_month": {
+      "2024-01": 1920,
+      "2024-02": 3600,
+      "2024-03": 5040,
+      "2024-04": 4800,
+      "2024-05": 4800,
+      "2024-06": 4560,
+      "2024-07": 5520,
+      "2024-08": 5280,
+      "2024-09": 3120
+    },
+    "scope_note": "This proves only the tested IF2409 lifecycle request against the nine non-overlapping month requests; it is not a provider-wide maximum.",
+    "silent_truncation_not_observed_in_tested_range": true,
+    "whole_canonical_sha256": "1ea6d69089455d2e3bb5049ff2b73bf122769d9d034c690fc2c088d5740962cf",
+    "whole_duplicate_count": 0,
+    "whole_only_keys_first_20": [],
+    "whole_row_count": 38640
+  }
+}
+JQ_FINANCIAL_FUTURES_PROBE_ROUND_03_END

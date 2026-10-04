@@ -1,0 +1,133 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at_utc": "2026-08-23T18:18:40.029241+00:00",
+  "python_executable": "E:\\anaconda3\\envs\\latitude\\python.exe",
+  "mode": "coverage",
+  "observation_date": "2026-08-21",
+  "request_policy": {
+    "repeats": 1,
+    "min_interval_seconds": 5.0,
+    "jitter_seconds": 0.5,
+    "timeout_seconds": 30.0,
+    "automatic_business_retry": false,
+    "concurrency": 1,
+    "stop_same_host_on": [
+      "transport_error",
+      "HTTP 403/429/5xx",
+      "invalid JSON where JSON is expected",
+      "block-page term"
+    ]
+  },
+  "scope_note": "Weekday-gap counts are descriptive only; they do not subtract source-specific holidays or prove a business-data defect.",
+  "robots": {
+    "datacenter-web.eastmoney.com": {
+      "robots_url": "https://datacenter-web.eastmoney.com/robots.txt",
+      "status": "received",
+      "http_status": 200,
+      "elapsed_seconds": 0.393378,
+      "content_type": "application/json;charset=UTF-8",
+      "body_bytes": 73,
+      "body_sha256": "324c876d095ac6408b90a82da563ff164a223fc57d234ce7224f8732bb24669e",
+      "can_fetch": true
+    }
+  },
+  "halted_hosts": {},
+  "summaries": {
+    "eastmoney_index_MYSTEEL_TIN_earliest": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "elapsed_seconds_min": 0.199482,
+      "elapsed_seconds_median": 0.199482,
+      "elapsed_seconds_p95": 0.199482,
+      "elapsed_seconds_max": 0.199482,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_MYSTEEL_TIN_latest": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "elapsed_seconds_min": 0.13459,
+      "elapsed_seconds_median": 0.13459,
+      "elapsed_seconds_p95": 0.13459,
+      "elapsed_seconds_max": 0.13459,
+      "semantic_response_variants": 1
+    }
+  },
+  "results": [
+    {
+      "sequence": 1,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_MYSTEEL_TIN_earliest",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:18:34.285799+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00135906%22%29&pageNumber=1&pageSize=1&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.199482,
+      "requests_elapsed_seconds": 0.198535,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "server": "Tengine",
+      "body_bytes": 89,
+      "body_sha256": "ea6528a2204b61a7ee34683a73ca00f8afdc86aadf3f765d4dae39bbfb19dbe7",
+      "inspection": {
+        "diagnostic_valid": true,
+        "response_kind": "empty_confirmed",
+        "success": false,
+        "code": 9201,
+        "message": "返回数据为空",
+        "row_count": 0,
+        "blocked_terms": [],
+        "semantic_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00135906",
+        "index_code": "MYSTEEL_TIN",
+        "index_name_zh": "钢联锡价格指数",
+        "index_category": "nonferrous"
+      }
+    },
+    {
+      "sequence": 2,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_MYSTEEL_TIN_latest",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:18:39.894810+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00135906%22%29&pageNumber=1&pageSize=1&sortColumns=REPORT_DATE&sortTypes=-1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.13459,
+      "requests_elapsed_seconds": 0.133407,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "server": "Tengine",
+      "body_bytes": 89,
+      "body_sha256": "ea6528a2204b61a7ee34683a73ca00f8afdc86aadf3f765d4dae39bbfb19dbe7",
+      "inspection": {
+        "diagnostic_valid": true,
+        "response_kind": "empty_confirmed",
+        "success": false,
+        "code": 9201,
+        "message": "返回数据为空",
+        "row_count": 0,
+        "blocked_terms": [],
+        "semantic_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00135906",
+        "index_code": "MYSTEEL_TIN",
+        "index_name_zh": "钢联锡价格指数",
+        "index_category": "nonferrous"
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+[
+  {
+    "label": "feb2025",
+    "request": {
+      "start_date": "20250201",
+      "end_date": "20250228",
+      "fields": "date,on,1w,2w,1m,3m,6m,9m,1y"
+    },
+    "checked_at": "2026-10-03T14:23:29.721590+08:00",
+    "rows": 19,
+    "status": "returned",
+    "sha256": "7e00c41b8e08e0c7cd6ee789bac997bf1b1ebf731e923e85c9f832cf3b04ba4f",
+    "evidence": "shibor_feb2025.json",
+    "elapsed_seconds": 0.198
+  }
+]

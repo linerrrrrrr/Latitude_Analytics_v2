@@ -1,0 +1,20 @@
+python: E:\anaconda3\envs\latitude_env_v2\python.exe
+environment: latitude_env_v2
+progress_event: {"event_version": 1, "event": "phase", "scope_id": "environment", "phase": "environment", "state": "completed", "object": {"python": "E:\\anaconda3\\envs\\latitude_env_v2\\python.exe", "environment": "latitude_env_v2"}, "counters": {"checks": {"completed": 1, "total": 1, "unit": "������"}}}
+progress_event: {"event_version": 1, "event": "progress", "scope_id": "packages", "phase": "packages", "state": "running", "object": {"package": "numpy"}, "counters": {"checks": {"completed": 0, "total": 5, "unit": "���������"}}}
+numpy: 2.4.3
+progress_event: {"event_version": 1, "event": "phase", "scope_id": "packages:numpy", "parent_scope_id": "packages", "phase": "packages", "state": "completed", "object": {"package": "numpy", "version": "2.4.3"}}
+progress_event: {"event_version": 1, "event": "progress", "scope_id": "packages", "phase": "packages", "state": "running", "object": {"package": "pandas"}, "counters": {"checks": {"completed": 1, "total": 5, "unit": "���������"}}}
+pandas: 3.0.1
+progress_event: {"event_version": 1, "event": "phase", "scope_id": "packages:pandas", "parent_scope_id": "packages", "phase": "packages", "state": "completed", "object": {"package": "pandas", "version": "3.0.1"}}
+progress_event: {"event_version": 1, "event": "progress", "scope_id": "packages", "phase": "packages", "state": "running", "object": {"package": "polars"}, "counters": {"checks": {"completed": 2, "total": 5, "unit": "���������"}}}
+polars: 1.35.2
+progress_event: {"event_version": 1, "event": "phase", "scope_id": "packages:polars", "parent_scope_id": "packages", "phase": "packages", "state": "completed", "object": {"package": "polars", "version": "1.35.2"}}
+progress_event: {"event_version": 1, "event": "progress", "scope_id": "packages", "phase": "packages", "state": "running", "object": {"package": "pyarrow"}, "counters": {"checks": {"completed": 3, "total": 5, "unit": "���������"}}}
+pyarrow: 24.0.0
+progress_event: {"event_version": 1, "event": "phase", "scope_id": "packages:pyarrow", "parent_scope_id": "packages", "phase": "packages", "state": "completed", "object": {"package": "pyarrow", "version": "24.0.0"}}
+progress_event: {"event_version": 1, "event": "progress", "scope_id": "packages", "phase": "packages", "state": "running", "object": {"package": "psutil"}, "counters": {"checks": {"completed": 4, "total": 5, "unit": "���������"}}}
+psutil: 7.2.2
+progress_event: {"event_version": 1, "event": "phase", "scope_id": "packages:psutil", "parent_scope_id": "packages", "phase": "packages", "state": "completed", "object": {"package": "psutil", "version": "7.2.2"}}
+progress_event: {"event_version": 1, "event": "phase", "scope_id": "packages", "phase": "packages", "state": "completed", "counters": {"checks": {"completed": 5, "total": 5, "unit": "���������"}}}
+runtime_ok: True

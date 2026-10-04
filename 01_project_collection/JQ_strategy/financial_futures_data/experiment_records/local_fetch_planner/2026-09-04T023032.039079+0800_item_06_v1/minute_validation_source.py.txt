@@ -1,0 +1,44 @@
+import datetime, hashlib, json, pathlib, sys
+from zoneinfo import ZoneInfo
+import pandas as pd
+sys.path.insert(0, str(pathlib.Path('financial_futures_data').resolve()))
+from financial_futures_fetch_planner import build_financial_futures_fetch_plan
+started_at = datetime.datetime.now(ZoneInfo('Asia/Shanghai'))
+plan = build_financial_futures_fetch_plan(as_of=datetime.datetime(2010,12,1,0,1,tzinfo=ZoneInfo('Asia/Shanghai')))
+canonical = lambda value: json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':'), allow_nan=False).encode('utf-8')
+assert hashlib.sha256(canonical(plan.plan_payload)).hexdigest() == plan.plan_sha256
+assert set(plan.planned_source_requests_df['bar_frequency']) == {'1d', '1m'}
+all_minute_keys = set()
+for source in plan.plan_payload['source_requests']:
+    source_identity = {key: value for key, value in source.items() if key not in {'source_request_id', 'source_request_ordinal', 'observations'}}
+    assert hashlib.sha256(canonical(source_identity)).hexdigest() == source['source_request_id']
+    assert sum(observation['expected_key_count'] for observation in source['observations']) <= 38000
+    for observation in source['observations']:
+        identity = {key: value for key, value in observation.items() if key not in {'request_id', 'request_ordinal'}}
+        assert hashlib.sha256(canonical(identity)).hexdigest() == observation['request_id']
+        if source['bar_frequency'] == '1m':
+            keys = pd.date_range(pd.Timestamp(observation['session_start_at']) + pd.Timedelta(minutes=1), pd.Timestamp(observation['session_end_at']), freq='min')
+            assert len(keys) == observation['expected_key_count']
+            texts = [key.isoformat(timespec='seconds') for key in keys]
+            assert hashlib.sha256(canonical(texts)).hexdigest() == observation['expected_keys_sha256']
+            for key in keys:
+                compound_key = (source['contract_code'], key)
+                assert compound_key not in all_minute_keys
+                all_minute_keys.add(compound_key)
+    if source['bar_frequency'] == '1m':
+        assert pd.Timestamp(source['source_start_at']) == pd.Timestamp(source['observations'][0]['session_start_at']) + pd.Timedelta(minutes=1)
+        assert pd.Timestamp(source['source_end_at']) == pd.Timestamp(source['observations'][-1]['session_end_at'])
+assert len(plan.planned_source_requests_df) <= 64
+assert len(plan.planned_observations_df) <= 50000
+assert int(plan.planned_source_requests_df['expected_key_count'].sum()) <= 500000
+print(json.dumps({
+    'started_at': started_at.isoformat(),
+    'completed_at': datetime.datetime.now(ZoneInfo('Asia/Shanghai')).isoformat(),
+    'as_of': plan.as_of.isoformat(),
+    'source_request_count': len(plan.planned_source_requests_df),
+    'observation_count': len(plan.planned_observations_df),
+    'planned_key_count': int(plan.planned_source_requests_df['expected_key_count'].sum()),
+    'planned_minute_key_count': len(all_minute_keys),
+    'maximum_source_request_key_count': int(plan.planned_source_requests_df['expected_key_count'].max()),
+    'checks': {'both_frequencies_planned': 'passed', 'three_level_identity_recomputed': 'passed', 'minute_interval_boundaries': 'passed', 'minute_key_digest': 'passed', 'no_overlapping_minute_keys': 'passed', 'all_batch_limits': 'passed'}
+}, indent=2))

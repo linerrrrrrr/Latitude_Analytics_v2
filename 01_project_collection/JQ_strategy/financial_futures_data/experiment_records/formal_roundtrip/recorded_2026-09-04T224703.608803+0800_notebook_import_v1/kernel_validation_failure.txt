@@ -1,0 +1,55 @@
+[IPKernelApp] WARNING | Could not set permissions on C:\Users\31918\.ipython\profile_default\security
+[IPKernelApp] WARNING | Could not set permissions on C:\Users\31918\.ipython\profile_default\pid
+[IPKernelApp] WARNING | Could not set permissions on C:\Users\31918\.ipython\profile_default\security
+[IPKernelApp] WARNING | Could not set permissions on C:\Users\31918\.ipython\profile_default\pid
+Traceback (most recent call last):
+  File "<stdin>", line 66, in <module>
+  File "E:\anaconda3\envs\latitude\Lib\site-packages\jupyter_core\utils\__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\anaconda3\envs\latitude\Lib\asyncio\base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "E:\anaconda3\envs\latitude\Lib\site-packages\nbclient\client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "E:\anaconda3\envs\latitude\Lib\site-packages\nbclient\client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "E:\anaconda3\envs\latitude\Lib\site-packages\nbclient\client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+assert import_report["status"] == "already_imported"
+assert import_report["database_write_performed"] is False
+assert fetch_plan is None and joinquant_code is None
+guard_source = 'if fetch_plan is None:\n    raise RuntimeError("导入后原计划已失效，请先重新运行第 3—8 节，再生成本批聚宽代码。")\ncurrent_plan_bytes = json.dumps(fetch_plan.plan_payload, ensure_ascii=False, sort_keys=True,\n                                separators=(",", ":"), allow_nan=False).encode("utf-8")\nif hashlib.sha256(current_plan_bytes).hexdigest() != fetch_plan.plan_sha256:\n    raise RuntimeError("内存计划已变化，请重新运行第 3 节，不要生成混合状态的代码。")\nif not fetch_plan.plan_payload["source_requests"]:\n    joinquant_code = "# 当前没有待拉取数据。无需运行聚宽，也不会覆盖已有文件。\\n"\nelse:\n    export_bundle = {\n        "plan": fetch_plan.plan_payload,\n        "plan_sha256": fetch_plan.plan_sha256,\n        "contract": {\n            "format_id": local_contract.TRANSFER_FORMAT_ID,\n            "protocol_version": local_contract.TRANSFER_PROTOCOL_VERSION,\n            "generator_version": local_contract.TRANSFER_GENERATOR_VERSION,\n            "planner_version": FETCH_PLANNER_VERSION,\n            "market_time_zone": local_contract.TRANSFER_MARKET_TIME_ZONE,\n            "source_api_module": local_contract.TRANSFER_SOURCE_API_MODULE,\n            "fixed_file_name": local_contract.TRANSFER_FIXED_FILE_NAME,\n            "member_names": list(local_contract.TRANSFER_MEMBER_NAMES),\n            "manifest_keys": list(local_contract.TRANSFER_MANIFEST_KEYS),\n            "request_block_keys": list(local_contract.TRANSFER_REQUEST_BLOCK_KEYS),\n            "daily_record_keys": list(local_contract.TRANSFER_DAILY_RECORD_KEYS),\n            "minute_record_keys": list(local_contract.TRANSFER_MINUTE_RECORD_KEYS),\n            "source_parameters": dict(local_contract.TRANSFER_SOURCE_PARAMETERS),\n            "source_fields": {"1d": list(local_contract.JOINQUANT_DAILY_SOURCE_FIELDS),\n                              "1m": list(local_contract.JOINQUANT_MINUTE_SOURCE_FIELDS)},\n            "underlying_codes": sorted(collection_policy.FINANCIAL_FUTURES_UNDERLYING_CODES),\n            "ready_hour": collection_policy.JOINQUANT_COMPLETED_DATA_READY_TIME.hour,\n            "ready_minute": collection_policy.JOINQUANT_COMPLETED_DATA_READY_TIME.minute,\n            "max_source_keys": collection_policy.JOINQUANT_MAX_EXPECTED_KEYS_PER_SOURCE_REQUEST,\n            "max_transfer_keys": collection_policy.JOINQUANT_MAX_EXPECTED_KEYS_PER_TRANSFER,\n            "max_observations": collection_policy.JOINQUANT_MAX_OBSERVATIONS_PER_TRANSFER,\n            "max_source_requests": collection_policy.JOINQUANT_MAX_SOURCE_REQUESTS_PER_TRANSFER,\n        },\n    }\n    export_bundle_bytes = json.dumps(export_bundle, ensure_ascii=False, sort_keys=True,\n                                     separators=(",", ":"), allow_nan=False).encode("utf-8")\n    encoded_bundle = base64.b64encode(zlib.compress(export_bundle_bytes, level=9)).decode("ascii")\n    bundle_literal = "\\n        ".join(repr(encoded_bundle[offset:offset + 100])\n                                     for offset in range(0, len(encoded_bundle), 100))\n    if joinquant_export_runtime.count("__EXPORT_BUNDLE_LITERAL__") != 1:\n        raise RuntimeError("导出模板占位符数量不正确。")\n    joinquant_code = joinquant_export_runtime.replace("__EXPORT_BUNDLE_LITERAL__", bundle_literal)\n    compile(joinquant_code, "<joinquant-export>", "exec")  # 仅语法检查，不执行。\n\nprint("计划 SHA-256:", fetch_plan.plan_sha256)\nprint("完整代码字符数:", len(joinquant_code))\nprint("在下方文本框内部 Ctrl+A、Ctrl+C。完整字符串也保留在 joinquant_code 变量中。")\ncode_box_html = (\n    \'<textarea readonly spellcheck="false" rows="24" \'\n    \'style="width:100%;font-family:monospace;color:CanvasText;background:Canvas;\'\n    \'color-scheme:light dark;box-sizing:border-box;" aria-label="完整聚宽代码">\'\n    + html.escape(joinquant_code) + \'</textarea>\'\n)\ndisplay({"text/html": code_box_html, "text/plain": joinquant_code}, raw=True)\n'
+try:
+    exec(compile(guard_source, "<notebook-plan-guard>", "exec"))
+except RuntimeError as error:
+    guard_error = str(error)
+    assert "导入后原计划已失效" in guard_error
+else:
+    raise AssertionError("导入后旧计划保护没有触发")
+assert hashlib.sha256(database_path.read_bytes()).hexdigest() == '71b6b4e972bb0d59bdb410bb5778ebeefa4b5371c782aa92ba89201e3d84ace0'
+assert hashlib.sha256((financial_futures_dir / "data/inbox/JQ_FINANCIAL_FUTURES_TRANSFER.zip").read_bytes()).hexdigest() == 'cc9e1a530ab75ab66f49a10f7acb058b47e824ae0669d18e2f7d00d630df7ec6'
+print(json.dumps({"status":"passed","import_report":import_report,"old_plan_guard_error":guard_error,
+    "database_sha256_after":hashlib.sha256(database_path.read_bytes()).hexdigest(),
+    "inbox_sha256_after":hashlib.sha256((financial_futures_dir / "data/inbox/JQ_FINANCIAL_FUTURES_TRANSFER.zip").read_bytes()).hexdigest(),
+    "shell_or_subprocess_used":False},ensure_ascii=False,sort_keys=True))
+------------------
+
+
+[31m---------------------------------------------------------------------------[39m
+[31mNameError[39m                                 Traceback (most recent call last)
+[36mCell[39m[36m [39m[32mIn[3][39m[32m, line 12[39m
+[32m     10[39m [38;5;28;01melse[39;00m:
+[32m     11[39m     [38;5;28;01mraise[39;00m [38;5;167;01mAssertionError[39;00m([33m"[39m[33m导入后旧计划保护没有触发[39m[33m"[39m)
+[32m---> [39m[32m12[39m [38;5;28;01massert[39;00m hashlib.sha256([43mdatabase_path[49m.read_bytes()).hexdigest() == [33m'[39m[33m71b6b4e972bb0d59bdb410bb5778ebeefa4b5371c782aa92ba89201e3d84ace0[39m[33m'[39m
+[32m     13[39m [38;5;28;01massert[39;00m hashlib.sha256((financial_futures_dir / [33m"[39m[33mdata/inbox/JQ_FINANCIAL_FUTURES_TRANSFER.zip[39m[33m"[39m).read_bytes()).hexdigest() == [33m'[39m[33mcc9e1a530ab75ab66f49a10f7acb058b47e824ae0669d18e2f7d00d630df7ec6[39m[33m'[39m
+[32m     14[39m [38;5;28mprint[39m(json.dumps({[33m"[39m[33mstatus[39m[33m"[39m:[33m"[39m[33mpassed[39m[33m"[39m,[33m"[39m[33mimport_report[39m[33m"[39m:import_report,[33m"[39m[33mold_plan_guard_error[39m[33m"[39m:guard_error,
+[32m     15[39m     [33m"[39m[33mdatabase_sha256_after[39m[33m"[39m:hashlib.sha256(database_path.read_bytes()).hexdigest(),
+[32m     16[39m     [33m"[39m[33minbox_sha256_after[39m[33m"[39m:hashlib.sha256((financial_futures_dir / [33m"[39m[33mdata/inbox/JQ_FINANCIAL_FUTURES_TRANSFER.zip[39m[33m"[39m).read_bytes()).hexdigest(),
+[32m     17[39m     [33m"[39m[33mshell_or_subprocess_used[39m[33m"[39m:[38;5;28;01mFalse[39;00m},ensure_ascii=[38;5;28;01mFalse[39;00m,sort_keys=[38;5;28;01mTrue[39;00m))
+
+[31mNameError[39m: name 'database_path' is not defined
+
+[IPKernelApp] WARNING | Parent appears to have exited, shutting down.

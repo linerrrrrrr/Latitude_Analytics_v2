@@ -1,0 +1,243 @@
+[
+  {
+    "label": "privileges",
+    "request": {},
+    "checked_at": "2026-10-03T14:22:41.068002+08:00",
+    "status": "returned",
+    "sha256": "477dcdc8b817cfabf3a87324960070f08bd71aea1b53398fcc0536e15d5fd88a",
+    "evidence": "jqdata_privileges.json",
+    "elapsed_seconds": 0.069
+  },
+  {
+    "label": "trade_days",
+    "request": {
+      "start_date": "2025-01-01",
+      "end_date": "2025-02-28"
+    },
+    "checked_at": "2026-10-03T14:22:41.137050+08:00",
+    "rows": 36,
+    "status": "returned",
+    "sha256": "49ed09133e5c29d485b631ba26c0bb1fffa25111ca79e2068c76f705b59e9508",
+    "evidence": "jqdata_trade_days.json",
+    "elapsed_seconds": 0.064
+  },
+  {
+    "label": "futures_catalog",
+    "request": {
+      "types": [
+        "futures"
+      ],
+      "date": null
+    },
+    "checked_at": "2026-10-03T14:22:41.201380+08:00",
+    "rows": 10795,
+    "status": "returned",
+    "sha256": "b26eb7c327279e9bf79f73ebb75811adcc0ed7fbfe794bc17ee55fdee2723dfa",
+    "evidence": "jqdata_futures_catalog.json",
+    "elapsed_seconds": 0.588
+  },
+  {
+    "label": "contract_info",
+    "request": {
+      "codes": [
+        "RB2505.XSGE",
+        "CU2503.XSGE",
+        "AU2504.XSGE",
+        "I2505.XDCE",
+        "MA2505.XZCE",
+        "SC2503.XINE",
+        "LC2505.GFEX"
+      ],
+      "fields": [
+        "contract_multiplier",
+        "tick_size",
+        "trade_time"
+      ]
+    },
+    "checked_at": "2026-10-03T14:22:41.790886+08:00",
+    "status": "returned",
+    "sha256": "2776672f6cee9227383b9eed93ece98909033d2c8fb308d6fdf0e3fc4092091f",
+    "evidence": "jqdata_contract_info.json",
+    "elapsed_seconds": 0.06
+  },
+  {
+    "label": "daily",
+    "request": {
+      "codes": [
+        "RB2505.XSGE",
+        "CU2503.XSGE",
+        "AU2504.XSGE",
+        "I2505.XDCE",
+        "MA2505.XZCE",
+        "SC2503.XINE",
+        "LC2505.GFEX"
+      ],
+      "start": "2025-02-13",
+      "end": "2025-02-14",
+      "fields": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "money",
+        "pre_close",
+        "open_interest"
+      ],
+      "fq": null,
+      "skip_paused": true,
+      "fill_paused": false,
+      "round": false
+    },
+    "checked_at": "2026-10-03T14:22:41.850777+08:00",
+    "rows": 14,
+    "status": "returned",
+    "sha256": "e1c61b19e559065ec3535276b3caefd0016d5b090af2f0fffb8cf4b33860f38c",
+    "evidence": "jqdata_daily.json",
+    "elapsed_seconds": 0.075
+  },
+  {
+    "label": "futures_sett_price",
+    "request": {
+      "codes": [
+        "RB2505.XSGE",
+        "CU2503.XSGE",
+        "AU2504.XSGE",
+        "I2505.XDCE",
+        "MA2505.XZCE",
+        "SC2503.XINE",
+        "LC2505.GFEX"
+      ],
+      "start": "2025-02-13",
+      "end": "2025-02-14"
+    },
+    "checked_at": "2026-10-03T14:22:41.925816+08:00",
+    "rows": 2,
+    "status": "returned",
+    "sha256": "9af2413aec7dd821250ef8f5ca46d1253bdd8c5ee03e326366c1ad4a86df53d9",
+    "evidence": "jqdata_futures_sett_price.json",
+    "elapsed_seconds": 0.063
+  },
+  {
+    "label": "futures_positions",
+    "request": {
+      "codes": [
+        "RB2505.XSGE",
+        "CU2503.XSGE",
+        "AU2504.XSGE",
+        "I2505.XDCE",
+        "MA2505.XZCE",
+        "SC2503.XINE",
+        "LC2505.GFEX"
+      ],
+      "start": "2025-02-13",
+      "end": "2025-02-14"
+    },
+    "checked_at": "2026-10-03T14:22:41.989378+08:00",
+    "rows": 2,
+    "status": "returned",
+    "sha256": "ed3e4bfb56ca8506e88e10c233c5b857bb466818d9c48801ad2fc801a9f75212",
+    "evidence": "jqdata_futures_positions.json",
+    "elapsed_seconds": 0.062
+  },
+  {
+    "label": "minute",
+    "request": {
+      "codes": [
+        "RB2505.XSGE",
+        "CU2503.XSGE",
+        "AU2504.XSGE",
+        "I2505.XDCE",
+        "MA2505.XZCE",
+        "SC2503.XINE",
+        "LC2505.GFEX"
+      ],
+      "start": "2025-02-13 20:59:00",
+      "end": "2025-02-14 15:01:00",
+      "fields": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "money",
+        "open_interest"
+      ]
+    },
+    "checked_at": "2026-10-03T14:22:42.051978+08:00",
+    "rows": 2835,
+    "status": "returned",
+    "sha256": "d76e2fc5baf7c5b2a1f48aa08d707eab47178b7ff2d8f81c901326c7c684a4c3",
+    "evidence": "jqdata_minute.json",
+    "elapsed_seconds": 0.268
+  },
+  {
+    "label": "rank",
+    "request": {
+      "day": "2025-02-14",
+      "codes": [
+        "RB2505.XSGE",
+        "CU2503.XSGE",
+        "AU2504.XSGE",
+        "I2505.XDCE",
+        "MA2505.XZCE",
+        "SC2503.XINE",
+        "LC2505.GFEX"
+      ],
+      "limit": 1000
+    },
+    "checked_at": "2026-10-03T14:22:42.458214+08:00",
+    "rows": 360,
+    "status": "returned",
+    "sha256": "05268a3c9cad969b6402f5372f626da984b8545af418ac37d9b91d3dd211eafb",
+    "evidence": "jqdata_rank.json",
+    "elapsed_seconds": 0.187
+  },
+  {
+    "label": "rank_au1306",
+    "request": {
+      "day": "2013-04-18",
+      "code": "AU1306.XSGE",
+      "limit": 100
+    },
+    "checked_at": "2026-10-03T14:22:42.646088+08:00",
+    "rows": 60,
+    "status": "returned",
+    "sha256": "6dcb2272f584da06d7b1b6a8f51ffc869979bb0b834697ce914584fe3afc1f61",
+    "evidence": "jqdata_rank_au1306.json",
+    "elapsed_seconds": 0.1
+  },
+  {
+    "label": "warehouse",
+    "request": {
+      "day": "2025-02-14",
+      "underlying_codes": [
+        "RB",
+        "I",
+        "MA",
+        "SC",
+        "LC"
+      ],
+      "limit": 1000
+    },
+    "checked_at": "2026-10-03T14:22:42.816154+08:00",
+    "rows": 92,
+    "status": "returned",
+    "sha256": "c209f19c5e9259826e8cac83e61c96a9c1c2be0f43464954da15d830a167b2c1",
+    "evidence": "jqdata_warehouse.json",
+    "elapsed_seconds": 0.091
+  },
+  {
+    "label": "overseas",
+    "request": {
+      "day": "2025-02-14",
+      "limit": 1000
+    },
+    "checked_at": "2026-10-03T14:22:42.975497+08:00",
+    "rows": 23,
+    "status": "returned",
+    "sha256": "cc5c5451610d806329f19c6a8a517f69819cd82b7d3c6630098839e5b70fe67a",
+    "evidence": "jqdata_overseas.json",
+    "elapsed_seconds": 0.088
+  }
+]

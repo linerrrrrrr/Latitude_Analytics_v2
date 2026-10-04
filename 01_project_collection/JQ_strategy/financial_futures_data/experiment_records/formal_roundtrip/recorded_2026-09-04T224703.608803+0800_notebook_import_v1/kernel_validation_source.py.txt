@@ -1,0 +1,88 @@
+import ast
+import copy
+import datetime as dt
+import hashlib
+import io
+import json
+import pathlib
+import sys
+import time
+from zoneinfo import ZoneInfo
+
+import nbclient
+import nbformat
+from jupyter_client import KernelManager
+
+module_dir = pathlib.Path.cwd() / "financial_futures_data"
+notebook_path = module_dir / "plan_financial_futures_fetch.ipynb"
+notebook = nbformat.read(notebook_path, as_version=4)
+database_path = module_dir / "data/warehouse/financial_futures.duckdb"
+inbox_path = module_dir / "data/inbox/JQ_FINANCIAL_FUTURES_TRANSFER.zip"
+database_sha256_before = hashlib.sha256(database_path.read_bytes()).hexdigest()
+inbox_sha256_before = hashlib.sha256(inbox_path.read_bytes()).hexdigest()
+expected_database_sha256 = "71b6b4e972bb0d59bdb410bb5778ebeefa4b5371c782aa92ba89201e3d84ace0"
+expected_inbox_sha256 = "cc9e1a530ab75ab66f49a10f7acb058b47e824ae0669d18e2f7d00d630df7ec6"
+assert database_sha256_before == expected_database_sha256
+assert inbox_sha256_before == expected_inbox_sha256
+assert notebook.cells[21].cell_type == "markdown"
+assert notebook.cells[22].cell_type == "code"
+assert "import_financial_futures_file(write=True)" in notebook.cells[22].source
+assert "get_ipython" not in notebook.cells[22].source
+assert "subprocess" not in notebook.cells[22].source
+assert "powershell" not in notebook.cells[22].source.lower()
+assert "fetch_plan is None" in notebook.cells[19].source
+
+selected_notebook = nbformat.v4.new_notebook(metadata=copy.deepcopy(notebook.metadata))
+selected_notebook.cells = [
+    copy.deepcopy(notebook.cells[1]),
+    copy.deepcopy(notebook.cells[22]),
+    nbformat.v4.new_code_cell("""assert import_report["status"] == "already_imported"
+assert import_report["database_write_performed"] is False
+assert fetch_plan is None and joinquant_code is None
+guard_source = """ + repr(notebook.cells[19].source) + """
+try:
+    exec(compile(guard_source, "<notebook-plan-guard>", "exec"))
+except RuntimeError as error:
+    guard_error = str(error)
+    assert "导入后原计划已失效" in guard_error
+else:
+    raise AssertionError("导入后旧计划保护没有触发")
+assert hashlib.sha256(database_path.read_bytes()).hexdigest() == """ + repr(expected_database_sha256) + """
+assert hashlib.sha256((financial_futures_dir / "data/inbox/JQ_FINANCIAL_FUTURES_TRANSFER.zip").read_bytes()).hexdigest() == """ + repr(expected_inbox_sha256) + """
+print(json.dumps({"status":"passed","import_report":import_report,"old_plan_guard_error":guard_error,
+    "database_sha256_after":hashlib.sha256(database_path.read_bytes()).hexdigest(),
+    "inbox_sha256_after":hashlib.sha256((financial_futures_dir / "data/inbox/JQ_FINANCIAL_FUTURES_TRANSFER.zip").read_bytes()).hexdigest(),
+    "shell_or_subprocess_used":False},ensure_ascii=False,sort_keys=True))"""),
+]
+started_at = dt.datetime.now(ZoneInfo("Asia/Shanghai")).isoformat()
+started_clock = time.perf_counter()
+kernel_manager = KernelManager(kernel_name="python3")
+kernel_manager.kernel_spec.argv[0] = sys.executable
+client = nbclient.NotebookClient(
+    selected_notebook, km=kernel_manager, timeout=180,
+    resources={"metadata":{"path":str(pathlib.Path.cwd())}},
+    allow_errors=False, record_timing=True,
+)
+executed = client.execute()
+kernel_manager.shutdown_kernel(now=True)
+final_stdout = "".join(output.get("text","") for output in executed.cells[-1].outputs if output.output_type=="stream")
+result = json.loads(final_stdout.strip().splitlines()[-1])
+assert result["status"] == "passed"
+assert result["import_report"]["status"] == "already_imported"
+assert result["import_report"]["database_write_performed"] is False
+assert result["database_sha256_after"] == database_sha256_before
+assert result["inbox_sha256_after"] == inbox_sha256_before
+assert sorted(path.name for path in (module_dir / "data/staging").iterdir()) == [".gitignore"]
+import_stdout = "".join(output.get("text","") for output in executed.cells[1].outputs if output.output_type=="stream")
+print(json.dumps({
+    "status":"passed","started_at":started_at,"completed_at":dt.datetime.now(ZoneInfo("Asia/Shanghai")).isoformat(),
+    "elapsed_seconds":time.perf_counter()-started_clock,
+    "execution_environment":"fresh Jupyter kernel forced to the current latitude interpreter",
+    "kernel_python":sys.executable,"executed_notebook_cell_indexes":[1,22],
+    "formal_import_function_called_directly":True,"shell_or_subprocess_used":False,
+    "import_report":result["import_report"],"import_stdout":import_stdout,
+    "old_plan_guard_error":result["old_plan_guard_error"],
+    "database_sha256_before":database_sha256_before,"database_sha256_after":result["database_sha256_after"],
+    "inbox_sha256_before":inbox_sha256_before,"inbox_sha256_after":result["inbox_sha256_after"],
+    "staging_runtime_files_after":[],"saved_notebook_outputs_not_rewritten":True
+},ensure_ascii=False,indent=2,sort_keys=True))

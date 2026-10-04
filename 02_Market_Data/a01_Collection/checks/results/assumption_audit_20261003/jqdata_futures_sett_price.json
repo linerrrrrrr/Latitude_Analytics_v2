@@ -1,0 +1,45 @@
+{
+  "columns": [
+    "RB2505.XSGE",
+    "CU2503.XSGE",
+    "AU2504.XSGE",
+    "I2505.XDCE",
+    "MA2505.XZCE",
+    "SC2503.XINE",
+    "LC2505.GFEX"
+  ],
+  "index_name": null,
+  "index": [
+    "2025-02-13 00:00:00",
+    "2025-02-14 00:00:00"
+  ],
+  "dtypes": {
+    "RB2505.XSGE": "float64",
+    "CU2503.XSGE": "float64",
+    "AU2504.XSGE": "float64",
+    "I2505.XDCE": "float64",
+    "MA2505.XZCE": "float64",
+    "SC2503.XINE": "float64",
+    "LC2505.GFEX": "float64"
+  },
+  "rows": [
+    {
+      "RB2505.XSGE": 3277.0,
+      "CU2503.XSGE": 77400.0,
+      "AU2504.XSGE": 681.68,
+      "I2505.XDCE": 818.5,
+      "MA2505.XZCE": 2560.0,
+      "SC2503.XINE": 607.2,
+      "LC2505.GFEX": 77540.0
+    },
+    {
+      "RB2505.XSGE": 3268.0,
+      "CU2503.XSGE": 77810.0,
+      "AU2504.XSGE": 686.22,
+      "I2505.XDCE": 814.0,
+      "MA2505.XZCE": 2539.0,
+      "SC2503.XINE": 593.5,
+      "LC2505.GFEX": 76980.0
+    }
+  ]
+}

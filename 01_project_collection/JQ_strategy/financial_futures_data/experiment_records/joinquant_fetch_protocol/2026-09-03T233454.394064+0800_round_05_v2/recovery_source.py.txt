@@ -1,0 +1,94 @@
+import builtins as recovery_builtins
+import re as recovery_re
+
+original_round_05_source = In[2]
+
+version_text = "joinquant_financial_futures_round_05_v1"
+if original_round_05_source.count(version_text) != 1:
+    raise recovery_builtins.RuntimeError(
+        "The v1 probe version was not found exactly once in In[2]"
+    )
+
+corrected_round_05_source = original_round_05_source.replace(
+    version_text,
+    "joinquant_financial_futures_round_05_v2",
+    1,
+)
+
+builtin_call_counts = {
+    "RuntimeError": 1,
+    "enumerate": 1,
+    "getattr": 1,
+    "isinstance": 8,
+    "list": 1,
+    "open": 4,
+    "print": 3,
+    "repr": 1,
+    "round": 2,
+    "str": 1,
+    "sum": 2,
+    "type": 6,
+}
+
+for builtin_name, expected_count in builtin_call_counts.items():
+    builtin_pattern = (
+        r"(?<![A-Za-z0-9_.])"
+        + recovery_re.escape(builtin_name)
+        + r"\("
+    )
+    actual_count = recovery_builtins.len(
+        recovery_re.findall(
+            builtin_pattern,
+            corrected_round_05_source,
+        )
+    )
+    if actual_count != expected_count:
+        raise recovery_builtins.RuntimeError(
+            "Expected {} unqualified {} calls, found {}".format(
+                expected_count,
+                builtin_name,
+                actual_count,
+            )
+        )
+    corrected_round_05_source = recovery_re.sub(
+        builtin_pattern,
+        "py_builtins." + builtin_name + "(",
+        corrected_round_05_source,
+    )
+
+exception_replacements = [
+    (
+        "except (TypeError, ValueError):",
+        "except (py_builtins.TypeError, py_builtins.ValueError):",
+        1,
+    ),
+    (
+        "except Exception as",
+        "except py_builtins.Exception as",
+        3,
+    ),
+]
+
+for old_text, new_text, expected_count in exception_replacements:
+    actual_count = corrected_round_05_source.count(old_text)
+    if actual_count != expected_count:
+        raise recovery_builtins.RuntimeError(
+            "Expected {} occurrences of {!r}, found {}".format(
+                expected_count,
+                old_text,
+                actual_count,
+            )
+        )
+    corrected_round_05_source = corrected_round_05_source.replace(
+        old_text,
+        new_text,
+    )
+
+recovery_builtins.exec(
+    recovery_builtins.compile(
+        corrected_round_05_source,
+        "<joinquant_financial_futures_round_05_v2>",
+        "exec",
+    ),
+    recovery_builtins.globals(),
+)

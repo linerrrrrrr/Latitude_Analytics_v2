@@ -1,0 +1,70 @@
+{
+  "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=ALL&filter=%28INDICATOR_ID%3D%22EMI00018828%22%29&sortColumns=REPORT_DATE&sortTypes=-1&pageSize=3&pageNumber=1&source=WEB&client=WEB",
+  "http_status": 200,
+  "body": {
+    "version": "76df77bf36b8ee7ecea7362c01db39a3",
+    "result": {
+      "pages": 1352,
+      "data": [
+        {
+          "REPORT_DATE": "2026-09-30 00:00:00",
+          "INDICATOR_VALUE": 2131.6,
+          "CHANGE_RATE": 0,
+          "CHANGERATE_3M": 20.32061413,
+          "CHANGERATE_6M": 54.27372078,
+          "CHANGERATE_1Y": 54.58698963,
+          "CHANGERATE_2Y": 30.05491153,
+          "CHANGERATE_3Y": -6.43079759,
+          "IS_NEWEST": "True",
+          "BOARD_CODE": "BK1250",
+          "BOARD_NAME": "煤炭开采",
+          "CONCEPT_CODE": "BK0492",
+          "CONCEPT_NAME": "煤化工",
+          "INDICATOR_ID": "EMI00018828",
+          "INDICATOR_NAME": "焦炭指数:综合",
+          "RANK_LABEL": "M"
+        },
+        {
+          "REPORT_DATE": "2026-09-29 00:00:00",
+          "INDICATOR_VALUE": 2131.6,
+          "CHANGE_RATE": 0,
+          "CHANGERATE_3M": 20.32061413,
+          "CHANGERATE_6M": 54.27372078,
+          "CHANGERATE_1Y": 54.58698963,
+          "CHANGERATE_2Y": 30.05491153,
+          "CHANGERATE_3Y": -6.43079759,
+          "IS_NEWEST": "False",
+          "BOARD_CODE": "BK1250",
+          "BOARD_NAME": "煤炭开采",
+          "CONCEPT_CODE": "BK0492",
+          "CONCEPT_NAME": "煤化工",
+          "INDICATOR_ID": "EMI00018828",
+          "INDICATOR_NAME": "焦炭指数:综合",
+          "RANK_LABEL": "M"
+        },
+        {
+          "REPORT_DATE": "2026-09-28 00:00:00",
+          "INDICATOR_VALUE": 2131.6,
+          "CHANGE_RATE": 0,
+          "CHANGERATE_3M": 20.32061413,
+          "CHANGERATE_6M": 54.27372078,
+          "CHANGERATE_1Y": 54.58698963,
+          "CHANGERATE_2Y": 30.0707835,
+          "CHANGERATE_3Y": -6.43079759,
+          "IS_NEWEST": "False",
+          "BOARD_CODE": "BK1250",
+          "BOARD_NAME": "煤炭开采",
+          "CONCEPT_CODE": "BK0492",
+          "CONCEPT_NAME": "煤化工",
+          "INDICATOR_ID": "EMI00018828",
+          "INDICATOR_NAME": "焦炭指数:综合",
+          "RANK_LABEL": "M"
+        }
+      ],
+      "count": 4056
+    },
+    "success": true,
+    "message": "ok",
+    "code": 0
+  }
+}

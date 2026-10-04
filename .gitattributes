@@ -11,3 +11,7 @@
 00_draft_collection_02/feature_engineering_before_research/** -text
 environment/rebuild_20261001/** -text
 environment/alipai/results/** -text
+
+# Fixed audit evidence retains the exact bytes recorded by SHA-256 manifests.
+01_project_collection/JQ_strategy/financial_futures_data/experiment_records/** -text
+02_Market_Data/a01_Collection/checks/results/** -text

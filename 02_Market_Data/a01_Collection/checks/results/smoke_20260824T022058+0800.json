@@ -1,0 +1,99 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at_utc": "2026-08-23T18:20:59.793640+00:00",
+  "python_executable": "E:\\anaconda3\\envs\\latitude\\python.exe",
+  "mode": "smoke",
+  "observation_date": "2026-08-21",
+  "request_policy": {
+    "repeats": 1,
+    "min_interval_seconds": 5.0,
+    "jitter_seconds": 0.0,
+    "timeout_seconds": 30.0,
+    "automatic_business_retry": false,
+    "concurrency": 1,
+    "stop_same_host_on": [
+      "transport_error",
+      "HTTP 403/429/5xx",
+      "invalid JSON where JSON is expected",
+      "block-page term"
+    ]
+  },
+  "scope_note": "Weekday-gap counts are descriptive only; they do not subtract source-specific holidays or prove a business-data defect.",
+  "robots": {
+    "datacenter-web.eastmoney.com": {
+      "robots_url": "https://datacenter-web.eastmoney.com/robots.txt",
+      "status": "unexpected_content",
+      "http_status": 200,
+      "elapsed_seconds": 0.363856,
+      "content_type": "application/json;charset=UTF-8",
+      "body_bytes": 73,
+      "body_sha256": "324c876d095ac6408b90a82da563ff164a223fc57d234ce7224f8732bb24669e",
+      "can_fetch": null
+    }
+  },
+  "halted_hosts": {},
+  "summaries": {
+    "eastmoney_index_BDI_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "elapsed_seconds_min": 0.60814,
+      "elapsed_seconds_median": 0.60814,
+      "elapsed_seconds_p95": 0.60814,
+      "elapsed_seconds_max": 0.60814,
+      "semantic_response_variants": 1
+    }
+  },
+  "results": [
+    {
+      "sequence": 1,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_BDI_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:20:59.184677+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00107664%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.60814,
+      "requests_elapsed_seconds": 0.601588,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "server": "Tengine",
+      "body_bytes": 7776,
+      "body_sha256": "97bc2a725bd8120c0fbf41f3e16424c9d4b2dbefd0e66fc9e7e6d3771da8ad70",
+      "inspection": {
+        "diagnostic_valid": true,
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 85,
+        "row_count": 85,
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 2,
+        "longest_calendar_gap_days": 4,
+        "blocked_terms": [],
+        "semantic_sha256": "29fa925ddc6fcfdafa3bd5e5baa244e787c7197e7a6d37a7a8f04fc6f3d55094"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00107664",
+        "index_code": "BDI",
+        "index_name_zh": "波罗的海干散货指数",
+        "index_category": "shipping"
+      }
+    }
+  ]
+}

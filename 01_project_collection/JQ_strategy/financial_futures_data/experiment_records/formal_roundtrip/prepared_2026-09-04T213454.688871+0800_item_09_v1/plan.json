@@ -1,0 +1,205 @@
+{
+  "format_id": "jq_financial_futures_transfer",
+  "generator_version": "financial_futures_joinquant_export_v1",
+  "market_time_zone": "Asia/Shanghai",
+  "planner_version": "financial_futures_fetch_planner_v1",
+  "protocol_version": "1.0.0",
+  "source_requests": [
+    {
+      "bar_frequency": "1d",
+      "contract_code": "IF2409.CCFX",
+      "observation_request_ids": [
+        "5adfdcbf1126b6e7ab55cf903a265998f1a9b151b3aa4356e2012c7c168e7e10"
+      ],
+      "observations": [
+        {
+          "bar_frequency": "1d",
+          "contract_code": "IF2409.CCFX",
+          "expected_key_count": 1,
+          "expected_keys_sha256": "f1f59901d745d1c8ba1b908a958c82dd0dfb8741f6fa11a8e9149fda4a61c385",
+          "request_id": "5adfdcbf1126b6e7ab55cf903a265998f1a9b151b3aa4356e2012c7c168e7e10",
+          "request_ordinal": 1,
+          "session_end_at": null,
+          "session_number": 0,
+          "session_start_at": null,
+          "trading_date": "2024-06-28"
+        }
+      ],
+      "source_end_at": "2024-06-28",
+      "source_fields": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "money",
+        "pre_close",
+        "open_interest"
+      ],
+      "source_frequency": "daily",
+      "source_parameters": {
+        "fill_paused": false,
+        "fq": null,
+        "panel": false,
+        "round": false,
+        "skip_paused": true
+      },
+      "source_request_id": "52fc8103c6e0975e95ac9ea39eda9d2799991146a268da70e01a7f39a951ee92",
+      "source_request_ordinal": 1,
+      "source_start_at": "2024-06-28"
+    },
+    {
+      "bar_frequency": "1d",
+      "contract_code": "TF1303.CCFX",
+      "observation_request_ids": [
+        "b64f9f87fec4a610d10c950714a3b0e613bb829615a13d4e6247fe27eacefeae"
+      ],
+      "observations": [
+        {
+          "bar_frequency": "1d",
+          "contract_code": "TF1303.CCFX",
+          "expected_key_count": 1,
+          "expected_keys_sha256": "b07c8e2da56af4faafa2cb5192eec8543668eee93db5df44a4ee66c1f99b53c8",
+          "request_id": "b64f9f87fec4a610d10c950714a3b0e613bb829615a13d4e6247fe27eacefeae",
+          "request_ordinal": 2,
+          "session_end_at": null,
+          "session_number": 0,
+          "session_start_at": null,
+          "trading_date": "2012-06-11"
+        }
+      ],
+      "source_end_at": "2012-06-11",
+      "source_fields": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "money",
+        "pre_close",
+        "open_interest"
+      ],
+      "source_frequency": "daily",
+      "source_parameters": {
+        "fill_paused": false,
+        "fq": null,
+        "panel": false,
+        "round": false,
+        "skip_paused": true
+      },
+      "source_request_id": "b0f16b491ee0b2e868b2342acffa8bdd3994bce9c576bd4ef20e9c42bd4f4b92",
+      "source_request_ordinal": 2,
+      "source_start_at": "2012-06-11"
+    },
+    {
+      "bar_frequency": "1m",
+      "contract_code": "IF2409.CCFX",
+      "observation_request_ids": [
+        "d8a028bd01d44edf75658faf9923db1e8ac2ef9f3fd6debc14fec7a25b8a903b",
+        "5976b7c694561b10f01c54709e6f7043dac1d0676c9bee6bcf2747a6c03a6c2b"
+      ],
+      "observations": [
+        {
+          "bar_frequency": "1m",
+          "contract_code": "IF2409.CCFX",
+          "expected_key_count": 120,
+          "expected_keys_sha256": "a8d58a11993a7bab734c2c02018f4ff817d4baa78948f856de82197eb209cb11",
+          "request_id": "d8a028bd01d44edf75658faf9923db1e8ac2ef9f3fd6debc14fec7a25b8a903b",
+          "request_ordinal": 3,
+          "session_end_at": "2024-06-28T11:30:00+08:00",
+          "session_number": 1,
+          "session_start_at": "2024-06-28T09:30:00+08:00",
+          "trading_date": "2024-06-28"
+        },
+        {
+          "bar_frequency": "1m",
+          "contract_code": "IF2409.CCFX",
+          "expected_key_count": 120,
+          "expected_keys_sha256": "be0c75a602a487ed15eb61b9bd0779145624727367d83a015639bb60ca681bd2",
+          "request_id": "5976b7c694561b10f01c54709e6f7043dac1d0676c9bee6bcf2747a6c03a6c2b",
+          "request_ordinal": 4,
+          "session_end_at": "2024-06-28T15:00:00+08:00",
+          "session_number": 2,
+          "session_start_at": "2024-06-28T13:00:00+08:00",
+          "trading_date": "2024-06-28"
+        }
+      ],
+      "source_end_at": "2024-06-28T15:00:00+08:00",
+      "source_fields": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "money",
+        "open_interest"
+      ],
+      "source_frequency": "1m",
+      "source_parameters": {
+        "fill_paused": false,
+        "fq": null,
+        "panel": false,
+        "round": false,
+        "skip_paused": true
+      },
+      "source_request_id": "19f79595ea1fc28edb3c1329ebd8a4a9f9a667fb48ed4d65b8b57ef425f2bf55",
+      "source_request_ordinal": 3,
+      "source_start_at": "2024-06-28T09:31:00+08:00"
+    },
+    {
+      "bar_frequency": "1m",
+      "contract_code": "TF1303.CCFX",
+      "observation_request_ids": [
+        "bb2bdd69ff2cbaf02d68df75f5696a51c63c55c09ac6136f45550553bc4702c5",
+        "514ddeeda51c365c286dd5b91632c6e8adf9a152df7ab75795bacb52f7b3b80b"
+      ],
+      "observations": [
+        {
+          "bar_frequency": "1m",
+          "contract_code": "TF1303.CCFX",
+          "expected_key_count": 135,
+          "expected_keys_sha256": "93d8929d04c84bd4f0c5f2ee7d5efc22c57cf92363b2d2e9bc79d01fb54e7c5d",
+          "request_id": "bb2bdd69ff2cbaf02d68df75f5696a51c63c55c09ac6136f45550553bc4702c5",
+          "request_ordinal": 5,
+          "session_end_at": "2012-06-11T11:30:00+08:00",
+          "session_number": 1,
+          "session_start_at": "2012-06-11T09:15:00+08:00",
+          "trading_date": "2012-06-11"
+        },
+        {
+          "bar_frequency": "1m",
+          "contract_code": "TF1303.CCFX",
+          "expected_key_count": 135,
+          "expected_keys_sha256": "2602f5404dedd144701b826399e269286d7b67a5f2ccb73ef19f3e887321590d",
+          "request_id": "514ddeeda51c365c286dd5b91632c6e8adf9a152df7ab75795bacb52f7b3b80b",
+          "request_ordinal": 6,
+          "session_end_at": "2012-06-11T15:15:00+08:00",
+          "session_number": 2,
+          "session_start_at": "2012-06-11T13:00:00+08:00",
+          "trading_date": "2012-06-11"
+        }
+      ],
+      "source_end_at": "2012-06-11T15:15:00+08:00",
+      "source_fields": [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "money",
+        "open_interest"
+      ],
+      "source_frequency": "1m",
+      "source_parameters": {
+        "fill_paused": false,
+        "fq": null,
+        "panel": false,
+        "round": false,
+        "skip_paused": true
+      },
+      "source_request_id": "f3fbcce6226aad63c168ef5493a8e3958c125150b2cbbdcc4c7489fa15f0e713",
+      "source_request_ordinal": 4,
+      "source_start_at": "2012-06-11T09:16:00+08:00"
+    }
+  ]
+}

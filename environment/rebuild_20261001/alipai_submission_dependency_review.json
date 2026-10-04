@@ -1,0 +1,33 @@
+{
+  "purpose": "Assess cloud job submission dependencies without changing environments or making remote API calls",
+  "alipai_version": "0.4.13",
+  "declared_numpy_constraint": "numpy<2,>=1.16.0",
+  "local_runtime": {
+    "environment": "latitude_env_v2",
+    "python": "3.13.15",
+    "numpy": "2.4.3"
+  },
+  "probe": {
+    "sdk_source": "E:/anaconda3/envs/latitude_env_v1/Lib/site-packages/pai",
+    "temporary_read_only_load": true,
+    "Estimator_import": true,
+    "Session_import": true,
+    "TrainingJobAPI_import": true,
+    "real_cloud_submission_tested": false
+  },
+  "source_review": {
+    "numpy_usage_concentrated_in": "pai/serializers.py",
+    "Estimator_imports_serializers": true,
+    "active_project_pai_or_dlc_source_references": 0
+  },
+  "official_control_sdk": {
+    "package": "alibabacloud-pai-dlc20201203",
+    "version": "1.11.5",
+    "requirements": [
+      "alibabacloud-tea-openapi<1.0.0,>=0.4.5",
+      "darabonba-core<2.0.0,>=1.0.0"
+    ],
+    "numpy_constraint": null
+  },
+  "recommendation": "Keep the local research NumPy version. Prefer DLC OpenAPI plus OSS SDK for upload/job control; configure the remote training image and requirements independently. Bypassing alipai metadata would remain an explicit unsupported dependency override until the actual submission path is validated."
+}

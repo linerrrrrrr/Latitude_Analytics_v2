@@ -1,0 +1,439 @@
+[
+  {
+    "label": "BDI",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI00107664\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:23:28.106038+08:00",
+    "status": "returned",
+    "sha256": "5d978454c9ac6754ce0999c19088f2fe98dc7aaf28857e6318a05905b83d865b",
+    "evidence": "http_BDI.json",
+    "elapsed_seconds": 5.091
+  },
+  {
+    "label": "BPI",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI00107665\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:23:33.197665+08:00",
+    "status": "returned",
+    "sha256": "d63e665c32c79eb7c307228e96d0de5b6c3c4b184ca379f5b99b667bda26d93b",
+    "evidence": "http_BPI.json",
+    "elapsed_seconds": 5.141
+  },
+  {
+    "label": "BCI",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI00107666\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:23:38.339397+08:00",
+    "status": "returned",
+    "sha256": "80d8a4b9af976fb0b9b6836f81a61b22fc7c48f61fd6ec49d20358d4611cd228",
+    "evidence": "http_BCI.json",
+    "elapsed_seconds": 4.915
+  },
+  {
+    "label": "BSI",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI00107667\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:23:43.254765+08:00",
+    "status": "returned",
+    "sha256": "31ed31a19dba001e60a738a7f2e465258ebdd0c65b9563c16d004898ec15b1af",
+    "evidence": "http_BSI.json",
+    "elapsed_seconds": 5.018
+  },
+  {
+    "label": "BDTI",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI00107668\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:23:48.272792+08:00",
+    "status": "returned",
+    "sha256": "6f26892d972a10fe6f4c55d958dacf699442d62d5c22a24a203f402aff0ddfc5",
+    "evidence": "http_BDTI.json",
+    "elapsed_seconds": 5.024
+  },
+  {
+    "label": "BCTI",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI00107669\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:23:53.296968+08:00",
+    "status": "returned",
+    "sha256": "091797c71fcc1fb2e1214f69fa1c352b1941384571743e4953ff77bed4adc428",
+    "evidence": "http_BCTI.json",
+    "elapsed_seconds": 4.892
+  },
+  {
+    "label": "WTI_CONC",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI01508580\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:23:58.189265+08:00",
+    "status": "returned",
+    "sha256": "2a8004aba0a5a292db15630d6acf978355fc7bd1325afaf65f8357b95adb20a8",
+    "evidence": "http_WTI_CONC.json",
+    "elapsed_seconds": 4.998
+  },
+  {
+    "label": "SUNSIRS_ENERGY",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI00662539\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:24:03.187943+08:00",
+    "status": "returned",
+    "sha256": "04625028a91aaf97ee8cfceb7931fb6bf529b06c30066e6f414b8140947fe218",
+    "evidence": "http_SUNSIRS_ENERGY.json",
+    "elapsed_seconds": 5.258
+  },
+  {
+    "label": "MYSTEEL_COKE",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI00018828\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:24:08.446092+08:00",
+    "status": "returned",
+    "sha256": "e78be706e828d97b1aaae566f06f8ebbd5d9399d8824e7c8bb7d4e288a704323",
+    "evidence": "http_MYSTEEL_COKE.json",
+    "elapsed_seconds": 4.766
+  },
+  {
+    "label": "SUNSIRS_STEEL",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI00662545\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:24:13.212300+08:00",
+    "status": "returned",
+    "sha256": "414280fce8053f06ea6762be3878c2f8dc3b47b390cd38123496f9d9810d7e4c",
+    "evidence": "http_SUNSIRS_STEEL.json",
+    "elapsed_seconds": 5.064
+  },
+  {
+    "label": "MYSTEEL_STEEL_COMPOSITE",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI00064821\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:24:18.276775+08:00",
+    "status": "returned",
+    "sha256": "c07cbaa8ff35933946a31106d7f633107bc8536d3013e06d22671fb6087040e7",
+    "evidence": "http_MYSTEEL_STEEL_COMPOSITE.json",
+    "elapsed_seconds": 5.024
+  },
+  {
+    "label": "XINHUA_IRON_ORE",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI00064805\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:24:23.301709+08:00",
+    "status": "returned",
+    "sha256": "81bd417c42562c74bb327a9534bd279b6232ec7c2e058d2b9f526480f0b5891f",
+    "evidence": "http_XINHUA_IRON_ORE.json",
+    "elapsed_seconds": 4.907
+  },
+  {
+    "label": "SUNSIRS_NONFERROUS",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI00662542\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:24:28.209319+08:00",
+    "status": "returned",
+    "sha256": "c54e9bfb5b6a12556db21804430afc603258919c1c987f52d4ab495e1c3697e1",
+    "evidence": "http_SUNSIRS_NONFERROUS.json",
+    "elapsed_seconds": 5.025
+  },
+  {
+    "label": "MYSTEEL_NICKEL",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI00135907\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:24:33.234544+08:00",
+    "status": "returned",
+    "sha256": "098a1cd8e98b802ba70f446396b2be933c4d60c583ef453febe91c879438382c",
+    "evidence": "http_MYSTEEL_NICKEL.json",
+    "elapsed_seconds": 4.95
+  },
+  {
+    "label": "MYSTEEL_TIN",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI00135906\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:24:38.184532+08:00",
+    "status": "returned",
+    "sha256": "97f688698e1fb66d0206b6fce8ff3db0f6872a8541f2f6aee4576671b35600f7",
+    "evidence": "http_MYSTEEL_TIN.json",
+    "elapsed_seconds": 5.078
+  },
+  {
+    "label": "MYSTEEL_ZINC",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI00135905\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:24:43.263037+08:00",
+    "status": "returned",
+    "sha256": "6f15c646e3d4e2ecdefc43fe77c3bc9cfd58a474cfd0f90b63f6f46d081653b1",
+    "evidence": "http_MYSTEEL_ZINC.json",
+    "elapsed_seconds": 4.958
+  },
+  {
+    "label": "MYSTEEL_LEAD",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI00135904\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:24:48.221200+08:00",
+    "status": "returned",
+    "sha256": "397d9cad30aa7988238b9787e36fae9042cb1a131454b3980a52c930bb8d758e",
+    "evidence": "http_MYSTEEL_LEAD.json",
+    "elapsed_seconds": 5.084
+  },
+  {
+    "label": "MYSTEEL_ALUMINUM",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI00135903\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:24:53.305996+08:00",
+    "status": "returned",
+    "sha256": "4960d5ea76317083e72544dcb32a623e786db3d1d69da9bbc16cf60fa47cb5e1",
+    "evidence": "http_MYSTEEL_ALUMINUM.json",
+    "elapsed_seconds": 4.908
+  },
+  {
+    "label": "MYSTEEL_COPPER",
+    "request": {
+      "reportName": "RPT_INDUSTRY_INDEX",
+      "columns": "ALL",
+      "filter": "(INDICATOR_ID=\"EMI00135902\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "3",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:24:58.214333+08:00",
+    "status": "returned",
+    "sha256": "3b1463de5e4a1d264abcb400cc30c598a1da7e8324ceb43bfc8344bdaf0ff0b3",
+    "evidence": "http_MYSTEEL_COPPER.json",
+    "elapsed_seconds": 5.018
+  },
+  {
+    "label": "RPT_ECONOMY_CPI",
+    "request": {
+      "reportName": "RPT_ECONOMY_CPI",
+      "columns": "ALL",
+      "filter": "(REPORT_DATE>=\"2025-01-01\")(REPORT_DATE<=\"2025-12-31\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "20",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:25:03.233177+08:00",
+    "status": "returned",
+    "sha256": "5b3564c1014ebfa1a109d0e3e77d94957aadbc13f057cf73c6eeec5218fcaa29",
+    "evidence": "http_RPT_ECONOMY_CPI.json",
+    "elapsed_seconds": 5.016
+  },
+  {
+    "label": "RPT_ECONOMY_PPI",
+    "request": {
+      "reportName": "RPT_ECONOMY_PPI",
+      "columns": "ALL",
+      "filter": "(REPORT_DATE>=\"2025-01-01\")(REPORT_DATE<=\"2025-12-31\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "20",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:25:08.249793+08:00",
+    "status": "returned",
+    "sha256": "f4ec7f85869093f327eae88ce284c68ccd98c2c549cdc7c7b05b19cbeb0c04b1",
+    "evidence": "http_RPT_ECONOMY_PPI.json",
+    "elapsed_seconds": 4.951
+  },
+  {
+    "label": "RPT_ECONOMY_PMI",
+    "request": {
+      "reportName": "RPT_ECONOMY_PMI",
+      "columns": "ALL",
+      "filter": "(REPORT_DATE>=\"2025-01-01\")(REPORT_DATE<=\"2025-12-31\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "20",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:25:13.201668+08:00",
+    "status": "returned",
+    "sha256": "0f696e3b8daf9df9a37950c82ea556b49d5b964c7c03d740c79b5b79a512a468",
+    "evidence": "http_RPT_ECONOMY_PMI.json",
+    "elapsed_seconds": 5.185
+  },
+  {
+    "label": "RPT_ECONOMY_GDP",
+    "request": {
+      "reportName": "RPT_ECONOMY_GDP",
+      "columns": "ALL",
+      "filter": "(REPORT_DATE>=\"2025-01-01\")(REPORT_DATE<=\"2025-12-31\")",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "20",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:25:18.387485+08:00",
+    "status": "returned",
+    "sha256": "a102c87ccd6b185b75661f56b9da682b92defef3e1447f0228982790a9fc1431",
+    "evidence": "http_RPT_ECONOMY_GDP.json",
+    "elapsed_seconds": 4.915
+  }
+]

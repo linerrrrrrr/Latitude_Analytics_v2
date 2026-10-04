@@ -1,0 +1,4244 @@
+[
+  {
+    "table": "dim_external_market_calendar",
+    "exists": true,
+    "parquet_files": 606,
+    "rows": 128478,
+    "data_files": 606,
+    "sample_fragments": [
+      {
+        "path": "silver\\dim_external_market_calendar\\dataset_name=domestic_spot_basis\\year=2010\\month=1\\part-0.parquet",
+        "rows": 31,
+        "physical_compatible": true,
+        "schema_version": "1.3.0",
+        "samples": [
+          {
+            "entity_code": "ALL",
+            "observation_date": "2010-01-01",
+            "is_fetch_required": false,
+            "is_fetch_completed": false,
+            "fetch_result_status": "not_required",
+            "is_data_missing": false,
+            "actual_record_count": 0,
+            "quality_status": "not_applicable",
+            "fetch_run_id": null,
+            "fetch_completed_at": null,
+            "quality_checked_at": null,
+            "updated_at": "2026-08-25 13:41:38.884421+00:00"
+          },
+          {
+            "entity_code": "ALL",
+            "observation_date": "2010-01-02",
+            "is_fetch_required": false,
+            "is_fetch_completed": false,
+            "fetch_result_status": "not_required",
+            "is_data_missing": false,
+            "actual_record_count": 0,
+            "quality_status": "not_applicable",
+            "fetch_run_id": null,
+            "fetch_completed_at": null,
+            "quality_checked_at": null,
+            "updated_at": "2026-08-25 13:41:38.884421+00:00"
+          },
+          {
+            "entity_code": "ALL",
+            "observation_date": "2010-01-03",
+            "is_fetch_required": false,
+            "is_fetch_completed": false,
+            "fetch_result_status": "not_required",
+            "is_data_missing": false,
+            "actual_record_count": 0,
+            "quality_status": "not_applicable",
+            "fetch_run_id": null,
+            "fetch_completed_at": null,
+            "quality_checked_at": null,
+            "updated_at": "2026-08-25 13:41:38.884421+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\dim_external_market_calendar\\dataset_name=external_index\\year=2026\\month=10\\part-0.parquet",
+        "rows": 19,
+        "physical_compatible": true,
+        "schema_version": "1.3.0",
+        "samples": [
+          {
+            "entity_code": "EMI00018828",
+            "observation_date": "2026-10-01",
+            "is_fetch_required": true,
+            "is_fetch_completed": true,
+            "fetch_result_status": "empty_confirmed",
+            "is_data_missing": true,
+            "actual_record_count": 0,
+            "quality_status": "warning",
+            "fetch_run_id": "84b716ace9854e07a591c182e882f1d7",
+            "fetch_completed_at": "2026-10-02 08:17:04.740030+00:00",
+            "quality_checked_at": "2026-10-02 08:17:04.740030+00:00",
+            "updated_at": "2026-10-02 08:17:04.740030+00:00"
+          },
+          {
+            "entity_code": "EMI00064805",
+            "observation_date": "2026-10-01",
+            "is_fetch_required": true,
+            "is_fetch_completed": true,
+            "fetch_result_status": "empty_confirmed",
+            "is_data_missing": true,
+            "actual_record_count": 0,
+            "quality_status": "warning",
+            "fetch_run_id": "84b716ace9854e07a591c182e882f1d7",
+            "fetch_completed_at": "2026-10-02 08:17:04.740030+00:00",
+            "quality_checked_at": "2026-10-02 08:17:04.740030+00:00",
+            "updated_at": "2026-10-02 08:17:04.740030+00:00"
+          },
+          {
+            "entity_code": "EMI00064821",
+            "observation_date": "2026-10-01",
+            "is_fetch_required": true,
+            "is_fetch_completed": true,
+            "fetch_result_status": "empty_confirmed",
+            "is_data_missing": true,
+            "actual_record_count": 0,
+            "quality_status": "warning",
+            "fetch_run_id": "84b716ace9854e07a591c182e882f1d7",
+            "fetch_completed_at": "2026-10-02 08:17:04.740030+00:00",
+            "quality_checked_at": "2026-10-02 08:17:04.740030+00:00",
+            "updated_at": "2026-10-02 08:17:04.740030+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\dim_external_market_calendar\\dataset_name=overseas_futures\\year=2026\\month=10\\part-0.parquet",
+        "rows": 1,
+        "physical_compatible": true,
+        "schema_version": "1.3.0",
+        "samples": [
+          {
+            "entity_code": "ALL",
+            "observation_date": "2026-10-01",
+            "is_fetch_required": true,
+            "is_fetch_completed": true,
+            "fetch_result_status": "success",
+            "is_data_missing": false,
+            "actual_record_count": 23,
+            "quality_status": "warning",
+            "fetch_run_id": "f6ff1862729e40c584063ba604a5a76f",
+            "fetch_completed_at": "2026-10-02 08:16:55.490152+00:00",
+            "quality_checked_at": "2026-10-02 08:16:55.490152+00:00",
+            "updated_at": "2026-10-02 08:16:55.490152+00:00"
+          }
+        ]
+      }
+    ],
+    "observation_date_range": [
+      "2010-01-01",
+      "2026-10-01"
+    ],
+    "state_counts": [
+      {
+        "dataset_name": "domestic_spot_basis",
+        "entity_code": "ALL",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 2051
+      },
+      {
+        "dataset_name": "domestic_spot_basis",
+        "entity_code": "ALL",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 4067
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00018828",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00018828",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 460
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00018828",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 3910
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00064805",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00064805",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 411
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00064805",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 3959
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00064821",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00064821",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 292
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00064821",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 4078
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00107664",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00107664",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 166
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00107664",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 4204
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00107665",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00107665",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 247
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00107665",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 4123
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00107666",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00107666",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 193
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00107666",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 4177
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00107667",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00107667",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 236
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00107667",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 4134
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00107668",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00107668",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 263
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00107668",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 4107
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00107669",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00107669",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 266
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00107669",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 4104
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00135902",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00135902",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 1050
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00135902",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 3320
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00135903",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00135903",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 1050
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00135903",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 3320
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00135904",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00135904",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 1051
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00135904",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 3319
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00135905",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00135905",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 1071
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00135905",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 3299
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00135906",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00135906",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 4370
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00135907",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00135907",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 1071
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00135907",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 3299
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00662539",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00662539",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 1025
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00662539",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 3345
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00662542",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00662542",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 1025
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00662542",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 3345
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00662545",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00662545",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 1025
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI00662545",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 3345
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI01508580",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI01508580",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 167
+      },
+      {
+        "dataset_name": "external_index",
+        "entity_code": "EMI01508580",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 4203
+      },
+      {
+        "dataset_name": "overseas_futures",
+        "entity_code": "ALL",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1748
+      },
+      {
+        "dataset_name": "overseas_futures",
+        "entity_code": "ALL",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 14
+      },
+      {
+        "dataset_name": "overseas_futures",
+        "entity_code": "ALL",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 2761
+      },
+      {
+        "dataset_name": "overseas_futures",
+        "entity_code": "ALL",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "warning",
+        "rows": 1595
+      }
+    ],
+    "count_sums": {
+      "actual_record_count": 185555
+    }
+  },
+  {
+    "table": "dim_futures_bar_calendar",
+    "exists": true,
+    "parquet_files": 1901,
+    "rows": 9846670,
+    "data_files": 1900,
+    "sample_fragments": [
+      {
+        "path": "silver\\dim_futures_bar_calendar\\bar_frequency=1d\\exchange_code=CCFX\\year=2010\\month=10\\part-0.parquet",
+        "rows": 64,
+        "physical_compatible": true,
+        "schema_version": "1.4.0",
+        "samples": [
+          {
+            "contract_code": "IF1010.CCFX",
+            "underlying_code": "IF",
+            "trading_date": "2010-10-08",
+            "session_number": 0,
+            "session_text": null,
+            "session_start_at": null,
+            "session_end_at": null,
+            "is_night_session": null,
+            "schedule_status": "scheduled",
+            "evidence_level": "contract_rule",
+            "evidence_source": "dim_futures_contract_calendar",
+            "is_fetch_required": false,
+            "expected_bar_count": 1,
+            "is_fetch_completed": false,
+            "actual_bar_count": 0,
+            "is_data_missing": false,
+            "missing_bar_count": 0,
+            "fetch_run_id": null,
+            "fetch_completed_at": null,
+            "missing_checked_at": "2026-08-22 19:27:48.919471+00:00",
+            "quality_status": "not_applicable",
+            "daily_open": null,
+            "daily_high": null,
+            "daily_low": null,
+            "daily_close": null,
+            "daily_volume": null,
+            "daily_money": null,
+            "daily_open_interest": null,
+            "aggregated_open": null,
+            "aggregated_high": null,
+            "aggregated_low": null,
+            "aggregated_close": null,
+            "aggregated_volume": null,
+            "aggregated_money": null,
+            "aggregated_open_interest": null,
+            "ohlc_matches_daily": null,
+            "volume_matches_daily": null,
+            "money_matches_daily": null,
+            "open_interest_matches_daily": null,
+            "quality_checked_at": "2026-08-22 19:27:48.919471+00:00",
+            "updated_at": "2026-08-22 19:27:48.919471+00:00"
+          },
+          {
+            "contract_code": "IF1010.CCFX",
+            "underlying_code": "IF",
+            "trading_date": "2010-10-11",
+            "session_number": 0,
+            "session_text": null,
+            "session_start_at": null,
+            "session_end_at": null,
+            "is_night_session": null,
+            "schedule_status": "scheduled",
+            "evidence_level": "contract_rule",
+            "evidence_source": "dim_futures_contract_calendar",
+            "is_fetch_required": false,
+            "expected_bar_count": 1,
+            "is_fetch_completed": false,
+            "actual_bar_count": 0,
+            "is_data_missing": false,
+            "missing_bar_count": 0,
+            "fetch_run_id": null,
+            "fetch_completed_at": null,
+            "missing_checked_at": "2026-08-22 19:27:48.919471+00:00",
+            "quality_status": "not_applicable",
+            "daily_open": null,
+            "daily_high": null,
+            "daily_low": null,
+            "daily_close": null,
+            "daily_volume": null,
+            "daily_money": null,
+            "daily_open_interest": null,
+            "aggregated_open": null,
+            "aggregated_high": null,
+            "aggregated_low": null,
+            "aggregated_close": null,
+            "aggregated_volume": null,
+            "aggregated_money": null,
+            "aggregated_open_interest": null,
+            "ohlc_matches_daily": null,
+            "volume_matches_daily": null,
+            "money_matches_daily": null,
+            "open_interest_matches_daily": null,
+            "quality_checked_at": "2026-08-22 19:27:48.919471+00:00",
+            "updated_at": "2026-08-22 19:27:48.919471+00:00"
+          },
+          {
+            "contract_code": "IF1010.CCFX",
+            "underlying_code": "IF",
+            "trading_date": "2010-10-12",
+            "session_number": 0,
+            "session_text": null,
+            "session_start_at": null,
+            "session_end_at": null,
+            "is_night_session": null,
+            "schedule_status": "scheduled",
+            "evidence_level": "contract_rule",
+            "evidence_source": "dim_futures_contract_calendar",
+            "is_fetch_required": false,
+            "expected_bar_count": 1,
+            "is_fetch_completed": false,
+            "actual_bar_count": 0,
+            "is_data_missing": false,
+            "missing_bar_count": 0,
+            "fetch_run_id": null,
+            "fetch_completed_at": null,
+            "missing_checked_at": "2026-08-22 19:27:48.919471+00:00",
+            "quality_status": "not_applicable",
+            "daily_open": null,
+            "daily_high": null,
+            "daily_low": null,
+            "daily_close": null,
+            "daily_volume": null,
+            "daily_money": null,
+            "daily_open_interest": null,
+            "aggregated_open": null,
+            "aggregated_high": null,
+            "aggregated_low": null,
+            "aggregated_close": null,
+            "aggregated_volume": null,
+            "aggregated_money": null,
+            "aggregated_open_interest": null,
+            "ohlc_matches_daily": null,
+            "volume_matches_daily": null,
+            "money_matches_daily": null,
+            "open_interest_matches_daily": null,
+            "quality_checked_at": "2026-08-22 19:27:48.919471+00:00",
+            "updated_at": "2026-08-22 19:27:48.919471+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\dim_futures_bar_calendar\\bar_frequency=1m\\exchange_code=XSGE\\year=2026\\month=9\\part-0.parquet",
+        "rows": 19740,
+        "physical_compatible": true,
+        "schema_version": "1.4.0",
+        "samples": [
+          {
+            "contract_code": "AD2609.XSGE",
+            "underlying_code": "AD",
+            "trading_date": "2026-09-01",
+            "session_number": 1,
+            "session_text": "21:00~01:00",
+            "session_start_at": "2026-08-31 21:00:00+08:00",
+            "session_end_at": "2026-09-01 01:00:00+08:00",
+            "is_night_session": true,
+            "schedule_status": "scheduled",
+            "evidence_level": "contract_rule",
+            "evidence_source": "dim_futures_contract_calendar",
+            "is_fetch_required": true,
+            "expected_bar_count": 240,
+            "is_fetch_completed": true,
+            "actual_bar_count": 240,
+            "is_data_missing": false,
+            "missing_bar_count": 0,
+            "fetch_run_id": "minute-20260928T231738Z-48d26f42",
+            "fetch_completed_at": "2026-09-28 23:17:38.548827+00:00",
+            "missing_checked_at": "2026-09-28 23:17:38.548827+00:00",
+            "quality_status": "passed",
+            "daily_open": null,
+            "daily_high": null,
+            "daily_low": null,
+            "daily_close": null,
+            "daily_volume": null,
+            "daily_money": null,
+            "daily_open_interest": null,
+            "aggregated_open": null,
+            "aggregated_high": null,
+            "aggregated_low": null,
+            "aggregated_close": null,
+            "aggregated_volume": null,
+            "aggregated_money": null,
+            "aggregated_open_interest": null,
+            "ohlc_matches_daily": null,
+            "volume_matches_daily": null,
+            "money_matches_daily": null,
+            "open_interest_matches_daily": null,
+            "quality_checked_at": "2026-09-28 23:17:38.548827+00:00",
+            "updated_at": "2026-09-28 23:17:38.548827+00:00"
+          },
+          {
+            "contract_code": "AD2609.XSGE",
+            "underlying_code": "AD",
+            "trading_date": "2026-09-01",
+            "session_number": 2,
+            "session_text": "09:00~10:15",
+            "session_start_at": "2026-09-01 09:00:00+08:00",
+            "session_end_at": "2026-09-01 10:15:00+08:00",
+            "is_night_session": false,
+            "schedule_status": "scheduled",
+            "evidence_level": "contract_rule",
+            "evidence_source": "dim_futures_contract_calendar",
+            "is_fetch_required": true,
+            "expected_bar_count": 75,
+            "is_fetch_completed": true,
+            "actual_bar_count": 75,
+            "is_data_missing": false,
+            "missing_bar_count": 0,
+            "fetch_run_id": "minute-20260928T231738Z-48d26f42",
+            "fetch_completed_at": "2026-09-28 23:17:38.548827+00:00",
+            "missing_checked_at": "2026-09-28 23:17:38.548827+00:00",
+            "quality_status": "passed",
+            "daily_open": null,
+            "daily_high": null,
+            "daily_low": null,
+            "daily_close": null,
+            "daily_volume": null,
+            "daily_money": null,
+            "daily_open_interest": null,
+            "aggregated_open": null,
+            "aggregated_high": null,
+            "aggregated_low": null,
+            "aggregated_close": null,
+            "aggregated_volume": null,
+            "aggregated_money": null,
+            "aggregated_open_interest": null,
+            "ohlc_matches_daily": null,
+            "volume_matches_daily": null,
+            "money_matches_daily": null,
+            "open_interest_matches_daily": null,
+            "quality_checked_at": "2026-09-28 23:17:38.548827+00:00",
+            "updated_at": "2026-09-28 23:17:38.548827+00:00"
+          },
+          {
+            "contract_code": "AD2609.XSGE",
+            "underlying_code": "AD",
+            "trading_date": "2026-09-01",
+            "session_number": 3,
+            "session_text": "10:30~11:30",
+            "session_start_at": "2026-09-01 10:30:00+08:00",
+            "session_end_at": "2026-09-01 11:30:00+08:00",
+            "is_night_session": false,
+            "schedule_status": "scheduled",
+            "evidence_level": "contract_rule",
+            "evidence_source": "dim_futures_contract_calendar",
+            "is_fetch_required": true,
+            "expected_bar_count": 60,
+            "is_fetch_completed": true,
+            "actual_bar_count": 60,
+            "is_data_missing": false,
+            "missing_bar_count": 0,
+            "fetch_run_id": "minute-20260928T231738Z-48d26f42",
+            "fetch_completed_at": "2026-09-28 23:17:38.548827+00:00",
+            "missing_checked_at": "2026-09-28 23:17:38.548827+00:00",
+            "quality_status": "passed",
+            "daily_open": null,
+            "daily_high": null,
+            "daily_low": null,
+            "daily_close": null,
+            "daily_volume": null,
+            "daily_money": null,
+            "daily_open_interest": null,
+            "aggregated_open": null,
+            "aggregated_high": null,
+            "aggregated_low": null,
+            "aggregated_close": null,
+            "aggregated_volume": null,
+            "aggregated_money": null,
+            "aggregated_open_interest": null,
+            "ohlc_matches_daily": null,
+            "volume_matches_daily": null,
+            "money_matches_daily": null,
+            "open_interest_matches_daily": null,
+            "quality_checked_at": "2026-09-28 23:17:38.548827+00:00",
+            "updated_at": "2026-09-28 23:17:38.548827+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\dim_futures_bar_calendar\\bar_frequency=1m\\exchange_code=XZCE\\year=2026\\month=9\\part-0.parquet",
+        "rows": 18471,
+        "physical_compatible": true,
+        "schema_version": "1.4.0",
+        "samples": [
+          {
+            "contract_code": "AP2610.XZCE",
+            "underlying_code": "AP",
+            "trading_date": "2026-09-01",
+            "session_number": 1,
+            "session_text": "09:00~10:15",
+            "session_start_at": "2026-09-01 09:00:00+08:00",
+            "session_end_at": "2026-09-01 10:15:00+08:00",
+            "is_night_session": false,
+            "schedule_status": "scheduled",
+            "evidence_level": "contract_rule",
+            "evidence_source": "dim_futures_contract_calendar",
+            "is_fetch_required": false,
+            "expected_bar_count": 75,
+            "is_fetch_completed": false,
+            "actual_bar_count": 0,
+            "is_data_missing": false,
+            "missing_bar_count": 0,
+            "fetch_run_id": null,
+            "fetch_completed_at": null,
+            "missing_checked_at": null,
+            "quality_status": "pending",
+            "daily_open": null,
+            "daily_high": null,
+            "daily_low": null,
+            "daily_close": null,
+            "daily_volume": null,
+            "daily_money": null,
+            "daily_open_interest": null,
+            "aggregated_open": null,
+            "aggregated_high": null,
+            "aggregated_low": null,
+            "aggregated_close": null,
+            "aggregated_volume": null,
+            "aggregated_money": null,
+            "aggregated_open_interest": null,
+            "ohlc_matches_daily": null,
+            "volume_matches_daily": null,
+            "money_matches_daily": null,
+            "open_interest_matches_daily": null,
+            "quality_checked_at": null,
+            "updated_at": "2026-09-28 23:16:42.715662+00:00"
+          },
+          {
+            "contract_code": "AP2610.XZCE",
+            "underlying_code": "AP",
+            "trading_date": "2026-09-01",
+            "session_number": 2,
+            "session_text": "10:30~11:30",
+            "session_start_at": "2026-09-01 10:30:00+08:00",
+            "session_end_at": "2026-09-01 11:30:00+08:00",
+            "is_night_session": false,
+            "schedule_status": "scheduled",
+            "evidence_level": "contract_rule",
+            "evidence_source": "dim_futures_contract_calendar",
+            "is_fetch_required": false,
+            "expected_bar_count": 60,
+            "is_fetch_completed": false,
+            "actual_bar_count": 0,
+            "is_data_missing": false,
+            "missing_bar_count": 0,
+            "fetch_run_id": null,
+            "fetch_completed_at": null,
+            "missing_checked_at": null,
+            "quality_status": "pending",
+            "daily_open": null,
+            "daily_high": null,
+            "daily_low": null,
+            "daily_close": null,
+            "daily_volume": null,
+            "daily_money": null,
+            "daily_open_interest": null,
+            "aggregated_open": null,
+            "aggregated_high": null,
+            "aggregated_low": null,
+            "aggregated_close": null,
+            "aggregated_volume": null,
+            "aggregated_money": null,
+            "aggregated_open_interest": null,
+            "ohlc_matches_daily": null,
+            "volume_matches_daily": null,
+            "money_matches_daily": null,
+            "open_interest_matches_daily": null,
+            "quality_checked_at": null,
+            "updated_at": "2026-09-28 23:16:42.715662+00:00"
+          },
+          {
+            "contract_code": "AP2610.XZCE",
+            "underlying_code": "AP",
+            "trading_date": "2026-09-01",
+            "session_number": 3,
+            "session_text": "13:30~15:00",
+            "session_start_at": "2026-09-01 13:30:00+08:00",
+            "session_end_at": "2026-09-01 15:00:00+08:00",
+            "is_night_session": false,
+            "schedule_status": "scheduled",
+            "evidence_level": "contract_rule",
+            "evidence_source": "dim_futures_contract_calendar",
+            "is_fetch_required": false,
+            "expected_bar_count": 90,
+            "is_fetch_completed": false,
+            "actual_bar_count": 0,
+            "is_data_missing": false,
+            "missing_bar_count": 0,
+            "fetch_run_id": null,
+            "fetch_completed_at": null,
+            "missing_checked_at": null,
+            "quality_status": "pending",
+            "daily_open": null,
+            "daily_high": null,
+            "daily_low": null,
+            "daily_close": null,
+            "daily_volume": null,
+            "daily_money": null,
+            "daily_open_interest": null,
+            "aggregated_open": null,
+            "aggregated_high": null,
+            "aggregated_low": null,
+            "aggregated_close": null,
+            "aggregated_volume": null,
+            "aggregated_money": null,
+            "aggregated_open_interest": null,
+            "ohlc_matches_daily": null,
+            "volume_matches_daily": null,
+            "money_matches_daily": null,
+            "open_interest_matches_daily": null,
+            "quality_checked_at": null,
+            "updated_at": "2026-09-28 23:16:42.715662+00:00"
+          }
+        ]
+      }
+    ],
+    "trading_date_range": [
+      "2010-01-04",
+      "2026-09-30"
+    ],
+    "state_counts": [
+      {
+        "exchange_code": "CCFX",
+        "bar_frequency": "1d",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "quality_status": "not_applicable",
+        "rows": 68514
+      },
+      {
+        "exchange_code": "CCFX",
+        "bar_frequency": "1d",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "quality_status": "pending",
+        "rows": 756
+      },
+      {
+        "exchange_code": "CCFX",
+        "bar_frequency": "1m",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "quality_status": "not_applicable",
+        "rows": 280
+      },
+      {
+        "exchange_code": "CCFX",
+        "bar_frequency": "1m",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "quality_status": "pending",
+        "rows": 138260
+      },
+      {
+        "exchange_code": "GFEX",
+        "bar_frequency": "1d",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "passed",
+        "rows": 25578
+      },
+      {
+        "exchange_code": "GFEX",
+        "bar_frequency": "1d",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "warning",
+        "rows": 3
+      },
+      {
+        "exchange_code": "GFEX",
+        "bar_frequency": "1m",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "passed",
+        "rows": 76708
+      },
+      {
+        "exchange_code": "GFEX",
+        "bar_frequency": "1m",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "warning",
+        "rows": 35
+      },
+      {
+        "exchange_code": "XDCE",
+        "bar_frequency": "1d",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "quality_status": "not_applicable",
+        "rows": 278141
+      },
+      {
+        "exchange_code": "XDCE",
+        "bar_frequency": "1d",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "quality_status": "pending",
+        "rows": 2214
+      },
+      {
+        "exchange_code": "XDCE",
+        "bar_frequency": "1d",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "passed",
+        "rows": 340465
+      },
+      {
+        "exchange_code": "XDCE",
+        "bar_frequency": "1d",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "warning",
+        "rows": 59928
+      },
+      {
+        "exchange_code": "XDCE",
+        "bar_frequency": "1m",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "quality_status": "not_applicable",
+        "rows": 1004231
+      },
+      {
+        "exchange_code": "XDCE",
+        "bar_frequency": "1m",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "quality_status": "pending",
+        "rows": 10744
+      },
+      {
+        "exchange_code": "XDCE",
+        "bar_frequency": "1m",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "passed",
+        "rows": 1427465
+      },
+      {
+        "exchange_code": "XDCE",
+        "bar_frequency": "1m",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "warning",
+        "rows": 6752
+      },
+      {
+        "exchange_code": "XINE",
+        "bar_frequency": "1d",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "passed",
+        "rows": 94344
+      },
+      {
+        "exchange_code": "XINE",
+        "bar_frequency": "1d",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "warning",
+        "rows": 6907
+      },
+      {
+        "exchange_code": "XINE",
+        "bar_frequency": "1m",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "passed",
+        "rows": 398036
+      },
+      {
+        "exchange_code": "XINE",
+        "bar_frequency": "1m",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "warning",
+        "rows": 2248
+      },
+      {
+        "exchange_code": "XSGE",
+        "bar_frequency": "1d",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "passed",
+        "rows": 617204
+      },
+      {
+        "exchange_code": "XSGE",
+        "bar_frequency": "1d",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "warning",
+        "rows": 48766
+      },
+      {
+        "exchange_code": "XSGE",
+        "bar_frequency": "1m",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "passed",
+        "rows": 2494139
+      },
+      {
+        "exchange_code": "XSGE",
+        "bar_frequency": "1m",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "warning",
+        "rows": 11684
+      },
+      {
+        "exchange_code": "XZCE",
+        "bar_frequency": "1d",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "quality_status": "not_applicable",
+        "rows": 257156
+      },
+      {
+        "exchange_code": "XZCE",
+        "bar_frequency": "1d",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "quality_status": "pending",
+        "rows": 1956
+      },
+      {
+        "exchange_code": "XZCE",
+        "bar_frequency": "1d",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "passed",
+        "rows": 349999
+      },
+      {
+        "exchange_code": "XZCE",
+        "bar_frequency": "1m",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "quality_status": "not_applicable",
+        "rows": 842726
+      },
+      {
+        "exchange_code": "XZCE",
+        "bar_frequency": "1m",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "quality_status": "pending",
+        "rows": 8215
+      },
+      {
+        "exchange_code": "XZCE",
+        "bar_frequency": "1m",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "passed",
+        "rows": 1267851
+      },
+      {
+        "exchange_code": "XZCE",
+        "bar_frequency": "1m",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "quality_status": "warning",
+        "rows": 5365
+      }
+    ],
+    "count_sums": {
+      "missing_bar_count": 9038846
+    }
+  },
+  {
+    "table": "dim_futures_contract_calendar",
+    "exists": true,
+    "parquet_files": 951,
+    "rows": 7694739,
+    "data_files": 950,
+    "sample_fragments": [
+      {
+        "path": "silver\\dim_futures_contract_calendar\\exchange_code=CCFX\\year=2010\\month=10\\part-0.parquet",
+        "rows": 128,
+        "physical_compatible": true,
+        "schema_version": "1.2.0",
+        "samples": [
+          {
+            "contract_code": "IF1010.CCFX",
+            "underlying_code": "IF",
+            "trading_date": "2010-10-08",
+            "list_date": "2010-08-23",
+            "delist_date": "2010-10-15",
+            "contract_multiplier": 300.0,
+            "tick_size": 0.2,
+            "rule_effective_date": "2010-08-23",
+            "rule_expiry_date": "2010-10-15",
+            "session_number": 1,
+            "session_text": "09:15~11:30",
+            "session_start_at": "2010-10-08 09:15:00+08:00",
+            "session_end_at": "2010-10-08 11:30:00+08:00",
+            "is_night_session": false,
+            "spans_midnight": false,
+            "minute_count": 135,
+            "source": "JQData_get_all_securities+get_futures_info",
+            "updated_at": "2026-08-21 14:27:14.422150+00:00"
+          },
+          {
+            "contract_code": "IF1010.CCFX",
+            "underlying_code": "IF",
+            "trading_date": "2010-10-08",
+            "list_date": "2010-08-23",
+            "delist_date": "2010-10-15",
+            "contract_multiplier": 300.0,
+            "tick_size": 0.2,
+            "rule_effective_date": "2010-08-23",
+            "rule_expiry_date": "2010-10-15",
+            "session_number": 2,
+            "session_text": "13:00~15:15",
+            "session_start_at": "2010-10-08 13:00:00+08:00",
+            "session_end_at": "2010-10-08 15:15:00+08:00",
+            "is_night_session": false,
+            "spans_midnight": false,
+            "minute_count": 135,
+            "source": "JQData_get_all_securities+get_futures_info",
+            "updated_at": "2026-08-21 14:27:14.422150+00:00"
+          },
+          {
+            "contract_code": "IF1010.CCFX",
+            "underlying_code": "IF",
+            "trading_date": "2010-10-11",
+            "list_date": "2010-08-23",
+            "delist_date": "2010-10-15",
+            "contract_multiplier": 300.0,
+            "tick_size": 0.2,
+            "rule_effective_date": "2010-08-23",
+            "rule_expiry_date": "2010-10-15",
+            "session_number": 1,
+            "session_text": "09:15~11:30",
+            "session_start_at": "2010-10-11 09:15:00+08:00",
+            "session_end_at": "2010-10-11 11:30:00+08:00",
+            "is_night_session": false,
+            "spans_midnight": false,
+            "minute_count": 135,
+            "source": "JQData_get_all_securities+get_futures_info",
+            "updated_at": "2026-08-21 14:27:14.422150+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\dim_futures_contract_calendar\\exchange_code=XSGE\\year=2026\\month=9\\part-0.parquet",
+        "rows": 19740,
+        "physical_compatible": true,
+        "schema_version": "1.2.0",
+        "samples": [
+          {
+            "contract_code": "AD2609.XSGE",
+            "underlying_code": "AD",
+            "trading_date": "2026-09-01",
+            "list_date": "2025-09-16",
+            "delist_date": "2026-09-15",
+            "contract_multiplier": 10.0,
+            "tick_size": 5.0,
+            "rule_effective_date": "2025-09-16",
+            "rule_expiry_date": "2026-09-15",
+            "session_number": 1,
+            "session_text": "21:00~01:00",
+            "session_start_at": "2026-08-31 21:00:00+08:00",
+            "session_end_at": "2026-09-01 01:00:00+08:00",
+            "is_night_session": true,
+            "spans_midnight": true,
+            "minute_count": 240,
+            "source": "JQData_get_all_securities+get_futures_info",
+            "updated_at": "2026-09-28 23:15:47.022941+00:00"
+          },
+          {
+            "contract_code": "AD2609.XSGE",
+            "underlying_code": "AD",
+            "trading_date": "2026-09-01",
+            "list_date": "2025-09-16",
+            "delist_date": "2026-09-15",
+            "contract_multiplier": 10.0,
+            "tick_size": 5.0,
+            "rule_effective_date": "2025-09-16",
+            "rule_expiry_date": "2026-09-15",
+            "session_number": 2,
+            "session_text": "09:00~10:15",
+            "session_start_at": "2026-09-01 09:00:00+08:00",
+            "session_end_at": "2026-09-01 10:15:00+08:00",
+            "is_night_session": false,
+            "spans_midnight": false,
+            "minute_count": 75,
+            "source": "JQData_get_all_securities+get_futures_info",
+            "updated_at": "2026-09-28 23:15:47.022941+00:00"
+          },
+          {
+            "contract_code": "AD2609.XSGE",
+            "underlying_code": "AD",
+            "trading_date": "2026-09-01",
+            "list_date": "2025-09-16",
+            "delist_date": "2026-09-15",
+            "contract_multiplier": 10.0,
+            "tick_size": 5.0,
+            "rule_effective_date": "2025-09-16",
+            "rule_expiry_date": "2026-09-15",
+            "session_number": 3,
+            "session_text": "10:30~11:30",
+            "session_start_at": "2026-09-01 10:30:00+08:00",
+            "session_end_at": "2026-09-01 11:30:00+08:00",
+            "is_night_session": false,
+            "spans_midnight": false,
+            "minute_count": 60,
+            "source": "JQData_get_all_securities+get_futures_info",
+            "updated_at": "2026-09-28 23:15:47.022941+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\dim_futures_contract_calendar\\exchange_code=XZCE\\year=2026\\month=9\\part-0.parquet",
+        "rows": 18471,
+        "physical_compatible": true,
+        "schema_version": "1.2.0",
+        "samples": [
+          {
+            "contract_code": "AP2610.XZCE",
+            "underlying_code": "AP",
+            "trading_date": "2026-09-01",
+            "list_date": "2025-10-23",
+            "delist_date": "2026-10-21",
+            "contract_multiplier": 10.0,
+            "tick_size": 1.0,
+            "rule_effective_date": "2025-10-23",
+            "rule_expiry_date": "2026-10-21",
+            "session_number": 1,
+            "session_text": "09:00~10:15",
+            "session_start_at": "2026-09-01 09:00:00+08:00",
+            "session_end_at": "2026-09-01 10:15:00+08:00",
+            "is_night_session": false,
+            "spans_midnight": false,
+            "minute_count": 75,
+            "source": "JQData_get_all_securities+get_futures_info",
+            "updated_at": "2026-09-28 23:15:47.022941+00:00"
+          },
+          {
+            "contract_code": "AP2610.XZCE",
+            "underlying_code": "AP",
+            "trading_date": "2026-09-01",
+            "list_date": "2025-10-23",
+            "delist_date": "2026-10-21",
+            "contract_multiplier": 10.0,
+            "tick_size": 1.0,
+            "rule_effective_date": "2025-10-23",
+            "rule_expiry_date": "2026-10-21",
+            "session_number": 2,
+            "session_text": "10:30~11:30",
+            "session_start_at": "2026-09-01 10:30:00+08:00",
+            "session_end_at": "2026-09-01 11:30:00+08:00",
+            "is_night_session": false,
+            "spans_midnight": false,
+            "minute_count": 60,
+            "source": "JQData_get_all_securities+get_futures_info",
+            "updated_at": "2026-09-28 23:15:47.022941+00:00"
+          },
+          {
+            "contract_code": "AP2610.XZCE",
+            "underlying_code": "AP",
+            "trading_date": "2026-09-01",
+            "list_date": "2025-10-23",
+            "delist_date": "2026-10-21",
+            "contract_multiplier": 10.0,
+            "tick_size": 1.0,
+            "rule_effective_date": "2025-10-23",
+            "rule_expiry_date": "2026-10-21",
+            "session_number": 3,
+            "session_text": "13:30~15:00",
+            "session_start_at": "2026-09-01 13:30:00+08:00",
+            "session_end_at": "2026-09-01 15:00:00+08:00",
+            "is_night_session": false,
+            "spans_midnight": false,
+            "minute_count": 90,
+            "source": "JQData_get_all_securities+get_futures_info",
+            "updated_at": "2026-09-28 23:15:47.022941+00:00"
+          }
+        ]
+      }
+    ],
+    "trading_date_range": [
+      "2010-01-04",
+      "2026-09-30"
+    ],
+    "state_counts": [
+      {
+        "exchange_code": "CCFX",
+        "rows": 138540
+      },
+      {
+        "exchange_code": "GFEX",
+        "rows": 76743
+      },
+      {
+        "exchange_code": "XDCE",
+        "rows": 2449192
+      },
+      {
+        "exchange_code": "XINE",
+        "rows": 400284
+      },
+      {
+        "exchange_code": "XSGE",
+        "rows": 2505823
+      },
+      {
+        "exchange_code": "XZCE",
+        "rows": 2124157
+      }
+    ],
+    "count_sums": {}
+  },
+  {
+    "table": "dim_futures_exchange_report_calendar",
+    "exists": true,
+    "parquet_files": 2851,
+    "rows": 681636,
+    "data_files": 2850,
+    "sample_fragments": [
+      {
+        "path": "silver\\dim_futures_exchange_report_calendar\\dataset_name=member_position\\exchange_code=CCFX\\year=2010\\month=10\\part-0.parquet",
+        "rows": 16,
+        "physical_compatible": true,
+        "schema_version": "1.3.0",
+        "samples": [
+          {
+            "underlying_code": "IF",
+            "trading_date": "2010-10-08",
+            "is_fetch_required": false,
+            "is_fetch_completed": false,
+            "fetch_result_status": "not_required",
+            "is_data_missing": false,
+            "expected_record_count": 0,
+            "actual_record_count": 0,
+            "quality_status": "not_applicable",
+            "fetch_run_id": null,
+            "fetch_completed_at": null,
+            "quality_checked_at": null,
+            "updated_at": "2026-08-23 03:17:05.601859+00:00"
+          },
+          {
+            "underlying_code": "IF",
+            "trading_date": "2010-10-11",
+            "is_fetch_required": false,
+            "is_fetch_completed": false,
+            "fetch_result_status": "not_required",
+            "is_data_missing": false,
+            "expected_record_count": 0,
+            "actual_record_count": 0,
+            "quality_status": "not_applicable",
+            "fetch_run_id": null,
+            "fetch_completed_at": null,
+            "quality_checked_at": null,
+            "updated_at": "2026-08-23 03:17:05.601859+00:00"
+          },
+          {
+            "underlying_code": "IF",
+            "trading_date": "2010-10-12",
+            "is_fetch_required": false,
+            "is_fetch_completed": false,
+            "fetch_result_status": "not_required",
+            "is_data_missing": false,
+            "expected_record_count": 0,
+            "actual_record_count": 0,
+            "quality_status": "not_applicable",
+            "fetch_run_id": null,
+            "fetch_completed_at": null,
+            "quality_checked_at": null,
+            "updated_at": "2026-08-23 03:17:05.601859+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\dim_futures_exchange_report_calendar\\dataset_name=warehouse_receipt\\exchange_code=XSGE\\year=2026\\month=9\\part-0.parquet",
+        "rows": 420,
+        "physical_compatible": true,
+        "schema_version": "1.4.0",
+        "samples": [
+          {
+            "underlying_code": "AD",
+            "trading_date": "2026-09-01",
+            "is_fetch_required": true,
+            "is_fetch_completed": true,
+            "fetch_result_status": "success",
+            "is_data_missing": false,
+            "expected_record_count": 1,
+            "actual_record_count": 1,
+            "quality_status": "passed",
+            "fetch_run_id": "2c276e95198c488a8e92a6b197c2b5a7",
+            "fetch_completed_at": "2026-09-28 23:55:38.819472+00:00",
+            "quality_checked_at": "2026-09-28 23:55:38.819472+00:00",
+            "updated_at": "2026-09-28 23:55:38.819472+00:00"
+          },
+          {
+            "underlying_code": "AD",
+            "trading_date": "2026-09-02",
+            "is_fetch_required": true,
+            "is_fetch_completed": true,
+            "fetch_result_status": "success",
+            "is_data_missing": false,
+            "expected_record_count": 1,
+            "actual_record_count": 1,
+            "quality_status": "passed",
+            "fetch_run_id": "2c276e95198c488a8e92a6b197c2b5a7",
+            "fetch_completed_at": "2026-09-28 23:55:38.819472+00:00",
+            "quality_checked_at": "2026-09-28 23:55:38.819472+00:00",
+            "updated_at": "2026-09-28 23:55:38.819472+00:00"
+          },
+          {
+            "underlying_code": "AD",
+            "trading_date": "2026-09-03",
+            "is_fetch_required": true,
+            "is_fetch_completed": true,
+            "fetch_result_status": "success",
+            "is_data_missing": false,
+            "expected_record_count": 1,
+            "actual_record_count": 1,
+            "quality_status": "passed",
+            "fetch_run_id": "2c276e95198c488a8e92a6b197c2b5a7",
+            "fetch_completed_at": "2026-09-28 23:55:38.819472+00:00",
+            "quality_checked_at": "2026-09-28 23:55:38.819472+00:00",
+            "updated_at": "2026-09-28 23:55:38.819472+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\dim_futures_exchange_report_calendar\\dataset_name=warehouse_receipt\\exchange_code=XZCE\\year=2026\\month=9\\part-0.parquet",
+        "rows": 546,
+        "physical_compatible": true,
+        "schema_version": "1.4.0",
+        "samples": [
+          {
+            "underlying_code": "AP",
+            "trading_date": "2026-09-01",
+            "is_fetch_required": false,
+            "is_fetch_completed": false,
+            "fetch_result_status": "not_required",
+            "is_data_missing": false,
+            "expected_record_count": 0,
+            "actual_record_count": 0,
+            "quality_status": "not_applicable",
+            "fetch_run_id": null,
+            "fetch_completed_at": null,
+            "quality_checked_at": null,
+            "updated_at": "2026-09-28 23:43:39.575733+00:00"
+          },
+          {
+            "underlying_code": "AP",
+            "trading_date": "2026-09-02",
+            "is_fetch_required": false,
+            "is_fetch_completed": false,
+            "fetch_result_status": "not_required",
+            "is_data_missing": false,
+            "expected_record_count": 0,
+            "actual_record_count": 0,
+            "quality_status": "not_applicable",
+            "fetch_run_id": null,
+            "fetch_completed_at": null,
+            "quality_checked_at": null,
+            "updated_at": "2026-09-28 23:43:39.575733+00:00"
+          },
+          {
+            "underlying_code": "AP",
+            "trading_date": "2026-09-03",
+            "is_fetch_required": false,
+            "is_fetch_completed": false,
+            "fetch_result_status": "not_required",
+            "is_data_missing": false,
+            "expected_record_count": 0,
+            "actual_record_count": 0,
+            "quality_status": "not_applicable",
+            "fetch_run_id": null,
+            "fetch_completed_at": null,
+            "quality_checked_at": null,
+            "updated_at": "2026-09-28 23:43:39.575733+00:00"
+          }
+        ]
+      }
+    ],
+    "trading_date_range": [
+      "2010-01-04",
+      "2026-09-30"
+    ],
+    "state_counts": [
+      {
+        "dataset_name": "member_position",
+        "exchange_code": "CCFX",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 19683
+      },
+      {
+        "dataset_name": "member_position",
+        "exchange_code": "GFEX",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 2531
+      },
+      {
+        "dataset_name": "member_position",
+        "exchange_code": "XDCE",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 32132
+      },
+      {
+        "dataset_name": "member_position",
+        "exchange_code": "XDCE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 34956
+      },
+      {
+        "dataset_name": "member_position",
+        "exchange_code": "XINE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 7505
+      },
+      {
+        "dataset_name": "member_position",
+        "exchange_code": "XSGE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 57334
+      },
+      {
+        "dataset_name": "member_position",
+        "exchange_code": "XZCE",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 43182
+      },
+      {
+        "dataset_name": "member_position",
+        "exchange_code": "XZCE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 29889
+      },
+      {
+        "dataset_name": "position_rank",
+        "exchange_code": "CCFX",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 19683
+      },
+      {
+        "dataset_name": "position_rank",
+        "exchange_code": "GFEX",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 638
+      },
+      {
+        "dataset_name": "position_rank",
+        "exchange_code": "GFEX",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 1893
+      },
+      {
+        "dataset_name": "position_rank",
+        "exchange_code": "XDCE",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 32132
+      },
+      {
+        "dataset_name": "position_rank",
+        "exchange_code": "XDCE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 4617
+      },
+      {
+        "dataset_name": "position_rank",
+        "exchange_code": "XDCE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 30301
+      },
+      {
+        "dataset_name": "position_rank",
+        "exchange_code": "XDCE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "warning",
+        "rows": 38
+      },
+      {
+        "dataset_name": "position_rank",
+        "exchange_code": "XINE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 3220
+      },
+      {
+        "dataset_name": "position_rank",
+        "exchange_code": "XINE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 4285
+      },
+      {
+        "dataset_name": "position_rank",
+        "exchange_code": "XSGE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 11332
+      },
+      {
+        "dataset_name": "position_rank",
+        "exchange_code": "XSGE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 46001
+      },
+      {
+        "dataset_name": "position_rank",
+        "exchange_code": "XSGE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "warning",
+        "rows": 1
+      },
+      {
+        "dataset_name": "position_rank",
+        "exchange_code": "XZCE",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 43182
+      },
+      {
+        "dataset_name": "position_rank",
+        "exchange_code": "XZCE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 2649
+      },
+      {
+        "dataset_name": "position_rank",
+        "exchange_code": "XZCE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 27240
+      },
+      {
+        "dataset_name": "warehouse_receipt",
+        "exchange_code": "CCFX",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 19683
+      },
+      {
+        "dataset_name": "warehouse_receipt",
+        "exchange_code": "GFEX",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 479
+      },
+      {
+        "dataset_name": "warehouse_receipt",
+        "exchange_code": "GFEX",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 2052
+      },
+      {
+        "dataset_name": "warehouse_receipt",
+        "exchange_code": "XDCE",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 32132
+      },
+      {
+        "dataset_name": "warehouse_receipt",
+        "exchange_code": "XDCE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 11994
+      },
+      {
+        "dataset_name": "warehouse_receipt",
+        "exchange_code": "XDCE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 22962
+      },
+      {
+        "dataset_name": "warehouse_receipt",
+        "exchange_code": "XINE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 1040
+      },
+      {
+        "dataset_name": "warehouse_receipt",
+        "exchange_code": "XINE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 6465
+      },
+      {
+        "dataset_name": "warehouse_receipt",
+        "exchange_code": "XSGE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 647
+      },
+      {
+        "dataset_name": "warehouse_receipt",
+        "exchange_code": "XSGE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 56687
+      },
+      {
+        "dataset_name": "warehouse_receipt",
+        "exchange_code": "XZCE",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 43182
+      },
+      {
+        "dataset_name": "warehouse_receipt",
+        "exchange_code": "XZCE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 5001
+      },
+      {
+        "dataset_name": "warehouse_receipt",
+        "exchange_code": "XZCE",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 24888
+      }
+    ],
+    "count_sums": {
+      "actual_record_count": 14616668,
+      "expected_record_count": 396645
+    }
+  },
+  {
+    "table": "dim_futures_variety_calendar",
+    "exists": true,
+    "parquet_files": 951,
+    "rows": 227212,
+    "data_files": 950,
+    "sample_fragments": [
+      {
+        "path": "silver\\dim_futures_variety_calendar\\exchange_code=CCFX\\year=2010\\month=10\\part-0.parquet",
+        "rows": 16,
+        "physical_compatible": true,
+        "schema_version": "1.2.0",
+        "samples": [
+          {
+            "underlying_code": "IF",
+            "trading_date": "2010-10-08",
+            "active_contract_count": 4,
+            "source": "JQData_get_all_securities+dim_trade_calendar",
+            "updated_at": "2026-08-21 11:21:25.742898+00:00"
+          },
+          {
+            "underlying_code": "IF",
+            "trading_date": "2010-10-11",
+            "active_contract_count": 4,
+            "source": "JQData_get_all_securities+dim_trade_calendar",
+            "updated_at": "2026-08-21 11:21:25.742898+00:00"
+          },
+          {
+            "underlying_code": "IF",
+            "trading_date": "2010-10-12",
+            "active_contract_count": 4,
+            "source": "JQData_get_all_securities+dim_trade_calendar",
+            "updated_at": "2026-08-21 11:21:25.742898+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\dim_futures_variety_calendar\\exchange_code=XSGE\\year=2026\\month=9\\part-0.parquet",
+        "rows": 420,
+        "physical_compatible": true,
+        "schema_version": "1.2.0",
+        "samples": [
+          {
+            "underlying_code": "AD",
+            "trading_date": "2026-09-01",
+            "active_contract_count": 12,
+            "source": "JQData_get_all_securities+dim_trade_calendar",
+            "updated_at": "2026-09-28 23:15:31.091044+00:00"
+          },
+          {
+            "underlying_code": "AD",
+            "trading_date": "2026-09-02",
+            "active_contract_count": 12,
+            "source": "JQData_get_all_securities+dim_trade_calendar",
+            "updated_at": "2026-09-28 23:15:31.091044+00:00"
+          },
+          {
+            "underlying_code": "AD",
+            "trading_date": "2026-09-03",
+            "active_contract_count": 12,
+            "source": "JQData_get_all_securities+dim_trade_calendar",
+            "updated_at": "2026-09-28 23:15:31.091044+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\dim_futures_variety_calendar\\exchange_code=XZCE\\year=2026\\month=9\\part-0.parquet",
+        "rows": 546,
+        "physical_compatible": true,
+        "schema_version": "1.2.0",
+        "samples": [
+          {
+            "underlying_code": "AP",
+            "trading_date": "2026-09-01",
+            "active_contract_count": 7,
+            "source": "JQData_get_all_securities+dim_trade_calendar",
+            "updated_at": "2026-09-28 23:15:31.091044+00:00"
+          },
+          {
+            "underlying_code": "AP",
+            "trading_date": "2026-09-02",
+            "active_contract_count": 7,
+            "source": "JQData_get_all_securities+dim_trade_calendar",
+            "updated_at": "2026-09-28 23:15:31.091044+00:00"
+          },
+          {
+            "underlying_code": "AP",
+            "trading_date": "2026-09-03",
+            "active_contract_count": 7,
+            "source": "JQData_get_all_securities+dim_trade_calendar",
+            "updated_at": "2026-09-28 23:15:31.091044+00:00"
+          }
+        ]
+      }
+    ],
+    "trading_date_range": [
+      "2010-01-04",
+      "2026-09-30"
+    ],
+    "state_counts": [
+      {
+        "exchange_code": "CCFX",
+        "rows": 19683
+      },
+      {
+        "exchange_code": "GFEX",
+        "rows": 2531
+      },
+      {
+        "exchange_code": "XDCE",
+        "rows": 67088
+      },
+      {
+        "exchange_code": "XINE",
+        "rows": 7505
+      },
+      {
+        "exchange_code": "XSGE",
+        "rows": 57334
+      },
+      {
+        "exchange_code": "XZCE",
+        "rows": 73071
+      }
+    ],
+    "count_sums": {}
+  },
+  {
+    "table": "dim_macro_release_calendar",
+    "exists": true,
+    "parquet_files": 404,
+    "rows": 37849,
+    "data_files": 403,
+    "sample_fragments": [
+      {
+        "path": "silver\\dim_macro_release_calendar\\dataset_name=interest_rate\\year=2010\\month=1\\part-0.parquet",
+        "rows": 168,
+        "physical_compatible": true,
+        "schema_version": "1.1.0",
+        "samples": [
+          {
+            "series_code": "SHIBOR_1M",
+            "report_date": "2010-01-01",
+            "expected_available_date": "2010-01-01",
+            "is_fetch_required": true,
+            "is_fetch_completed": true,
+            "fetch_result_status": "empty_confirmed",
+            "is_data_missing": true,
+            "actual_record_count": 0,
+            "quality_status": "warning",
+            "fetch_run_id": "efe3460dad8d428e9a767cd475b7a74f",
+            "fetch_completed_at": "2026-08-26 06:32:43.210965+00:00",
+            "quality_checked_at": "2026-08-26 06:32:43.210965+00:00",
+            "updated_at": "2026-08-26 06:32:43.210965+00:00"
+          },
+          {
+            "series_code": "SHIBOR_1M",
+            "report_date": "2010-01-04",
+            "expected_available_date": "2010-01-04",
+            "is_fetch_required": true,
+            "is_fetch_completed": true,
+            "fetch_result_status": "success",
+            "is_data_missing": false,
+            "actual_record_count": 1,
+            "quality_status": "passed",
+            "fetch_run_id": "efe3460dad8d428e9a767cd475b7a74f",
+            "fetch_completed_at": "2026-08-26 06:32:43.210965+00:00",
+            "quality_checked_at": "2026-08-26 06:32:43.210965+00:00",
+            "updated_at": "2026-08-26 06:32:43.210965+00:00"
+          },
+          {
+            "series_code": "SHIBOR_1M",
+            "report_date": "2010-01-05",
+            "expected_available_date": "2010-01-05",
+            "is_fetch_required": true,
+            "is_fetch_completed": true,
+            "fetch_result_status": "success",
+            "is_data_missing": false,
+            "actual_record_count": 1,
+            "quality_status": "passed",
+            "fetch_run_id": "efe3460dad8d428e9a767cd475b7a74f",
+            "fetch_completed_at": "2026-08-26 06:32:43.210965+00:00",
+            "quality_checked_at": "2026-08-26 06:32:43.210965+00:00",
+            "updated_at": "2026-08-26 06:32:43.210965+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\dim_macro_release_calendar\\dataset_name=macro_release\\year=2026\\month=9\\part-0.parquet",
+        "rows": 17,
+        "physical_compatible": true,
+        "schema_version": "1.1.0",
+        "samples": [
+          {
+            "series_code": "CPI_CITY_MOM",
+            "report_date": "2026-09-30",
+            "expected_available_date": "2026-10-09",
+            "is_fetch_required": false,
+            "is_fetch_completed": false,
+            "fetch_result_status": "not_required",
+            "is_data_missing": false,
+            "actual_record_count": 0,
+            "quality_status": "not_applicable",
+            "fetch_run_id": null,
+            "fetch_completed_at": null,
+            "quality_checked_at": null,
+            "updated_at": "2026-09-30 04:51:39.167969+00:00"
+          },
+          {
+            "series_code": "CPI_CITY_YOY",
+            "report_date": "2026-09-30",
+            "expected_available_date": "2026-10-09",
+            "is_fetch_required": false,
+            "is_fetch_completed": false,
+            "fetch_result_status": "not_required",
+            "is_data_missing": false,
+            "actual_record_count": 0,
+            "quality_status": "not_applicable",
+            "fetch_run_id": null,
+            "fetch_completed_at": null,
+            "quality_checked_at": null,
+            "updated_at": "2026-09-30 04:51:39.167969+00:00"
+          },
+          {
+            "series_code": "CPI_CITY_YTD",
+            "report_date": "2026-09-30",
+            "expected_available_date": "2026-10-09",
+            "is_fetch_required": false,
+            "is_fetch_completed": false,
+            "fetch_result_status": "not_required",
+            "is_data_missing": false,
+            "actual_record_count": 0,
+            "quality_status": "not_applicable",
+            "fetch_run_id": null,
+            "fetch_completed_at": null,
+            "quality_checked_at": null,
+            "updated_at": "2026-09-30 04:51:39.167969+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\dim_macro_release_calendar\\dataset_name=interest_rate\\year=2026\\month=10\\part-0.parquet",
+        "rows": 16,
+        "physical_compatible": true,
+        "schema_version": "1.1.0",
+        "samples": [
+          {
+            "series_code": "SHIBOR_1M",
+            "report_date": "2026-10-01",
+            "expected_available_date": "2026-10-01",
+            "is_fetch_required": true,
+            "is_fetch_completed": true,
+            "fetch_result_status": "empty_confirmed",
+            "is_data_missing": true,
+            "actual_record_count": 0,
+            "quality_status": "warning",
+            "fetch_run_id": "10e9eabebb8e4fc8833ea8a779017a0e",
+            "fetch_completed_at": "2026-10-02 08:17:27.740923+00:00",
+            "quality_checked_at": "2026-10-02 08:17:27.740923+00:00",
+            "updated_at": "2026-10-02 08:17:27.740923+00:00"
+          },
+          {
+            "series_code": "SHIBOR_1M",
+            "report_date": "2026-10-02",
+            "expected_available_date": "2026-10-02",
+            "is_fetch_required": true,
+            "is_fetch_completed": true,
+            "fetch_result_status": "empty_confirmed",
+            "is_data_missing": true,
+            "actual_record_count": 0,
+            "quality_status": "warning",
+            "fetch_run_id": "10e9eabebb8e4fc8833ea8a779017a0e",
+            "fetch_completed_at": "2026-10-02 08:17:27.740923+00:00",
+            "quality_checked_at": "2026-10-02 08:17:27.740923+00:00",
+            "updated_at": "2026-10-02 08:17:27.740923+00:00"
+          },
+          {
+            "series_code": "SHIBOR_1W",
+            "report_date": "2026-10-01",
+            "expected_available_date": "2026-10-01",
+            "is_fetch_required": true,
+            "is_fetch_completed": true,
+            "fetch_result_status": "empty_confirmed",
+            "is_data_missing": true,
+            "actual_record_count": 0,
+            "quality_status": "warning",
+            "fetch_run_id": "10e9eabebb8e4fc8833ea8a779017a0e",
+            "fetch_completed_at": "2026-10-02 08:17:27.740923+00:00",
+            "quality_checked_at": "2026-10-02 08:17:27.740923+00:00",
+            "updated_at": "2026-10-02 08:17:27.740923+00:00"
+          }
+        ]
+      }
+    ],
+    "report_date_range": [
+      "2010-01-01",
+      "2026-10-02"
+    ],
+    "state_counts": [
+      {
+        "dataset_name": "interest_rate",
+        "series_code": "SHIBOR_1M",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 305
+      },
+      {
+        "dataset_name": "interest_rate",
+        "series_code": "SHIBOR_1M",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 4066
+      },
+      {
+        "dataset_name": "interest_rate",
+        "series_code": "SHIBOR_1W",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 305
+      },
+      {
+        "dataset_name": "interest_rate",
+        "series_code": "SHIBOR_1W",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 4066
+      },
+      {
+        "dataset_name": "interest_rate",
+        "series_code": "SHIBOR_1Y",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 305
+      },
+      {
+        "dataset_name": "interest_rate",
+        "series_code": "SHIBOR_1Y",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 4066
+      },
+      {
+        "dataset_name": "interest_rate",
+        "series_code": "SHIBOR_2W",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 305
+      },
+      {
+        "dataset_name": "interest_rate",
+        "series_code": "SHIBOR_2W",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 4066
+      },
+      {
+        "dataset_name": "interest_rate",
+        "series_code": "SHIBOR_3M",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 305
+      },
+      {
+        "dataset_name": "interest_rate",
+        "series_code": "SHIBOR_3M",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 4066
+      },
+      {
+        "dataset_name": "interest_rate",
+        "series_code": "SHIBOR_6M",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 305
+      },
+      {
+        "dataset_name": "interest_rate",
+        "series_code": "SHIBOR_6M",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 4066
+      },
+      {
+        "dataset_name": "interest_rate",
+        "series_code": "SHIBOR_9M",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 305
+      },
+      {
+        "dataset_name": "interest_rate",
+        "series_code": "SHIBOR_9M",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 4066
+      },
+      {
+        "dataset_name": "interest_rate",
+        "series_code": "SHIBOR_ON",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "empty_confirmed",
+        "quality_status": "warning",
+        "rows": 305
+      },
+      {
+        "dataset_name": "interest_rate",
+        "series_code": "SHIBOR_ON",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 4066
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "CPI_CITY_MOM",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "CPI_CITY_MOM",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 200
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "CPI_CITY_YOY",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "CPI_CITY_YOY",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 200
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "CPI_CITY_YTD",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "CPI_CITY_YTD",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 200
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "CPI_NATIONAL_MOM",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "CPI_NATIONAL_MOM",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 200
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "CPI_NATIONAL_YOY",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "CPI_NATIONAL_YOY",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 200
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "CPI_NATIONAL_YTD",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "CPI_NATIONAL_YTD",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 200
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "CPI_RURAL_MOM",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "CPI_RURAL_MOM",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 200
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "CPI_RURAL_YOY",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "CPI_RURAL_YOY",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 200
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "CPI_RURAL_YTD",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "CPI_RURAL_YTD",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 200
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "GDP_PRIMARY_YOY",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "GDP_PRIMARY_YOY",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 66
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "GDP_SECONDARY_YOY",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "GDP_SECONDARY_YOY",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 66
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "GDP_TERTIARY_YOY",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "GDP_TERTIARY_YOY",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 66
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "GDP_YOY",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "GDP_YOY",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 66
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "PMI_MANUFACTURING",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 201
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "PMI_NON_MANUFACTURING",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 201
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "PPI_YOY",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "PPI_YOY",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 200
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "PPI_YTD",
+        "is_fetch_required": false,
+        "is_fetch_completed": false,
+        "fetch_result_status": "not_required",
+        "quality_status": "not_applicable",
+        "rows": 1
+      },
+      {
+        "dataset_name": "macro_release",
+        "series_code": "PPI_YTD",
+        "is_fetch_required": true,
+        "is_fetch_completed": true,
+        "fetch_result_status": "success",
+        "quality_status": "passed",
+        "rows": 200
+      }
+    ],
+    "count_sums": {
+      "actual_record_count": 35394
+    }
+  },
+  {
+    "table": "dim_trade_calendar",
+    "exists": true,
+    "parquet_files": 18,
+    "rows": 6118,
+    "data_files": 17,
+    "sample_fragments": [
+      {
+        "path": "silver\\dim_trade_calendar\\year=2010\\part-0.parquet",
+        "rows": 365,
+        "physical_compatible": true,
+        "schema_version": "1.1.0",
+        "samples": [
+          {
+            "calendar_date": "2010-01-01",
+            "date_key": "20100101",
+            "is_trading_day": false,
+            "weekday": 5,
+            "is_weekend": false,
+            "source": "JQData_get_trade_days",
+            "calendar_name": "CN_FUTURES_MARKET",
+            "calendar_timezone": "Asia/Shanghai",
+            "effective_after": "20:00:00",
+            "updated_at": "2026-08-02 10:22:51+00:00"
+          },
+          {
+            "calendar_date": "2010-01-02",
+            "date_key": "20100102",
+            "is_trading_day": false,
+            "weekday": 6,
+            "is_weekend": true,
+            "source": "JQData_get_trade_days",
+            "calendar_name": "CN_FUTURES_MARKET",
+            "calendar_timezone": "Asia/Shanghai",
+            "effective_after": "20:00:00",
+            "updated_at": "2026-08-02 10:22:51+00:00"
+          },
+          {
+            "calendar_date": "2010-01-03",
+            "date_key": "20100103",
+            "is_trading_day": false,
+            "weekday": 7,
+            "is_weekend": true,
+            "source": "JQData_get_trade_days",
+            "calendar_name": "CN_FUTURES_MARKET",
+            "calendar_timezone": "Asia/Shanghai",
+            "effective_after": "20:00:00",
+            "updated_at": "2026-08-02 10:22:51+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\dim_trade_calendar\\year=2025\\part-0.parquet",
+        "rows": 365,
+        "physical_compatible": true,
+        "schema_version": "1.1.0",
+        "samples": [
+          {
+            "calendar_date": "2025-01-01",
+            "date_key": "20250101",
+            "is_trading_day": false,
+            "weekday": 3,
+            "is_weekend": false,
+            "source": "JQData_get_trade_days",
+            "calendar_name": "CN_FUTURES_MARKET",
+            "calendar_timezone": "Asia/Shanghai",
+            "effective_after": "20:00:00",
+            "updated_at": "2026-08-02 10:22:51+00:00"
+          },
+          {
+            "calendar_date": "2025-01-02",
+            "date_key": "20250102",
+            "is_trading_day": true,
+            "weekday": 4,
+            "is_weekend": false,
+            "source": "JQData_get_trade_days",
+            "calendar_name": "CN_FUTURES_MARKET",
+            "calendar_timezone": "Asia/Shanghai",
+            "effective_after": "20:00:00",
+            "updated_at": "2026-08-02 10:22:51+00:00"
+          },
+          {
+            "calendar_date": "2025-01-03",
+            "date_key": "20250103",
+            "is_trading_day": true,
+            "weekday": 5,
+            "is_weekend": false,
+            "source": "JQData_get_trade_days",
+            "calendar_name": "CN_FUTURES_MARKET",
+            "calendar_timezone": "Asia/Shanghai",
+            "effective_after": "20:00:00",
+            "updated_at": "2026-08-02 10:22:51+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\dim_trade_calendar\\year=2026\\part-0.parquet",
+        "rows": 274,
+        "physical_compatible": true,
+        "schema_version": "1.1.0",
+        "samples": [
+          {
+            "calendar_date": "2026-01-01",
+            "date_key": "20260101",
+            "is_trading_day": false,
+            "weekday": 4,
+            "is_weekend": false,
+            "source": "JQData_get_trade_days",
+            "calendar_name": "CN_FUTURES_MARKET",
+            "calendar_timezone": "Asia/Shanghai",
+            "effective_after": "20:00:00",
+            "updated_at": "2026-08-02 10:22:51+00:00"
+          },
+          {
+            "calendar_date": "2026-01-02",
+            "date_key": "20260102",
+            "is_trading_day": false,
+            "weekday": 5,
+            "is_weekend": false,
+            "source": "JQData_get_trade_days",
+            "calendar_name": "CN_FUTURES_MARKET",
+            "calendar_timezone": "Asia/Shanghai",
+            "effective_after": "20:00:00",
+            "updated_at": "2026-08-02 10:22:51+00:00"
+          },
+          {
+            "calendar_date": "2026-01-03",
+            "date_key": "20260103",
+            "is_trading_day": false,
+            "weekday": 6,
+            "is_weekend": true,
+            "source": "JQData_get_trade_days",
+            "calendar_name": "CN_FUTURES_MARKET",
+            "calendar_timezone": "Asia/Shanghai",
+            "effective_after": "20:00:00",
+            "updated_at": "2026-08-02 10:22:51+00:00"
+          }
+        ]
+      }
+    ],
+    "calendar_date_range": [
+      "2010-01-01",
+      "2026-10-01"
+    ],
+    "count_sums": {}
+  },
+  {
+    "table": "fact_external_index_daily",
+    "exists": true,
+    "parquet_files": 786,
+    "rows": 67591,
+    "data_files": 785,
+    "sample_fragments": [
+      {
+        "path": "silver\\fact_external_index_daily\\index_category=energy\\year=2010\\month=1\\part-0.parquet",
+        "rows": 19,
+        "physical_compatible": true,
+        "schema_version": "1.1.0",
+        "samples": [
+          {
+            "observation_date": "2010-01-04",
+            "index_code": "WTI_CONC",
+            "index_name": "NYMEX WTI 连续商品指数",
+            "index_value": 81.51,
+            "source_indicator_id": "EMI01508580",
+            "source": "Eastmoney_RPT_INDUSTRY_INDEX",
+            "updated_at": "2026-08-26 03:28:35.527613+00:00"
+          },
+          {
+            "observation_date": "2010-01-05",
+            "index_code": "WTI_CONC",
+            "index_name": "NYMEX WTI 连续商品指数",
+            "index_value": 81.77,
+            "source_indicator_id": "EMI01508580",
+            "source": "Eastmoney_RPT_INDUSTRY_INDEX",
+            "updated_at": "2026-08-26 03:28:35.527613+00:00"
+          },
+          {
+            "observation_date": "2010-01-06",
+            "index_code": "WTI_CONC",
+            "index_name": "NYMEX WTI 连续商品指数",
+            "index_value": 83.18,
+            "source_indicator_id": "EMI01508580",
+            "source": "Eastmoney_RPT_INDUSTRY_INDEX",
+            "updated_at": "2026-08-26 03:28:35.527613+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\fact_external_index_daily\\index_category=nonferrous\\year=2026\\month=10\\part-0.parquet",
+        "rows": 1,
+        "physical_compatible": true,
+        "schema_version": "1.1.0",
+        "samples": [
+          {
+            "observation_date": "2026-10-01",
+            "index_code": "SUNSIRS_NONFERROUS",
+            "index_name": "生意社有色金属指数",
+            "index_value": 1581.0,
+            "source_indicator_id": "EMI00662542",
+            "source": "Eastmoney_RPT_INDUSTRY_INDEX",
+            "updated_at": "2026-10-02 08:17:06.131337+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\fact_external_index_daily\\index_category=shipping\\year=2026\\month=10\\part-0.parquet",
+        "rows": 6,
+        "physical_compatible": true,
+        "schema_version": "1.1.0",
+        "samples": [
+          {
+            "observation_date": "2026-10-01",
+            "index_code": "BCI",
+            "index_name": "波罗的海海岬型运费指数",
+            "index_value": 5010.0,
+            "source_indicator_id": "EMI00107666",
+            "source": "Eastmoney_RPT_INDUSTRY_INDEX",
+            "updated_at": "2026-10-02 08:17:08.068998+00:00"
+          },
+          {
+            "observation_date": "2026-10-01",
+            "index_code": "BCTI",
+            "index_name": "波罗的海成品油运输指数",
+            "index_value": 2412.0,
+            "source_indicator_id": "EMI00107669",
+            "source": "Eastmoney_RPT_INDUSTRY_INDEX",
+            "updated_at": "2026-10-02 08:17:08.068998+00:00"
+          },
+          {
+            "observation_date": "2026-10-01",
+            "index_code": "BDI",
+            "index_name": "波罗的海干散货指数",
+            "index_value": 3140.0,
+            "source_indicator_id": "EMI00107664",
+            "source": "Eastmoney_RPT_INDUSTRY_INDEX",
+            "updated_at": "2026-10-02 08:17:08.068998+00:00"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "table": "fact_futures_daily",
+    "exists": true,
+    "parquet_files": 10272,
+    "rows": 2076956,
+    "data_files": 10271,
+    "sample_fragments": [
+      {
+        "path": "silver\\fact_futures_daily\\exchange_code=GFEX\\underlying_code=LC\\year=2023\\month=10\\part-0.parquet",
+        "rows": 160,
+        "physical_compatible": true,
+        "schema_version": "1.5.0",
+        "samples": [
+          {
+            "contract_code": "LC2401.GFEX",
+            "trading_date": "2023-10-09",
+            "previous_close": null,
+            "previous_settlement": null,
+            "open": 150000.0,
+            "high": 153300.0,
+            "low": 148500.0,
+            "close": 151900.0,
+            "settlement": null,
+            "close_change_from_previous_settlement": null,
+            "settlement_change_from_previous_settlement": null,
+            "volume": 111723.0,
+            "money": 16822296600.0,
+            "open_interest": 65157.0,
+            "open_interest_change": null,
+            "has_market_data": true,
+            "source": "JQData_get_price_1d_skip_paused",
+            "updated_at": "2026-08-02 10:35:02+00:00"
+          },
+          {
+            "contract_code": "LC2401.GFEX",
+            "trading_date": "2023-10-10",
+            "previous_close": null,
+            "previous_settlement": null,
+            "open": 152600.0,
+            "high": 155300.0,
+            "low": 150800.0,
+            "close": 151900.0,
+            "settlement": null,
+            "close_change_from_previous_settlement": null,
+            "settlement_change_from_previous_settlement": null,
+            "volume": 182713.0,
+            "money": 27957657550.0,
+            "open_interest": 71144.0,
+            "open_interest_change": null,
+            "has_market_data": true,
+            "source": "JQData_get_price_1d_skip_paused",
+            "updated_at": "2026-08-02 10:35:02+00:00"
+          },
+          {
+            "contract_code": "LC2401.GFEX",
+            "trading_date": "2023-10-11",
+            "previous_close": null,
+            "previous_settlement": null,
+            "open": 152900.0,
+            "high": 156000.0,
+            "low": 152350.0,
+            "close": 155900.0,
+            "settlement": null,
+            "close_change_from_previous_settlement": null,
+            "settlement_change_from_previous_settlement": null,
+            "volume": 150353.0,
+            "money": 23188721350.0,
+            "open_interest": 74313.0,
+            "open_interest_change": null,
+            "has_market_data": true,
+            "source": "JQData_get_price_1d_skip_paused",
+            "updated_at": "2026-08-02 10:35:02+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\fact_futures_daily\\exchange_code=XZCE\\underlying_code=UR\\year=2026\\month=9\\part-0.parquet",
+        "rows": 252,
+        "physical_compatible": true,
+        "schema_version": "1.5.0",
+        "samples": [
+          {
+            "contract_code": "UR2609.XZCE",
+            "trading_date": "2026-09-01",
+            "previous_close": 1723.0,
+            "previous_settlement": 1723.0,
+            "open": 1714.0,
+            "high": 1716.0,
+            "low": 1701.0,
+            "close": 1707.0,
+            "settlement": 1707.0,
+            "close_change_from_previous_settlement": -16.0,
+            "settlement_change_from_previous_settlement": -16.0,
+            "volume": 601.0,
+            "money": 20518140.0,
+            "open_interest": 8781.0,
+            "open_interest_change": -427.0,
+            "has_market_data": true,
+            "source": "JQData_get_price_daily_get_extras_raw",
+            "updated_at": "2026-09-28 23:16:52.279099+00:00"
+          },
+          {
+            "contract_code": "UR2609.XZCE",
+            "trading_date": "2026-09-02",
+            "previous_close": 1707.0,
+            "previous_settlement": 1707.0,
+            "open": 1720.0,
+            "high": 1729.0,
+            "low": 1715.0,
+            "close": 1719.0,
+            "settlement": 1722.0,
+            "close_change_from_previous_settlement": 12.0,
+            "settlement_change_from_previous_settlement": 15.0,
+            "volume": 1272.0,
+            "money": 43807680.0,
+            "open_interest": 7915.0,
+            "open_interest_change": -866.0,
+            "has_market_data": true,
+            "source": "JQData_get_price_daily_get_extras_raw",
+            "updated_at": "2026-09-28 23:16:52.279099+00:00"
+          },
+          {
+            "contract_code": "UR2609.XZCE",
+            "trading_date": "2026-09-03",
+            "previous_close": 1722.0,
+            "previous_settlement": 1722.0,
+            "open": 1724.0,
+            "high": 1739.0,
+            "low": 1709.0,
+            "close": 1709.0,
+            "settlement": 1725.0,
+            "close_change_from_previous_settlement": -13.0,
+            "settlement_change_from_previous_settlement": 3.0,
+            "volume": 1408.0,
+            "money": 48576000.0,
+            "open_interest": 7481.0,
+            "open_interest_change": -434.0,
+            "has_market_data": true,
+            "source": "JQData_get_price_daily_get_extras_raw",
+            "updated_at": "2026-09-28 23:16:52.279099+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\fact_futures_daily\\exchange_code=XZCE\\underlying_code=ZC\\year=2026\\month=9\\part-0.parquet",
+        "rows": 252,
+        "physical_compatible": true,
+        "schema_version": "1.5.0",
+        "samples": [
+          {
+            "contract_code": "ZC2609.XZCE",
+            "trading_date": "2026-09-01",
+            "previous_close": 801.4,
+            "previous_settlement": 801.4,
+            "open": 801.4,
+            "high": 801.4,
+            "low": 801.4,
+            "close": 801.4,
+            "settlement": 801.4,
+            "close_change_from_previous_settlement": 0.0,
+            "settlement_change_from_previous_settlement": 0.0,
+            "volume": 0.0,
+            "money": 0.0,
+            "open_interest": 0.0,
+            "open_interest_change": 0.0,
+            "has_market_data": true,
+            "source": "JQData_get_price_daily_get_extras_raw",
+            "updated_at": "2026-09-28 23:16:52.279099+00:00"
+          },
+          {
+            "contract_code": "ZC2609.XZCE",
+            "trading_date": "2026-09-02",
+            "previous_close": 801.4,
+            "previous_settlement": 801.4,
+            "open": 801.4,
+            "high": 801.4,
+            "low": 801.4,
+            "close": 801.4,
+            "settlement": 801.4,
+            "close_change_from_previous_settlement": 0.0,
+            "settlement_change_from_previous_settlement": 0.0,
+            "volume": 0.0,
+            "money": 0.0,
+            "open_interest": 0.0,
+            "open_interest_change": 0.0,
+            "has_market_data": true,
+            "source": "JQData_get_price_daily_get_extras_raw",
+            "updated_at": "2026-09-28 23:16:52.279099+00:00"
+          },
+          {
+            "contract_code": "ZC2609.XZCE",
+            "trading_date": "2026-09-03",
+            "previous_close": 801.4,
+            "previous_settlement": 801.4,
+            "open": 801.4,
+            "high": 801.4,
+            "low": 801.4,
+            "close": 801.4,
+            "settlement": 801.4,
+            "close_change_from_previous_settlement": 0.0,
+            "settlement_change_from_previous_settlement": 0.0,
+            "volume": 0.0,
+            "money": 0.0,
+            "open_interest": 0.0,
+            "open_interest_change": 0.0,
+            "has_market_data": true,
+            "source": "JQData_get_price_daily_get_extras_raw",
+            "updated_at": "2026-09-28 23:16:52.279099+00:00"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "table": "fact_futures_member_position_daily",
+    "exists": true,
+    "parquet_files": 1,
+    "rows": 0,
+    "data_files": 0,
+    "sample_fragments": []
+  },
+  {
+    "table": "fact_futures_minute",
+    "exists": true,
+    "parquet_files": 6623,
+    "rows": 527130532,
+    "data_files": 6622,
+    "sample_fragments": [
+      {
+        "path": "silver\\fact_futures_minute\\exchange_code=GFEX\\underlying_code=LC\\year=2023\\month=10\\part-0.parquet",
+        "rows": 36000,
+        "physical_compatible": true,
+        "schema_version": "1.5.0",
+        "samples": [
+          {
+            "contract_code": "LC2401.GFEX",
+            "trading_date": "2023-10-09",
+            "session_number": 1,
+            "bar_at": "2023-10-09 09:01:00+08:00",
+            "open": 150000.0,
+            "high": 151600.0,
+            "low": 148500.0,
+            "close": 151500.0,
+            "volume": 4606.0,
+            "money": 689218900.0,
+            "open_interest": 61442.0,
+            "source": "JQData_get_price_1m_skip_paused",
+            "updated_at": "2026-08-02 12:03:53+00:00"
+          },
+          {
+            "contract_code": "LC2401.GFEX",
+            "trading_date": "2023-10-09",
+            "session_number": 1,
+            "bar_at": "2023-10-09 09:02:00+08:00",
+            "open": 151700.0,
+            "high": 152500.0,
+            "low": 150550.0,
+            "close": 150650.0,
+            "volume": 4432.0,
+            "money": 671757200.0,
+            "open_interest": 61711.0,
+            "source": "JQData_get_price_1m_skip_paused",
+            "updated_at": "2026-08-02 12:03:53+00:00"
+          },
+          {
+            "contract_code": "LC2401.GFEX",
+            "trading_date": "2023-10-09",
+            "session_number": 1,
+            "bar_at": "2023-10-09 09:03:00+08:00",
+            "open": 150600.0,
+            "high": 150650.0,
+            "low": 148950.0,
+            "close": 149150.0,
+            "volume": 3056.0,
+            "money": 457460200.0,
+            "open_interest": 62127.0,
+            "source": "JQData_get_price_1m_skip_paused",
+            "updated_at": "2026-08-02 12:03:53+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\fact_futures_minute\\exchange_code=XZCE\\underlying_code=UR\\year=2026\\month=9\\part-0.parquet",
+        "rows": 56700,
+        "physical_compatible": true,
+        "schema_version": "1.5.0",
+        "samples": [
+          {
+            "contract_code": "UR2609.XZCE",
+            "trading_date": "2026-09-01",
+            "session_number": 1,
+            "bar_at": "2026-09-01 09:01:00+08:00",
+            "open": 1714.0,
+            "high": 1714.0,
+            "low": 1704.0,
+            "close": 1704.0,
+            "volume": 142.0,
+            "money": 4859240.0,
+            "open_interest": 9101.0,
+            "source": "JQData_get_price_1m_skip_paused_fq_none",
+            "updated_at": "2026-09-28 23:17:38.548827+00:00"
+          },
+          {
+            "contract_code": "UR2609.XZCE",
+            "trading_date": "2026-09-01",
+            "session_number": 1,
+            "bar_at": "2026-09-01 09:02:00+08:00",
+            "open": 1703.0,
+            "high": 1703.0,
+            "low": 1703.0,
+            "close": 1703.0,
+            "volume": 5.0,
+            "money": 171100.0,
+            "open_interest": 9101.0,
+            "source": "JQData_get_price_1m_skip_paused_fq_none",
+            "updated_at": "2026-09-28 23:17:38.548827+00:00"
+          },
+          {
+            "contract_code": "UR2609.XZCE",
+            "trading_date": "2026-09-01",
+            "session_number": 1,
+            "bar_at": "2026-09-01 09:03:00+08:00",
+            "open": 1703.0,
+            "high": 1703.0,
+            "low": 1703.0,
+            "close": 1703.0,
+            "volume": 36.0,
+            "money": 1224600.0,
+            "open_interest": 9065.0,
+            "source": "JQData_get_price_1m_skip_paused_fq_none",
+            "updated_at": "2026-09-28 23:17:38.548827+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\fact_futures_minute\\exchange_code=XZCE\\underlying_code=ZC\\year=2026\\month=9\\part-0.parquet",
+        "rows": 85500,
+        "physical_compatible": true,
+        "schema_version": "1.5.0",
+        "samples": [
+          {
+            "contract_code": "ZC2609.XZCE",
+            "trading_date": "2026-09-01",
+            "session_number": 1,
+            "bar_at": "2026-08-31 21:01:00+08:00",
+            "open": 801.4,
+            "high": 801.4,
+            "low": 801.4,
+            "close": 801.4,
+            "volume": 0.0,
+            "money": 0.0,
+            "open_interest": 0.0,
+            "source": "JQData_get_price_1m_skip_paused_fq_none",
+            "updated_at": "2026-09-28 23:17:38.548827+00:00"
+          },
+          {
+            "contract_code": "ZC2609.XZCE",
+            "trading_date": "2026-09-01",
+            "session_number": 1,
+            "bar_at": "2026-08-31 21:02:00+08:00",
+            "open": 801.4,
+            "high": 801.4,
+            "low": 801.4,
+            "close": 801.4,
+            "volume": 0.0,
+            "money": 0.0,
+            "open_interest": 0.0,
+            "source": "JQData_get_price_1m_skip_paused_fq_none",
+            "updated_at": "2026-09-28 23:17:38.548827+00:00"
+          },
+          {
+            "contract_code": "ZC2609.XZCE",
+            "trading_date": "2026-09-01",
+            "session_number": 1,
+            "bar_at": "2026-08-31 21:03:00+08:00",
+            "open": 801.4,
+            "high": 801.4,
+            "low": 801.4,
+            "close": 801.4,
+            "volume": 0.0,
+            "money": 0.0,
+            "open_interest": 0.0,
+            "source": "JQData_get_price_1m_skip_paused_fq_none",
+            "updated_at": "2026-09-28 23:17:38.548827+00:00"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "table": "fact_futures_missing_bar",
+    "exists": true,
+    "parquet_files": 2382,
+    "rows": 8951963,
+    "data_files": 2381,
+    "sample_fragments": [
+      {
+        "path": "silver\\fact_futures_missing_bar\\bar_frequency=1m\\exchange_code=GFEX\\underlying_code=PD\\year=2026\\month=4\\part-0.parquet",
+        "rows": 225,
+        "physical_compatible": true,
+        "schema_version": "1.2.0",
+        "samples": [
+          {
+            "contract_code": "PD2704.GFEX",
+            "trading_date": "2026-04-16",
+            "session_number": 1,
+            "expected_bar_at": "2026-04-16 09:01:00+08:00",
+            "detected_at": "2026-08-20 15:00:23.458088+00:00"
+          },
+          {
+            "contract_code": "PD2704.GFEX",
+            "trading_date": "2026-04-16",
+            "session_number": 1,
+            "expected_bar_at": "2026-04-16 09:02:00+08:00",
+            "detected_at": "2026-08-20 15:00:23.458088+00:00"
+          },
+          {
+            "contract_code": "PD2704.GFEX",
+            "trading_date": "2026-04-16",
+            "session_number": 1,
+            "expected_bar_at": "2026-04-16 09:03:00+08:00",
+            "detected_at": "2026-08-20 15:00:23.458088+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\fact_futures_missing_bar\\bar_frequency=1m\\exchange_code=XDCE\\underlying_code=L\\year=2026\\month=8\\part-0.parquet",
+        "rows": 2,
+        "physical_compatible": true,
+        "schema_version": "1.2.0",
+        "samples": [
+          {
+            "contract_code": "L2612.XDCE",
+            "trading_date": "2026-08-11",
+            "session_number": 1,
+            "expected_bar_at": "2026-08-10 21:01:00+08:00",
+            "detected_at": "2026-08-20 15:00:23.458088+00:00"
+          },
+          {
+            "contract_code": "L2702.XDCE",
+            "trading_date": "2026-08-12",
+            "session_number": 1,
+            "expected_bar_at": "2026-08-11 21:01:00+08:00",
+            "detected_at": "2026-08-20 15:00:23.458088+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\fact_futures_missing_bar\\bar_frequency=1m\\exchange_code=XDCE\\underlying_code=PP\\year=2026\\month=8\\part-0.parquet",
+        "rows": 1,
+        "physical_compatible": true,
+        "schema_version": "1.2.0",
+        "samples": [
+          {
+            "contract_code": "PP2702.XDCE",
+            "trading_date": "2026-08-11",
+            "session_number": 1,
+            "expected_bar_at": "2026-08-10 21:01:00+08:00",
+            "detected_at": "2026-08-20 15:00:23.458088+00:00"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "table": "fact_futures_position_rank_daily",
+    "exists": true,
+    "parquet_files": 5507,
+    "rows": 13234819,
+    "data_files": 5506,
+    "sample_fragments": [
+      {
+        "path": "silver\\fact_futures_position_rank_daily\\exchange_code=GFEX\\underlying_code=LC\\year=2023\\month=11\\part-0.parquet",
+        "rows": 1067,
+        "physical_compatible": true,
+        "schema_version": "1.2.0",
+        "samples": [
+          {
+            "trading_date": "2023-11-10",
+            "source_symbol": "LC2401.GFEX",
+            "contract_code": "LC2401.GFEX",
+            "member_name": "一德期货",
+            "volume_rank": null,
+            "volume": null,
+            "volume_change": null,
+            "long_position_rank": null,
+            "long_position": null,
+            "long_position_change": null,
+            "short_position_rank": 15,
+            "short_position": 1415.0,
+            "short_position_change": 107.0,
+            "source": "JQData_FUT_MEMBER_POSITION_RANK",
+            "updated_at": "2026-08-23 03:26:18.653052+00:00"
+          },
+          {
+            "trading_date": "2023-11-10",
+            "source_symbol": "LC2401.GFEX",
+            "contract_code": "LC2401.GFEX",
+            "member_name": "上海东亚",
+            "volume_rank": null,
+            "volume": null,
+            "volume_change": null,
+            "long_position_rank": null,
+            "long_position": null,
+            "long_position_change": null,
+            "short_position_rank": 13,
+            "short_position": 1554.0,
+            "short_position_change": -190.0,
+            "source": "JQData_FUT_MEMBER_POSITION_RANK",
+            "updated_at": "2026-08-23 03:26:18.653052+00:00"
+          },
+          {
+            "trading_date": "2023-11-10",
+            "source_symbol": "LC2401.GFEX",
+            "contract_code": "LC2401.GFEX",
+            "member_name": "东吴期货",
+            "volume_rank": 18,
+            "volume": 9170.0,
+            "volume_change": -2366.0,
+            "long_position_rank": null,
+            "long_position": null,
+            "long_position_change": null,
+            "short_position_rank": null,
+            "short_position": null,
+            "short_position_change": null,
+            "source": "JQData_FUT_MEMBER_POSITION_RANK",
+            "updated_at": "2026-08-23 03:26:18.653052+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\fact_futures_position_rank_daily\\exchange_code=XZCE\\underlying_code=TA\\year=2026\\month=9\\part-0.parquet",
+        "rows": 4829,
+        "physical_compatible": true,
+        "schema_version": "1.2.0",
+        "samples": [
+          {
+            "trading_date": "2026-09-30",
+            "source_symbol": "TA2610.XZCE",
+            "contract_code": "TA2610.XZCE",
+            "member_name": "一德期货",
+            "volume_rank": 12,
+            "volume": 638.0,
+            "volume_change": -102.0,
+            "long_position_rank": null,
+            "long_position": null,
+            "long_position_change": null,
+            "short_position_rank": null,
+            "short_position": null,
+            "short_position_change": null,
+            "source": "JQData_FUT_MEMBER_POSITION_RANK",
+            "updated_at": "2026-10-02 08:15:36.306001+00:00"
+          },
+          {
+            "trading_date": "2026-09-30",
+            "source_symbol": "TA2610.XZCE",
+            "contract_code": "TA2610.XZCE",
+            "member_name": "上海中期",
+            "volume_rank": null,
+            "volume": null,
+            "volume_change": null,
+            "long_position_rank": 6,
+            "long_position": 4000.0,
+            "long_position_change": -18.0,
+            "short_position_rank": null,
+            "short_position": null,
+            "short_position_change": null,
+            "source": "JQData_FUT_MEMBER_POSITION_RANK",
+            "updated_at": "2026-10-02 08:15:36.306001+00:00"
+          },
+          {
+            "trading_date": "2026-09-30",
+            "source_symbol": "TA2610.XZCE",
+            "contract_code": "TA2610.XZCE",
+            "member_name": "东吴期货",
+            "volume_rank": 1,
+            "volume": 8757.0,
+            "volume_change": -4617.0,
+            "long_position_rank": 4,
+            "long_position": 4086.0,
+            "long_position_change": -4924.0,
+            "short_position_rank": 2,
+            "short_position": 13732.0,
+            "short_position_change": -461.0,
+            "source": "JQData_FUT_MEMBER_POSITION_RANK",
+            "updated_at": "2026-10-02 08:15:36.306001+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\fact_futures_position_rank_daily\\exchange_code=XZCE\\underlying_code=UR\\year=2026\\month=9\\part-0.parquet",
+        "rows": 4620,
+        "physical_compatible": true,
+        "schema_version": "1.2.0",
+        "samples": [
+          {
+            "trading_date": "2026-09-30",
+            "source_symbol": "UR2610.XZCE",
+            "contract_code": "UR2610.XZCE",
+            "member_name": "一德期货",
+            "volume_rank": 19,
+            "volume": 45.0,
+            "volume_change": -10.0,
+            "long_position_rank": 6,
+            "long_position": 108.0,
+            "long_position_change": 28.0,
+            "short_position_rank": 13,
+            "short_position": 25.0,
+            "short_position_change": -17.0,
+            "source": "JQData_FUT_MEMBER_POSITION_RANK",
+            "updated_at": "2026-10-02 08:15:37.358747+00:00"
+          },
+          {
+            "trading_date": "2026-09-30",
+            "source_symbol": "UR2610.XZCE",
+            "contract_code": "UR2610.XZCE",
+            "member_name": "上海中期",
+            "volume_rank": null,
+            "volume": null,
+            "volume_change": null,
+            "long_position_rank": null,
+            "long_position": null,
+            "long_position_change": null,
+            "short_position_rank": 11,
+            "short_position": 92.0,
+            "short_position_change": 0.0,
+            "source": "JQData_FUT_MEMBER_POSITION_RANK",
+            "updated_at": "2026-10-02 08:15:37.358747+00:00"
+          },
+          {
+            "trading_date": "2026-09-30",
+            "source_symbol": "UR2610.XZCE",
+            "contract_code": "UR2610.XZCE",
+            "member_name": "东方财富",
+            "volume_rank": 13,
+            "volume": 119.0,
+            "volume_change": 118.0,
+            "long_position_rank": null,
+            "long_position": null,
+            "long_position_change": null,
+            "short_position_rank": null,
+            "short_position": null,
+            "short_position_change": null,
+            "source": "JQData_FUT_MEMBER_POSITION_RANK",
+            "updated_at": "2026-10-02 08:15:37.358747+00:00"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "table": "fact_futures_warehouse_receipt_daily",
+    "exists": true,
+    "parquet_files": 5818,
+    "rows": 1381849,
+    "data_files": 5817,
+    "sample_fragments": [
+      {
+        "path": "silver\\fact_futures_warehouse_receipt_daily\\exchange_code=GFEX\\underlying_code=LC\\year=2023\\month=12\\part-0.parquet",
+        "rows": 109,
+        "physical_compatible": true,
+        "schema_version": "1.2.0",
+        "samples": [
+          {
+            "trading_date": "2023-12-06",
+            "warehouse_name": "中远海运镇江",
+            "warehouse_receipt_number": 10.0,
+            "warehouse_receipt_unit": "手",
+            "warehouse_receipt_number_change": 10.0,
+            "source": "JQData_finance_FUT_WAREHOUSE_RECEIPT",
+            "updated_at": "2026-08-24 15:48:16.894533+00:00"
+          },
+          {
+            "trading_date": "2023-12-06",
+            "warehouse_name": "象屿速传上海",
+            "warehouse_receipt_number": 30.0,
+            "warehouse_receipt_unit": "手",
+            "warehouse_receipt_number_change": 30.0,
+            "source": "JQData_finance_FUT_WAREHOUSE_RECEIPT",
+            "updated_at": "2026-08-24 15:48:16.894533+00:00"
+          },
+          {
+            "trading_date": "2023-12-08",
+            "warehouse_name": "中远海运镇江",
+            "warehouse_receipt_number": 10.0,
+            "warehouse_receipt_unit": "手",
+            "warehouse_receipt_number_change": 0.0,
+            "source": "JQData_finance_FUT_WAREHOUSE_RECEIPT",
+            "updated_at": "2026-08-24 15:48:16.894533+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\fact_futures_warehouse_receipt_daily\\exchange_code=XZCE\\underlying_code=UR\\year=2026\\month=9\\part-0.parquet",
+        "rows": 861,
+        "physical_compatible": true,
+        "schema_version": "1.3.0",
+        "samples": [
+          {
+            "trading_date": "2026-09-30",
+            "warehouse_name": "中农云仓",
+            "warehouse_receipt_number": 0.0,
+            "warehouse_receipt_unit": "张",
+            "warehouse_receipt_number_change": 0.0,
+            "source": "JQData_finance_FUT_WAREHOUSE_RECEIPT",
+            "updated_at": "2026-10-02 08:16:01.863424+00:00"
+          },
+          {
+            "trading_date": "2026-09-30",
+            "warehouse_name": "中农控股（厂库）",
+            "warehouse_receipt_number": 1624.0,
+            "warehouse_receipt_unit": "张",
+            "warehouse_receipt_number_change": 0.0,
+            "source": "JQData_finance_FUT_WAREHOUSE_RECEIPT",
+            "updated_at": "2026-10-02 08:16:01.863424+00:00"
+          },
+          {
+            "trading_date": "2026-09-30",
+            "warehouse_name": "临沂路桥",
+            "warehouse_receipt_number": 0.0,
+            "warehouse_receipt_unit": "张",
+            "warehouse_receipt_number_change": 0.0,
+            "source": "JQData_finance_FUT_WAREHOUSE_RECEIPT",
+            "updated_at": "2026-10-02 08:16:01.863424+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\fact_futures_warehouse_receipt_daily\\exchange_code=XZCE\\underlying_code=ZC\\year=2026\\month=9\\part-0.parquet",
+        "rows": 105,
+        "physical_compatible": true,
+        "schema_version": "1.3.0",
+        "samples": [
+          {
+            "trading_date": "2026-09-01",
+            "warehouse_name": "中煤能源",
+            "warehouse_receipt_number": 0.0,
+            "warehouse_receipt_unit": "张",
+            "warehouse_receipt_number_change": 0.0,
+            "source": "JQData_finance_FUT_WAREHOUSE_RECEIPT",
+            "updated_at": "2026-09-28 23:56:46.986782+00:00"
+          },
+          {
+            "trading_date": "2026-09-01",
+            "warehouse_name": "内蒙古伊泰",
+            "warehouse_receipt_number": 0.0,
+            "warehouse_receipt_unit": "张",
+            "warehouse_receipt_number_change": 0.0,
+            "source": "JQData_finance_FUT_WAREHOUSE_RECEIPT",
+            "updated_at": "2026-09-28 23:56:46.986782+00:00"
+          },
+          {
+            "trading_date": "2026-09-01",
+            "warehouse_name": "晋能煤业",
+            "warehouse_receipt_number": 0.0,
+            "warehouse_receipt_unit": "张",
+            "warehouse_receipt_number_change": 0.0,
+            "source": "JQData_finance_FUT_WAREHOUSE_RECEIPT",
+            "updated_at": "2026-09-28 23:56:46.986782+00:00"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "table": "fact_interest_rate_daily",
+    "exists": true,
+    "parquet_files": 202,
+    "rows": 32528,
+    "data_files": 201,
+    "sample_fragments": [
+      {
+        "path": "silver\\fact_interest_rate_daily\\year=2010\\month=1\\part-0.parquet",
+        "rows": 160,
+        "physical_compatible": true,
+        "schema_version": "1.1.0",
+        "samples": [
+          {
+            "series_code": "SHIBOR_1M",
+            "observation_date": "2010-01-04",
+            "rate": 1.7728,
+            "source": "Tushare_shibor",
+            "updated_at": "2026-08-26 06:32:42.092561+00:00"
+          },
+          {
+            "series_code": "SHIBOR_1M",
+            "observation_date": "2010-01-05",
+            "rate": 1.758,
+            "source": "Tushare_shibor",
+            "updated_at": "2026-08-26 06:32:42.092561+00:00"
+          },
+          {
+            "series_code": "SHIBOR_1M",
+            "observation_date": "2010-01-06",
+            "rate": 1.7513,
+            "source": "Tushare_shibor",
+            "updated_at": "2026-08-26 06:32:42.092561+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\fact_interest_rate_daily\\year=2026\\month=8\\part-0.parquet",
+        "rows": 168,
+        "physical_compatible": true,
+        "schema_version": "1.1.0",
+        "samples": [
+          {
+            "series_code": "SHIBOR_1M",
+            "observation_date": "2026-08-03",
+            "rate": 1.42,
+            "source": "Tushare_shibor",
+            "updated_at": "2026-08-26 06:51:15.481179+00:00"
+          },
+          {
+            "series_code": "SHIBOR_1M",
+            "observation_date": "2026-08-04",
+            "rate": 1.419,
+            "source": "Tushare_shibor",
+            "updated_at": "2026-08-26 06:51:15.481179+00:00"
+          },
+          {
+            "series_code": "SHIBOR_1M",
+            "observation_date": "2026-08-05",
+            "rate": 1.4169,
+            "source": "Tushare_shibor",
+            "updated_at": "2026-08-26 06:51:15.481179+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\fact_interest_rate_daily\\year=2026\\month=9\\part-0.parquet",
+        "rows": 152,
+        "physical_compatible": true,
+        "schema_version": "1.1.0",
+        "samples": [
+          {
+            "series_code": "SHIBOR_1M",
+            "observation_date": "2026-09-01",
+            "rate": 1.417,
+            "source": "Tushare_shibor",
+            "updated_at": "2026-09-28 23:58:10.248535+00:00"
+          },
+          {
+            "series_code": "SHIBOR_1M",
+            "observation_date": "2026-09-02",
+            "rate": 1.418,
+            "source": "Tushare_shibor",
+            "updated_at": "2026-09-28 23:58:10.248535+00:00"
+          },
+          {
+            "series_code": "SHIBOR_1M",
+            "observation_date": "2026-09-03",
+            "rate": 1.418,
+            "source": "Tushare_shibor",
+            "updated_at": "2026-09-28 23:58:10.248535+00:00"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "table": "fact_macro_release",
+    "exists": true,
+    "parquet_files": 202,
+    "rows": 2866,
+    "data_files": 201,
+    "sample_fragments": [
+      {
+        "path": "silver\\fact_macro_release\\year=2010\\month=1\\part-0.parquet",
+        "rows": 13,
+        "physical_compatible": true,
+        "schema_version": "1.1.0",
+        "samples": [
+          {
+            "series_code": "PMI_MANUFACTURING",
+            "report_date": "2010-01-31",
+            "available_date": "2010-01-31",
+            "value": 55.8,
+            "source": "Eastmoney_RPT_ECONOMY_PMI",
+            "updated_at": "2026-08-26 10:54:58.587405+00:00"
+          },
+          {
+            "series_code": "PMI_NON_MANUFACTURING",
+            "report_date": "2010-01-31",
+            "available_date": "2010-01-31",
+            "value": 58.1,
+            "source": "Eastmoney_RPT_ECONOMY_PMI",
+            "updated_at": "2026-08-26 10:54:58.587405+00:00"
+          },
+          {
+            "series_code": "PPI_YOY",
+            "report_date": "2010-01-31",
+            "available_date": "2010-02-09",
+            "value": 4.32,
+            "source": "Eastmoney_RPT_ECONOMY_PPI",
+            "updated_at": "2026-08-26 10:55:00.649319+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\fact_macro_release\\year=2026\\month=8\\part-0.parquet",
+        "rows": 13,
+        "physical_compatible": true,
+        "schema_version": "1.1.0",
+        "samples": [
+          {
+            "series_code": "CPI_CITY_MOM",
+            "report_date": "2026-08-31",
+            "available_date": "2026-09-09",
+            "value": 0.4,
+            "source": "Eastmoney_RPT_ECONOMY_CPI",
+            "updated_at": "2026-09-28 23:58:13.446465+00:00"
+          },
+          {
+            "series_code": "CPI_CITY_YOY",
+            "report_date": "2026-08-31",
+            "available_date": "2026-09-09",
+            "value": 0.8,
+            "source": "Eastmoney_RPT_ECONOMY_CPI",
+            "updated_at": "2026-09-28 23:58:13.446465+00:00"
+          },
+          {
+            "series_code": "CPI_CITY_YTD",
+            "report_date": "2026-08-31",
+            "available_date": "2026-09-09",
+            "value": 0.9000000000000057,
+            "source": "Eastmoney_RPT_ECONOMY_CPI",
+            "updated_at": "2026-09-28 23:58:13.446465+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\fact_macro_release\\year=2026\\month=9\\part-0.parquet",
+        "rows": 2,
+        "physical_compatible": true,
+        "schema_version": "1.1.0",
+        "samples": [
+          {
+            "series_code": "PMI_MANUFACTURING",
+            "report_date": "2026-09-30",
+            "available_date": "2026-09-30",
+            "value": 50.1,
+            "source": "Eastmoney_RPT_ECONOMY_PMI",
+            "updated_at": "2026-09-30 04:52:03.899830+00:00"
+          },
+          {
+            "series_code": "PMI_NON_MANUFACTURING",
+            "report_date": "2026-09-30",
+            "available_date": "2026-09-30",
+            "value": 50.2,
+            "source": "Eastmoney_RPT_ECONOMY_PMI",
+            "updated_at": "2026-09-30 04:52:03.899830+00:00"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "table": "fact_overseas_futures_daily",
+    "exists": true,
+    "parquet_files": 203,
+    "rows": 113897,
+    "data_files": 202,
+    "sample_fragments": [
+      {
+        "path": "silver\\fact_overseas_futures_daily\\year=2010\\month=1\\part-0.parquet",
+        "rows": 530,
+        "physical_compatible": true,
+        "schema_version": "1.2.0",
+        "samples": [
+          {
+            "snapshot_date": "2010-01-04",
+            "trading_date": "2010-01-04",
+            "source_instrument_id": "69555",
+            "instrument_code": "AHD",
+            "instrument_name": "LME铝3个月",
+            "open": 2247.5,
+            "high": 2280.0,
+            "low": 2240.0,
+            "close": 2267.0,
+            "volume": 8121.0,
+            "change_pct": 0.98,
+            "amplitude": 1.781737,
+            "previous_close": 2245.0,
+            "source": "JQData_finance_FUT_GLOBAL_DAILY",
+            "updated_at": "2026-08-25 17:48:15.812834+00:00"
+          },
+          {
+            "snapshot_date": "2010-01-05",
+            "trading_date": "2010-01-05",
+            "source_instrument_id": "69556",
+            "instrument_code": "AHD",
+            "instrument_name": "LME铝3个月",
+            "open": 2270.0,
+            "high": 2306.0,
+            "low": 2267.8,
+            "close": 2300.0,
+            "volume": 10480.0,
+            "change_pct": 1.46,
+            "amplitude": 1.685046,
+            "previous_close": 2267.0,
+            "source": "JQData_finance_FUT_GLOBAL_DAILY",
+            "updated_at": "2026-08-25 17:48:15.812834+00:00"
+          },
+          {
+            "snapshot_date": "2010-01-06",
+            "trading_date": "2010-01-06",
+            "source_instrument_id": "69557",
+            "instrument_code": "AHD",
+            "instrument_name": "LME铝3个月",
+            "open": 2297.0,
+            "high": 2393.5,
+            "low": 2296.9,
+            "close": 2368.0,
+            "volume": 14413.0,
+            "change_pct": 2.96,
+            "amplitude": 4.2,
+            "previous_close": 2300.0,
+            "source": "JQData_finance_FUT_GLOBAL_DAILY",
+            "updated_at": "2026-08-25 17:48:15.812834+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\fact_overseas_futures_daily\\year=2026\\month=9\\part-0.parquet",
+        "rows": 499,
+        "physical_compatible": true,
+        "schema_version": "1.2.0",
+        "samples": [
+          {
+            "snapshot_date": "2026-09-01",
+            "trading_date": "2026-09-01",
+            "source_instrument_id": "3074739",
+            "instrument_code": "AHD",
+            "instrument_name": "LME铝3个月",
+            "open": 3242.0,
+            "high": 3288.0,
+            "low": 3243.0,
+            "close": 3272.5,
+            "volume": 19857.0,
+            "change_pct": 0.9408,
+            "amplitude": 1.388032,
+            "previous_close": 3242.0,
+            "source": "JQData_finance_FUT_GLOBAL_DAILY",
+            "updated_at": "2026-09-28 23:57:38.454607+00:00"
+          },
+          {
+            "snapshot_date": "2026-09-02",
+            "trading_date": "2026-09-02",
+            "source_instrument_id": "3075309",
+            "instrument_code": "AHD",
+            "instrument_name": "LME铝3个月",
+            "open": 3271.0,
+            "high": 3296.0,
+            "low": 3232.0,
+            "close": 3292.5,
+            "volume": 23554.0,
+            "change_pct": 0.6112,
+            "amplitude": 1.955691,
+            "previous_close": 3272.5,
+            "source": "JQData_finance_FUT_GLOBAL_DAILY",
+            "updated_at": "2026-09-28 23:57:38.454607+00:00"
+          },
+          {
+            "snapshot_date": "2026-09-03",
+            "trading_date": "2026-09-03",
+            "source_instrument_id": "3076449",
+            "instrument_code": "AHD",
+            "instrument_name": "LME铝3个月",
+            "open": 3291.0,
+            "high": 3328.5,
+            "low": 3282.5,
+            "close": 3317.5,
+            "volume": 15116.0,
+            "change_pct": 0.7593,
+            "amplitude": 1.397115,
+            "previous_close": 3292.5,
+            "source": "JQData_finance_FUT_GLOBAL_DAILY",
+            "updated_at": "2026-09-28 23:57:38.454607+00:00"
+          }
+        ]
+      },
+      {
+        "path": "silver\\fact_overseas_futures_daily\\year=2026\\month=10\\part-0.parquet",
+        "rows": 23,
+        "physical_compatible": true,
+        "schema_version": "1.2.0",
+        "samples": [
+          {
+            "snapshot_date": "2026-10-01",
+            "trading_date": "2026-10-01",
+            "source_instrument_id": "3108369",
+            "instrument_code": "AHD",
+            "instrument_name": "LME铝3个月",
+            "open": 3218.5,
+            "high": 3168.5,
+            "low": 3112.0,
+            "close": 3119.0,
+            "volume": 31383.0,
+            "change_pct": -1.6088,
+            "amplitude": 1.782334,
+            "previous_close": 3170.0,
+            "source": "JQData_finance_FUT_GLOBAL_DAILY",
+            "updated_at": "2026-10-02 08:16:55.172917+00:00"
+          },
+          {
+            "snapshot_date": "2026-10-01",
+            "trading_date": "2026-10-01",
+            "source_instrument_id": "3107932",
+            "instrument_code": "BO",
+            "instrument_name": "CBOT-黄豆油",
+            "open": 68.66,
+            "high": 68.77,
+            "low": 67.14,
+            "close": 67.83,
+            "volume": 0.0,
+            "change_pct": -1.2376,
+            "amplitude": 2.373326,
+            "previous_close": 68.68,
+            "source": "JQData_finance_FUT_GLOBAL_DAILY",
+            "updated_at": "2026-10-02 08:16:55.172917+00:00"
+          },
+          {
+            "snapshot_date": "2026-10-01",
+            "trading_date": "2026-10-01",
+            "source_instrument_id": "3108635",
+            "instrument_code": "C",
+            "instrument_name": "CBOT-玉米",
+            "open": 518.0,
+            "high": 521.0,
+            "low": 514.0,
+            "close": 516.75,
+            "volume": 0.0,
+            "change_pct": -0.1449,
+            "amplitude": 1.352657,
+            "previous_close": 517.5,
+            "source": "JQData_finance_FUT_GLOBAL_DAILY",
+            "updated_at": "2026-10-02 08:16:55.172917+00:00"
+          }
+        ]
+      }
+    ]
+  }
+]

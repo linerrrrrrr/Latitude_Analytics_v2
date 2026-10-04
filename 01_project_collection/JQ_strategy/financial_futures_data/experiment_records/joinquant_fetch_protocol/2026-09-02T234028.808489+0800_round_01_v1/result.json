@@ -1,0 +1,191 @@
+{
+  "callables": {
+    "get_all_securities": {
+      "available": false
+    },
+    "get_extras": {
+      "available": false
+    },
+    "get_price": {
+      "available": false
+    },
+    "get_query_count": {
+      "available": false
+    },
+    "get_security_info": {
+      "available": true,
+      "signature": "(code, date=None)"
+    }
+  },
+  "cases": [
+    {
+      "case": "recent_security_info",
+      "elapsed_seconds": 0.910296,
+      "result": {
+        "attributes": {
+          "code": "IF2409.CCFX",
+          "display_name": "沪深300指数期货",
+          "end_date": "2024-09-20",
+          "name": "IF2409",
+          "parent": null,
+          "start_date": "2024-01-22",
+          "type": "futures"
+        },
+        "python_type": "Security",
+        "repr": "Security(code=IF2409.CCFX)"
+      },
+      "status": "ok"
+    },
+    {
+      "case": "early_tf_security_info",
+      "elapsed_seconds": 2.6e-05,
+      "result": {
+        "attributes": {
+          "code": "TF1303.CCFX",
+          "display_name": "5年期国债期货",
+          "end_date": "2013-03-08",
+          "name": "TF1303",
+          "parent": null,
+          "start_date": "2012-06-11",
+          "type": "futures"
+        },
+        "python_type": "Security",
+        "repr": "Security(code=TF1303.CCFX)"
+      },
+      "status": "ok"
+    },
+    {
+      "case": "recent_daily_baseline",
+      "elapsed_seconds": 3e-06,
+      "error_message": "module 'jqdata' has no attribute 'get_price'",
+      "error_type": "AttributeError",
+      "status": "error"
+    },
+    {
+      "case": "recent_daily_extended_kwargs",
+      "elapsed_seconds": 2e-06,
+      "error_message": "module 'jqdata' has no attribute 'get_price'",
+      "error_type": "AttributeError",
+      "status": "error"
+    },
+    {
+      "case": "recent_daily_multi_panel_false",
+      "elapsed_seconds": 2e-06,
+      "error_message": "module 'jqdata' has no attribute 'get_price'",
+      "error_type": "AttributeError",
+      "status": "error"
+    },
+    {
+      "case": "recent_settlement",
+      "elapsed_seconds": 2e-06,
+      "error_message": "module 'jqdata' has no attribute 'get_extras'",
+      "error_type": "AttributeError",
+      "status": "error"
+    },
+    {
+      "case": "recent_positions",
+      "elapsed_seconds": 2e-06,
+      "error_message": "module 'jqdata' has no attribute 'get_extras'",
+      "error_type": "AttributeError",
+      "status": "error"
+    },
+    {
+      "case": "recent_minute_exact_morning_session",
+      "elapsed_seconds": 1e-06,
+      "error_message": "module 'jqdata' has no attribute 'get_price'",
+      "error_type": "AttributeError",
+      "status": "error"
+    },
+    {
+      "case": "recent_minute_widened_morning_session",
+      "elapsed_seconds": 1e-06,
+      "error_message": "module 'jqdata' has no attribute 'get_price'",
+      "error_type": "AttributeError",
+      "status": "error"
+    },
+    {
+      "case": "recent_minute_date_only",
+      "elapsed_seconds": 1e-06,
+      "error_message": "module 'jqdata' has no attribute 'get_price'",
+      "error_type": "AttributeError",
+      "status": "error"
+    },
+    {
+      "case": "early_tf_daily",
+      "elapsed_seconds": 1e-06,
+      "error_message": "module 'jqdata' has no attribute 'get_price'",
+      "error_type": "AttributeError",
+      "status": "error"
+    },
+    {
+      "case": "early_tf_minute_all_sessions",
+      "elapsed_seconds": 1e-06,
+      "error_message": "module 'jqdata' has no attribute 'get_price'",
+      "error_type": "AttributeError",
+      "status": "error"
+    }
+  ],
+  "environment": {
+    "local_timezone": "CST",
+    "modules": {
+      "jqdata": {
+        "available": true,
+        "version": "1.33.38"
+      },
+      "numpy": {
+        "available": true,
+        "version": "1.14.6"
+      },
+      "pandas": {
+        "available": true,
+        "version": "0.23.4"
+      },
+      "pyarrow": {
+        "available": false,
+        "error_message": "No module named 'pyarrow'",
+        "error_type": "ModuleNotFoundError"
+      }
+    },
+    "platform": "Linux-5.4.256-1.el7.elrepo.x86_64-x86_64-with-debian-stretch-sid",
+    "python_implementation": "CPython",
+    "python_version": "3.6.7 |Anaconda, Inc.| (default, Oct 23 2018, 19:16:44) \n[GCC 7.3.0]"
+  },
+  "executed_at": "2026-09-02T23:40:28.808489+08:00",
+  "local_calendar_expectations": {
+    "early_tf": {
+      "contract": "TF1303.CCFX",
+      "daily_expected_rows": 1,
+      "minute_sessions": [
+        {
+          "expected_rows": 135,
+          "interval": "(2012-06-11 09:15:00, 2012-06-11 11:30:00]",
+          "session_number": 1
+        },
+        {
+          "expected_rows": 135,
+          "interval": "(2012-06-11 13:00:00, 2012-06-11 15:15:00]",
+          "session_number": 2
+        }
+      ],
+      "trading_date": "2012-06-11"
+    },
+    "recent": {
+      "contract": "IF2409.CCFX",
+      "daily_expected_rows": 1,
+      "minute_sessions": [
+        {
+          "expected_rows": 120,
+          "interval": "(2024-06-28 09:30:00, 2024-06-28 11:30:00]",
+          "session_number": 1
+        },
+        {
+          "expected_rows": 120,
+          "interval": "(2024-06-28 13:00:00, 2024-06-28 15:00:00]",
+          "session_number": 2
+        }
+      ],
+      "trading_date": "2024-06-28"
+    }
+  },
+  "probe_version": "joinquant_financial_futures_round_01_v1"
+}

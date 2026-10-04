@@ -1,0 +1,70 @@
+{
+  "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=ALL&filter=%28INDICATOR_ID%3D%22EMI00107664%22%29&sortColumns=REPORT_DATE&sortTypes=-1&pageSize=3&pageNumber=1&source=WEB&client=WEB",
+  "http_status": 200,
+  "body": {
+    "version": "6a5e9675916d31f58f881d6aa9fb52a0",
+    "result": {
+      "pages": 3184,
+      "data": [
+        {
+          "REPORT_DATE": "2026-10-02 00:00:00",
+          "INDICATOR_VALUE": 3148,
+          "CHANGE_RATE": 0.25477707,
+          "CHANGERATE_3M": 18.79245283,
+          "CHANGERATE_6M": 52.37173282,
+          "CHANGERATE_1Y": 64.90309062,
+          "CHANGERATE_2Y": 59.15065723,
+          "CHANGERATE_3Y": 81.23200921,
+          "IS_NEWEST": "True",
+          "BOARD_CODE": "BK0450",
+          "BOARD_NAME": "航运港口",
+          "CONCEPT_CODE": "BK0712",
+          "CONCEPT_NAME": "一带一路",
+          "INDICATOR_ID": "EMI00107664",
+          "INDICATOR_NAME": "波罗的海干散货指数(BDI)",
+          "RANK_LABEL": "H"
+        },
+        {
+          "REPORT_DATE": "2026-10-01 00:00:00",
+          "INDICATOR_VALUE": 3140,
+          "CHANGE_RATE": 0.86733055,
+          "CHANGERATE_3M": 22.56049961,
+          "CHANGERATE_6M": 54.67980296,
+          "CHANGERATE_1Y": 58.58585859,
+          "CHANGERATE_2Y": 54.67980296,
+          "CHANGERATE_3Y": 82.98368298,
+          "IS_NEWEST": "False",
+          "BOARD_CODE": "BK0450",
+          "BOARD_NAME": "航运港口",
+          "CONCEPT_CODE": "BK0712",
+          "CONCEPT_NAME": "一带一路",
+          "INDICATOR_ID": "EMI00107664",
+          "INDICATOR_NAME": "波罗的海干散货指数(BDI)",
+          "RANK_LABEL": "H"
+        },
+        {
+          "REPORT_DATE": "2026-09-30 00:00:00",
+          "INDICATOR_VALUE": 3113,
+          "CHANGE_RATE": -2.04531152,
+          "CHANGERATE_3M": 24.47021192,
+          "CHANGERATE_6M": 56.04010025,
+          "CHANGERATE_1Y": 45.87628866,
+          "CHANGERATE_2Y": 49.37619962,
+          "CHANGERATE_3Y": 81.41025641,
+          "IS_NEWEST": "False",
+          "BOARD_CODE": "BK0450",
+          "BOARD_NAME": "航运港口",
+          "CONCEPT_CODE": "BK0712",
+          "CONCEPT_NAME": "一带一路",
+          "INDICATOR_ID": "EMI00107664",
+          "INDICATOR_NAME": "波罗的海干散货指数(BDI)",
+          "RANK_LABEL": "H"
+        }
+      ],
+      "count": 9552
+    },
+    "success": true,
+    "message": "ok",
+    "code": 0
+  }
+}

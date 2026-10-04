@@ -1,0 +1,46 @@
+import datetime as dt
+import hashlib
+import json
+import pathlib
+import sys
+import zipfile
+from zoneinfo import ZoneInfo
+
+project_dir = pathlib.Path.cwd()
+record_dir = project_dir / "financial_futures_data/experiment_records/formal_roundtrip/2026-09-04T214920.164421+0800_item_09_v1"
+prepared_dir = record_dir.parent / "prepared_2026-09-04T213454.688871+0800_item_09_v1"
+remote_report = json.loads((record_dir / "decoded_report.json").read_text(encoding="utf-8"))
+expected_sha256 = remote_report["download_instruction"]["expected_sha256"]
+snapshot_path = project_dir / "financial_futures_data/data/staging" / (expected_sha256 + ".zip")
+snapshot_bytes = snapshot_path.read_bytes()
+assert len(snapshot_bytes) == remote_report["download_instruction"]["expected_bytes"]
+assert hashlib.sha256(snapshot_bytes).hexdigest() == expected_sha256
+prepared_plan = json.loads((prepared_dir / "plan.json").read_text(encoding="utf-8"))
+prepared_plan_sha256 = hashlib.sha256(json.dumps(prepared_plan, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")).hexdigest()
+assert prepared_plan_sha256 == remote_report["plan_sha256"]
+with zipfile.ZipFile(snapshot_path) as transfer_zip:
+    manifest = json.loads(transfer_zip.read("manifest.json"))
+    request_blocks = [json.loads(line) for line in transfer_zip.read("request_blocks.jsonl").splitlines()]
+    member_identities = [{"name": member.filename, "bytes": member.file_size, "compressed_bytes": member.compress_size,
+                         "sha256": hashlib.sha256(transfer_zip.read(member.filename)).hexdigest()} for member in transfer_zip.infolist()]
+for field in ("run_id", "run_started_at", "plan_sha256", "publication_status", "source_request_count",
+              "successful_source_request_count", "daily_record_count", "minute_record_count", "failed_source_requests"):
+    assert manifest[field] == remote_report[field], field
+assert manifest["successful_request_count"] == remote_report["successful_observation_count"]
+assert manifest["failed_request_count"] == remote_report["failed_observation_count"]
+assert manifest["failed_source_request_count"] == 0
+assert manifest["source_request_count"] == 4 and manifest["successful_request_count"] == 6
+assert manifest["daily_record_count"] == 1 and manifest["minute_record_count"] == 240
+assert manifest["fixed_file_name"] == remote_report["download_instruction"]["file_name"]
+prepared_code_bytes = (prepared_dir / "joinquant_cell_source.py.txt").read_bytes()
+assert hashlib.sha256(prepared_code_bytes).hexdigest() == "195f1ee712974e4493be25d946e88c70d6eee622e6f55570cfe87b6cd03cfff7"
+database_path = project_dir / "financial_futures_data/data/warehouse/financial_futures.duckdb"
+assert not database_path.exists()
+print(json.dumps({
+    "status": "passed", "checked_at": dt.datetime.now(ZoneInfo("Asia/Shanghai")).isoformat(),
+    "python_executable": sys.executable, "database_existed_before_import": False,
+    "file_sha256": expected_sha256, "file_bytes": len(snapshot_bytes), "plan_sha256": prepared_plan_sha256,
+    "prepared_code_sha256": hashlib.sha256(prepared_code_bytes).hexdigest(),
+    "source_identity_limit": "Prepared code snapshot is linked; the returned report does not attest a source-code hash.",
+    "manifest": manifest, "request_blocks": request_blocks, "members": member_identities
+}, ensure_ascii=False, indent=2, sort_keys=True))

@@ -1,0 +1,33 @@
+{
+  "started_at": "2026-09-04T21:34:54.688871+08:00",
+  "completed_at": "2026-09-04T21:35:55.061099+08:00",
+  "status": "prepared_awaiting_user_joinquant_execution",
+  "executed_notebook_code_cells": 10,
+  "extra_readonly_assertion_cell": true,
+  "elapsed_seconds": 60.372,
+  "code_characters": 32749,
+  "code_sha256": "195f1ee712974e4493be25d946e88c70d6eee622e6f55570cfe87b6cd03cfff7",
+  "notebook_sha256": "2adc39acd45b2d271e1806f3ba0b86310b5ff84e1c50df4db7352da093b65245",
+  "planner_sha256": "65768b3405871b89ec93475fdf6bcf015a90d73f15d22f7eb2f2e0be00ee7df7",
+  "plan_sha256": "ddd915a9256c5499b04dc01bd1ad8f76c5e547880a03c6cfd9d1379e2429aafc",
+  "source_request_count": 4,
+  "observation_count": 6,
+  "expected_key_count": 512,
+  "checks": {
+    "fresh_kernel_execution": "passed",
+    "textarea_roundtrip": "passed",
+    "python36_syntax": "passed",
+    "embedded_plan_digest": "passed",
+    "scope_has_daily_and_minute": "passed",
+    "scope_is_exactly_two_contract_dates": "passed",
+    "full_coverage_not_trimmed": "passed",
+    "normal_default_plan_unchanged": "passed",
+    "empty_scope_no_fallback": "passed",
+    "invalid_scopes_rejected": "passed",
+    "no_local_research_api_import": "passed",
+    "database_not_created": "passed"
+  },
+  "outputs_written_to_notebook": false,
+  "temporary_kernel_directory_removed": true,
+  "real_joinquant_calls": 0
+}

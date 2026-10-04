@@ -1,0 +1,75 @@
+{
+  "new_environment": {
+    "name": "latitude_env_v2",
+    "python": "3.13.15",
+    "executable": "E:\\anaconda3\\envs\\latitude_env_v2\\python.exe",
+    "package_count": 254,
+    "direct_requirements": 58
+  },
+  "preserved_environment": {
+    "name": "latitude_env_v1",
+    "python": "3.11.15",
+    "package_inventory_identical": true
+  },
+  "checks": {
+    "pip_check": true,
+    "library_imports": 62,
+    "schema_round_trips": 17,
+    "numba_jit": true,
+    "jqdata_local_thrift_round_trip": true,
+    "clean_kernel_v1": true,
+    "clean_kernel_v2": true,
+    "notebook_export_full_sync": 19,
+    "feature_notebook_export_check": true,
+    "operations_tests": 53,
+    "a00_workbench_tests": 8,
+    "git_diff_check": true,
+    "notebook_outputs_preserved": 54,
+    "v1_conda_run_after_original_removal": true,
+    "v2_conda_run": true,
+    "pycharm_paths_retargeted": true,
+    "pip_check_after_cleanup": true
+  },
+  "differences": {
+    "alipai": {
+      "old": "0.4.13",
+      "new": null
+    },
+    "numpy": {
+      "old": "1.26.4",
+      "new": "2.4.3"
+    },
+    "pip": {
+      "old": "26.0.1",
+      "new": "26.2.1"
+    },
+    "setuptools": {
+      "old": "82.0.1",
+      "new": "83.0.0"
+    },
+    "wheel": {
+      "old": "0.46.3",
+      "new": "0.47.0"
+    }
+  },
+  "limitations": [
+    "Item09 historical fixed run retains strict code and environment fingerprint checks; new runtime does not satisfy its historical fingerprint. Recomputing and accepting a new run requires explicit research batch authorization.",
+    "Feature engineering pre-existing structural migration blockers remain as documented.",
+    "Optional legacy GPU/deep-learning requirements were absent from the original environment and are not used by current active project sources."
+  ],
+  "pending_original_cleanup": {
+    "original_name": "latitude",
+    "completed": true,
+    "original_directory_exists": false,
+    "active_processes": []
+  },
+  "status": "complete",
+  "alipai_metadata_verification": {
+    "official_version": "0.4.13",
+    "latest_pypi_version": "0.4.13",
+    "numpy_requirement": "numpy<2,>=1.16.0",
+    "version_metadata_url": "https://pypi.org/pypi/alipai/0.4.13/json",
+    "latest_metadata_url": "https://pypi.org/pypi/alipai/json",
+    "meaning": "Publisher-declared installation constraint; actual NumPy 2 runtime compatibility has not been established by this metadata alone."
+  }
+}

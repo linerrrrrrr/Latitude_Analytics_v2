@@ -1,0 +1,10 @@
+file_name: JQ_FINANCIAL_FUTURES_TRANSFER_PROBE.zip
+source_path: D:\Downloads\JQ_FINANCIAL_FUTURES_TRANSFER_PROBE.zip
+downloaded_file_created_at: 2026-09-03T22:44:27.4666381+08:00
+downloaded_file_modified_at: 2026-09-03T22:44:27.6916803+08:00
+verified_at: 2026-09-03T22:45:23.0213765+08:00
+bytes: 13546
+sha256: 6302a8035b761332ee0dbfb70041995b19a64ec992b4a744d938f60ed6782c65
+zip_test_bad_member: null
+payload_bytes: 262890
+payload_sha256: a7f477f2ee58cc2a55adef0092443bba2f6f6e884888fecff4dc111e969fc7c2

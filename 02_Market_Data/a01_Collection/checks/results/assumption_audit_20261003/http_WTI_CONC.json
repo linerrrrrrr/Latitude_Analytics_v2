@@ -1,0 +1,70 @@
+{
+  "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=ALL&filter=%28INDICATOR_ID%3D%22EMI01508580%22%29&sortColumns=REPORT_DATE&sortTypes=-1&pageSize=3&pageNumber=1&source=WEB&client=WEB",
+  "http_status": 200,
+  "body": {
+    "version": "959f715bfa817b28c34609087861bf75",
+    "result": {
+      "pages": 1997,
+      "data": [
+        {
+          "REPORT_DATE": "2026-10-02 00:00:00",
+          "INDICATOR_VALUE": 91.11,
+          "CHANGE_RATE": -1.89512221,
+          "CHANGERATE_3M": 32.63939438,
+          "CHANGERATE_6M": -18.31629909,
+          "CHANGERATE_1Y": 50.64484127,
+          "CHANGERATE_2Y": 29.97146933,
+          "CHANGERATE_3Y": 2.57824814,
+          "IS_NEWEST": "True",
+          "BOARD_CODE": "BK1274",
+          "BOARD_NAME": "炼化及贸易",
+          "CONCEPT_CODE": "BK0606",
+          "CONCEPT_NAME": "油气设服",
+          "INDICATOR_ID": "EMI01508580",
+          "INDICATOR_NAME": "美原油指数CONC",
+          "RANK_LABEL": "L"
+        },
+        {
+          "REPORT_DATE": "2026-10-01 00:00:00",
+          "INDICATOR_VALUE": 92.87,
+          "CHANGE_RATE": 2.70957753,
+          "CHANGERATE_3M": 35.41848936,
+          "CHANGERATE_6M": -7.24131043,
+          "CHANGERATE_1Y": 50.32372936,
+          "CHANGERATE_2Y": 32.99441501,
+          "CHANGERATE_3Y": 2.29100121,
+          "IS_NEWEST": "False",
+          "BOARD_CODE": "BK1274",
+          "BOARD_NAME": "炼化及贸易",
+          "CONCEPT_CODE": "BK0606",
+          "CONCEPT_NAME": "油气设服",
+          "INDICATOR_ID": "EMI01508580",
+          "INDICATOR_NAME": "美原油指数CONC",
+          "RANK_LABEL": "L"
+        },
+        {
+          "REPORT_DATE": "2026-09-30 00:00:00",
+          "INDICATOR_VALUE": 90.42,
+          "CHANGE_RATE": 1.16357127,
+          "CHANGERATE_3M": 30.10071942,
+          "CHANGERATE_6M": -10.81081081,
+          "CHANGERATE_1Y": 44.97354497,
+          "CHANGERATE_2Y": 32.63899076,
+          "CHANGERATE_3Y": -0.40753387,
+          "IS_NEWEST": "False",
+          "BOARD_CODE": "BK1274",
+          "BOARD_NAME": "炼化及贸易",
+          "CONCEPT_CODE": "BK0606",
+          "CONCEPT_NAME": "油气设服",
+          "INDICATOR_ID": "EMI01508580",
+          "INDICATOR_NAME": "美原油指数CONC",
+          "RANK_LABEL": "L"
+        }
+      ],
+      "count": 5990
+    },
+    "success": true,
+    "message": "ok",
+    "code": 0
+  }
+}

@@ -1,0 +1,2919 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at_utc": "2026-08-23T18:38:52.973256+00:00",
+  "audit_status": "warning",
+  "python_executable": "E:\\anaconda3\\envs\\latitude\\python.exe",
+  "mode": "coverage",
+  "observation_date": "2026-08-21",
+  "request_policy": {
+    "repeats": 1,
+    "min_interval_seconds": 5.0,
+    "jitter_seconds": 0.5,
+    "timeout_seconds": 30.0,
+    "automatic_business_retry": false,
+    "concurrency": 1,
+    "interval_scope": "same_host_including_robots",
+    "published_crawl_delay_takes_precedence": true,
+    "stop_same_host_on": [
+      "transport_error",
+      "unsafe robots response",
+      "any diagnostic_status=failed"
+    ]
+  },
+  "scope_note": "Weekday-gap counts are descriptive only; they do not subtract source-specific holidays or prove a business-data defect.",
+  "robots": {
+    "www.100ppi.com": {
+      "robots_url": "https://www.100ppi.com/robots.txt",
+      "status": "received",
+      "http_status": 200,
+      "elapsed_seconds": 1.289145,
+      "content_type": "text/plain",
+      "body_bytes": 107,
+      "body_sha256": "ef3069a61773acdf5dad5a183b18b410818b314f05ae61abc747cd52adac6993",
+      "can_fetch": true,
+      "crawl_delay_seconds": null,
+      "request_rate": null
+    },
+    "datacenter-web.eastmoney.com": {
+      "robots_url": "https://datacenter-web.eastmoney.com/robots.txt",
+      "status": "unexpected_content",
+      "http_status": 200,
+      "elapsed_seconds": 0.299635,
+      "content_type": "application/json;charset=UTF-8",
+      "body_bytes": 73,
+      "body_sha256": "324c876d095ac6408b90a82da563ff164a223fc57d234ce7224f8732bb24669e",
+      "can_fetch": null,
+      "crawl_delay_seconds": null,
+      "request_rate": null
+    }
+  },
+  "robots_warning_hosts": {
+    "datacenter-web.eastmoney.com": "unexpected_content"
+  },
+  "disallowed_hosts": [],
+  "halted_hosts": {},
+  "diagnostic_status_counts": {
+    "passed": 27,
+    "warning": 1
+  },
+  "summaries": {
+    "eastmoney_index_BCI_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.201991,
+      "elapsed_seconds_median": 0.201991,
+      "elapsed_seconds_p95": 0.201991,
+      "elapsed_seconds_max": 0.201991,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_BCTI_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.205555,
+      "elapsed_seconds_median": 0.205555,
+      "elapsed_seconds_p95": 0.205555,
+      "elapsed_seconds_max": 0.205555,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_BDI_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.762352,
+      "elapsed_seconds_median": 0.762352,
+      "elapsed_seconds_p95": 0.762352,
+      "elapsed_seconds_max": 0.762352,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_BDTI_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.394002,
+      "elapsed_seconds_median": 0.394002,
+      "elapsed_seconds_p95": 0.394002,
+      "elapsed_seconds_max": 0.394002,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_BPI_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.137367,
+      "elapsed_seconds_median": 0.137367,
+      "elapsed_seconds_p95": 0.137367,
+      "elapsed_seconds_max": 0.137367,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_BSI_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.22669,
+      "elapsed_seconds_median": 0.22669,
+      "elapsed_seconds_p95": 0.22669,
+      "elapsed_seconds_max": 0.22669,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_MYSTEEL_ALUMINUM_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.540072,
+      "elapsed_seconds_median": 0.540072,
+      "elapsed_seconds_p95": 0.540072,
+      "elapsed_seconds_max": 0.540072,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_MYSTEEL_COKE_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.725936,
+      "elapsed_seconds_median": 0.725936,
+      "elapsed_seconds_p95": 0.725936,
+      "elapsed_seconds_max": 0.725936,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_MYSTEEL_COPPER_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.133333,
+      "elapsed_seconds_median": 0.133333,
+      "elapsed_seconds_p95": 0.133333,
+      "elapsed_seconds_max": 0.133333,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_MYSTEEL_LEAD_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.571888,
+      "elapsed_seconds_median": 0.571888,
+      "elapsed_seconds_p95": 0.571888,
+      "elapsed_seconds_max": 0.571888,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_MYSTEEL_NICKEL_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.743194,
+      "elapsed_seconds_median": 0.743194,
+      "elapsed_seconds_p95": 0.743194,
+      "elapsed_seconds_max": 0.743194,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_MYSTEEL_STEEL_COMPOSITE_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.723824,
+      "elapsed_seconds_median": 0.723824,
+      "elapsed_seconds_p95": 0.723824,
+      "elapsed_seconds_max": 0.723824,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_MYSTEEL_TIN_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 0,
+      "diagnostic_status_counts": {
+        "warning": 1
+      },
+      "diagnostic_reason_counts": {
+        "source_confirmed_empty": 1
+      },
+      "elapsed_seconds_min": 0.131276,
+      "elapsed_seconds_median": 0.131276,
+      "elapsed_seconds_p95": 0.131276,
+      "elapsed_seconds_max": 0.131276,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_MYSTEEL_ZINC_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.388837,
+      "elapsed_seconds_median": 0.388837,
+      "elapsed_seconds_p95": 0.388837,
+      "elapsed_seconds_max": 0.388837,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_SUNSIRS_ENERGY_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.745187,
+      "elapsed_seconds_median": 0.745187,
+      "elapsed_seconds_p95": 0.745187,
+      "elapsed_seconds_max": 0.745187,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_SUNSIRS_NONFERROUS_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.630852,
+      "elapsed_seconds_median": 0.630852,
+      "elapsed_seconds_p95": 0.630852,
+      "elapsed_seconds_max": 0.630852,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_SUNSIRS_STEEL_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.535151,
+      "elapsed_seconds_median": 0.535151,
+      "elapsed_seconds_p95": 0.535151,
+      "elapsed_seconds_max": 0.535151,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_WTI_CONC_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.254471,
+      "elapsed_seconds_median": 0.254471,
+      "elapsed_seconds_p95": 0.254471,
+      "elapsed_seconds_max": 0.254471,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_index_XINHUA_IRON_ORE_recent": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.727852,
+      "elapsed_seconds_median": 0.727852,
+      "elapsed_seconds_p95": 0.727852,
+      "elapsed_seconds_max": 0.727852,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_macro_RPT_ECONOMY_CPI": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.206221,
+      "elapsed_seconds_median": 0.206221,
+      "elapsed_seconds_p95": 0.206221,
+      "elapsed_seconds_max": 0.206221,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_macro_RPT_ECONOMY_GDP": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.703042,
+      "elapsed_seconds_median": 0.703042,
+      "elapsed_seconds_p95": 0.703042,
+      "elapsed_seconds_max": 0.703042,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_macro_RPT_ECONOMY_PMI": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.201131,
+      "elapsed_seconds_median": 0.201131,
+      "elapsed_seconds_p95": 0.201131,
+      "elapsed_seconds_max": 0.201131,
+      "semantic_response_variants": 1
+    },
+    "eastmoney_macro_RPT_ECONOMY_PPI": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 0.21629,
+      "elapsed_seconds_median": 0.21629,
+      "elapsed_seconds_p95": 0.21629,
+      "elapsed_seconds_max": 0.21629,
+      "semantic_response_variants": 1
+    },
+    "sunsirs_spot_futures_2026-08-17": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 3.404972,
+      "elapsed_seconds_median": 3.404972,
+      "elapsed_seconds_p95": 3.404972,
+      "elapsed_seconds_max": 3.404972,
+      "semantic_response_variants": 1
+    },
+    "sunsirs_spot_futures_2026-08-18": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 5.801836,
+      "elapsed_seconds_median": 5.801836,
+      "elapsed_seconds_p95": 5.801836,
+      "elapsed_seconds_max": 5.801836,
+      "semantic_response_variants": 1
+    },
+    "sunsirs_spot_futures_2026-08-19": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 6.262437,
+      "elapsed_seconds_median": 6.262437,
+      "elapsed_seconds_p95": 6.262437,
+      "elapsed_seconds_max": 6.262437,
+      "semantic_response_variants": 1
+    },
+    "sunsirs_spot_futures_2026-08-20": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 2.00485,
+      "elapsed_seconds_median": 2.00485,
+      "elapsed_seconds_p95": 2.00485,
+      "elapsed_seconds_max": 2.00485,
+      "semantic_response_variants": 1
+    },
+    "sunsirs_spot_futures_2026-08-21": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "diagnostic_status_counts": {
+        "passed": 1
+      },
+      "diagnostic_reason_counts": {},
+      "elapsed_seconds_min": 3.705397,
+      "elapsed_seconds_median": 3.705397,
+      "elapsed_seconds_p95": 3.705397,
+      "elapsed_seconds_max": 3.705397,
+      "semantic_response_variants": 1
+    }
+  },
+  "results": [
+    {
+      "sequence": 1,
+      "repeat": 1,
+      "family": "sunsirs_html",
+      "name": "sunsirs_spot_futures_2026-08-17",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:36:04.611565+00:00",
+      "request_url": "https://www.100ppi.com/sf/day-2026-08-17.html",
+      "http_status": 200,
+      "elapsed_seconds": 3.404972,
+      "requests_elapsed_seconds": 3.403069,
+      "content_type": "text/html; charset=utf-8;",
+      "content_encoding": "gzip",
+      "cache_control": "max-age=60",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:36:02 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "nginx",
+      "body_bytes": 60188,
+      "body_sha256": "c93015a0522463a3b7717c9aba1cb0c742f71f5234f0b356cb87a2db86d7eb41",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_html",
+        "title": "2026年08月17日商品现货与期货价格对比表 - 现期表 - 生意社",
+        "semantic_sha256": "bfd21c7547e64a93269851b708e995bfedc051f2c952cb203e06f0fa19a3da9f",
+        "title_matches_date_and_subject": true,
+        "fdata_table_present": true,
+        "commodity_row_count": 54,
+        "empty_direct_cell_count": 0,
+        "null_like_direct_cell_count": 0,
+        "rows_with_null_like_cells": 0,
+        "business_cell_count": 378,
+        "nonempty_business_cell_count": 378,
+        "nonempty_business_cell_ratio": 1.0,
+        "header_text": "商品 现货 最近合约 主力合约 价格 代码 价格 现期差1 代码 价格 现期差2 上海期货交易所 63 0.06% 323 0.29% 148 4.81% 62 2.01% -27 -0.10% -47 -0.18% 150 0.62% 45 0.19% 1.28 0.13% -3.54 -0.37% -66 -2.02% -18 -0.55% 2322 37.15% 2646 42.34% 143 0.83% -896 -5.23% -108 -0.68% -143 -0.90% -20 -0.12% -115 -0.72% -100 -2.30% 118 2.71% 86 2.62% 15 0.46% 896 0.69% 856 0.66% 830 0.19% 360 0.08% 132 2.75% 76 1.58% 335 2.29% 325 2.23% 200 1.41% 80 0.56% 郑州商品交易所 262 4.16% 408 6.48% 93 1.77% -68 -1.30% 1759 9.82% 1189 6.64% 226 2.10% 330 3.07% 89 9.19% 44 4.55% 68 2.88% 166 7.03% -452 -8.09% -332 -5.94% -156 -2.76% -200 -3.54% 32 1.16% 26 0.94% 2125 8.58% 2025 8.17% 10 0.59% -27 -1.59% 118 10.83% 59 5.41% 87 1.14% 85 1.11% 114 1.34% 236 2.78% 103 5.16% 98 4.91% 122 1.61% 188 2.48% 86 1.02% 743 8.85% 大连商品交易所 -7 -0.07% -360 -3.80% -106 -2.37% -255 -5.70% 275 3.29% 709 8.47% -438 -9.73% -487 -10.82% -27 -0.87% -72 -2.32% 72 0.84% 51 0.59% 4.29 0.19% 44 1.96% -41 -2.19% -135 -7.22% 534 28.12% 376 19.80% -20 -2.85% -5 -0.71% 626 11.98% 1295 24.78% 560 6.13% 1320 14.45% -463 -9.05% -54 -1.06% 96 1.09% 285 3.23% 937 14.67% 936 14.65% -835 -7.68% -1530 -14.08% 298 3.84% 175 2.26% 广州期货交易所 705 7.54% 640 6.84% -1860 -1.23% -2500 -1.66% -7476 -23.86% -7646 -24.40%",
+        "header_semantics_present": true,
+        "publication_time": "16:30",
+        "basis_definition_present": true,
+        "blocked_terms": [],
+        "replacement_character_count": 0
+      }
+    },
+    {
+      "sequence": 2,
+      "repeat": 1,
+      "family": "sunsirs_html",
+      "name": "sunsirs_spot_futures_2026-08-18",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:36:13.149086+00:00",
+      "request_url": "https://www.100ppi.com/sf/day-2026-08-18.html",
+      "http_status": 200,
+      "elapsed_seconds": 5.801836,
+      "requests_elapsed_seconds": 5.7988,
+      "content_type": "text/html; charset=utf-8;",
+      "content_encoding": "gzip",
+      "cache_control": "max-age=60",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:36:11 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "nginx",
+      "body_bytes": 60205,
+      "body_sha256": "369a0d2884f3ff12945055c77fe31ff59a673d2e8970551deb7e9ec08c3b52c8",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_html",
+        "title": "2026年08月18日商品现货与期货价格对比表 - 现期表 - 生意社",
+        "semantic_sha256": "57900a15dcdb8969b5e209c836b9ec195050e62762db158808068a6bce1335aa",
+        "title_matches_date_and_subject": true,
+        "fdata_table_present": true,
+        "commodity_row_count": 54,
+        "empty_direct_cell_count": 0,
+        "null_like_direct_cell_count": 0,
+        "rows_with_null_like_cells": 0,
+        "business_cell_count": 378,
+        "nonempty_business_cell_count": 378,
+        "nonempty_business_cell_ratio": 1.0,
+        "header_text": "商品 现货 最近合约 主力合约 价格 代码 价格 现期差1 代码 价格 现期差2 上海期货交易所 231 0.21% 231 0.21% 81 2.63% 53 1.72% -114 -0.45% -179 -0.70% -21 -0.09% -41 -0.17% -1.32 -0.14% -3.14 -0.33% 0.50 0.02% 0.50 0.02% 2189 34.82% 2538 40.37% 10 0.06% -935 -5.47% -121 -0.77% -136 -0.86% 115 0.72% 91 0.57% -93 -2.14% 37 0.85% 33 1.00% 5 0.15% 126 0.10% 126 0.10% -665 -0.16% -665 -0.16% 86 1.79% 70 1.46% 295 2.02% 270 1.85% 240 1.63% 225 1.53% 郑州商品交易所 282 4.44% 512 8.06% 48 0.93% -135 -2.60% 1737 9.66% 1142 6.35% 366 3.37% 453 4.17% 88 9.09% 50 5.17% 52 2.18% 137 5.74% -498 -8.88% -366 -6.53% -148 -2.60% -204 -3.58% 29 1.03% 34 1.21% 1945 7.85% 1870 7.55% -6 -0.35% -29 -1.70% 110 10.09% 47 4.31% 26 0.34% 18 0.23% 16 0.19% 124 1.46% 102 5.11% 77 3.86% 73 0.95% 145 1.89% 239 2.77% 863 9.99% 大连商品交易所 89 0.92% -322 -3.35% -78 -1.73% -229 -5.07% 291 3.43% 682 8.05% -534 -11.87% -579 -12.87% -56 -1.78% -97 -3.09% 96 1.09% 74 0.84% -9 -0.40% 18 0.80% -81 -4.33% -141 -7.55% 549 28.54% 377 19.60% -29 -4.15% -14 -2.00% 765 14.26% 1487 27.72% 544 5.92% 1236 13.46% -366 -6.99% -41 -0.78% -94 -1.06% 218 2.46% 992 15.40% 765 11.87% -840 -7.67% -1555 -14.20% 166 2.08% 468 5.86% 广州期货交易所 710 7.59% 625 6.68% -1940 -1.28% -3400 -2.24% -6126 -19.55% -6296 -20.09%",
+        "header_semantics_present": true,
+        "publication_time": "16:30",
+        "basis_definition_present": true,
+        "blocked_terms": [],
+        "replacement_character_count": 0
+      }
+    },
+    {
+      "sequence": 3,
+      "repeat": 1,
+      "family": "sunsirs_html",
+      "name": "sunsirs_spot_futures_2026-08-19",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:36:24.254563+00:00",
+      "request_url": "https://www.100ppi.com/sf/day-2026-08-19.html",
+      "http_status": 200,
+      "elapsed_seconds": 6.262437,
+      "requests_elapsed_seconds": 6.261072,
+      "content_type": "text/html; charset=utf-8;",
+      "content_encoding": "gzip",
+      "cache_control": "max-age=60",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:36:22 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "nginx",
+      "body_bytes": 60194,
+      "body_sha256": "25c933e734bf2e777c3adcbf8a174b8949d8f7b3eb719fb9cc83644d9b315e2b",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_html",
+        "title": "2026年08月19日商品现货与期货价格对比表 - 现期表 - 生意社",
+        "semantic_sha256": "94c80a669cf2e2588eaa24a39f85fb91ab8743a115e9891dc7815f8c4b4a5ddb",
+        "title_matches_date_and_subject": true,
+        "fdata_table_present": true,
+        "commodity_row_count": 54,
+        "empty_direct_cell_count": 0,
+        "null_like_direct_cell_count": 0,
+        "rows_with_null_like_cells": 0,
+        "business_cell_count": 378,
+        "nonempty_business_cell_count": 378,
+        "nonempty_business_cell_ratio": 1.0,
+        "header_text": "商品 现货 最近合约 主力合约 价格 代码 价格 现期差1 代码 价格 现期差2 上海期货交易所 401 0.37% 401 0.37% 53 1.74% 22 0.72% -106 -0.42% -136 -0.54% 31 0.13% 6 0.03% 4.70 0.50% 2.78 0.29% 19 0.58% 19 0.58% 1992 31.68% 2462 39.16% 1.67 0.01% -973 -5.64% -117 -0.74% -142 -0.90% 22 0.14% -8 -0.05% -198 -4.55% -44 -1.01% 40 1.21% 14 0.42% 366 0.29% 136 0.11% 202 0.05% 202 0.05% 102 2.12% 82 1.71% 253 1.75% 223 1.54% 135 0.91% 120 0.81% 郑州商品交易所 378 5.99% 556 8.81% 39 0.75% -175 -3.36% 1579 8.79% 989 5.51% 289 2.65% 336 3.08% 95 9.81% 65 6.71% 51 2.11% 140 5.80% -508 -9.06% -348 -6.21% -162 -2.84% -218 -3.82% 30 1.04% 37 1.28% 1860 7.49% 1855 7.47% -14 -0.82% -39 -2.29% 130 11.93% 78 7.16% 98 1.26% 114 1.47% 114 1.34% 204 2.40% 99 4.96% 64 3.21% 151 1.96% 233 3.02% 336 3.80% 991 11.22% 大连商品交易所 104 1.08% -338 -3.50% -88 -1.95% -237 -5.26% 351 4.12% 686 8.04% -524 -11.64% -574 -12.76% -48 -1.52% -80 -2.53% 40 0.46% 29 0.33% -23 -1.02% -19 -0.85% -110 -5.89% -189 -10.11% 513 26.67% 337 17.52% -17 -2.41% -5 -0.71% 869 16.17% 1562 29.06% 523 5.68% 1190 12.93% -366 -6.99% -77 -1.47% -94 -1.06% 167 1.89% 1055 16.22% 822 12.64% -520 -4.71% -1265 -11.45% 227 2.79% 575 7.08% 广州期货交易所 660 7.03% 565 6.02% -480 -0.32% -1660 -1.11% -6261 -19.98% -6481 -20.68%",
+        "header_semantics_present": true,
+        "publication_time": "16:30",
+        "basis_definition_present": true,
+        "blocked_terms": [],
+        "replacement_character_count": 0
+      }
+    },
+    {
+      "sequence": 4,
+      "repeat": 1,
+      "family": "sunsirs_html",
+      "name": "sunsirs_spot_futures_2026-08-20",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:36:35.543348+00:00",
+      "request_url": "https://www.100ppi.com/sf/day-2026-08-20.html",
+      "http_status": 200,
+      "elapsed_seconds": 2.00485,
+      "requests_elapsed_seconds": 2.003565,
+      "content_type": "text/html; charset=utf-8;",
+      "content_encoding": "gzip",
+      "cache_control": "max-age=60",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:36:33 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "nginx",
+      "body_bytes": 60226,
+      "body_sha256": "7cb50c5854d2879ad2de208981e87b3a64ef22f453bdebfb889db26948e2c033",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_html",
+        "title": "2026年08月20日商品现货与期货价格对比表 - 现期表 - 生意社",
+        "semantic_sha256": "17b6a6515d6bb184942e4d28b530a9a7a6b8e306cf36e0d300be24b80e538346",
+        "title_matches_date_and_subject": true,
+        "fdata_table_present": true,
+        "commodity_row_count": 54,
+        "empty_direct_cell_count": 0,
+        "null_like_direct_cell_count": 0,
+        "rows_with_null_like_cells": 0,
+        "business_cell_count": 378,
+        "nonempty_business_cell_count": 378,
+        "nonempty_business_cell_ratio": 1.0,
+        "header_text": "商品 现货 最近合约 主力合约 价格 代码 价格 现期差1 代码 价格 现期差2 上海期货交易所 335 0.31% 675 0.63% 54 1.77% 11 0.36% -30 -0.12% -65 -0.26% 35 0.15% 25 0.11% -0.62 -0.06% -2.88 -0.30% 26 0.79% 26 0.79% 2079 32.80% 2558 40.36% -15 -0.09% -985 -5.64% -68 -0.43% -78 -0.49% -119 -0.73% -155 -0.96% -164 -3.65% 10 0.22% 30 0.91% 3.00 0.09% 1026 0.79% 756 0.58% -350 -0.08% -660 -0.15% 28 0.58% 0.00 0.00% 213 1.47% 183 1.26% 325 2.20% 335 2.26% 郑州商品交易所 338 5.35% 578 9.15% 35 0.67% -194 -3.73% 1581 8.76% 1006 5.58% 250 2.27% 324 2.94% 94 9.71% 50 5.17% 21 0.88% 106 4.44% -507 -9.01% -337 -5.99% -142 -2.48% -214 -3.74% 32 1.11% 38 1.32% 1815 7.31% 1825 7.35% -13 -0.76% -39 -2.27% 122 11.19% 57 5.23% 205 2.62% 219 2.80% 110 1.29% 236 2.78% 119 5.96% 80 4.01% 160 2.07% 356 4.61% 523 5.80% 1165 12.92% 大连商品交易所 73 0.74% -354 -3.61% -79 -1.76% -228 -5.09% 443 5.20% 727 8.53% -586 -13.02% -630 -14.00% -47 -1.48% -81 -2.54% 65 0.73% 89 1.00% -2.86 -0.13% -15 -0.67% -174 -9.31% -203 -10.86% 430 22.35% 332 17.26% -19 -2.71% -5 -0.71% 666 12.45% 1469 27.46% 615 6.66% 1239 13.42% -358 -6.70% 270 5.05% 18 0.20% 257 2.87% 1042 16.05% 806 12.41% -360 -3.25% -1235 -11.15% 354 4.35% 554 6.81% 广州期货交易所 725 7.72% 635 6.76% -1500 -1.00% -2160 -1.44% -6981 -22.28% -7141 -22.79%",
+        "header_semantics_present": true,
+        "publication_time": "16:30",
+        "basis_definition_present": true,
+        "blocked_terms": [],
+        "replacement_character_count": 0
+      }
+    },
+    {
+      "sequence": 5,
+      "repeat": 1,
+      "family": "sunsirs_html",
+      "name": "sunsirs_spot_futures_2026-08-21",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:36:42.974591+00:00",
+      "request_url": "https://www.100ppi.com/sf/day-2026-08-21.html",
+      "http_status": 200,
+      "elapsed_seconds": 3.705397,
+      "requests_elapsed_seconds": 3.704043,
+      "content_type": "text/html; charset=utf-8;",
+      "content_encoding": "gzip",
+      "cache_control": "max-age=60",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:36:41 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "nginx",
+      "body_bytes": 60209,
+      "body_sha256": "b2c8efa05cd81666e4dab47d17a266238582c109bbd445c8d5e4d54e248b4404",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_html",
+        "title": "2026年08月21日商品现货与期货价格对比表 - 现期表 - 生意社",
+        "semantic_sha256": "78092f809ae8c170f032be15af52df5c385348811cc50bb466708d2ec0105569",
+        "title_matches_date_and_subject": true,
+        "fdata_table_present": true,
+        "commodity_row_count": 54,
+        "empty_direct_cell_count": 0,
+        "null_like_direct_cell_count": 0,
+        "rows_with_null_like_cells": 0,
+        "business_cell_count": 378,
+        "nonempty_business_cell_count": 378,
+        "nonempty_business_cell_ratio": 1.0,
+        "header_text": "商品 现货 最近合约 主力合约 价格 代码 价格 现期差1 代码 价格 现期差2 上海期货交易所 143 0.13% 373 0.35% 48 1.57% 15 0.49% -4.00 -0.02% -59 -0.23% 0.00 0.00% -15 -0.06% -5 -0.51% -7 -0.71% 37 1.12% 37 1.12% 2002 31.53% 2505 39.45% 95 0.54% -900 -5.11% -106 -0.66% -136 -0.85% -96 -0.58% -133 -0.80% 3.00 0.06% 122 2.63% 31 0.94% 3.00 0.09% 843 0.65% 583 0.45% 692 0.16% 232 0.05% 100 2.02% 58 1.17% 298 2.06% 283 1.95% 235 1.58% 225 1.52% 郑州商品交易所 515 7.93% 763 11.75% 17 0.33% -188 -3.62% 1682 9.25% 1117 6.14% 308 2.84% 370 3.41% 103 10.64% 60 6.20% 39 1.65% 124 5.25% -561 -9.97% -393 -6.98% -140 -2.44% -220 -3.83% 34 1.15% 47 1.59% 1790 7.20% 1725 6.93% -13 -0.76% -50 -2.91% 118 10.83% 51 4.68% 161 2.06% 171 2.19% 118 1.39% 248 2.92% 107 5.36% 76 3.81% 169 2.17% 389 5.00% 315 3.52% 938 10.48% 大连商品交易所 94 0.96% -342 -3.48% -93 -2.09% -232 -5.22% 360 4.23% 644 7.57% -476 -10.58% -522 -11.60% -24 -0.76% -62 -1.96% 82 0.92% 90 1.01% -8 -0.36% -16 -0.71% -224 -11.99% -250 -13.38% 598 28.22% 537 25.35% -18 -2.57% -6 -0.86% 626 11.79% 1475 27.78% 501 5.44% 1095 11.88% -458 -8.57% 139 2.60% 28 0.31% 202 2.25% 757 11.70% 668 10.33% -435 -3.93% -1180 -10.66% 334 4.08% 549 6.71% 广州期货交易所 730 7.74% 640 6.79% -2140 -1.39% -4680 -3.04% -6946 -22.17% -7096 -22.65%",
+        "header_semantics_present": true,
+        "publication_time": "16:30",
+        "basis_definition_present": true,
+        "blocked_terms": [],
+        "replacement_character_count": 0
+      }
+    },
+    {
+      "sequence": 6,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_BDI_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:36:46.735243+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00107664%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.762352,
+      "requests_elapsed_seconds": 0.760753,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:36:45 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 7776,
+      "body_sha256": "97bc2a725bd8120c0fbf41f3e16424c9d4b2dbefd0e66fc9e7e6d3771da8ad70",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 85,
+        "row_count": 85,
+        "expected_indicator_id": "EMI00107664",
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "INDICATOR_VALUE": {
+            "non_null_count": 85,
+            "unique_value_count": 78,
+            "adjacent_change_count": 83,
+            "longest_equal_run": 2
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 87,
+          "missing_count": 2,
+          "range_count": 2,
+          "ranges": [
+            {
+              "start": "2026-05-04",
+              "end": "2026-05-04",
+              "expected_observation_count": 1
+            },
+            {
+              "start": "2026-05-25",
+              "end": "2026-05-25",
+              "expected_observation_count": 1
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 2,
+        "longest_calendar_gap_days": 4,
+        "blocked_terms": [],
+        "semantic_sha256": "29fa925ddc6fcfdafa3bd5e5baa244e787c7197e7a6d37a7a8f04fc6f3d55094"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00107664",
+        "index_code": "BDI",
+        "index_name_zh": "波罗的海干散货指数",
+        "index_category": "shipping"
+      }
+    },
+    {
+      "sequence": 7,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_BPI_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:36:52.627796+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00107665%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.137367,
+      "requests_elapsed_seconds": 0.135771,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:36:50 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 7776,
+      "body_sha256": "235ceba30f5ef1d8884f091846f0cd97fd8515086ba5eefd636d96d1a85a5b89",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 85,
+        "row_count": 85,
+        "expected_indicator_id": "EMI00107665",
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "INDICATOR_VALUE": {
+            "non_null_count": 85,
+            "unique_value_count": 76,
+            "adjacent_change_count": 83,
+            "longest_equal_run": 2
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 87,
+          "missing_count": 2,
+          "range_count": 2,
+          "ranges": [
+            {
+              "start": "2026-05-04",
+              "end": "2026-05-04",
+              "expected_observation_count": 1
+            },
+            {
+              "start": "2026-05-25",
+              "end": "2026-05-25",
+              "expected_observation_count": 1
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 2,
+        "longest_calendar_gap_days": 4,
+        "blocked_terms": [],
+        "semantic_sha256": "01b1e42af0a20fc2bf7b621d295ec772558ef9f724c6c64fba5dd021e7e27277"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00107665",
+        "index_code": "BPI",
+        "index_name_zh": "波罗的海巴拿马型运费指数",
+        "index_category": "shipping"
+      }
+    },
+    {
+      "sequence": 8,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_BCI_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:36:58.000057+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00107666%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.201991,
+      "requests_elapsed_seconds": 0.200118,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:36:55 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 7776,
+      "body_sha256": "cd13f524369f4d94e7eeb94587de6417a91525f626ab2e05563a3fec08e3dbad",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 85,
+        "row_count": 85,
+        "expected_indicator_id": "EMI00107666",
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "INDICATOR_VALUE": {
+            "non_null_count": 85,
+            "unique_value_count": 83,
+            "adjacent_change_count": 83,
+            "longest_equal_run": 2
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 87,
+          "missing_count": 2,
+          "range_count": 2,
+          "ranges": [
+            {
+              "start": "2026-05-04",
+              "end": "2026-05-04",
+              "expected_observation_count": 1
+            },
+            {
+              "start": "2026-05-25",
+              "end": "2026-05-25",
+              "expected_observation_count": 1
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 2,
+        "longest_calendar_gap_days": 4,
+        "blocked_terms": [],
+        "semantic_sha256": "19335561465994827641c53a13fae4024feaec8e050ab8707a11d16ed8e9f668"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00107666",
+        "index_code": "BCI",
+        "index_name_zh": "波罗的海海岬型运费指数",
+        "index_category": "shipping"
+      }
+    },
+    {
+      "sequence": 9,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_BSI_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:37:03.505340+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00107667%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.22669,
+      "requests_elapsed_seconds": 0.225356,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:37:01 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 7776,
+      "body_sha256": "ff258379e95848a58a52ccae1972456841ce9aab3eed5041bf9e8cb7f99f3957",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 85,
+        "row_count": 85,
+        "expected_indicator_id": "EMI00107667",
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "INDICATOR_VALUE": {
+            "non_null_count": 85,
+            "unique_value_count": 70,
+            "adjacent_change_count": 82,
+            "longest_equal_run": 2
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 87,
+          "missing_count": 2,
+          "range_count": 2,
+          "ranges": [
+            {
+              "start": "2026-05-04",
+              "end": "2026-05-04",
+              "expected_observation_count": 1
+            },
+            {
+              "start": "2026-05-25",
+              "end": "2026-05-25",
+              "expected_observation_count": 1
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 2,
+        "longest_calendar_gap_days": 4,
+        "blocked_terms": [],
+        "semantic_sha256": "aa9944753cfb5c3cdb0fae598672b6e6c48c377fd039a1711c246c503f8268b2"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00107667",
+        "index_code": "BSI",
+        "index_name_zh": "波罗的海超灵便型船运价指数",
+        "index_category": "shipping"
+      }
+    },
+    {
+      "sequence": 10,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_BDTI_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:37:08.986038+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00107668%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.394002,
+      "requests_elapsed_seconds": 0.388616,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:37:07 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 7776,
+      "body_sha256": "bcfc786bffdd996ad3c075ea1ed7c6e9c42a1f142b110c299687b3bcada7b1b5",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 85,
+        "row_count": 85,
+        "expected_indicator_id": "EMI00107668",
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "INDICATOR_VALUE": {
+            "non_null_count": 85,
+            "unique_value_count": 83,
+            "adjacent_change_count": 84,
+            "longest_equal_run": 1
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 87,
+          "missing_count": 2,
+          "range_count": 2,
+          "ranges": [
+            {
+              "start": "2026-05-04",
+              "end": "2026-05-04",
+              "expected_observation_count": 1
+            },
+            {
+              "start": "2026-05-25",
+              "end": "2026-05-25",
+              "expected_observation_count": 1
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 2,
+        "longest_calendar_gap_days": 4,
+        "blocked_terms": [],
+        "semantic_sha256": "cb1205525f8fd49d73736a02b275656e19e59bf91e6832afa42f5808e0e6d532"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00107668",
+        "index_code": "BDTI",
+        "index_name_zh": "波罗的海原油运输指数",
+        "index_category": "shipping"
+      }
+    },
+    {
+      "sequence": 11,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_BCTI_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:37:14.732856+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00107669%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.205555,
+      "requests_elapsed_seconds": 0.204167,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:37:12 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 7775,
+      "body_sha256": "8501a373e7334ebd71868c2d7f139a39c946890d26ca0de0ee78f9f8e2ad5fcd",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 85,
+        "row_count": 85,
+        "expected_indicator_id": "EMI00107669",
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "INDICATOR_VALUE": {
+            "non_null_count": 85,
+            "unique_value_count": 80,
+            "adjacent_change_count": 83,
+            "longest_equal_run": 2
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 87,
+          "missing_count": 2,
+          "range_count": 2,
+          "ranges": [
+            {
+              "start": "2026-05-04",
+              "end": "2026-05-04",
+              "expected_observation_count": 1
+            },
+            {
+              "start": "2026-05-25",
+              "end": "2026-05-25",
+              "expected_observation_count": 1
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 2,
+        "longest_calendar_gap_days": 4,
+        "blocked_terms": [],
+        "semantic_sha256": "e7701d6e56a92cfdcdd79679ba225e07d59a0eaf50075601b1485632008d7713"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00107669",
+        "index_code": "BCTI",
+        "index_name_zh": "波罗的海成品油运输指数",
+        "index_category": "shipping"
+      }
+    },
+    {
+      "sequence": 12,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_WTI_CONC_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:37:20.375254+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI01508580%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.254471,
+      "requests_elapsed_seconds": 0.252753,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:37:18 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 7770,
+      "body_sha256": "4f614f3bc11e2398983c564c1a97f95040ce671b77262c0b58fa9cabdaa7ee1c",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 84,
+        "row_count": 84,
+        "expected_indicator_id": "EMI01508580",
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "INDICATOR_VALUE": {
+            "non_null_count": 84,
+            "unique_value_count": 84,
+            "adjacent_change_count": 83,
+            "longest_equal_run": 1
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 87,
+          "missing_count": 3,
+          "range_count": 3,
+          "ranges": [
+            {
+              "start": "2026-05-25",
+              "end": "2026-05-25",
+              "expected_observation_count": 1
+            },
+            {
+              "start": "2026-06-19",
+              "end": "2026-06-19",
+              "expected_observation_count": 1
+            },
+            {
+              "start": "2026-07-03",
+              "end": "2026-07-03",
+              "expected_observation_count": 1
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 3,
+        "longest_calendar_gap_days": 4,
+        "blocked_terms": [],
+        "semantic_sha256": "3deb4eee60e420597262f8cad08d15ff80ae2482f18e33badb03fae1a71e85c3"
+      },
+      "entity": {
+        "source_indicator_id": "EMI01508580",
+        "index_code": "WTI_CONC",
+        "index_name_zh": "NYMEX WTI 连续商品指数",
+        "index_category": "energy"
+      }
+    },
+    {
+      "sequence": 13,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_SUNSIRS_ENERGY_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:37:25.774983+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00662539%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.745187,
+      "requests_elapsed_seconds": 0.741949,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:37:24 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 10938,
+      "body_sha256": "5354bae2f20a3b215cb78d4746b2834a1f45f55a1f9a8adf0a7f60a462b92323",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 121,
+        "row_count": 121,
+        "expected_indicator_id": "EMI00662539",
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "INDICATOR_VALUE": {
+            "non_null_count": 121,
+            "unique_value_count": 52,
+            "adjacent_change_count": 77,
+            "longest_equal_run": 5
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 87,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 0,
+        "longest_calendar_gap_days": 1,
+        "blocked_terms": [],
+        "semantic_sha256": "f12eae496caf652b5d7461e4e4f5dc417e24bf10016c9c3e6bc793ac293a7f75"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00662539",
+        "index_code": "SUNSIRS_ENERGY",
+        "index_name_zh": "生意社能源指数",
+        "index_category": "energy"
+      }
+    },
+    {
+      "sequence": 14,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_MYSTEEL_COKE_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:37:31.882916+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00018828%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.725936,
+      "requests_elapsed_seconds": 0.724275,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:37:30 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 7794,
+      "body_sha256": "1c40ce1abb640dff01b313a7178c95c7df3b8569a414621bb2a5d9a99112a3f4",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 84,
+        "row_count": 84,
+        "expected_indicator_id": "EMI00018828",
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "INDICATOR_VALUE": {
+            "non_null_count": 84,
+            "unique_value_count": 20,
+            "adjacent_change_count": 19,
+            "longest_equal_run": 9
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 87,
+          "missing_count": 4,
+          "range_count": 2,
+          "ranges": [
+            {
+              "start": "2026-05-01",
+              "end": "2026-05-05",
+              "expected_observation_count": 3
+            },
+            {
+              "start": "2026-06-19",
+              "end": "2026-06-19",
+              "expected_observation_count": 1
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 4,
+        "longest_calendar_gap_days": 6,
+        "blocked_terms": [],
+        "semantic_sha256": "de423a96137701e91c49c63c805e6d0c65caf4be4da1e425fced37080909fca9"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00018828",
+        "index_code": "MYSTEEL_COKE",
+        "index_name_zh": "钢联中国焦炭价格指数",
+        "index_category": "ferrous"
+      }
+    },
+    {
+      "sequence": 15,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_SUNSIRS_STEEL_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:37:37.894623+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00662545%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.535151,
+      "requests_elapsed_seconds": 0.304693,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:37:35 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 10896,
+      "body_sha256": "4b7788e9cc65914a474ea5cecfb8a8ee40c58f2bdc75853d28b714326a69eb88",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 121,
+        "row_count": 121,
+        "expected_indicator_id": "EMI00662545",
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "INDICATOR_VALUE": {
+            "non_null_count": 121,
+            "unique_value_count": 37,
+            "adjacent_change_count": 64,
+            "longest_equal_run": 6
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 87,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 0,
+        "longest_calendar_gap_days": 1,
+        "blocked_terms": [],
+        "semantic_sha256": "ddc3aa8048fbbaf82a64de036436f0866527945cd9d7d1ede22fb96fa2bb0b1a"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00662545",
+        "index_code": "SUNSIRS_STEEL",
+        "index_name_zh": "生意社钢铁指数",
+        "index_category": "ferrous"
+      }
+    },
+    {
+      "sequence": 16,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_MYSTEEL_STEEL_COMPOSITE_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:37:43.592255+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00064821%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.723824,
+      "requests_elapsed_seconds": 0.722162,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:37:41 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 7850,
+      "body_sha256": "4c0a67c8ba1f898a88da743027289e2443485d0262d39b0cd7f91072ac6e99ca",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 84,
+        "row_count": 84,
+        "expected_indicator_id": "EMI00064821",
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "INDICATOR_VALUE": {
+            "non_null_count": 84,
+            "unique_value_count": 81,
+            "adjacent_change_count": 81,
+            "longest_equal_run": 2
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 87,
+          "missing_count": 4,
+          "range_count": 2,
+          "ranges": [
+            {
+              "start": "2026-05-01",
+              "end": "2026-05-05",
+              "expected_observation_count": 3
+            },
+            {
+              "start": "2026-06-19",
+              "end": "2026-06-19",
+              "expected_observation_count": 1
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 4,
+        "longest_calendar_gap_days": 6,
+        "blocked_terms": [],
+        "semantic_sha256": "e12ccc0017b801270aadb1c218f726ce763427b3dce28a67605261863bf3e2ff"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00064821",
+        "index_code": "MYSTEEL_STEEL_COMPOSITE",
+        "index_name_zh": "钢联普钢综合价格指数",
+        "index_category": "ferrous"
+      }
+    },
+    {
+      "sequence": 17,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_XINHUA_IRON_ORE_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:37:49.697804+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00064805%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.727852,
+      "requests_elapsed_seconds": 0.72673,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:37:48 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 7847,
+      "body_sha256": "925d5f482cd1119e5d948713e3f285872cdc2b23a8cd7ec80d7c8b4aa3dec4ca",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 84,
+        "row_count": 84,
+        "expected_indicator_id": "EMI00064805",
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "INDICATOR_VALUE": {
+            "non_null_count": 84,
+            "unique_value_count": 80,
+            "adjacent_change_count": 81,
+            "longest_equal_run": 2
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 87,
+          "missing_count": 4,
+          "range_count": 2,
+          "ranges": [
+            {
+              "start": "2026-05-01",
+              "end": "2026-05-05",
+              "expected_observation_count": 3
+            },
+            {
+              "start": "2026-06-19",
+              "end": "2026-06-19",
+              "expected_observation_count": 1
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 4,
+        "longest_calendar_gap_days": 6,
+        "blocked_terms": [],
+        "semantic_sha256": "54b4b1f240a5ca1435196b2fbbaa78bb85b950ae6b1a96f81760c66e19f7b218"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00064805",
+        "index_code": "XINHUA_IRON_ORE",
+        "index_name_zh": "新华中国铁矿石价格指数",
+        "index_category": "ferrous"
+      }
+    },
+    {
+      "sequence": 18,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_SUNSIRS_NONFERROUS_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:37:55.905433+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00662542%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.630852,
+      "requests_elapsed_seconds": 0.397493,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:37:54 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 11017,
+      "body_sha256": "9749b5d1433b2a074a9b040f15683b8a5ce6463d238f9dbea13696f589c27fc5",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 121,
+        "row_count": 121,
+        "expected_indicator_id": "EMI00662542",
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "INDICATOR_VALUE": {
+            "non_null_count": 121,
+            "unique_value_count": 66,
+            "adjacent_change_count": 84,
+            "longest_equal_run": 6
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 87,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 0,
+        "longest_calendar_gap_days": 1,
+        "blocked_terms": [],
+        "semantic_sha256": "5271cdf7d92cc9bde784407a5ad28ad407d0c87781146168b856c640e99eba21"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00662542",
+        "index_code": "SUNSIRS_NONFERROUS",
+        "index_name_zh": "生意社有色金属指数",
+        "index_category": "nonferrous"
+      }
+    },
+    {
+      "sequence": 19,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_MYSTEEL_NICKEL_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:38:01.627543+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00135907%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.743194,
+      "requests_elapsed_seconds": 0.741807,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:38:00 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 8097,
+      "body_sha256": "ea3f41b9e63affbb1627624b5a56e53279d563f0c14ff8cf3711890974555a48",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 84,
+        "row_count": 84,
+        "expected_indicator_id": "EMI00135907",
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "INDICATOR_VALUE": {
+            "non_null_count": 84,
+            "unique_value_count": 83,
+            "adjacent_change_count": 82,
+            "longest_equal_run": 2
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 87,
+          "missing_count": 4,
+          "range_count": 2,
+          "ranges": [
+            {
+              "start": "2026-05-01",
+              "end": "2026-05-05",
+              "expected_observation_count": 3
+            },
+            {
+              "start": "2026-06-19",
+              "end": "2026-06-19",
+              "expected_observation_count": 1
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 4,
+        "longest_calendar_gap_days": 6,
+        "blocked_terms": [],
+        "semantic_sha256": "50f6dd301b11b0244e2600de1e08f538620a489579474777fb1901bea3e9d7e8"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00135907",
+        "index_code": "MYSTEEL_NICKEL",
+        "index_name_zh": "钢联镍价格指数",
+        "index_category": "nonferrous"
+      }
+    },
+    {
+      "sequence": 20,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_MYSTEEL_TIN_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:38:07.676367+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00135906%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.131276,
+      "requests_elapsed_seconds": 0.129879,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:38:05 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 89,
+      "body_sha256": "ea6528a2204b61a7ee34683a73ca00f8afdc86aadf3f765d4dae39bbfb19dbe7",
+      "inspection": {
+        "diagnostic_status": "warning",
+        "diagnostic_valid": null,
+        "diagnostic_reasons": [
+          "source_confirmed_empty"
+        ],
+        "response_kind": "empty_confirmed",
+        "success": false,
+        "code": 9201,
+        "message": "返回数据为空",
+        "row_count": 0,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 87,
+          "missing_count": 87,
+          "range_count": 1,
+          "ranges": [
+            {
+              "start": "2026-04-23",
+              "end": "2026-08-21",
+              "expected_observation_count": 87
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "blocked_terms": [],
+        "semantic_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00135906",
+        "index_code": "MYSTEEL_TIN",
+        "index_name_zh": "钢联锡价格指数",
+        "index_category": "nonferrous"
+      }
+    },
+    {
+      "sequence": 21,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_MYSTEEL_ZINC_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:38:12.965341+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00135905%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.388837,
+      "requests_elapsed_seconds": 0.387599,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:38:11 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 8011,
+      "body_sha256": "b5e92c6db87d2f643bbca01f0051a2223c21038c8eb94ec290925aaaf564e788",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 84,
+        "row_count": 84,
+        "expected_indicator_id": "EMI00135905",
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "INDICATOR_VALUE": {
+            "non_null_count": 84,
+            "unique_value_count": 75,
+            "adjacent_change_count": 82,
+            "longest_equal_run": 2
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 87,
+          "missing_count": 4,
+          "range_count": 2,
+          "ranges": [
+            {
+              "start": "2026-05-01",
+              "end": "2026-05-05",
+              "expected_observation_count": 3
+            },
+            {
+              "start": "2026-06-19",
+              "end": "2026-06-19",
+              "expected_observation_count": 1
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 4,
+        "longest_calendar_gap_days": 6,
+        "blocked_terms": [],
+        "semantic_sha256": "c3421ba9cf1f7d9fd6251b64493e52064e86c0c4736ab71b5febb8a082434151"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00135905",
+        "index_code": "MYSTEEL_ZINC",
+        "index_name_zh": "钢联锌价格指数",
+        "index_category": "nonferrous"
+      }
+    },
+    {
+      "sequence": 22,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_MYSTEEL_LEAD_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:38:18.854690+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00135904%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.571888,
+      "requests_elapsed_seconds": 0.570232,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:38:17 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 8015,
+      "body_sha256": "c92ef515bd7234021fe015d28102abe06aade44a441f5cf68c8a0497127b248a",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 84,
+        "row_count": 84,
+        "expected_indicator_id": "EMI00135904",
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "INDICATOR_VALUE": {
+            "non_null_count": 84,
+            "unique_value_count": 81,
+            "adjacent_change_count": 81,
+            "longest_equal_run": 2
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 87,
+          "missing_count": 4,
+          "range_count": 2,
+          "ranges": [
+            {
+              "start": "2026-05-01",
+              "end": "2026-05-05",
+              "expected_observation_count": 3
+            },
+            {
+              "start": "2026-06-19",
+              "end": "2026-06-19",
+              "expected_observation_count": 1
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 4,
+        "longest_calendar_gap_days": 6,
+        "blocked_terms": [],
+        "semantic_sha256": "9de92457966d8ec4e1b6ce1a8bedff6a843c2251178c38ab6b9800687968a7a7"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00135904",
+        "index_code": "MYSTEEL_LEAD",
+        "index_name_zh": "钢联铅价格指数",
+        "index_category": "nonferrous"
+      }
+    },
+    {
+      "sequence": 23,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_MYSTEEL_ALUMINUM_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:38:24.512833+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00135903%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.540072,
+      "requests_elapsed_seconds": 0.538266,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:38:22 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 7844,
+      "body_sha256": "9efaf492339b6f8c7bfb06c0f9d80ce8a9566e2692a155dd6ad97ed3d9a24867",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 84,
+        "row_count": 84,
+        "expected_indicator_id": "EMI00135903",
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "INDICATOR_VALUE": {
+            "non_null_count": 84,
+            "unique_value_count": 82,
+            "adjacent_change_count": 82,
+            "longest_equal_run": 2
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 87,
+          "missing_count": 4,
+          "range_count": 2,
+          "ranges": [
+            {
+              "start": "2026-05-01",
+              "end": "2026-05-05",
+              "expected_observation_count": 3
+            },
+            {
+              "start": "2026-06-19",
+              "end": "2026-06-19",
+              "expected_observation_count": 1
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 4,
+        "longest_calendar_gap_days": 6,
+        "blocked_terms": [],
+        "semantic_sha256": "b5554a68fbaa95e5ca4124d035824e84801d23d43a05cc8784d5c4006554aefc"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00135903",
+        "index_code": "MYSTEEL_ALUMINUM",
+        "index_name_zh": "钢联铝价格指数",
+        "index_category": "nonferrous"
+      }
+    },
+    {
+      "sequence": 24,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_MYSTEEL_COPPER_recent",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:38:30.344899+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=INDICATOR_ID%2CINDICATOR_VALUE%2CREPORT_DATE&filter=%28INDICATOR_ID%3D%22EMI00135902%22%29%28REPORT_DATE%3E%3D%272026-04-23%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.133333,
+      "requests_elapsed_seconds": 0.131691,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:38:28 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 8092,
+      "body_sha256": "bfd62bb8be095b181575664e21a1751e8c80ae58298e9b661fe1fc7765d45b50",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 84,
+        "row_count": 84,
+        "expected_indicator_id": "EMI00135902",
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2026-04-23",
+        "latest_report_date": "2026-08-21",
+        "latest_lag_days_from_probe_end": 0,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "INDICATOR_VALUE": {
+            "non_null_count": 84,
+            "unique_value_count": 83,
+            "adjacent_change_count": 82,
+            "longest_equal_run": 2
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "weekday_descriptive",
+        "missing_observation_ranges": {
+          "expected_count": 87,
+          "missing_count": 4,
+          "range_count": 2,
+          "ranges": [
+            {
+              "start": "2026-05-01",
+              "end": "2026-05-05",
+              "expected_observation_count": 3
+            },
+            {
+              "start": "2026-06-19",
+              "end": "2026-06-19",
+              "expected_observation_count": 1
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 4,
+        "longest_calendar_gap_days": 6,
+        "blocked_terms": [],
+        "semantic_sha256": "fcd6aa03b68ec93db5707fe96ce256c055b43a5ed5f31308543c3c98228a463c"
+      },
+      "entity": {
+        "source_indicator_id": "EMI00135902",
+        "index_code": "MYSTEEL_COPPER",
+        "index_name_zh": "钢联铜价格指数",
+        "index_category": "nonferrous"
+      }
+    },
+    {
+      "sequence": 25,
+      "repeat": 1,
+      "family": "eastmoney_macro_json",
+      "name": "eastmoney_macro_RPT_ECONOMY_CPI",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:38:35.913604+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_ECONOMY_CPI&columns=REPORT_DATE%2CNATIONAL_SAME%2CNATIONAL_SEQUENTIAL%2CNATIONAL_ACCUMULATE%2CCITY_SAME%2CCITY_SEQUENTIAL%2CCITY_ACCUMULATE%2CRURAL_SAME%2CRURAL_SEQUENTIAL%2CRURAL_ACCUMULATE&filter=%28REPORT_DATE%3E%3D%272024-06-12%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.206221,
+      "requests_elapsed_seconds": 0.204427,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:38:33 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 6060,
+      "body_sha256": "3982d9f5cf2f10b4e77aee59eb8944be927b725ebf02686aa6b47c57d46b7f54",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 25,
+        "row_count": 25,
+        "expected_indicator_id": null,
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2024-07-01",
+        "latest_report_date": "2026-07-01",
+        "latest_lag_days_from_probe_end": 51,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "CITY_ACCUMULATE": {
+            "non_null_count": 25,
+            "unique_value_count": 8,
+            "adjacent_change_count": 10,
+            "longest_equal_run": 6
+          },
+          "CITY_SAME": {
+            "non_null_count": 25,
+            "unique_value_count": 18,
+            "adjacent_change_count": 22,
+            "longest_equal_run": 2
+          },
+          "CITY_SEQUENTIAL": {
+            "non_null_count": 25,
+            "unique_value_count": 13,
+            "adjacent_change_count": 22,
+            "longest_equal_run": 2
+          },
+          "NATIONAL_ACCUMULATE": {
+            "non_null_count": 25,
+            "unique_value_count": 8,
+            "adjacent_change_count": 10,
+            "longest_equal_run": 9
+          },
+          "NATIONAL_SAME": {
+            "non_null_count": 25,
+            "unique_value_count": 16,
+            "adjacent_change_count": 21,
+            "longest_equal_run": 3
+          },
+          "NATIONAL_SEQUENTIAL": {
+            "non_null_count": 25,
+            "unique_value_count": 14,
+            "adjacent_change_count": 23,
+            "longest_equal_run": 2
+          },
+          "RURAL_ACCUMULATE": {
+            "non_null_count": 25,
+            "unique_value_count": 8,
+            "adjacent_change_count": 9,
+            "longest_equal_run": 8
+          },
+          "RURAL_SAME": {
+            "non_null_count": 25,
+            "unique_value_count": 17,
+            "adjacent_change_count": 22,
+            "longest_equal_run": 2
+          },
+          "RURAL_SEQUENTIAL": {
+            "non_null_count": 25,
+            "unique_value_count": 12,
+            "adjacent_change_count": 22,
+            "longest_equal_run": 2
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "month_end",
+        "missing_observation_ranges": {
+          "expected_count": 25,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 1,
+          "missing_count": 1,
+          "range_count": 1,
+          "ranges": [
+            {
+              "start": "2026-08-01",
+              "end": "2026-08-01",
+              "expected_observation_count": 1
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 0,
+        "longest_calendar_gap_days": 31,
+        "blocked_terms": [],
+        "semantic_sha256": "d468d164d3d4374fcc0e28845ec802b8ee01e962ffd247aa496065604131df6c"
+      }
+    },
+    {
+      "sequence": 26,
+      "repeat": 1,
+      "family": "eastmoney_macro_json",
+      "name": "eastmoney_macro_RPT_ECONOMY_GDP",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:38:41.237136+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_ECONOMY_GDP&columns=REPORT_DATE%2CSUM_SAME%2CFIRST_SAME%2CSECOND_SAME%2CTHIRD_SAME&filter=%28REPORT_DATE%3E%3D%272024-06-12%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.703042,
+      "requests_elapsed_seconds": 0.701887,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:38:39 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 957,
+      "body_sha256": "6df6879f7905252fdee2afba43e236e1c7260d74fd76f2c86447ebd18c4d6e34",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 8,
+        "row_count": 8,
+        "expected_indicator_id": null,
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2024-09-01",
+        "latest_report_date": "2026-06-01",
+        "latest_lag_days_from_probe_end": 81,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "FIRST_SAME": {
+            "non_null_count": 8,
+            "unique_value_count": 5,
+            "adjacent_change_count": 6,
+            "longest_equal_run": 2
+          },
+          "SECOND_SAME": {
+            "non_null_count": 8,
+            "unique_value_count": 6,
+            "adjacent_change_count": 7,
+            "longest_equal_run": 1
+          },
+          "SUM_SAME": {
+            "non_null_count": 8,
+            "unique_value_count": 6,
+            "adjacent_change_count": 6,
+            "longest_equal_run": 2
+          },
+          "THIRD_SAME": {
+            "non_null_count": 8,
+            "unique_value_count": 6,
+            "adjacent_change_count": 5,
+            "longest_equal_run": 2
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "quarter_end",
+        "missing_observation_ranges": {
+          "expected_count": 8,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 0,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 0,
+        "longest_calendar_gap_days": 92,
+        "blocked_terms": [],
+        "semantic_sha256": "a9712e0eb98d98f363e3ec63a76f210d661ad525ee472d27ac54f95b7ac7ad12"
+      }
+    },
+    {
+      "sequence": 27,
+      "repeat": 1,
+      "family": "eastmoney_macro_json",
+      "name": "eastmoney_macro_RPT_ECONOMY_PMI",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:38:47.365435+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_ECONOMY_PMI&columns=REPORT_DATE%2CMAKE_INDEX%2CNMAKE_INDEX&filter=%28REPORT_DATE%3E%3D%272024-06-12%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.201131,
+      "requests_elapsed_seconds": 0.199758,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:38:45 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 1985,
+      "body_sha256": "7d99168a5a4f38b0eb1d311aca1819c6bd3b9e51a13281166a50578a60c3267b",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 25,
+        "row_count": 25,
+        "expected_indicator_id": null,
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2024-07-01",
+        "latest_report_date": "2026-07-01",
+        "latest_lag_days_from_probe_end": 51,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "MAKE_INDEX": {
+            "non_null_count": 25,
+            "unique_value_count": 14,
+            "adjacent_change_count": 24,
+            "longest_equal_run": 1
+          },
+          "NMAKE_INDEX": {
+            "non_null_count": 25,
+            "unique_value_count": 11,
+            "adjacent_change_count": 24,
+            "longest_equal_run": 1
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "month_end",
+        "missing_observation_ranges": {
+          "expected_count": 25,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 1,
+          "missing_count": 1,
+          "range_count": 1,
+          "ranges": [
+            {
+              "start": "2026-08-01",
+              "end": "2026-08-01",
+              "expected_observation_count": 1
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 0,
+        "longest_calendar_gap_days": 31,
+        "blocked_terms": [],
+        "semantic_sha256": "11f8afc71efd3df526423af7454b70205d79d045f0c712f1cf68a4147966492e"
+      }
+    },
+    {
+      "sequence": 28,
+      "repeat": 1,
+      "family": "eastmoney_macro_json",
+      "name": "eastmoney_macro_RPT_ECONOMY_PPI",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:38:52.757127+00:00",
+      "request_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_ECONOMY_PPI&columns=REPORT_DATE%2CBASE_SAME%2CBASE_ACCUMULATE&filter=%28REPORT_DATE%3E%3D%272024-06-12%27%29%28REPORT_DATE%3C%3D%272026-08-21%27%29&pageNumber=1&pageSize=500&sortColumns=REPORT_DATE&sortTypes=1&source=WEB&client=WEB",
+      "http_status": 200,
+      "elapsed_seconds": 0.21629,
+      "requests_elapsed_seconds": 0.214688,
+      "content_type": "text/plain;charset=UTF-8",
+      "content_encoding": null,
+      "cache_control": "no-cache",
+      "retry_after": null,
+      "response_date": "Sun, 23 Aug 2026 18:38:50 GMT",
+      "last_modified": null,
+      "etag": null,
+      "age": null,
+      "server": "Tengine",
+      "body_bytes": 2072,
+      "body_sha256": "1979e3d038396523290d09e56d52e60f4cd0f4bbc61b19d6e099fa2da3ec4107",
+      "inspection": {
+        "diagnostic_status": "passed",
+        "diagnostic_valid": true,
+        "diagnostic_reasons": [],
+        "response_kind": "expected_json",
+        "success": true,
+        "code": 0,
+        "message": "ok",
+        "pages": 1,
+        "reported_count": 25,
+        "row_count": 25,
+        "expected_indicator_id": null,
+        "unexpected_indicator_id_count": 0,
+        "unexpected_indicator_ids": [],
+        "earliest_report_date": "2024-07-01",
+        "latest_report_date": "2026-07-01",
+        "latest_lag_days_from_probe_end": 51,
+        "missing_field_counts": {},
+        "null_field_counts": {},
+        "null_value_ranges": {},
+        "invalid_numeric_counts": {},
+        "constant_numeric_fields": [],
+        "all_zero_numeric_fields": [],
+        "numeric_field_profiles": {
+          "BASE_ACCUMULATE": {
+            "non_null_count": 25,
+            "unique_value_count": 18,
+            "adjacent_change_count": 22,
+            "longest_equal_run": 2
+          },
+          "BASE_SAME": {
+            "non_null_count": 25,
+            "unique_value_count": 19,
+            "adjacent_change_count": 22,
+            "longest_equal_run": 2
+          }
+        },
+        "quality_warning": false,
+        "coverage_basis": "month_end",
+        "missing_observation_ranges": {
+          "expected_count": 25,
+          "missing_count": 0,
+          "range_count": 0,
+          "ranges": [],
+          "ranges_truncated": false
+        },
+        "unassessed_pending_tail": {
+          "expected_count": 1,
+          "missing_count": 1,
+          "range_count": 1,
+          "ranges": [
+            {
+              "start": "2026-08-01",
+              "end": "2026-08-01",
+              "expected_observation_count": 1
+            }
+          ],
+          "ranges_truncated": false
+        },
+        "invalid_date_count": 0,
+        "outside_range_count": 0,
+        "duplicate_key_count": 0,
+        "non_object_row_count": 0,
+        "descriptive_weekday_gap_count": 0,
+        "longest_calendar_gap_days": 31,
+        "blocked_terms": [],
+        "semantic_sha256": "7c4beac72d127d17d546c58f96a6ccf51c6cd795481b0744c1d17dbdb7438631"
+      }
+    }
+  ]
+}

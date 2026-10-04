@@ -1,0 +1,18 @@
+{
+  "started_at": "2026-09-04T02:33:12.581888+08:00",
+  "completed_at": "2026-09-04T02:33:15.862349+08:00",
+  "as_of": "2010-12-01T00:01:00+08:00",
+  "source_request_count": 23,
+  "observation_count": 1812,
+  "planned_key_count": 163684,
+  "planned_minute_key_count": 163080,
+  "maximum_source_request_key_count": 37935,
+  "checks": {
+    "both_frequencies_planned": "passed",
+    "three_level_identity_recomputed": "passed",
+    "minute_interval_boundaries": "passed",
+    "minute_key_digest": "passed",
+    "no_overlapping_minute_keys": "passed",
+    "all_batch_limits": "passed"
+  }
+}

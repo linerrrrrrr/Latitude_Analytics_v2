@@ -1,0 +1,411 @@
+{
+  "elapsed_seconds": 26.51500000001397,
+  "remaining_transfers": 46,
+  "remaining_sources": 1667,
+  "calendar_is_current": false,
+  "trade_calendar_through": "2026-08-28",
+  "due_market_date": "2026-08-28",
+  "calendar_coverage": [
+    {
+      "bar_frequency": "1d",
+      "underlying_code": "IC",
+      "latest_calendar_trading_date": "2026-08-28",
+      "is_current": true
+    },
+    {
+      "bar_frequency": "1d",
+      "underlying_code": "IF",
+      "latest_calendar_trading_date": "2026-08-28",
+      "is_current": true
+    },
+    {
+      "bar_frequency": "1d",
+      "underlying_code": "IH",
+      "latest_calendar_trading_date": "2026-08-28",
+      "is_current": true
+    },
+    {
+      "bar_frequency": "1d",
+      "underlying_code": "IM",
+      "latest_calendar_trading_date": "2026-08-28",
+      "is_current": true
+    },
+    {
+      "bar_frequency": "1d",
+      "underlying_code": "T",
+      "latest_calendar_trading_date": "2026-08-28",
+      "is_current": true
+    },
+    {
+      "bar_frequency": "1d",
+      "underlying_code": "TF",
+      "latest_calendar_trading_date": "2026-08-28",
+      "is_current": true
+    },
+    {
+      "bar_frequency": "1d",
+      "underlying_code": "TL",
+      "latest_calendar_trading_date": "2026-08-28",
+      "is_current": true
+    },
+    {
+      "bar_frequency": "1d",
+      "underlying_code": "TS",
+      "latest_calendar_trading_date": "2026-08-28",
+      "is_current": true
+    },
+    {
+      "bar_frequency": "1m",
+      "underlying_code": "IC",
+      "latest_calendar_trading_date": "2026-08-28",
+      "is_current": true
+    },
+    {
+      "bar_frequency": "1m",
+      "underlying_code": "IF",
+      "latest_calendar_trading_date": "2026-08-28",
+      "is_current": true
+    },
+    {
+      "bar_frequency": "1m",
+      "underlying_code": "IH",
+      "latest_calendar_trading_date": "2026-08-28",
+      "is_current": true
+    },
+    {
+      "bar_frequency": "1m",
+      "underlying_code": "IM",
+      "latest_calendar_trading_date": "2026-08-28",
+      "is_current": true
+    },
+    {
+      "bar_frequency": "1m",
+      "underlying_code": "T",
+      "latest_calendar_trading_date": "2026-08-28",
+      "is_current": true
+    },
+    {
+      "bar_frequency": "1m",
+      "underlying_code": "TF",
+      "latest_calendar_trading_date": "2026-08-28",
+      "is_current": true
+    },
+    {
+      "bar_frequency": "1m",
+      "underlying_code": "TL",
+      "latest_calendar_trading_date": "2026-08-28",
+      "is_current": true
+    },
+    {
+      "bar_frequency": "1m",
+      "underlying_code": "TS",
+      "latest_calendar_trading_date": "2026-08-28",
+      "is_current": true
+    }
+  ],
+  "coverage": [
+    {
+      "bar_frequency": "1d",
+      "expected_due_block_count": 68654,
+      "expected_due_key_count": 68654,
+      "present_key_count": 1,
+      "data_missing_key_count": 68653,
+      "source_confirmed_missing_key_count": 1,
+      "fetch_pending_key_count": 68652,
+      "not_yet_fetchable_block_count": 0,
+      "planned_observation_count": 5992,
+      "planned_expected_key_count": 5992
+    },
+    {
+      "bar_frequency": "1m",
+      "expected_due_block_count": 137308,
+      "expected_due_key_count": 17248050,
+      "present_key_count": 240,
+      "data_missing_key_count": 17247810,
+      "source_confirmed_missing_key_count": 270,
+      "fetch_pending_key_count": 17247540,
+      "not_yet_fetchable_block_count": 0,
+      "planned_observation_count": 0,
+      "planned_expected_key_count": 0
+    }
+  ],
+  "schedule": [
+    {
+      "transfer_number": 1,
+      "source_request_count": 64,
+      "observation_count": 5992,
+      "expected_key_count": 5992
+    },
+    {
+      "transfer_number": 2,
+      "source_request_count": 64,
+      "observation_count": 6760,
+      "expected_key_count": 6760
+    },
+    {
+      "transfer_number": 3,
+      "source_request_count": 64,
+      "observation_count": 6764,
+      "expected_key_count": 6764
+    },
+    {
+      "transfer_number": 4,
+      "source_request_count": 64,
+      "observation_count": 6395,
+      "expected_key_count": 6395
+    },
+    {
+      "transfer_number": 5,
+      "source_request_count": 64,
+      "observation_count": 6580,
+      "expected_key_count": 6580
+    },
+    {
+      "transfer_number": 6,
+      "source_request_count": 64,
+      "observation_count": 6519,
+      "expected_key_count": 6519
+    },
+    {
+      "transfer_number": 7,
+      "source_request_count": 64,
+      "observation_count": 6916,
+      "expected_key_count": 6916
+    },
+    {
+      "transfer_number": 8,
+      "source_request_count": 64,
+      "observation_count": 6277,
+      "expected_key_count": 6277
+    },
+    {
+      "transfer_number": 9,
+      "source_request_count": 64,
+      "observation_count": 6529,
+      "expected_key_count": 6529
+    },
+    {
+      "transfer_number": 10,
+      "source_request_count": 64,
+      "observation_count": 5928,
+      "expected_key_count": 5928
+    },
+    {
+      "transfer_number": 11,
+      "source_request_count": 64,
+      "observation_count": 6192,
+      "expected_key_count": 267992
+    },
+    {
+      "transfer_number": 12,
+      "source_request_count": 38,
+      "observation_count": 3984,
+      "expected_key_count": 499800
+    },
+    {
+      "transfer_number": 13,
+      "source_request_count": 24,
+      "observation_count": 4088,
+      "expected_key_count": 499920
+    },
+    {
+      "transfer_number": 14,
+      "source_request_count": 34,
+      "observation_count": 4058,
+      "expected_key_count": 499920
+    },
+    {
+      "transfer_number": 15,
+      "source_request_count": 32,
+      "observation_count": 4036,
+      "expected_key_count": 499770
+    },
+    {
+      "transfer_number": 16,
+      "source_request_count": 31,
+      "observation_count": 4040,
+      "expected_key_count": 499830
+    },
+    {
+      "transfer_number": 17,
+      "source_request_count": 33,
+      "observation_count": 4056,
+      "expected_key_count": 499860
+    },
+    {
+      "transfer_number": 18,
+      "source_request_count": 25,
+      "observation_count": 4082,
+      "expected_key_count": 499920
+    },
+    {
+      "transfer_number": 19,
+      "source_request_count": 29,
+      "observation_count": 4066,
+      "expected_key_count": 499920
+    },
+    {
+      "transfer_number": 20,
+      "source_request_count": 32,
+      "observation_count": 4056,
+      "expected_key_count": 499845
+    },
+    {
+      "transfer_number": 21,
+      "source_request_count": 20,
+      "observation_count": 4022,
+      "expected_key_count": 499815
+    },
+    {
+      "transfer_number": 22,
+      "source_request_count": 28,
+      "observation_count": 4086,
+      "expected_key_count": 499995
+    },
+    {
+      "transfer_number": 23,
+      "source_request_count": 28,
+      "observation_count": 4082,
+      "expected_key_count": 499920
+    },
+    {
+      "transfer_number": 24,
+      "source_request_count": 24,
+      "observation_count": 4036,
+      "expected_key_count": 499770
+    },
+    {
+      "transfer_number": 25,
+      "source_request_count": 33,
+      "observation_count": 4092,
+      "expected_key_count": 499980
+    },
+    {
+      "transfer_number": 26,
+      "source_request_count": 27,
+      "observation_count": 4034,
+      "expected_key_count": 499950
+    },
+    {
+      "transfer_number": 27,
+      "source_request_count": 34,
+      "observation_count": 4092,
+      "expected_key_count": 499830
+    },
+    {
+      "transfer_number": 28,
+      "source_request_count": 28,
+      "observation_count": 4029,
+      "expected_key_count": 499770
+    },
+    {
+      "transfer_number": 29,
+      "source_request_count": 29,
+      "observation_count": 4031,
+      "expected_key_count": 499965
+    },
+    {
+      "transfer_number": 30,
+      "source_request_count": 31,
+      "observation_count": 3987,
+      "expected_key_count": 499815
+    },
+    {
+      "transfer_number": 31,
+      "source_request_count": 29,
+      "observation_count": 3947,
+      "expected_key_count": 499905
+    },
+    {
+      "transfer_number": 32,
+      "source_request_count": 25,
+      "observation_count": 3965,
+      "expected_key_count": 499395
+    },
+    {
+      "transfer_number": 33,
+      "source_request_count": 25,
+      "observation_count": 3923,
+      "expected_key_count": 499965
+    },
+    {
+      "transfer_number": 34,
+      "source_request_count": 26,
+      "observation_count": 3996,
+      "expected_key_count": 499680
+    },
+    {
+      "transfer_number": 35,
+      "source_request_count": 29,
+      "observation_count": 3994,
+      "expected_key_count": 499050
+    },
+    {
+      "transfer_number": 36,
+      "source_request_count": 30,
+      "observation_count": 3956,
+      "expected_key_count": 499230
+    },
+    {
+      "transfer_number": 37,
+      "source_request_count": 25,
+      "observation_count": 3986,
+      "expected_key_count": 498885
+    },
+    {
+      "transfer_number": 38,
+      "source_request_count": 25,
+      "observation_count": 4009,
+      "expected_key_count": 497250
+    },
+    {
+      "transfer_number": 39,
+      "source_request_count": 25,
+      "observation_count": 4002,
+      "expected_key_count": 498165
+    },
+    {
+      "transfer_number": 40,
+      "source_request_count": 25,
+      "observation_count": 3860,
+      "expected_key_count": 499365
+    },
+    {
+      "transfer_number": 41,
+      "source_request_count": 26,
+      "observation_count": 3709,
+      "expected_key_count": 497055
+    },
+    {
+      "transfer_number": 42,
+      "source_request_count": 29,
+      "observation_count": 3693,
+      "expected_key_count": 498555
+    },
+    {
+      "transfer_number": 43,
+      "source_request_count": 25,
+      "observation_count": 3684,
+      "expected_key_count": 497340
+    },
+    {
+      "transfer_number": 44,
+      "source_request_count": 29,
+      "observation_count": 3679,
+      "expected_key_count": 496665
+    },
+    {
+      "transfer_number": 45,
+      "source_request_count": 29,
+      "observation_count": 3694,
+      "expected_key_count": 498690
+    },
+    {
+      "transfer_number": 46,
+      "source_request_count": 1,
+      "observation_count": 50,
+      "expected_key_count": 6750
+    }
+  ],
+  "plan_sha256": "7bf1397f5b7cda0d0d404ffbc0c67185b281749917485f92a30af1a320de2ad3"
+}

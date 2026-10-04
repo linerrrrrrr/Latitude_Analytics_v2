@@ -1,0 +1,23 @@
+file_name: JQ_FINANCIAL_FUTURES_TRANSFER_PROBE.zip
+source_path: D:\Downloads\JQ_FINANCIAL_FUTURES_TRANSFER_PROBE.zip
+downloaded_file_created_at: 2026-09-03T23:39:58.9814941+08:00
+downloaded_file_modified_at: 2026-09-03T23:39:59.2006479+08:00
+verified_at: 2026-09-03T23:41:24.683656+08:00
+bytes: 8437
+sha256: e331a7da334a9f62ab5e2708a0675190dcdba84d51dd5c56b0af45081e7516c4
+zip_test_bad_member: null
+member_names: manifest.json, request_blocks.jsonl, daily.jsonl, minute.jsonl
+manifest_bytes: 869
+manifest_crc32: 3535608386
+request_blocks_bytes: 4035
+request_blocks_sha256: a75d69981ab168ca642cf207f5e33695fd29afd5d15c14c8cdcaa9676738303a
+request_blocks_record_count: 3
+daily_bytes: 255
+daily_sha256: 57dab18248c83d2f7db540692e889d2d4a6544fc12a274db175b4d49b13bffed
+daily_record_count: 1
+minute_bytes: 66903
+minute_sha256: 047a7620dd4839088446988d54a3f0be7e83d79869ba92a0cc1eba2a8cc97f55
+minute_record_count: 240
+manifest_matches_remote_report: true
+request_blocks_match_remote_report: true
+all_business_keys_match_expected: true

@@ -1,0 +1,11 @@
+{
+  "completed_at": "2026-09-05T02:18:23.559199+08:00",
+  "executed_source_archived": true,
+  "executed_source_sha256": "4f15bc6c448d7614b47d4ce49a429e69a5d53ed96548ef5b6b05e3ae5530b221",
+  "temporary_local_source_deleted": true,
+  "temporary_local_notebook_deleted": true,
+  "download_copy_deleted_after_import": true,
+  "project_inbox_deleted_by_importer": true,
+  "joinquant_fixed_zip_retained": true,
+  "joinquant_uploaded_source_retained": true
+}

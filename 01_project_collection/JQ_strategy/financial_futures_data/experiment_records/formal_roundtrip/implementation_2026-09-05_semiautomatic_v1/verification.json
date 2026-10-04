@@ -1,0 +1,63 @@
+{
+  "record_type": "semi_automatic_financial_futures_notebook_implementation_and_validation",
+  "implementation_started_before": "2026-09-05T01:07:22.270577+08:00",
+  "importer_validation": {
+    "started_at": "2026-09-05T01:07:22.270577+08:00",
+    "completed_at": "2026-09-05T01:07:30.609612+08:00",
+    "cases_passed": 7,
+    "source_zip_sha256": "cc9e1a530ab75ab66f49a10f7acb058b47e824ae0669d18e2f7d00d630df7ec6",
+    "temporary_fixtures_removed": true
+  },
+  "planner_validation": {
+    "completed_before": "2026-09-05T01:12:21.050438+08:00",
+    "elapsed_seconds": 26.515,
+    "remaining_transfers": 46,
+    "remaining_source_requests": 1667,
+    "current_source_requests": 64,
+    "current_observations": 5992,
+    "plan_sha256": "7bf1397f5b7cda0d0d404ffbc0c67185b281749917485f92a30af1a320de2ad3",
+    "calendar_is_current": false,
+    "trade_calendar_through": "2026-08-28",
+    "latest_due_date": "2026-09-04",
+    "all_schedule_bounds_passed": true
+  },
+  "notebook_integration": {
+    "started_at": "2026-09-05T01:12:21.050438+08:00",
+    "completed_at": "2026-09-05T01:13:08.426858+08:00",
+    "run_all_rounds_passed": 2,
+    "first_elapsed_seconds": 23.062,
+    "second_elapsed_seconds": 22.328,
+    "first_status": "already_imported",
+    "first_database_write_performed": false,
+    "first_inbox_deleted": true,
+    "first_rows_inserted": {
+      "daily": 0,
+      "minute": 0
+    },
+    "second_import_report": null,
+    "database_sha256_before": "71b6b4e972bb0d59bdb410bb5778ebeefa4b5371c782aa92ba89201e3d84ace0",
+    "database_sha256_after": "71b6b4e972bb0d59bdb410bb5778ebeefa4b5371c782aa92ba89201e3d84ace0",
+    "consumed_zip_sha256": "cc9e1a530ab75ab66f49a10f7acb058b47e824ae0669d18e2f7d00d630df7ec6",
+    "inbox_exists_after": false,
+    "plan_sha256_both_runs": "7bf1397f5b7cda0d0d404ffbc0c67185b281749917485f92a30af1a320de2ad3",
+    "generated_code_characters": 932915,
+    "generated_code_sha256": "510ddb1661fdff61b16298130e881f1d0a928eefe439a92b27cff62d346a912f",
+    "remote_code_executed": false,
+    "notebook_outputs_saved": false
+  },
+  "branch_validation": {
+    "completed_at": "2026-09-05T01:13:20.729264+08:00",
+    "cases_passed": 7,
+    "cases": [
+      "all_facts_complete",
+      "known_source_gaps_not_falsely_complete",
+      "stale_calendar_not_falsely_current",
+      "final_rejects_stale_plan_after_failed_import",
+      "missing_zip_continues_to_planning",
+      "failed_import_clears_old_code_and_prevents_planning",
+      "another_download_blocks_new_plan"
+    ]
+  },
+  "completed_at": "2026-09-05T01:13:32+08:00"
+}
+

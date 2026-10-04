@@ -1,0 +1,707 @@
+import builtins as py_builtins
+import datetime
+import hashlib
+import io
+import json
+import math
+import os
+import platform
+import time
+import uuid
+import zipfile
+
+import numpy as np
+import pandas as pd
+import jqresearch.api as jq_api
+
+
+PROBE_VERSION = "joinquant_financial_futures_round_05_v2"
+PACKAGE_FORMAT_VERSION = "joinquant_financial_futures_transfer_probe_v1"
+MARKET_TIME_ZONE = "Asia/Shanghai"
+RUN_STARTED_AT = datetime.datetime.now().astimezone().isoformat()
+RUN_ID = py_builtins.str(uuid.uuid4())
+
+FIXED_FILE_NAME = "JQ_FINANCIAL_FUTURES_TRANSFER_PROBE.zip"
+TEMP_FILE_NAME = "." + FIXED_FILE_NAME + ".tmp"
+FIXED_FILE_PATH = os.path.abspath(FIXED_FILE_NAME)
+TEMP_FILE_PATH = os.path.abspath(TEMP_FILE_NAME)
+
+CONTRACT_CODE = "IF2409.CCFX"
+TRADING_DATE = "2024-06-28"
+DAILY_FIELDS = [
+    "open",
+    "high",
+    "low",
+    "close",
+    "volume",
+    "money",
+    "pre_close",
+    "open_interest",
+]
+MINUTE_FIELDS = [
+    "open",
+    "high",
+    "low",
+    "close",
+    "volume",
+    "money",
+    "open_interest",
+]
+
+
+def sha256_bytes(value):
+    return hashlib.sha256(value).hexdigest()
+
+
+def canonical_key_sha256(keys):
+    encoded = json.dumps(
+        keys,
+        ensure_ascii=False,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return sha256_bytes(encoded)
+
+
+def json_value(value):
+    if py_builtins.isinstance(value, np.generic):
+        value = value.item()
+
+    if value is None:
+        return None
+
+    try:
+        if py_builtins.bool(pd.isnull(value)):
+            return None
+    except (py_builtins.TypeError, py_builtins.ValueError):
+        pass
+
+    if py_builtins.isinstance(value, (datetime.datetime, pd.Timestamp)):
+        return value.isoformat()
+    if py_builtins.isinstance(value, datetime.date):
+        return value.isoformat()
+    if py_builtins.isinstance(value, py_builtins.bool):
+        return value
+    if py_builtins.isinstance(value, py_builtins.int):
+        return value
+    if py_builtins.isinstance(value, py_builtins.float):
+        if math.isfinite(value):
+            return value
+        return None
+    if py_builtins.isinstance(value, py_builtins.str):
+        return value
+    return py_builtins.str(value)
+
+
+def json_bytes(value):
+    return json.dumps(
+        value,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+
+
+def jsonl_bytes(records):
+    if py_builtins.len(records) == 0:
+        return b""
+    lines = [
+        json.dumps(
+            record,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        for record in records
+    ]
+    return ("\n".join(lines) + "\n").encode("utf-8")
+
+
+def decode_jsonl(value):
+    if py_builtins.len(value) == 0:
+        return []
+    return [
+        json.loads(line)
+        for line in value.decode("utf-8").splitlines()
+        if line.strip()
+    ]
+
+
+def minute_keys(first_bar_at, last_bar_at):
+    first_value = datetime.datetime.strptime(first_bar_at, "%Y-%m-%d %H:%M:%S")
+    last_value = datetime.datetime.strptime(last_bar_at, "%Y-%m-%d %H:%M:%S")
+    keys = []
+    current_value = first_value
+    while current_value <= last_value:
+        keys.append(current_value.strftime("%Y-%m-%dT%H:%M:%S"))
+        current_value += datetime.timedelta(minutes=1)
+    return keys
+
+
+request_specs = [
+    {
+        "request_id": "IF2409_20240628_DAILY",
+        "contract_code": CONTRACT_CODE,
+        "frequency": "1d",
+        "trading_date": TRADING_DATE,
+        "session_number": 0,
+        "start_at": TRADING_DATE,
+        "end_at": TRADING_DATE,
+        "fields": DAILY_FIELDS,
+        "key_name": "trading_date",
+        "expected_keys": [TRADING_DATE],
+    },
+    {
+        "request_id": "IF2409_20240628_MINUTE_SESSION_1",
+        "contract_code": CONTRACT_CODE,
+        "frequency": "1m",
+        "trading_date": TRADING_DATE,
+        "session_number": 1,
+        "start_at": "2024-06-28 09:31:00",
+        "end_at": "2024-06-28 11:30:00",
+        "fields": MINUTE_FIELDS,
+        "key_name": "bar_at",
+        "expected_keys": minute_keys(
+            "2024-06-28 09:31:00",
+            "2024-06-28 11:30:00",
+        ),
+    },
+    {
+        "request_id": "IF2409_20240628_MINUTE_SESSION_2",
+        "contract_code": CONTRACT_CODE,
+        "frequency": "1m",
+        "trading_date": TRADING_DATE,
+        "session_number": 2,
+        "start_at": "2024-06-28 13:01:00",
+        "end_at": "2024-06-28 15:00:00",
+        "fields": MINUTE_FIELDS,
+        "key_name": "bar_at",
+        "expected_keys": minute_keys(
+            "2024-06-28 13:01:00",
+            "2024-06-28 15:00:00",
+        ),
+    },
+]
+
+run_clock_started = time.time()
+request_observations = []
+daily_records = []
+minute_records = []
+
+for request_spec in request_specs:
+    request_clock_started = time.time()
+    expected_keys = request_spec["expected_keys"]
+    observation = {
+        "request_id": request_spec["request_id"],
+        "contract_code": request_spec["contract_code"],
+        "frequency": request_spec["frequency"],
+        "trading_date": request_spec["trading_date"],
+        "session_number": request_spec["session_number"],
+        "start_at": request_spec["start_at"],
+        "end_at": request_spec["end_at"],
+        "fields": py_builtins.list(request_spec["fields"]),
+        "expected": {
+            "key_name": request_spec["key_name"],
+            "key_count": py_builtins.len(expected_keys),
+            "first_key": expected_keys[0],
+            "last_key": expected_keys[-1],
+            "keys_sha256": canonical_key_sha256(expected_keys),
+        },
+        "request_status": "not_started",
+        "coverage_status": None,
+        "quality_status": "failed",
+        "observation_eligible": False,
+        "actual": None,
+    }
+
+    try:
+        response_df = jq_api.get_price(
+            request_spec["contract_code"],
+            start_date=request_spec["start_at"],
+            end_date=request_spec["end_at"],
+            frequency=request_spec["frequency"],
+            fields=request_spec["fields"],
+            skip_paused=True,
+            fq=None,
+            panel=False,
+            fill_paused=False,
+            round=False,
+        )
+        observation["request_status"] = "success"
+
+        if not py_builtins.isinstance(response_df, pd.DataFrame):
+            observation["coverage_status"] = "invalid_response"
+            observation["actual"] = {
+                "python_type": py_builtins.type(response_df).__name__,
+                "repr": py_builtins.repr(response_df),
+            }
+        else:
+            response_columns = [
+                py_builtins.str(column)
+                for column in response_df.columns
+            ]
+            response_index_timezone = py_builtins.getattr(response_df.index, "tz", None)
+            response_index_timezone_text = (
+                None
+                if response_index_timezone is None
+                else py_builtins.str(response_index_timezone)
+            )
+
+            normalized_index = response_df.index
+            if response_index_timezone is not None:
+                normalized_index = (
+                    response_df.index
+                    .tz_convert(MARKET_TIME_ZONE)
+                    .tz_localize(None)
+                )
+
+            if request_spec["frequency"] == "1d":
+                actual_keys = [
+                    pd.Timestamp(index_value).strftime("%Y-%m-%d")
+                    for index_value in normalized_index
+                ]
+            else:
+                actual_keys = [
+                    pd.Timestamp(index_value).strftime("%Y-%m-%dT%H:%M:%S")
+                    for index_value in normalized_index
+                ]
+
+            duplicate_key_count = (
+                py_builtins.len(actual_keys)
+                - py_builtins.len(py_builtins.set(actual_keys))
+            )
+            missing_keys = py_builtins.sorted(
+                py_builtins.set(expected_keys) - py_builtins.set(actual_keys)
+            )
+            extra_keys = py_builtins.sorted(
+                py_builtins.set(actual_keys) - py_builtins.set(expected_keys)
+            )
+            null_counts = {
+                column: py_builtins.int(response_df[column].isnull().sum())
+                for column in response_columns
+            }
+            null_value_count = py_builtins.sum(null_counts.values())
+            dtypes = {
+                column: py_builtins.str(response_df[column].dtype)
+                for column in response_columns
+            }
+
+            observation["actual"] = {
+                "python_type": py_builtins.type(response_df).__name__,
+                "shape": [
+                    py_builtins.int(response_df.shape[0]),
+                    py_builtins.int(response_df.shape[1]),
+                ],
+                "columns": response_columns,
+                "dtypes": dtypes,
+                "index_python_type": py_builtins.type(response_df.index).__name__,
+                "index_dtype": py_builtins.str(response_df.index.dtype),
+                "index_timezone": response_index_timezone_text,
+                "key_count": py_builtins.len(actual_keys),
+                "first_key": actual_keys[0] if actual_keys else None,
+                "last_key": actual_keys[-1] if actual_keys else None,
+                "keys_sha256": canonical_key_sha256(actual_keys),
+                "duplicate_key_count": duplicate_key_count,
+                "missing_key_count": py_builtins.len(missing_keys),
+                "missing_keys": missing_keys,
+                "extra_key_count": py_builtins.len(extra_keys),
+                "extra_keys": extra_keys,
+                "null_counts": null_counts,
+                "null_value_count": null_value_count,
+            }
+
+            response_is_structurally_valid = (
+                response_columns == request_spec["fields"]
+                and duplicate_key_count == 0
+                and py_builtins.len(extra_keys) == 0
+                and actual_keys == py_builtins.sorted(actual_keys)
+                and null_value_count == 0
+            )
+
+            if not response_is_structurally_valid:
+                coverage_status = "invalid_response"
+            elif actual_keys == expected_keys:
+                coverage_status = "complete"
+            elif py_builtins.len(actual_keys) == 0:
+                coverage_status = "empty"
+            else:
+                coverage_status = "partial_missing"
+
+            observation["coverage_status"] = coverage_status
+            observation["observation_eligible"] = coverage_status in [
+                "complete",
+                "partial_missing",
+                "empty",
+            ]
+            observation["quality_status"] = (
+                "passed" if coverage_status == "complete" else
+                "warning" if observation["observation_eligible"] else
+                "failed"
+            )
+
+            if observation["observation_eligible"]:
+                for row_number, (index_value, row) in py_builtins.enumerate(
+                    response_df.iterrows()
+                ):
+                    actual_key = actual_keys[row_number]
+                    if request_spec["frequency"] == "1d":
+                        record = {
+                            "request_id": request_spec["request_id"],
+                            "contract_code": request_spec["contract_code"],
+                            "trading_date": actual_key,
+                            "session_number": 0,
+                        }
+                        for field_name in request_spec["fields"]:
+                            record[field_name] = json_value(row[field_name])
+                        daily_records.append(record)
+                    else:
+                        record = {
+                            "request_id": request_spec["request_id"],
+                            "contract_code": request_spec["contract_code"],
+                            "bar_at": actual_key + "+08:00",
+                            "trading_date": request_spec["trading_date"],
+                            "session_number": request_spec["session_number"],
+                        }
+                        for field_name in request_spec["fields"]:
+                            record[field_name] = json_value(row[field_name])
+                        minute_records.append(record)
+
+    except py_builtins.Exception as exc:
+        observation["request_status"] = "error"
+        observation["coverage_status"] = None
+        observation["quality_status"] = "failed"
+        observation["observation_eligible"] = False
+        observation["error_type"] = py_builtins.type(exc).__name__
+        observation["error_message"] = py_builtins.str(exc)
+
+    observation["elapsed_seconds"] = py_builtins.round(
+        time.time() - request_clock_started,
+        6,
+    )
+    request_observations.append(observation)
+
+request_blocks_payload = jsonl_bytes(request_observations)
+daily_payload = jsonl_bytes(daily_records)
+minute_payload = jsonl_bytes(minute_records)
+
+payload_by_name = {
+    "request_blocks.jsonl": request_blocks_payload,
+    "daily.jsonl": daily_payload,
+    "minute.jsonl": minute_payload,
+}
+payload_order = [
+    "request_blocks.jsonl",
+    "daily.jsonl",
+    "minute.jsonl",
+]
+member_descriptors = {
+    member_name: {
+        "bytes": py_builtins.len(payload_by_name[member_name]),
+        "sha256": sha256_bytes(payload_by_name[member_name]),
+        "record_count": py_builtins.len(
+            decode_jsonl(payload_by_name[member_name])
+        ),
+    }
+    for member_name in payload_order
+}
+
+all_request_blocks_complete = py_builtins.all([
+    observation["request_status"] == "success"
+    and observation["coverage_status"] == "complete"
+    and observation["observation_eligible"] is True
+    for observation in request_observations
+])
+
+manifest = {
+    "package_format_version": PACKAGE_FORMAT_VERSION,
+    "probe_version": PROBE_VERSION,
+    "probe_only_not_formal_schema": True,
+    "run_id": RUN_ID,
+    "run_started_at": RUN_STARTED_AT,
+    "market_time_zone": MARKET_TIME_ZONE,
+    "source_api": "jqresearch.api.get_price",
+    "publication_status": (
+        "complete"
+        if all_request_blocks_complete
+        else "contains_incomplete_requests"
+    ),
+    "request_block_count": py_builtins.len(request_observations),
+    "eligible_observation_count": py_builtins.sum([
+        1
+        for observation in request_observations
+        if observation["observation_eligible"]
+    ]),
+    "daily_record_count": py_builtins.len(daily_records),
+    "minute_record_count": py_builtins.len(minute_records),
+    "members": member_descriptors,
+}
+manifest_payload = json_bytes(manifest)
+
+zip_payload_by_name = {
+    "manifest.json": manifest_payload,
+    "request_blocks.jsonl": request_blocks_payload,
+    "daily.jsonl": daily_payload,
+    "minute.jsonl": minute_payload,
+}
+zip_member_order = [
+    "manifest.json",
+    "request_blocks.jsonl",
+    "daily.jsonl",
+    "minute.jsonl",
+]
+
+zip_buffer = io.BytesIO()
+with zipfile.ZipFile(
+    zip_buffer,
+    mode="w",
+    compression=zipfile.ZIP_DEFLATED,
+    allowZip64=True,
+) as zip_writer:
+    for member_name in zip_member_order:
+        member_info = zipfile.ZipInfo(
+            member_name,
+            date_time=(2020, 1, 1, 0, 0, 0),
+        )
+        member_info.compress_type = zipfile.ZIP_DEFLATED
+        member_info.external_attr = (0o644 & 0xFFFF) << 16
+        zip_writer.writestr(
+            member_info,
+            zip_payload_by_name[member_name],
+        )
+latest_package_bytes = zip_buffer.getvalue()
+latest_package_sha256 = sha256_bytes(latest_package_bytes)
+
+preexisting_file = {
+    "exists": os.path.isfile(FIXED_FILE_PATH),
+    "bytes": None,
+    "sha256": None,
+}
+if preexisting_file["exists"]:
+    with py_builtins.open(FIXED_FILE_PATH, "rb") as existing_reader:
+        existing_bytes = existing_reader.read()
+    preexisting_file["bytes"] = py_builtins.len(existing_bytes)
+    preexisting_file["sha256"] = sha256_bytes(existing_bytes)
+
+publication = {
+    "status": "not_started",
+    "preexisting_fixed_file": preexisting_file,
+    "fixed_file_path": FIXED_FILE_PATH,
+    "temp_file_path": TEMP_FILE_PATH,
+    "latest_in_memory_bytes": py_builtins.len(latest_package_bytes),
+    "latest_in_memory_sha256": latest_package_sha256,
+    "final_validation": None,
+}
+
+try:
+    with py_builtins.open(TEMP_FILE_PATH, "wb") as temp_writer:
+        temp_writer.write(latest_package_bytes)
+        temp_writer.flush()
+        os.fsync(temp_writer.fileno())
+
+    with py_builtins.open(TEMP_FILE_PATH, "rb") as temp_reader:
+        temp_bytes = temp_reader.read()
+
+    if temp_bytes != latest_package_bytes:
+        raise py_builtins.RuntimeError(
+            "Temporary ZIP differs from the in-memory package"
+        )
+
+    os.replace(TEMP_FILE_PATH, FIXED_FILE_PATH)
+
+    with py_builtins.open(FIXED_FILE_PATH, "rb") as fixed_reader:
+        final_file_bytes = fixed_reader.read()
+
+    with zipfile.ZipFile(io.BytesIO(final_file_bytes), mode="r") as zip_reader:
+        zip_test_bad_member = zip_reader.testzip()
+        zip_member_names = zip_reader.namelist()
+        zip_member_details = [
+            {
+                "name": zip_info.filename,
+                "compression_type": zip_info.compress_type,
+                "compressed_bytes": zip_info.compress_size,
+                "uncompressed_bytes": zip_info.file_size,
+                "crc32": zip_info.CRC,
+            }
+            for zip_info in zip_reader.infolist()
+        ]
+        disk_member_payloads = {
+            member_name: zip_reader.read(member_name)
+            for member_name in zip_member_names
+        }
+
+    manifest_from_disk = json.loads(
+        disk_member_payloads["manifest.json"].decode("utf-8")
+    )
+    request_blocks_from_disk = decode_jsonl(
+        disk_member_payloads["request_blocks.jsonl"]
+    )
+    daily_records_from_disk = decode_jsonl(
+        disk_member_payloads["daily.jsonl"]
+    )
+    minute_records_from_disk = decode_jsonl(
+        disk_member_payloads["minute.jsonl"]
+    )
+
+    descriptors_match_disk = py_builtins.all([
+        manifest_from_disk["members"][member_name]["bytes"]
+        == py_builtins.len(disk_member_payloads[member_name])
+        and manifest_from_disk["members"][member_name]["sha256"]
+        == sha256_bytes(disk_member_payloads[member_name])
+        and manifest_from_disk["members"][member_name]["record_count"]
+        == py_builtins.len(
+            decode_jsonl(disk_member_payloads[member_name])
+        )
+        for member_name in payload_order
+    ])
+
+    expected_daily_keys = request_specs[0]["expected_keys"]
+    expected_minute_keys = (
+        request_specs[1]["expected_keys"]
+        + request_specs[2]["expected_keys"]
+    )
+    disk_daily_keys = [
+        record["trading_date"]
+        for record in daily_records_from_disk
+    ]
+    disk_minute_keys = [
+        record["bar_at"][:-6]
+        for record in minute_records_from_disk
+    ]
+
+    validation_checks = {
+        "fixed_file_exists": os.path.isfile(FIXED_FILE_PATH),
+        "temp_file_exists": os.path.exists(TEMP_FILE_PATH),
+        "final_bytes_match_in_memory": (
+            final_file_bytes == latest_package_bytes
+        ),
+        "final_sha256_matches_in_memory": (
+            sha256_bytes(final_file_bytes) == latest_package_sha256
+        ),
+        "zip_test_bad_member_is_none": zip_test_bad_member is None,
+        "zip_member_names_match": zip_member_names == zip_member_order,
+        "manifest_matches_in_memory": manifest_from_disk == manifest,
+        "member_descriptors_match_disk": descriptors_match_disk,
+        "request_blocks_match_in_memory": (
+            request_blocks_from_disk == request_observations
+        ),
+        "request_block_count_is_3": (
+            py_builtins.len(request_blocks_from_disk) == 3
+        ),
+        "all_request_blocks_complete": py_builtins.all([
+            request_block["request_status"] == "success"
+            and request_block["coverage_status"] == "complete"
+            and request_block["observation_eligible"] is True
+            for request_block in request_blocks_from_disk
+        ]),
+        "daily_record_count_is_1": (
+            py_builtins.len(daily_records_from_disk) == 1
+        ),
+        "minute_record_count_is_240": (
+            py_builtins.len(minute_records_from_disk) == 240
+        ),
+        "daily_keys_match_expected": (
+            disk_daily_keys == expected_daily_keys
+        ),
+        "minute_keys_match_expected": (
+            disk_minute_keys == expected_minute_keys
+        ),
+        "daily_business_keys_are_unique": (
+            py_builtins.len({
+                (record["contract_code"], record["trading_date"])
+                for record in daily_records_from_disk
+            })
+            == py_builtins.len(daily_records_from_disk)
+        ),
+        "minute_business_keys_are_unique": (
+            py_builtins.len({
+                (record["contract_code"], record["bar_at"])
+                for record in minute_records_from_disk
+            })
+            == py_builtins.len(minute_records_from_disk)
+        ),
+        "manifest_publication_status_is_complete": (
+            manifest_from_disk["publication_status"] == "complete"
+        ),
+    }
+    validation_passed = py_builtins.all([
+        py_builtins.bool(check_value)
+        for check_name, check_value in validation_checks.items()
+        if check_name != "temp_file_exists"
+    ]) and validation_checks["temp_file_exists"] is False
+
+    publication["status"] = (
+        "ok" if validation_passed else "validation_failed"
+    )
+    publication["final_validation"] = {
+        "passed": validation_passed,
+        "checks": validation_checks,
+        "final_file_bytes": py_builtins.len(final_file_bytes),
+        "final_file_sha256": sha256_bytes(final_file_bytes),
+        "zip_member_details": zip_member_details,
+    }
+
+except py_builtins.Exception as exc:
+    publication["status"] = "error"
+    publication["error_type"] = py_builtins.type(exc).__name__
+    publication["error_message"] = py_builtins.str(exc)
+
+finally:
+    if os.path.exists(TEMP_FILE_PATH):
+        try:
+            os.remove(TEMP_FILE_PATH)
+            publication["temp_cleanup"] = "removed"
+        except py_builtins.Exception as cleanup_exc:
+            publication["temp_cleanup"] = "failed"
+            publication["temp_cleanup_error_type"] = (
+                py_builtins.type(cleanup_exc).__name__
+            )
+            publication["temp_cleanup_error_message"] = py_builtins.str(
+                cleanup_exc
+            )
+    else:
+        publication["temp_cleanup"] = "not_present"
+
+final_validation = publication.get("final_validation") or {}
+
+report = {
+    "probe_version": PROBE_VERSION,
+    "package_format_version": PACKAGE_FORMAT_VERSION,
+    "run_id": RUN_ID,
+    "run_started_at": RUN_STARTED_AT,
+    "elapsed_seconds": py_builtins.round(time.time() - run_clock_started, 6),
+    "environment": {
+        "python_version": platform.python_version(),
+        "python_implementation": platform.python_implementation(),
+        "platform": platform.platform(),
+        "pandas_version": pd.__version__,
+        "numpy_version": np.__version__,
+        "working_directory": os.getcwd(),
+        "market_time_zone": MARKET_TIME_ZONE,
+    },
+    "request_plan": [
+        {
+            key: value
+            for key, value in request_spec.items()
+            if key != "expected_keys"
+        }
+        for request_spec in request_specs
+    ],
+    "request_observations": request_observations,
+    "manifest": manifest,
+    "publication": publication,
+    "download_instruction": {
+        "file_name": FIXED_FILE_NAME,
+        "expected_bytes": final_validation.get("final_file_bytes"),
+        "expected_sha256": final_validation.get("final_file_sha256"),
+        "action": (
+            "Download this fixed-name ZIP from the JoinQuant file panel, "
+            "replace the previous local file, and return the original ZIP "
+            "together with this complete BEGIN/END output."
+        ),
+    },
+    "status": "ok" if publication["status"] == "ok" else "failed",
+}
+
+py_builtins.print("JQ_FINANCIAL_FUTURES_PROBE_ROUND_05_BEGIN")
+py_builtins.print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+py_builtins.print("JQ_FINANCIAL_FUTURES_PROBE_ROUND_05_END")
+

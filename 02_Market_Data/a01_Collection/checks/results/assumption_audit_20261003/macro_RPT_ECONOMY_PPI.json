@@ -1,0 +1,156 @@
+{
+  "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_ECONOMY_PPI&columns=ALL&sortColumns=REPORT_DATE&sortTypes=-1&pageSize=20&pageNumber=1&source=WEB&client=WEB",
+  "http_status": 200,
+  "body": {
+    "version": "f001488f3b3d4805195d2e5a1f774650",
+    "result": {
+      "pages": 13,
+      "data": [
+        {
+          "REPORT_DATE": "2026-08-01 00:00:00",
+          "TIME": "2026年08月份",
+          "BASE": 103.8,
+          "BASE_SAME": 3.8,
+          "BASE_ACCUMULATE": 102
+        },
+        {
+          "REPORT_DATE": "2026-07-01 00:00:00",
+          "TIME": "2026年07月份",
+          "BASE": 103.5,
+          "BASE_SAME": 3.5,
+          "BASE_ACCUMULATE": 101.8
+        },
+        {
+          "REPORT_DATE": "2026-06-01 00:00:00",
+          "TIME": "2026年06月份",
+          "BASE": 104.1,
+          "BASE_SAME": 4.1,
+          "BASE_ACCUMULATE": 101.5
+        },
+        {
+          "REPORT_DATE": "2026-05-01 00:00:00",
+          "TIME": "2026年05月份",
+          "BASE": 103.9,
+          "BASE_SAME": 3.9,
+          "BASE_ACCUMULATE": 101
+        },
+        {
+          "REPORT_DATE": "2026-04-01 00:00:00",
+          "TIME": "2026年04月份",
+          "BASE": 102.8,
+          "BASE_SAME": 2.8,
+          "BASE_ACCUMULATE": 100.2
+        },
+        {
+          "REPORT_DATE": "2026-03-01 00:00:00",
+          "TIME": "2026年03月份",
+          "BASE": 100.5,
+          "BASE_SAME": 0.5,
+          "BASE_ACCUMULATE": 99.4
+        },
+        {
+          "REPORT_DATE": "2026-02-01 00:00:00",
+          "TIME": "2026年02月份",
+          "BASE": 99.1,
+          "BASE_SAME": -0.9,
+          "BASE_ACCUMULATE": 98.8
+        },
+        {
+          "REPORT_DATE": "2026-01-01 00:00:00",
+          "TIME": "2026年01月份",
+          "BASE": 98.6,
+          "BASE_SAME": -1.4,
+          "BASE_ACCUMULATE": 98.6
+        },
+        {
+          "REPORT_DATE": "2025-12-01 00:00:00",
+          "TIME": "2025年12月份",
+          "BASE": 98.1,
+          "BASE_SAME": -1.9,
+          "BASE_ACCUMULATE": 97.4
+        },
+        {
+          "REPORT_DATE": "2025-11-01 00:00:00",
+          "TIME": "2025年11月份",
+          "BASE": 97.8,
+          "BASE_SAME": -2.2,
+          "BASE_ACCUMULATE": 97.3
+        },
+        {
+          "REPORT_DATE": "2025-10-01 00:00:00",
+          "TIME": "2025年10月份",
+          "BASE": 97.9,
+          "BASE_SAME": -2.1,
+          "BASE_ACCUMULATE": 97.3
+        },
+        {
+          "REPORT_DATE": "2025-09-01 00:00:00",
+          "TIME": "2025年09月份",
+          "BASE": 97.7,
+          "BASE_SAME": -2.3,
+          "BASE_ACCUMULATE": 97.2
+        },
+        {
+          "REPORT_DATE": "2025-08-01 00:00:00",
+          "TIME": "2025年08月份",
+          "BASE": 97.1,
+          "BASE_SAME": -2.9,
+          "BASE_ACCUMULATE": 97.1
+        },
+        {
+          "REPORT_DATE": "2025-07-01 00:00:00",
+          "TIME": "2025年07月份",
+          "BASE": 96.4,
+          "BASE_SAME": -3.6,
+          "BASE_ACCUMULATE": 97.1
+        },
+        {
+          "REPORT_DATE": "2025-06-01 00:00:00",
+          "TIME": "2025年06月份",
+          "BASE": 96.4,
+          "BASE_SAME": -3.6,
+          "BASE_ACCUMULATE": 97.2
+        },
+        {
+          "REPORT_DATE": "2025-05-01 00:00:00",
+          "TIME": "2025年05月份",
+          "BASE": 96.7,
+          "BASE_SAME": -3.3,
+          "BASE_ACCUMULATE": 97.4
+        },
+        {
+          "REPORT_DATE": "2025-04-01 00:00:00",
+          "TIME": "2025年04月份",
+          "BASE": 97.3,
+          "BASE_SAME": -2.7,
+          "BASE_ACCUMULATE": 97.6
+        },
+        {
+          "REPORT_DATE": "2025-03-01 00:00:00",
+          "TIME": "2025年03月份",
+          "BASE": 97.5,
+          "BASE_SAME": -2.5,
+          "BASE_ACCUMULATE": 97.7
+        },
+        {
+          "REPORT_DATE": "2025-02-01 00:00:00",
+          "TIME": "2025年02月份",
+          "BASE": 97.8,
+          "BASE_SAME": -2.2,
+          "BASE_ACCUMULATE": 97.8
+        },
+        {
+          "REPORT_DATE": "2025-01-01 00:00:00",
+          "TIME": "2025年01月份",
+          "BASE": 97.7,
+          "BASE_SAME": -2.3,
+          "BASE_ACCUMULATE": 97.7
+        }
+      ],
+      "count": 248
+    },
+    "success": true,
+    "message": "ok",
+    "code": 0
+  }
+}

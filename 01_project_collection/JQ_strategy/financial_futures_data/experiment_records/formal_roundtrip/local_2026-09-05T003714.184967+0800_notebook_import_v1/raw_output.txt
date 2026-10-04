@@ -1,0 +1,27 @@
+{
+  "completed_at": "2026-09-05T00:37:14.297182+08:00",
+  "counts": {
+    "daily_existing_equal_count": 0,
+    "daily_inserted_count": 1,
+    "minute_existing_equal_count": 0,
+    "minute_inserted_count": 240
+  },
+  "counts_scope": "stored_batch_ledger_not_this_invocation",
+  "daily_record_count": 1,
+  "database_path": "E:\\Latitude_Analytics_v2\\01_project_collection\\JQ_strategy\\financial_futures_data\\data\\warehouse\\financial_futures.duckdb",
+  "database_write_performed": false,
+  "failed_request_count": 0,
+  "file_bytes": 10008,
+  "file_sha256": "cc9e1a530ab75ab66f49a10f7acb058b47e824ae0669d18e2f7d00d630df7ec6",
+  "inbox_path": "E:\\Latitude_Analytics_v2\\01_project_collection\\JQ_strategy\\financial_futures_data\\data\\inbox\\JQ_FINANCIAL_FUTURES_TRANSFER.zip",
+  "minute_record_count": 240,
+  "publication_status": "complete",
+  "run_id": "7d96befe-e6ff-4efa-88a0-c9ec71f3d713",
+  "snapshot_path": "E:\\Latitude_Analytics_v2\\01_project_collection\\JQ_strategy\\financial_futures_data\\data\\staging\\cc9e1a530ab75ab66f49a10f7acb058b47e824ae0669d18e2f7d00d630df7ec6.zip",
+  "snapshot_retained": false,
+  "started_at": "2026-09-05T00:37:14.184967+08:00",
+  "status": "already_imported",
+  "successful_request_count": 6,
+  "write_requested": true
+}
+入库检查完成。请重新运行第 3—9 节，更新缺失名单和聚宽代码；不要使用前面的旧输出。

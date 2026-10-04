@@ -1,0 +1,18 @@
+E:\anaconda3\envs\latitude_env_v2\python.exe
+{'table': 'dim_external_market_calendar', 'rows': 128478, 'parquet_files': 606}
+{'table': 'dim_futures_bar_calendar', 'rows': 9846670, 'parquet_files': 1901}
+{'table': 'dim_futures_contract_calendar', 'rows': 7694739, 'parquet_files': 951}
+{'table': 'dim_futures_exchange_report_calendar', 'rows': 681636, 'parquet_files': 2851}
+{'table': 'dim_futures_variety_calendar', 'rows': 227212, 'parquet_files': 951}
+{'table': 'dim_macro_release_calendar', 'rows': 37849, 'parquet_files': 404}
+{'table': 'dim_trade_calendar', 'rows': 6118, 'parquet_files': 18}
+{'table': 'fact_external_index_daily', 'rows': 67591, 'parquet_files': 786}
+{'table': 'fact_futures_daily', 'rows': 2076956, 'parquet_files': 10272}
+{'table': 'fact_futures_member_position_daily', 'rows': 0, 'parquet_files': 1}
+{'table': 'fact_futures_minute', 'rows': 527130532, 'parquet_files': 6623}
+{'table': 'fact_futures_missing_bar', 'rows': 8951963, 'parquet_files': 2382}
+{'table': 'fact_futures_position_rank_daily', 'rows': 13234819, 'parquet_files': 5507}
+{'table': 'fact_futures_warehouse_receipt_daily', 'rows': 1381849, 'parquet_files': 5818}
+{'table': 'fact_interest_rate_daily', 'rows': 32528, 'parquet_files': 202}
+{'table': 'fact_macro_release', 'rows': 2866, 'parquet_files': 202}
+{'table': 'fact_overseas_futures_daily', 'rows': 113897, 'parquet_files': 203}

@@ -1,0 +1,65 @@
+---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+<ipython-input-10-00b926acb0a2> in <module>
+    497 
+    498 print("JQ_FINANCIAL_FUTURES_PROBE_ROUND_02_BEGIN")
+--> 499 print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    500 print("JQ_FINANCIAL_FUTURES_PROBE_ROUND_02_END")
+
+/opt/conda/lib/python3.6/json/__init__.py in dumps(obj, skipkeys, ensure_ascii, check_circular, allow_nan, cls, indent, separators, default, sort_keys, **kw)
+    236         check_circular=check_circular, allow_nan=allow_nan, indent=indent,
+    237         separators=separators, default=default, sort_keys=sort_keys,
+--> 238         **kw).encode(obj)
+    239 
+    240 
+
+/opt/conda/lib/python3.6/json/encoder.py in encode(self, o)
+    199         chunks = self.iterencode(o, _one_shot=True)
+    200         if not isinstance(chunks, (list, tuple)):
+--> 201             chunks = list(chunks)
+    202         return ''.join(chunks)
+    203 
+
+/opt/conda/lib/python3.6/json/encoder.py in _iterencode(o, _current_indent_level)
+    428             yield from _iterencode_list(o, _current_indent_level)
+    429         elif isinstance(o, dict):
+--> 430             yield from _iterencode_dict(o, _current_indent_level)
+    431         else:
+    432             if markers is not None:
+
+/opt/conda/lib/python3.6/json/encoder.py in _iterencode_dict(dct, _current_indent_level)
+    402                 else:
+    403                     chunks = _iterencode(value, _current_indent_level)
+--> 404                 yield from chunks
+    405         if newline_indent is not None:
+    406             _current_indent_level -= 1
+
+/opt/conda/lib/python3.6/json/encoder.py in _iterencode_dict(dct, _current_indent_level)
+    402                 else:
+    403                     chunks = _iterencode(value, _current_indent_level)
+--> 404                 yield from chunks
+    405         if newline_indent is not None:
+    406             _current_indent_level -= 1
+
+/opt/conda/lib/python3.6/json/encoder.py in _iterencode_dict(dct, _current_indent_level)
+    402                 else:
+    403                     chunks = _iterencode(value, _current_indent_level)
+--> 404                 yield from chunks
+    405         if newline_indent is not None:
+    406             _current_indent_level -= 1
+
+/opt/conda/lib/python3.6/json/encoder.py in _iterencode(o, _current_indent_level)
+    435                     raise ValueError("Circular reference detected")
+    436                 markers[markerid] = o
+--> 437             o = _default(o)
+    438             yield from _iterencode(o, _current_indent_level)
+    439             if markers is not None:
+
+/opt/conda/lib/python3.6/json/encoder.py in default(self, o)
+    178         """
+    179         raise TypeError("Object of type '%s' is not JSON serializable" %
+--> 180                         o.__class__.__name__)
+    181 
+    182     def encode(self, o):
+
+TypeError: Object of type 'generator' is not JSON serializable

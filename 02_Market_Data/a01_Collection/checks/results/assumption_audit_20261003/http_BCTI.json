@@ -1,0 +1,70 @@
+{
+  "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_INDUSTRY_INDEX&columns=ALL&filter=%28INDICATOR_ID%3D%22EMI00107669%22%29&sortColumns=REPORT_DATE&sortTypes=-1&pageSize=3&pageNumber=1&source=WEB&client=WEB",
+  "http_status": 200,
+  "body": {
+    "version": "abffb7e038a798b80cb8bf4483b927ee",
+    "result": {
+      "pages": 2011,
+      "data": [
+        {
+          "REPORT_DATE": "2026-10-02 00:00:00",
+          "INDICATOR_VALUE": 2414,
+          "CHANGE_RATE": 0.08291874,
+          "CHANGERATE_3M": 134.36893204,
+          "CHANGERATE_6M": 22.60030472,
+          "CHANGERATE_1Y": 309.84719864,
+          "CHANGERATE_2Y": 326.50176678,
+          "CHANGERATE_3Y": 197.65721332,
+          "IS_NEWEST": "True",
+          "BOARD_CODE": "BK0450",
+          "BOARD_NAME": "航运港口",
+          "CONCEPT_CODE": "BK0712",
+          "CONCEPT_NAME": "一带一路",
+          "INDICATOR_ID": "EMI00107669",
+          "INDICATOR_NAME": "成品油运输指数(BCTI)",
+          "RANK_LABEL": "H"
+        },
+        {
+          "REPORT_DATE": "2026-10-01 00:00:00",
+          "INDICATOR_VALUE": 2412,
+          "CHANGE_RATE": 2.03045685,
+          "CHANGERATE_3M": 123.95543175,
+          "CHANGERATE_6M": 20.96288867,
+          "CHANGERATE_1Y": 309.50764007,
+          "CHANGERATE_2Y": 326.14840989,
+          "CHANGERATE_3Y": 196.67896679,
+          "IS_NEWEST": "False",
+          "BOARD_CODE": "BK0450",
+          "BOARD_NAME": "航运港口",
+          "CONCEPT_CODE": "BK0712",
+          "CONCEPT_NAME": "一带一路",
+          "INDICATOR_ID": "EMI00107669",
+          "INDICATOR_NAME": "成品油运输指数(BCTI)",
+          "RANK_LABEL": "H"
+        },
+        {
+          "REPORT_DATE": "2026-09-30 00:00:00",
+          "INDICATOR_VALUE": 2364,
+          "CHANGE_RATE": 3.09638029,
+          "CHANGERATE_3M": 112.97297297,
+          "CHANGERATE_6M": 20.24415056,
+          "CHANGERATE_1Y": 292.6910299,
+          "CHANGERATE_2Y": 317.66784452,
+          "CHANGERATE_3Y": 190.77490775,
+          "IS_NEWEST": "False",
+          "BOARD_CODE": "BK0450",
+          "BOARD_NAME": "航运港口",
+          "CONCEPT_CODE": "BK0712",
+          "CONCEPT_NAME": "一带一路",
+          "INDICATOR_ID": "EMI00107669",
+          "INDICATOR_NAME": "成品油运输指数(BCTI)",
+          "RANK_LABEL": "H"
+        }
+      ],
+      "count": 6032
+    },
+    "success": true,
+    "message": "ok",
+    "code": 0
+  }
+}

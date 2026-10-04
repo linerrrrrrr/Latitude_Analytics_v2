@@ -1,0 +1,36 @@
+{
+  "executed_at": "2026-09-05T01:13:20.729264+08:00",
+  "cases": [
+    {
+      "case": "all_facts_complete",
+      "status": "passed",
+      "output": "已完成：白名单数据库的日线和分钟行情已全量覆盖当前就绪范围。\n本地日历已知最新应有交易日: 2026-09-04\n自然日日历水位: 2026-09-04 ；当前应覆盖至: 2026-09-04\n预计剩余普通拉取轮数：0\n可于明天 2026-09-06 00:01:00（北京时间）之后再次从头运行；请确保上游本地日历同步更新。\n"
+    },
+    {
+      "case": "known_source_gaps_not_falsely_complete",
+      "status": "passed",
+      "output": "当前可拉取任务已完成，但仍有 271 个来源确认缺失键；不是全部行情齐全，当前规则不自动重拉。\n本地日历已知最新应有交易日: 2026-09-04\n自然日日历水位: 2026-09-04 ；当前应覆盖至: 2026-09-04\n预计剩余普通拉取轮数：0\n可于明天 2026-09-06 00:01:00（北京时间）之后再次从头运行；请确保上游本地日历同步更新。\n"
+    },
+    {
+      "case": "stale_calendar_not_falsely_current",
+      "status": "passed",
+      "output": "本地已知范围没有普通待办，但上游日历尚未更新到应有日期，不能判定已全量更新到最新。 来源确认缺失键数：0。\n本地日历已知最新应有交易日: 2026-09-04\n自然日日历水位: 2026-09-04 ；当前应覆盖至: 2026-09-04\n预计剩余普通拉取轮数：0\n可于明天 2026-09-06 00:01:00（北京时间）之后再次从头运行；请确保上游本地日历同步更新。\n"
+    },
+    {
+      "case": "final_rejects_stale_plan_after_failed_import",
+      "status": "passed"
+    },
+    {
+      "case": "missing_zip_continues_to_planning",
+      "status": "passed"
+    },
+    {
+      "case": "failed_import_clears_old_code_and_prevents_planning",
+      "status": "passed"
+    },
+    {
+      "case": "another_download_blocks_new_plan",
+      "status": "passed"
+    }
+  ]
+}

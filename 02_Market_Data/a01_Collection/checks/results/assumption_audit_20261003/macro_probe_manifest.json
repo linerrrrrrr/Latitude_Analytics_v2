@@ -1,0 +1,74 @@
+[
+  {
+    "label": "RPT_ECONOMY_CPI",
+    "request": {
+      "reportName": "RPT_ECONOMY_CPI",
+      "columns": "ALL",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "20",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:32:38.322178+08:00",
+    "status": "returned",
+    "sha256": "385bfa00fa839af028eef747d5e9391f261eb9cbedd309bfca77aaa3e069a13f",
+    "evidence": "macro_RPT_ECONOMY_CPI.json",
+    "elapsed_seconds": 5.062
+  },
+  {
+    "label": "RPT_ECONOMY_PPI",
+    "request": {
+      "reportName": "RPT_ECONOMY_PPI",
+      "columns": "ALL",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "20",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:32:43.390997+08:00",
+    "status": "returned",
+    "sha256": "efb2ad45064efd19825bc0dd2e2f0de68f46c0579ff95a5df0f03cb6e0bc21a0",
+    "evidence": "macro_RPT_ECONOMY_PPI.json",
+    "elapsed_seconds": 5.017
+  },
+  {
+    "label": "RPT_ECONOMY_PMI",
+    "request": {
+      "reportName": "RPT_ECONOMY_PMI",
+      "columns": "ALL",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "20",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:32:48.408081+08:00",
+    "status": "returned",
+    "sha256": "a76a281d2e9a9f3a418759f5f22920b74af0eac1a1c1c5897093463089eef758",
+    "evidence": "macro_RPT_ECONOMY_PMI.json",
+    "elapsed_seconds": 5.012
+  },
+  {
+    "label": "RPT_ECONOMY_GDP",
+    "request": {
+      "reportName": "RPT_ECONOMY_GDP",
+      "columns": "ALL",
+      "sortColumns": "REPORT_DATE",
+      "sortTypes": "-1",
+      "pageSize": "20",
+      "pageNumber": "1",
+      "source": "WEB",
+      "client": "WEB"
+    },
+    "checked_at": "2026-10-03T14:32:53.420264+08:00",
+    "status": "returned",
+    "sha256": "1b1d4fc042a8c1e1a9c47784e3ca9b82ee76b140f41632123e5e1b3f48e1dbeb",
+    "evidence": "macro_RPT_ECONOMY_GDP.json",
+    "elapsed_seconds": 4.999
+  }
+]

@@ -1,0 +1,274 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at_utc": "2026-08-23T18:19:42.418694+00:00",
+  "python_executable": "E:\\anaconda3\\envs\\latitude\\python.exe",
+  "mode": "coverage",
+  "observation_date": "2026-08-21",
+  "request_policy": {
+    "repeats": 1,
+    "min_interval_seconds": 5.0,
+    "jitter_seconds": 0.5,
+    "timeout_seconds": 30.0,
+    "automatic_business_retry": false,
+    "concurrency": 1,
+    "stop_same_host_on": [
+      "transport_error",
+      "HTTP 403/429/5xx",
+      "invalid JSON where JSON is expected",
+      "block-page term"
+    ]
+  },
+  "scope_note": "Weekday-gap counts are descriptive only; they do not subtract source-specific holidays or prove a business-data defect.",
+  "robots": {
+    "www.100ppi.com": {
+      "robots_url": "https://www.100ppi.com/robots.txt",
+      "status": "received",
+      "http_status": 200,
+      "elapsed_seconds": 0.98031,
+      "content_type": "text/plain",
+      "body_bytes": 107,
+      "body_sha256": "ef3069a61773acdf5dad5a183b18b410818b314f05ae61abc747cd52adac6993",
+      "can_fetch": true
+    }
+  },
+  "halted_hosts": {},
+  "summaries": {
+    "sunsirs_spot_futures_2026-08-17": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "elapsed_seconds_min": 0.264271,
+      "elapsed_seconds_median": 0.264271,
+      "elapsed_seconds_p95": 0.264271,
+      "elapsed_seconds_max": 0.264271,
+      "semantic_response_variants": 1
+    },
+    "sunsirs_spot_futures_2026-08-18": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "elapsed_seconds_min": 0.299503,
+      "elapsed_seconds_median": 0.299503,
+      "elapsed_seconds_p95": 0.299503,
+      "elapsed_seconds_max": 0.299503,
+      "semantic_response_variants": 1
+    },
+    "sunsirs_spot_futures_2026-08-19": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "elapsed_seconds_min": 0.328708,
+      "elapsed_seconds_median": 0.328708,
+      "elapsed_seconds_p95": 0.328708,
+      "elapsed_seconds_max": 0.328708,
+      "semantic_response_variants": 1
+    },
+    "sunsirs_spot_futures_2026-08-20": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "elapsed_seconds_min": 0.317305,
+      "elapsed_seconds_median": 0.317305,
+      "elapsed_seconds_p95": 0.317305,
+      "elapsed_seconds_max": 0.317305,
+      "semantic_response_variants": 1
+    },
+    "sunsirs_spot_futures_2026-08-21": {
+      "samples": 1,
+      "http_status_counts": {
+        "200": 1
+      },
+      "diagnostic_valid_samples": 1,
+      "elapsed_seconds_min": 0.319252,
+      "elapsed_seconds_median": 0.319252,
+      "elapsed_seconds_p95": 0.319252,
+      "elapsed_seconds_max": 0.319252,
+      "semantic_response_variants": 1
+    }
+  },
+  "results": [
+    {
+      "sequence": 1,
+      "repeat": 1,
+      "family": "sunsirs_html",
+      "name": "sunsirs_spot_futures_2026-08-17",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:19:19.956493+00:00",
+      "request_url": "https://www.100ppi.com/sf/day-2026-08-17.html",
+      "http_status": 200,
+      "elapsed_seconds": 0.264271,
+      "requests_elapsed_seconds": 0.263124,
+      "content_type": "text/html; charset=utf-8;",
+      "content_encoding": "gzip",
+      "cache_control": "max-age=60",
+      "retry_after": null,
+      "server": "nginx",
+      "body_bytes": 60188,
+      "body_sha256": "c93015a0522463a3b7717c9aba1cb0c742f71f5234f0b356cb87a2db86d7eb41",
+      "inspection": {
+        "diagnostic_valid": true,
+        "response_kind": "expected_html",
+        "title": "2026年08月17日商品现货与期货价格对比表 - 现期表 - 生意社",
+        "semantic_sha256": "bfd21c7547e64a93269851b708e995bfedc051f2c952cb203e06f0fa19a3da9f",
+        "title_matches_date_and_subject": true,
+        "fdata_table_present": true,
+        "commodity_row_count": 54,
+        "empty_direct_cell_count": 0,
+        "null_like_direct_cell_count": 0,
+        "rows_with_null_like_cells": 0,
+        "publication_time": "16:30",
+        "basis_definition_present": true,
+        "blocked_terms": [],
+        "replacement_character_count": 0
+      }
+    },
+    {
+      "sequence": 2,
+      "repeat": 1,
+      "family": "sunsirs_html",
+      "name": "sunsirs_spot_futures_2026-08-18",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:19:25.404783+00:00",
+      "request_url": "https://www.100ppi.com/sf/day-2026-08-18.html",
+      "http_status": 200,
+      "elapsed_seconds": 0.299503,
+      "requests_elapsed_seconds": 0.293414,
+      "content_type": "text/html; charset=utf-8;",
+      "content_encoding": "gzip",
+      "cache_control": "max-age=60",
+      "retry_after": null,
+      "server": "nginx",
+      "body_bytes": 60205,
+      "body_sha256": "369a0d2884f3ff12945055c77fe31ff59a673d2e8970551deb7e9ec08c3b52c8",
+      "inspection": {
+        "diagnostic_valid": true,
+        "response_kind": "expected_html",
+        "title": "2026年08月18日商品现货与期货价格对比表 - 现期表 - 生意社",
+        "semantic_sha256": "57900a15dcdb8969b5e209c836b9ec195050e62762db158808068a6bce1335aa",
+        "title_matches_date_and_subject": true,
+        "fdata_table_present": true,
+        "commodity_row_count": 54,
+        "empty_direct_cell_count": 0,
+        "null_like_direct_cell_count": 0,
+        "rows_with_null_like_cells": 0,
+        "publication_time": "16:30",
+        "basis_definition_present": true,
+        "blocked_terms": [],
+        "replacement_character_count": 0
+      }
+    },
+    {
+      "sequence": 3,
+      "repeat": 1,
+      "family": "sunsirs_html",
+      "name": "sunsirs_spot_futures_2026-08-19",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:19:31.097623+00:00",
+      "request_url": "https://www.100ppi.com/sf/day-2026-08-19.html",
+      "http_status": 200,
+      "elapsed_seconds": 0.328708,
+      "requests_elapsed_seconds": 0.326896,
+      "content_type": "text/html; charset=utf-8;",
+      "content_encoding": "gzip",
+      "cache_control": "max-age=60",
+      "retry_after": null,
+      "server": "nginx",
+      "body_bytes": 60194,
+      "body_sha256": "25c933e734bf2e777c3adcbf8a174b8949d8f7b3eb719fb9cc83644d9b315e2b",
+      "inspection": {
+        "diagnostic_valid": true,
+        "response_kind": "expected_html",
+        "title": "2026年08月19日商品现货与期货价格对比表 - 现期表 - 生意社",
+        "semantic_sha256": "94c80a669cf2e2588eaa24a39f85fb91ab8743a115e9891dc7815f8c4b4a5ddb",
+        "title_matches_date_and_subject": true,
+        "fdata_table_present": true,
+        "commodity_row_count": 54,
+        "empty_direct_cell_count": 0,
+        "null_like_direct_cell_count": 0,
+        "rows_with_null_like_cells": 0,
+        "publication_time": "16:30",
+        "basis_definition_present": true,
+        "blocked_terms": [],
+        "replacement_character_count": 0
+      }
+    },
+    {
+      "sequence": 4,
+      "repeat": 1,
+      "family": "sunsirs_html",
+      "name": "sunsirs_spot_futures_2026-08-20",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:19:36.545535+00:00",
+      "request_url": "https://www.100ppi.com/sf/day-2026-08-20.html",
+      "http_status": 200,
+      "elapsed_seconds": 0.317305,
+      "requests_elapsed_seconds": 0.315941,
+      "content_type": "text/html; charset=utf-8;",
+      "content_encoding": "gzip",
+      "cache_control": "max-age=60",
+      "retry_after": null,
+      "server": "nginx",
+      "body_bytes": 60226,
+      "body_sha256": "7cb50c5854d2879ad2de208981e87b3a64ef22f453bdebfb889db26948e2c033",
+      "inspection": {
+        "diagnostic_valid": true,
+        "response_kind": "expected_html",
+        "title": "2026年08月20日商品现货与期货价格对比表 - 现期表 - 生意社",
+        "semantic_sha256": "17b6a6515d6bb184942e4d28b530a9a7a6b8e306cf36e0d300be24b80e538346",
+        "title_matches_date_and_subject": true,
+        "fdata_table_present": true,
+        "commodity_row_count": 54,
+        "empty_direct_cell_count": 0,
+        "null_like_direct_cell_count": 0,
+        "rows_with_null_like_cells": 0,
+        "publication_time": "16:30",
+        "basis_definition_present": true,
+        "blocked_terms": [],
+        "replacement_character_count": 0
+      }
+    },
+    {
+      "sequence": 5,
+      "repeat": 1,
+      "family": "sunsirs_html",
+      "name": "sunsirs_spot_futures_2026-08-21",
+      "status": "received",
+      "started_at_utc": "2026-08-23T18:19:42.065724+00:00",
+      "request_url": "https://www.100ppi.com/sf/day-2026-08-21.html",
+      "http_status": 200,
+      "elapsed_seconds": 0.319252,
+      "requests_elapsed_seconds": 0.317857,
+      "content_type": "text/html; charset=utf-8;",
+      "content_encoding": "gzip",
+      "cache_control": "max-age=60",
+      "retry_after": null,
+      "server": "nginx",
+      "body_bytes": 60209,
+      "body_sha256": "b2c8efa05cd81666e4dab47d17a266238582c109bbd445c8d5e4d54e248b4404",
+      "inspection": {
+        "diagnostic_valid": true,
+        "response_kind": "expected_html",
+        "title": "2026年08月21日商品现货与期货价格对比表 - 现期表 - 生意社",
+        "semantic_sha256": "78092f809ae8c170f032be15af52df5c385348811cc50bb466708d2ec0105569",
+        "title_matches_date_and_subject": true,
+        "fdata_table_present": true,
+        "commodity_row_count": 54,
+        "empty_direct_cell_count": 0,
+        "null_like_direct_cell_count": 0,
+        "rows_with_null_like_cells": 0,
+        "publication_time": "16:30",
+        "basis_definition_present": true,
+        "blocked_terms": [],
+        "replacement_character_count": 0
+      }
+    }
+  ]
+}

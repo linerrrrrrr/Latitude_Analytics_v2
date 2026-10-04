@@ -1,0 +1,270 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at_utc": "2026-08-23T18:35:37.465734+00:00",
+  "audit_status": "failed",
+  "python_executable": "E:\\anaconda3\\envs\\latitude\\python.exe",
+  "mode": "coverage",
+  "observation_date": "2026-08-21",
+  "request_policy": {
+    "repeats": 1,
+    "min_interval_seconds": 5.0,
+    "jitter_seconds": 0.5,
+    "timeout_seconds": 30.0,
+    "automatic_business_retry": false,
+    "concurrency": 1,
+    "interval_scope": "same_host_including_robots",
+    "published_crawl_delay_takes_precedence": true,
+    "stop_same_host_on": [
+      "transport_error",
+      "unsafe robots response",
+      "any diagnostic_status=failed"
+    ]
+  },
+  "scope_note": "Weekday-gap counts are descriptive only; they do not subtract source-specific holidays or prove a business-data defect.",
+  "robots": {
+    "www.100ppi.com": {
+      "robots_url": "https://www.100ppi.com/robots.txt",
+      "status": "unavailable",
+      "error": "ConnectionError: HTTPSConnectionPool(host='www.100ppi.com', port=443): Max retries exceeded with url: /robots.txt (Caused by NewConnectionError(\"HTTPSConnection(host='www.100ppi.com', port=443): Failed to establish a new connection: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。\"))"
+    },
+    "datacenter-web.eastmoney.com": {
+      "robots_url": "https://datacenter-web.eastmoney.com/robots.txt",
+      "status": "unavailable",
+      "error": "ConnectionError: HTTPSConnectionPool(host='datacenter-web.eastmoney.com', port=443): Max retries exceeded with url: /robots.txt (Caused by NewConnectionError(\"HTTPSConnection(host='datacenter-web.eastmoney.com', port=443): Failed to establish a new connection: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。\"))"
+    }
+  },
+  "robots_warning_hosts": {},
+  "disallowed_hosts": [],
+  "halted_hosts": {
+    "www.100ppi.com": "robots_unavailable",
+    "datacenter-web.eastmoney.com": "robots_unavailable"
+  },
+  "diagnostic_status_counts": {},
+  "summaries": {},
+  "results": [
+    {
+      "sequence": 1,
+      "repeat": 1,
+      "family": "sunsirs_html",
+      "name": "sunsirs_spot_futures_2026-08-17",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 2,
+      "repeat": 1,
+      "family": "sunsirs_html",
+      "name": "sunsirs_spot_futures_2026-08-18",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 3,
+      "repeat": 1,
+      "family": "sunsirs_html",
+      "name": "sunsirs_spot_futures_2026-08-19",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 4,
+      "repeat": 1,
+      "family": "sunsirs_html",
+      "name": "sunsirs_spot_futures_2026-08-20",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 5,
+      "repeat": 1,
+      "family": "sunsirs_html",
+      "name": "sunsirs_spot_futures_2026-08-21",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 6,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_BDI_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 7,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_BPI_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 8,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_BCI_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 9,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_BSI_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 10,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_BDTI_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 11,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_BCTI_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 12,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_WTI_CONC_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 13,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_SUNSIRS_ENERGY_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 14,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_MYSTEEL_COKE_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 15,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_SUNSIRS_STEEL_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 16,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_MYSTEEL_STEEL_COMPOSITE_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 17,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_XINHUA_IRON_ORE_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 18,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_SUNSIRS_NONFERROUS_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 19,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_MYSTEEL_NICKEL_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 20,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_MYSTEEL_TIN_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 21,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_MYSTEEL_ZINC_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 22,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_MYSTEEL_LEAD_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 23,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_MYSTEEL_ALUMINUM_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 24,
+      "repeat": 1,
+      "family": "eastmoney_industry_index_json",
+      "name": "eastmoney_index_MYSTEEL_COPPER_recent",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 25,
+      "repeat": 1,
+      "family": "eastmoney_macro_json",
+      "name": "eastmoney_macro_RPT_ECONOMY_CPI",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 26,
+      "repeat": 1,
+      "family": "eastmoney_macro_json",
+      "name": "eastmoney_macro_RPT_ECONOMY_GDP",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 27,
+      "repeat": 1,
+      "family": "eastmoney_macro_json",
+      "name": "eastmoney_macro_RPT_ECONOMY_PMI",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    },
+    {
+      "sequence": 28,
+      "repeat": 1,
+      "family": "eastmoney_macro_json",
+      "name": "eastmoney_macro_RPT_ECONOMY_PPI",
+      "status": "skipped",
+      "reason": "host_halted_after_robots_unavailable"
+    }
+  ]
+}
