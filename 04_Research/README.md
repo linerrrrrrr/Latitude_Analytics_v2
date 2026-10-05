@@ -2,7 +2,11 @@
 
 `a01_Methods` 维护可组合函数及 demo，`a02_Experiments` 按时间范围与训练／测试划分组织对照实验。编号用于浏览排序，函数调用决定实际依赖。本说明面向熟悉 Python 和 Notebook、首次进入本目录的研究人员。
 
-当前已建立两个空业务分区、通用 Notebook 加载器和参考资料目录，尚未定义具体方法、派生方法或真实时间分区。带尖括号的名称与配置均为填写约定，不是已创建的入口。强制规则见 [AGENTS.md](AGENTS.md)。
+当前已建立通用 Notebook 加载器、参考资料目录及[逐交易日主力合约识别 Notebook](a01_Methods/b01_MainContractSelection/b01_MainContractSelection.ipynb)。该方法已实现逐交易日递推函数、同名导入代理、四张正式 silver 输入的只读读取和 RB demo。Notebook 内嵌展示数据、候选证据、每日映射、换约明细及输出稳定性检查；验证不覆盖正式实验组合与 Hydra/MLflow 链路。`a02_Experiments` 尚无具体时间分区。带尖括号的名称与配置均为填写约定，不是已创建的入口。强制规则见 [AGENTS.md](AGENTS.md)。
+
+方法[主力片段与全合约价格复权](a01_Methods/b02_MainContinuousAdjustment/b02_MainContinuousAdjustment.ipynb)已实现日级分段、分钟与自然对数输入准备、log 域共同偏移复权及导入代理，显式核对上游主力 demo 并只读使用正式分钟和 Session 日历。RB 演示固定为 2023-10-25 至 2025-10-20（交易日两端包含，Asia/Shanghai），包含 1,972,620 条全合约分钟、164,385 条主力分钟、7 个片段和 6 次换约。正式日历记录 13 个疑似休市夜盘，主力缺失 1,560 分钟；保留缺失诊断，不补价、不改主力。累计换月 log 差值按全部相邻实际分钟间隔均摊，换月衔接也参与，首尾 OHLC 保持原值；片段首末或换约锚点缺失时拒绝计算。确定性边界例子、全区间数学核对及独立真实换约调用已通过。完整全合约长表已保存为本方法 demo，回读核对实际内容；同一身份与内容重跑时保留文件字节和生成时间。
+
+方法[全合约 close 重采样](a01_Methods/b03_CloseResampling/b03_CloseResampling.ipynb)读取 b02 复权分钟 demo，提供固定区间采样与每个分钟末端向后 K 点的分批采样。所有合约共用源分钟和插值比例，在复权 log open/close 之间插值，仅输出 close 的 log 与价格表示。按用户选定的 N 分钟校准成交量／额间隔 a，预览超过 a 的分钟及实际多次采样情况。RB 15 分钟演示的三种采样轴各有 10,959 个点，合计 394,524 条合约记录，已保存并回读核对；逐分钟向后 32 点已遍历全部 164,385 个末端，并通过边界和逐点参考检查。未建立实验时间分区。
 
 ```text
 04_Research/
@@ -10,6 +14,18 @@
 ├─ README.md
 ├─ a00_notebook_loader.py
 ├─ a01_Methods/
+│  ├─ b01_MainContractSelection/
+│  │  ├─ b01_MainContractSelection.ipynb  # 方法定义与 RB demo
+│  │  ├─ b01_MainContractSelection.py     # 仅加载 Notebook export 定义
+│  │  └─ b01_MainContractSelection_demo.parquet  # 纳入 Git，供下游 demo 读取
+│  ├─ b02_MainContinuousAdjustment/
+│  │  ├─ b02_MainContinuousAdjustment.ipynb  # 日级分段、分钟输入、共同偏移复权与 RB demo
+│  │  ├─ b02_MainContinuousAdjustment.py     # 仅加载 Notebook export 定义
+│  │  └─ b02_MainContinuousAdjustment_demo.parquet  # 完整全合约复权分钟长表，纳入 Git
+│  └─ b03_CloseResampling/
+│     ├─ b03_CloseResampling.ipynb  # 共同位置插值、间隔预览、两种采样方式与 RB demo
+│     ├─ b03_CloseResampling.py     # 仅加载 Notebook export 定义
+│     └─ b03_CloseResampling_demo.parquet  # 时间／成交量／成交额三种轴的全合约 close
 ├─ a02_Experiments/
 └─ referance/                 # 研究参考资料、文献和资料包
 ```
@@ -20,9 +36,15 @@
 
 ## 方法与 demo
 
-后续方法目录采用 `bNN_<方法名>/`，派生方法使用同级 `bNN_01_<派生方法名>/`、`bNN_02_<派生方法名>/`。每方法通常只有同名 Notebook、代理 `.py` 和一个 `demo.parquet`；方法说明和演示写在 Notebook 内。
+方法目录采用 `bNN_<方法名>/`，派生方法使用同级 `bNN_01_<派生方法名>/`、`bNN_02_<派生方法名>/`。每方法通常只有同名 Notebook、代理 `.py` 和一个 `<方法Notebook名>_demo.parquet`，demo 前缀与 Notebook 一致并保留编号；方法说明和演示写在 Notebook 内。主力识别 Notebook 的 `export` 单元格定义局部 Schema、`build_main_contract_daily()` 和 `plot_main_contract_daily()`；同名代理只加载这些定义。RB 每日主力映射已保存为本方法目录的 [b01_MainContractSelection_demo.parquet](a01_Methods/b01_MainContractSelection/b01_MainContractSelection_demo.parquet)，生成条件、输入与代码摘要写入 metadata，并通过复读验收。Notebook 提供下游显式读取及摘要核对示例。
+
+复权方法保存的 [b02_MainContinuousAdjustment_demo.parquet](a01_Methods/b02_MainContinuousAdjustment/b02_MainContinuousAdjustment_demo.parquet)保留 `raw_*`、`log_*`、`adjusted_log_*`、`adjusted_*` OHLC、数量、主力身份、片段与逐分钟共同偏移。下游用 `is_main` 选取主力，用 `segment_id` 定位片段；`log_*` 和 `adjusted_log_*` 已是自然对数，直接选用相应价格域。metadata 包含上游身份、实际分钟和 Session 输入内容摘要、固定范围、复权参数、相关定义/Schema/环境及输出内容摘要。
 
 Notebook 按“说明与定义 → demo 输入和参数 → 本地或云端计算 → 展示与保存”组织。下游 demo 显式读取上游文件，不复制上游输入。数据 metadata 保存生成条件、时间范围和上游摘要；上游改变后检查下游是否需要重算。表格优先单个 Parquet，模型与表格不强求同一格式。
+
+研究方法的代码和 demo 数据都纳入 Git。方法或输入变化后，重新生成并验收受影响的 demo，将相关代码与对应数据一起提交。检出某次提交后，下游 demo 可以读取该次提交保存的上游结果；重算仍需取得对应的原始输入。
+
+主力识别 demo 的算法及局部 Schema 单元格同时标记 `export` 与 `demo-dependency`，代码摘要只取这些生成依赖；绘图函数只标记 `export`。新增生成依赖时同步纳入摘要范围。保存时复读已有文件，比较生成身份和实际数据；两者一致就保留文件和原生成时间，发生变化才写入并验收。
 
 可复用的导入、常量与定义单元格标记 `export`；demo、读写、图表和提交操作不标记。同名代理只需：
 
@@ -108,10 +130,10 @@ OSS/research/<scope_id>/
 
 正式 silver 通过 `settings.futures_lake_root` 按[湖仓规则](../02_Market_Data/a02_Lake/AGENTS.md)和[数据契约](../config/data_contracts.py)只读使用。demo、缓存及成果保存在研究目录，使用局部明确的 Arrow Schema；不默认写入湖内 gold，不改变17张稳定 silver 表。
 
-代码和配置进入 Git；demo Parquet、实验数据、SQLite及附属文件、artifacts 和暂存包按 [.gitignore](../.gitignore)留在本地。忽略规则不清理磁盘。缓存清理保护活跃输入和保留成果依赖；严格复现还需可取得的原输入和代码版本。
+代码、配置和方法 demo 数据进入 Git。[.gitignore](../.gitignore)统一放行 `a01_Methods/**/*_demo.parquet`，[.gitattributes](../.gitattributes)将其声明为二进制文件；其他格式的正式 demo 按实际入口补充对应规则。实验数据、SQLite 及附属文件、artifacts 和暂存包按所属目录规则留在本地。忽略规则不清理磁盘。缓存清理保护活跃输入和保留成果依赖；严格复现还需可取得的原输入和代码版本。
 
 原 `04_Feature_Engineering` 五个工作区文件原样暂存在[草稿目录](../00_draft_collection_02/feature_engineering_before_research/)，摘要见 [PRESERVATION.json](../00_draft_collection_02/feature_engineering_before_research/PRESERVATION.json)。其去留、复用与最终归属待用户按[草稿区规则](../AGENTS.md#草稿区与文件收纳规则)确认。旧 README 链接及启动命令属于历史路径；缺失 `c00_lakehouse` 和日线分区缺少 `underlying_code` 的两个阻塞未修复。正式入口不从暂存目录导入，用户已删除的旧 AGENTS 未恢复。
 
 加载器[离线测试](../00_draft_collection_02/tests/test_research_notebook_loader.py)在仓库根使用 v2 执行：`python -B -m unittest discover -s 00_draft_collection_02/tests -p test_research_notebook_loader.py`。测试只使用临时合成 Notebook，不读取湖或调用云 API。
 
-同步入口：[根 README](../README.md)、[根 AGENTS](../AGENTS.md)、[研究 AGENTS](AGENTS.md)、[环境模板](../.env.template)、[采集规则](../02_Market_Data/a01_Collection/AGENTS.md)。
+同步入口：[根 README](../README.md)、[根 AGENTS](../AGENTS.md)、[研究 AGENTS](AGENTS.md)、[环境模板](../.env.template)、[采集规则](../02_Market_Data/a01_Collection/AGENTS.md)、[.gitignore](../.gitignore)、[.gitattributes](../.gitattributes)。

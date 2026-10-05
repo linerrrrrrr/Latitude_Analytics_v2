@@ -38,6 +38,9 @@
 *.xz
 *.pid
 
+# Versioned research method demos; naming and ownership: 04_Research/AGENTS.md
+!/04_Research/a01_Methods/**/*_demo.parquet
+
 # Local environment rebuild evidence
 /environment/rebuild_20261001/
 

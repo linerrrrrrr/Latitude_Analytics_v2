@@ -1,13 +1,15 @@
 # 研究目录规则
 
-适用于 `04_Research` 全树，继承[根规则](../AGENTS.md)。目录和使用说明见 [README](README.md)，环境边界见 [环境说明](../environment/README.md)。当前仅建立骨架与加载器；具体方法、派生方法、时间分区及业务数据尚未定义。
+适用于 `04_Research` 全树，继承[根规则](../AGENTS.md)。目录和使用说明见 [README](README.md)，环境边界见 [环境说明](../environment/README.md)。当前已建立骨架、加载器与主力识别方法，包含递推函数、导入代理和 RB 只读 demo；尚无具体实验时间分区。
 
 ## 目录与文件
 
 - `referance/` 保存研究参考资料、文献和资料包，保留各资料的日期与证据边界；资料中的建议不自动成为项目规则或已验收的研究成果。资料索引见 [README](README.md#研究参考资料)。
 - `a01_Methods/` 保存方法。目录使用 `bNN_Name`，相关派生方法使用同级 `bNN_01_Name`、`bNN_02_Name`。编号决定浏览顺序，函数调用决定执行顺序。
 - 每方法以同名 `.ipynb`、`.py` 两个维护文件为主，必要配置最多再增加一个。说明与 demo 代码写入 Notebook，不机械增加每方法 README、启动器或工具模块。
-- demo 归所属方法，表格优先单个 `demo.parquet`。下游显式读取上游 demo，不复制上游文件、不在导入时执行上游。生成条件、时间口径及上游摘要写入数据 metadata；摘要不匹配时明确提示重算。
+- demo 归所属方法，表格优先单个 `<方法Notebook名>_demo.parquet`，前缀使用 Notebook 去掉扩展名的完整名称（含编号），例如 `b01_MainContractSelection_demo.parquet`。下游显式读取上游 demo，不复制上游文件、不在导入时执行上游。生成条件、时间口径及上游摘要写入数据 metadata；摘要不匹配时明确提示重算。
+- 方法代码和 demo 数据都纳入 Git；方法、生成条件或输入变化后，重新生成并验收受影响的 demo，将相关代码与对应产物在同一次提交中更新。表格产物由[根忽略规则](../.gitignore)按 `a01_Methods/**/*_demo.parquet` 放行，并由[文件属性](../.gitattributes)声明为二进制。其他格式的正式 demo 按实际入口同步加入收纳规则，不用宽泛的文件类型例外代替明确归属。
+- demo 的生成身份覆盖输入、参数、相关代码、运行环境和输出内容。代码摘要须明确包含算法、局部 Schema 及实际依赖，纯绘图定义不参与数据产物身份；新增依赖时同步更新摘要范围和下游核对。已有文件复读后，若生成身份和实际数据均一致，保留其字节和生成时间；仅有变化时重新写入并复读验收。
 - `a02_Experiments/` 的业务一级目录仅按时间范围及训练／测试划分建立，名称包含编号和可辨认的时间标签。准确条件以本目录 `config.yaml` 为准，不从文件名推断。
 - 每时间分区以 `experiment.ipynb`、代理 `experiment.py`、`config.yaml` 三个维护文件为主。共享数据归 `c01_Data/`，运行记录归 `c02_Tracking/`；不为每组参数复制代码目录。
 - `01_project_collection` 的专题项目及记录保留自身归属。旧项目保持只读。尚未确认正式归属的新测试暂存 `00_draft_collection_02/tests/`，去留、复用与最终归属遵循[根级草稿区规则](../AGENTS.md#草稿区与文件收纳规则)。
@@ -39,4 +41,4 @@
 
 ## 同步入口
 
-修改本规则或加载契约时检查[根索引](../AGENTS.md)、[根 README](../README.md)、[研究说明](README.md)、[环境模板](../.env.template)、[湖仓规则](../02_Market_Data/a02_Lake/AGENTS.md)、[采集规则](../02_Market_Data/a01_Collection/AGENTS.md)和 [.gitignore](../.gitignore)。不扩展为其他研究项目或采集双轨的批量改造。
+修改本规则或加载契约时检查[根索引](../AGENTS.md)、[根 README](../README.md)、[研究说明](README.md)、[环境模板](../.env.template)、[湖仓规则](../02_Market_Data/a02_Lake/AGENTS.md)、[采集规则](../02_Market_Data/a01_Collection/AGENTS.md)、[.gitignore](../.gitignore)和 [.gitattributes](../.gitattributes)。不扩展为其他研究项目或采集双轨的批量改造。

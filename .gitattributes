@@ -2,16 +2,19 @@
 *.py text eol=lf
 *.ipynb text eol=lf
 
+# Research method demos are binary data committed beside their producer notebooks.
+04_Research/a01_Methods/**/*_demo.parquet binary
 # Historical snapshot manifests verify exact bytes, not normalized text.
 *.snapshot -text
-
 # Read-only project/source archives retain their original bytes as well.
 05_Old_Projects/** -text
 01_project_collection/JQ_strategy/volatility_research/supporting_materials/** -text
 00_draft_collection_02/feature_engineering_before_research/** -text
 environment/rebuild_20261001/** -text
 environment/alipai/results/** -text
-
 # Fixed audit evidence retains the exact bytes recorded by SHA-256 manifests.
 01_project_collection/JQ_strategy/financial_futures_data/experiment_records/** -text
 02_Market_Data/a01_Collection/checks/results/** -text
+04_Research/a01_Methods/b02_MainContinuousAdjustment/b02_MainContinuousAdjustment_demo.parquet filter=lfs diff=lfs merge=lfs -text
+04_Research/a01_Methods/b02_MainContinuousAdjustment/c01_MainContinuousAdjustment_DemoData/c01_MainContinuousAdjustment_CU_train20100101-20241231_test20250101-20260930_ratio1.10_log_common_demo.parquet filter=lfs diff=lfs merge=lfs -text
+04_Research/a01_Methods/b02_MainContinuousAdjustment/c01_MainContinuousAdjustment_DemoData/c01_MainContinuousAdjustment_RB_train20100101-20241231_test20250101-20260930_ratio1.10_log_common_demo.parquet filter=lfs diff=lfs merge=lfs -text
