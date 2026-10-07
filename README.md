@@ -4,6 +4,8 @@
 
 本地入口统一使用 v2，安装、alipai 依赖例外和云端环境边界见[环境说明](environment/README.md)。
 
+研究方法中超过 100 MiB 的 demo 通过 Git LFS 保存。首次克隆后，在仓库根运行 `git lfs install --local` 和 `git lfs pull`，取得原路径下的完整 Parquet 数据；后续检出版本也需保持 Git LFS 可用。文件内容、metadata 和生成身份不因存储方式改变。
+
 市场数据和 `04_Research` 的数据预览采用 `英文字段名（中文含义）` 表头。中文只作用于展示，silver 含义取权威 Schema，研究派生字段由所属方法定义；范围和边界见[展示规则](AGENTS.md#数据呈现附带中文)。
 
 ```text

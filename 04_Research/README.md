@@ -325,7 +325,7 @@ OSS/research/<scope_id>/
 
 b01、b02 的正式 silver 读取直接使用 PyArrow Dataset 和统一转换入口，不额外调用 `validate_arrow_table()`，不逐 Dataset／fragment 重验 Schema／metadata，也不在读取前另行扫描行数。方法不复验正式输入已保证的字段、时区、主键和数值范围；b03 确认上游 demo 生成身份后，信任 b02 已保证的字段、主键与主力身份关系。方法仍检查自身需要的样本与连接、可空输入的实际可用性、log 正价格和换约锚点，以及采样精度和变换后的输出性质。外部或合成输入由调用方先按来源契约校验。`arrow_to_pandas()`／`arrow_to_polars()` 内部仍调用 `validate_arrow_table()`；这两个共享函数的实现保持不变。
 
-代码、配置和方法 demo 数据进入 Git。[.gitignore](../.gitignore)统一放行 `a01_Methods/**/c[0-9][0-9]_*_DemoData/*_demo.parquet`，[.gitattributes](../.gitattributes)将其声明为二进制文件；其他格式的正式 demo 按实际入口补充对应规则。实验数据、SQLite 及附属文件、artifacts 和暂存包按所属目录规则留在本地。忽略规则不清理磁盘。缓存清理保护活跃输入和保留成果依赖；严格复现还需可取得的原输入和代码版本。
+代码、配置和方法 demo 数据进入 Git。[.gitignore](../.gitignore)统一放行 `a01_Methods/**/c[0-9][0-9]_*_DemoData/*_demo.parquet`，[.gitattributes](../.gitattributes)将其声明为二进制文件；超过 100 MiB 的 demo 按实际文件路径登记 Git LFS 属性，检出后运行 `git lfs pull` 取得原路径下的完整 Parquet，数据字节和 metadata 保持一致；其他格式的正式 demo 按实际入口补充对应规则。实验数据、SQLite 及附属文件、artifacts 和暂存包按所属目录规则留在本地。忽略规则不清理磁盘。缓存清理保护活跃输入和保留成果依赖；严格复现还需可取得的原输入和代码版本。
 
 原 `04_Feature_Engineering` 五个工作区文件原样暂存在[草稿目录](../00_draft_collection_02/feature_engineering_before_research/)，摘要见 [PRESERVATION.json](../00_draft_collection_02/feature_engineering_before_research/PRESERVATION.json)。其去留、复用与最终归属待用户按[草稿区规则](../AGENTS.md#草稿区与文件收纳规则)确认。旧 README 链接及启动命令属于历史路径；缺失 `c00_lakehouse` 和日线分区缺少 `underlying_code` 的两个阻塞未修复。正式入口不从暂存目录导入，用户已删除的旧 AGENTS 未恢复。
 

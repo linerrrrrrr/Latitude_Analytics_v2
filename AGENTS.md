@@ -5,7 +5,7 @@
 - [仓库 README](README.md)：分区、正式入口与记录归属。
 - [本文件](AGENTS.md)：[写作与读者前提](#写作与读者前提)、[协作纠错与执行状态](#协作纠错与执行状态)、[层级编号与资源归属](#层级编号与资源归属)、命名、实现、环境及执行边界。
 - [环境说明](environment/README.md)：v2 重建、v1 回退、验证边界及环境材料收纳；[requirements.txt](environment/requirements.txt) 保存直接依赖与可选 GPU 安装说明；[alipai 说明](environment/alipai/README.md) 定义 SDK 依赖例外、验证入口与批次结果。
-- [.gitignore](.gitignore) 与 [.gitattributes](.gitattributes)：Git 收纳、研究方法 demo 的跟踪例外与二进制属性、敏感旧文件排除、Notebook/Python 的 LF 和历史快照字节保护。忽略规则不会移除已跟踪的数据。
+- [.gitignore](.gitignore) 与 [.gitattributes](.gitattributes)：Git 收纳、研究方法 demo 的跟踪例外、二进制属性与大文件 Git LFS 属性、敏感旧文件排除、Notebook/Python 的 LF 和历史快照字节保护。忽略规则不会移除已跟踪的数据。
 - [.env.template](.env.template)：根目录定位、统一采集起点和正式湖根路径。
 - [采集 AGENTS](02_Market_Data/a01_Collection/AGENTS.md)：采集目录全树规则、b00 支撑脚本、Notebook/Python 双轨与导出同步。
 - [采集 README](02_Market_Data/a01_Collection/README.md)：19 个正式入口的来源、粒度、更新水位、写入与验收。
