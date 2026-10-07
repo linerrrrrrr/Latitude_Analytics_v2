@@ -891,10 +891,11 @@ class OperationsConsole(QMainWindow):
         self.trade_table.setUniformRowHeights(True)
         self.trade_table.setMinimumHeight(180)
         self.trade_table.setColumnCount(len(TRADE_CALENDAR_SCHEMA))
-        captions = {"calendar_date": "日期", "date_key": "日期键", "is_trading_day": "交易日", "weekday": "星期",
-                    "is_weekend": "周末", "source": "来源", "calendar_name": "日历名称", "calendar_timezone": "时区",
-                    "effective_after": "生效时点", "updated_at": "更新时间（北京时间）", "year": "年份"}
-        self.trade_table.setHeaderLabels([captions.get(field.name, field.name) for field in TRADE_CALENDAR_SCHEMA])
+        self.trade_table.setHeaderLabels([
+            f"{field.name}（{field.metadata[b'field_name_zh'].decode('utf-8')}）"
+            + ("［北京时间］" if field.name == "updated_at" else "")
+            for field in TRADE_CALENDAR_SCHEMA
+        ])
         self.trade_table.header().setStretchLastSection(False)
         self.trade_table.header().setMinimumSectionSize(80)
         for index, field in enumerate(TRADE_CALENDAR_SCHEMA):
@@ -2434,8 +2435,7 @@ class OperationsConsole(QMainWindow):
         for index, field in enumerate(TRADE_CALENDAR_SCHEMA):
             self.trade_table.setColumnHidden(index, not self.trade_all_fields.isChecked() and field.name not in {
                 "calendar_date", "weekday", "is_trading_day", "is_weekend", "effective_after", "updated_at"})
-            self.trade_table.header().setSectionResizeMode(index, QHeaderView.ResizeMode.ResizeToContents
-                if self.trade_all_fields.isChecked() or field.name == "updated_at" else QHeaderView.ResizeMode.Stretch)
+            self.trade_table.header().setSectionResizeMode(index, QHeaderView.ResizeMode.ResizeToContents)
         total_rows = len(snapshot["rows"])
         trading_rows = sum(row["is_trading_day"] is True for row in snapshot["rows"])
         if total_rows:

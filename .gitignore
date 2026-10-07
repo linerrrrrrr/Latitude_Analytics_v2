@@ -14,8 +14,8 @@
 /02_Market_Data/a01_Collection/checks/results/
 
 # Research scope-local caches, MLflow database/sidecars, artifacts and staging
-/04_Research/a02_Experiments/*/c01_Data/
-/04_Research/a02_Experiments/*/c02_Tracking/
+/04_Research/a02_Experiments/*/Data/
+/04_Research/a02_Experiments/*/Tracking/
 
 # Local notebook outputs; ownership and export rules: 00_draft_collection_01/AGENTS.md
 /00_draft_collection_01/testing_[0-9]*/
@@ -38,8 +38,8 @@
 *.xz
 *.pid
 
-# Versioned research method demos; naming and ownership: 04_Research/AGENTS.md
-!/04_Research/a01_Methods/**/*_demo.parquet
+# Versioned method demos share their producer's cNN business unit: 04_Research/AGENTS.md
+!/04_Research/a01_Methods/**/c[0-9][0-9]_*_DemoData/*_demo.parquet
 
 # Local environment rebuild evidence
 /environment/rebuild_20261001/

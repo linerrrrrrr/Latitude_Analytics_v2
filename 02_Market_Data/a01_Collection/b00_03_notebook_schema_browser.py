@@ -725,10 +725,17 @@ class _TableDemo(widgets.VBox):
             + escape(" · ".join(f"{_DEMO_LABELS.get(name, name)}：{value}" for name, value in scope.items()))
             + "</details>"
         )
+        # 中文含义取当前权威 Schema，仅重命名展示副本，缓存仍使用原字段。
+        preview_column_labels = {
+            field.name: f"{field.name}（{field.metadata[b'field_name_zh'].decode('utf-8')}）"
+            for field in self.schema
+        }
         # 行、字段顺序来自 Arrow；横向滚动避免宽表撑满页面。
         self.output.value = (
             f'<p class="schema-browser-status">{escape(status)}</p><div class="schema-browser-scroll">'
-            + preview_table.to_pandas().to_html(index=False, escape=True, border=0, classes="schema-browser-table schema-browser-demo")
+            + preview_table.to_pandas().rename(columns=preview_column_labels).to_html(
+                index=False, escape=True, border=0, classes="schema-browser-table schema-browser-demo",
+            )
             + "</div>"
         )
 

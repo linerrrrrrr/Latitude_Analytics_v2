@@ -1490,7 +1490,7 @@ def commit_calendar_partitions(
 #     J -. 异常 .-> L["异常向上抛出；无成功结束日志"]
 # ```
 
-# In[8]:
+# In[ ]:
 
 
 @click.command()
@@ -1873,9 +1873,14 @@ def main(
             f"planning_progress: table={CALENDAR_TABLE_NAME}; function=main; phase=preview; "
             f"status=completed; rows={min(20, len(changed_df))}; total_candidates={len(changed_df)}"
         )
+        preview_column_labels = {
+            name: f"{name}（{FUTURES_BAR_CALENDAR_SCHEMA.field(name).metadata[b'field_name_zh'].decode('utf-8')}）"
+            for name in preview_columns
+        }
         click.echo(
             changed_df.loc[:, preview_columns]
             .head(20)
+            .rename(columns=preview_column_labels)
             .to_string(index=False)
         )
 

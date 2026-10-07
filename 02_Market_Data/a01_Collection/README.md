@@ -124,6 +124,8 @@ b04/c01 不调用 API，从环境统一起点到北京时间当前日按共享�
 
 业务 Notebook 开篇调用共用 [Schema 浏览器](b00_03_notebook_schema_browser.py)，先展示直接参与的具名 Schema，再读业务数据。导入方式见[采集规则](AGENTS.md#共享配置与-notebook-展示归属)，字段、metadata、展开与样例交互契约见[湖仓规则](../a02_Lake/AGENTS.md#33-notebook-开篇-schema-契约呈现)。
 
+silver 数据样例和 c07 的终端表格使用 `英文字段名（中文含义）`，中文取权威 Schema 的 `field_name_zh`。只在呈现时重命名副本，保留原字段、缓存和业务输出；统一约定见[展示规则](../../AGENTS.md#数据呈现附带中文)。
+
 默认保留六列 Schema 总览、所选表的 2—3 项说明及“字段/含义”关键字段表。完整表说明、字段目录与详情可展开，所有值来自权威 Schema，不截断或另写摘要。采集 Notebook 显式传入 `lake_root=settings.futures_lake_root` 启用样例：默认至多 10 行、8 个关键字段；行数 10/20/50/100 与全部字段开关独立。不传路径的研究 Notebook 只浏览契约。
 
 同一表在不同 Notebook 使用相同取舍；主键从 metadata 自动纳入，其他默认内容及覆盖关系如下：

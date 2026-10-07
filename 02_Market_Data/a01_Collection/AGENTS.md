@@ -29,6 +29,8 @@
 
 ## 共享配置与 Notebook 展示归属
 
+- 数据预览遵循[数据呈现附带中文](../../AGENTS.md#数据呈现附带中文)：Schema 浏览器、终端预览和 GUI 数据表使用 `英文字段名（中文含义）`，silver 中文从权威字段 metadata 读取；只改展示副本，不改业务字段和输出契约。
+
 - `config/futures_lakehouse/` 集中保存正式湖仓的事实采集范围、外部实体映射、宏观系列与可用日规则、已核实校准案例；它们向生产者和研究消费者共同公开，各业务目录不得复制第二份配置。配置范围与实际落盘覆盖的区别遵循 [数据库规则](../a02_Lake/AGENTS.md)。
 - 既有 Schema metadata 中的旧配置路径按数据库规范保留为来源说明标识；模块迁移不改变任何 Schema 值，也不触发历史数据重写。
 - 湖仓级 Schema 展示实现位于 [b00_03_notebook_schema_browser.py](b00_03_notebook_schema_browser.py)，采集与研究 Notebook 共用。字段和表的权威说明仍从 `config/data_contracts.py` 读取，默认选择与折叠行为只在展示模块维护。

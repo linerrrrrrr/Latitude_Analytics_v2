@@ -458,7 +458,24 @@ def main() -> None:
 
     print(f"python: {sys.executable}")
     print(f"output: {OUTPUT_DIR}")
-    print(contracts.to_string(index=False))
+    contract_column_labels = {
+        "underlying_code": "underlying_code（品种代码）",
+        "description": "description（品种名称）",
+        "contract_code": "contract_code（合约代码）",
+        "week_start": "week_start（检查周起点）",
+        "week_end": "week_end（检查周终点）",
+    }
+    comparison_column_labels = {
+        **contract_column_labels,
+        "trading_date": "trading_date（所属交易日）",
+        "cycle_first_bar_at": "cycle_first_bar_at（完整周期首分钟时点）",
+        "cycle_last_bar_at": "cycle_last_bar_at（完整周期末分钟时点）",
+        "daily_open_matches_night_open": "daily_open_matches_night_open（日线开盘是否等于夜盘开盘）",
+        "daily_close_matches_day_close": "daily_close_matches_day_close（日线收盘是否等于日盘收盘）",
+        "cycle_ohlcv_matches_daily": "cycle_ohlcv_matches_daily（完整周期行情是否匹配日线）",
+        "day_only_ohlcv_matches_daily": "day_only_ohlcv_matches_daily（仅日盘行情是否匹配日线）",
+    }
+    print(contracts.rename(columns=contract_column_labels).to_string(index=False))
     print()
     print(
         comparisons[
@@ -473,7 +490,7 @@ def main() -> None:
                 "cycle_ohlcv_matches_daily",
                 "day_only_ohlcv_matches_daily",
             ]
-        ].to_string(index=False)
+        ].rename(columns=comparison_column_labels).to_string(index=False)
     )
 
 

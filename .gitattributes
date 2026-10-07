@@ -2,8 +2,8 @@
 *.py text eol=lf
 *.ipynb text eol=lf
 
-# Research method demos are binary data committed beside their producer notebooks.
-04_Research/a01_Methods/**/*_demo.parquet binary
+# Research method demos are binary data in their producer's cNN_Name_DemoData directory.
+04_Research/a01_Methods/**/c[0-9][0-9]_*_DemoData/*_demo.parquet binary
 # Historical snapshot manifests verify exact bytes, not normalized text.
 *.snapshot -text
 # Read-only project/source archives retain their original bytes as well.

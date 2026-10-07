@@ -15,7 +15,7 @@
 - [采集规则](../a01_Collection/AGENTS.md)与[采集说明](../a01_Collection/README.md)：入口、来源、更新、双轨和事务；[operations 规则](../a01_Collection/operations/AGENTS.md)与[操作说明](../a01_Collection/operations/README.md)：人工启动、监控与失败现场。
 - [数据契约](../../config/data_contracts.py)、[Schema 浏览器](../a01_Collection/b00_03_notebook_schema_browser.py)及[读取 Demo](read_futures_lake_demo.ipynb)：唯一 Schema、只读展示与逐表读取。
 - 共享配置：[事实白名单](../../config/futures_lakehouse/futures_fact_collection_policy.py)、[特殊案例](../../config/futures_lakehouse/futures_position_rank_special_cases.py)、[外部实体](../../config/futures_lakehouse/external_market_entities.py)、[宏观系列](../../config/futures_lakehouse/macro_release_entities.py)；认证共用 [JQData 连接](../../config/jqdata_connection.py)。
-- 下游：[研究规则](../../04_Research/AGENTS.md)及[说明](../../04_Research/README.md)、[市场演变复现](../../01_project_collection/china_futures_market_evolution_reproduction/AGENTS.md)、[日内波动预测复现](../../01_project_collection/china_commodity_futures_intraday_volatility_forecasting_reproduction/AGENTS.md)、[金融期货规则](../../01_project_collection/JQ_strategy/financial_futures_data/AGENTS.md)及[说明](../../01_project_collection/JQ_strategy/financial_futures_data/README.md)。金融期货的[局部采集政策](../../01_project_collection/JQ_strategy/financial_futures_data/financial_futures_collection_policy.py)不改变正式商品事实政策。
+- 下游：[研究规则](../../04_Research/AGENTS.md)及[说明](../../04_Research/README.md)，其中 `04_Research` 的检查范围由[上游契约与研究校验](../../04_Research/AGENTS.md#上游契约与研究校验)定义；另见[市场演变复现](../../01_project_collection/china_futures_market_evolution_reproduction/AGENTS.md)、[日内波动预测复现](../../01_project_collection/china_commodity_futures_intraday_volatility_forecasting_reproduction/AGENTS.md)、[金融期货规则](../../01_project_collection/JQ_strategy/financial_futures_data/AGENTS.md)及[说明](../../01_project_collection/JQ_strategy/financial_futures_data/README.md)。金融期货的[局部采集政策](../../01_project_collection/JQ_strategy/financial_futures_data/financial_futures_collection_policy.py)不改变正式商品事实政策。
 - 历史项目遵守[归档保护](../../05_Old_Projects/AGENTS.md)。
 - 修改本规范时检查上述索引；字段、类型、Schema 或转换入口变更须同批同步相关文本与代码。
 
@@ -60,9 +60,15 @@
 
 Pandas 与 Polars 不得为同表维护独立类型定义。silver 读取与转换显式使用同一权威 Arrow Schema；gold 使用所属工作流的局部 Schema。
 
-读取者必须在当前工作流直接使用 `pyarrow.dataset.dataset(...)`，再调用
-`validate_arrow_table()` 与 `arrow_to_pandas()` / `arrow_to_polars()`。禁止恢复已归档的
-`c00_lakehouse.py` 薄封装，也禁止依赖 Pandas 或 Polars 推断落盘类型。
+读取者必须在当前工作流直接使用 `pyarrow.dataset.dataset(...)`，并通过权威 Arrow Schema 和
+`arrow_to_pandas()` / `arrow_to_polars()` 转换。`04_Research` 读取正式 silver 时，不再额外调用
+`validate_arrow_table()`，也不重复执行上游已保证的 Schema／metadata 检查；研究所需条件按
+[上游契约与研究校验](../../04_Research/AGENTS.md#上游契约与研究校验)确定。其他读取、采集及入仓仍按各自契约
+调用 `validate_arrow_table()` 并执行相应检查。禁止恢复已归档的 `c00_lakehouse.py` 薄封装，也禁止依赖
+Pandas 或 Polars 推断落盘类型。
+
+实现边界：`arrow_to_pandas()` 和 `arrow_to_polars()` 内部仍调用 `validate_arrow_table()`。
+本次研究校验边界调整不修改这两个函数；使用统一转换入口仍会执行其内部校验。
 
 ## 3. 当前稳定 silver Schema 与转换入口
 
@@ -215,6 +221,7 @@ Schema 列表保留原有六列横向总览：英文表名、中文表名、字�
 全部原始表级、字段级 metadata 均必须可展开和收起；切换表时清空字段选择与详情，切换字段时完整详情恢复折叠。
 
 数据样例跟随所选 Schema，每次只读一个已有叶分区，默认显示至多 10 行、主键及逐表选定的关键字段（最多 8 列）。
+样例和标准读取 Demo 的表头按[数据呈现附带中文](../../AGENTS.md#数据呈现附带中文)使用 `英文字段名（中文含义）`，中文直接读取当前 Schema 的 `field_name_zh`；仅在显示时重命名 Pandas 副本，Arrow 表、原 DataFrame 和读取缓存仍保留原字段。
 标题与刷新同排；其下筛选项按网格对齐、标签置于输入框上方；行数与字段开关另排一行，结果提示紧邻样例表。
 “行数”独立选择 10、20、50、100；“显示全部字段”只控制列，保留所选行数。表格在固定高度内滚动，不加载全表。分区候选逐层读取目录，年份和月份默认选择已有的较新值；
 品种、合约、指标候选只来自所选分区的有界窄列读取，并允许手动输入其他值。日期以“全部日期 / 指定日期”切换；指定日期时显示可选取或输入日期的日历控件，全部日期仅取消当前分区内的日期筛选，不扩大读取范围；明细表仍默认聚焦一个已有日期。候选不完整及有界读取未命中时
@@ -340,7 +347,7 @@ Eastmoney `REPORT_DATE` 使用报告月 1 日编码：CPI/PPI/PMI 归一到该�
 - raw 证据的路径、编码、原子提交、正式复读和保留边界必须在对应生产者迁移时一并确认并同步代码、metadata 与测试。尚未具备该契约的生产者继续执行现有 silver 门禁、失败留痕及已经冻结的显式归一化，不得自行发明通用 raw 路径、新增静默取舍或提前放宽校验。下文的失败、硬失败和拒绝提交均指 silver 验收结果。
 
 - 更新集合、尾部增量与正式写入范围按[采集规则](../a01_Collection/AGENTS.md#生产数据更新的手动触发规则)执行；空湖由同一入口全建，不另设生产日期范围。
-- 下游消费者必须信任生产者正式提交的上游表：正式提交已经证明上游主键、水位、覆盖和完整表级业务质量。消费者仍须精确检查上游 Schema/metadata 的物理兼容性，但不得重新扫描或复算上游已经保证的主键唯一性、日期连续性、范围覆盖和派生质量；只验证未写入上游契约、但确属自身计算前提的局部边界。消费者对自己的输出继续承担完整契约与质量校验；代码收缩按用户确认逐脚本实施，不自动扩大为批量重构。
+- 下游消费者必须信任生产者正式提交的上游表：正式提交已经证明上游主键、水位、覆盖和完整表级业务质量。`04_Research` 按[上游契约与研究校验](../../04_Research/AGENTS.md#上游契约与研究校验)确定检查范围，不重复执行上游已保证的 Schema／metadata 和业务质量检查；其他消费者仍须精确检查上游 Schema／metadata 的物理兼容性，但不得重新扫描或复算上游已经保证的主键唯一性、日期连续性、范围覆盖和派生质量。消费者的业务前提检查仅限上游契约未保证、但确属自身计算前提的局部边界；所有消费者对自己的输出继续承担完整契约与质量校验。代码收缩按用户确认逐脚本实施，不自动扩大为批量重构。
 - 正式写入不能以任意日期截断水位；c01/c02/c04 的 `--full --write`、c03 来源质检、c07 有界 `--force` 及 c08 人工全量审计分别适用采集规则中的例外。
 - c03 来源双向比较不比较 `updated_at`；完整来源校验、dirty 输出和尾部/全量模式遵守采集规则，不以历史合约数差异触发日常 API。
 - 空正式表和小规模缺口使用同一规则：空表的已完整格点集合为空，差集自然等于上游全量。下游表必须先读取已由上游生产者正式提交的水位，不能生成或提交超过上游的格点。

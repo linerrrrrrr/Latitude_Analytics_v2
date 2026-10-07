@@ -3,7 +3,7 @@
 本文件定义全仓通用规则；目录业务细则由下列入口定义。修改索引中的规范、模板或可执行契约前，检查其余索引项，并在同一次变更中同步受影响的说明、示例和代码。新增规范须加入本索引及相关文件的反向索引；规范冲突必须先消除，不得选择性执行。
 
 - [仓库 README](README.md)：分区、正式入口与记录归属。
-- [本文件](AGENTS.md)：[写作与读者前提](#写作与读者前提)、[协作纠错与执行状态](#协作纠错与执行状态)、命名、实现、环境及执行边界。
+- [本文件](AGENTS.md)：[写作与读者前提](#写作与读者前提)、[协作纠错与执行状态](#协作纠错与执行状态)、[层级编号与资源归属](#层级编号与资源归属)、命名、实现、环境及执行边界。
 - [环境说明](environment/README.md)：v2 重建、v1 回退、验证边界及环境材料收纳；[requirements.txt](environment/requirements.txt) 保存直接依赖与可选 GPU 安装说明；[alipai 说明](environment/alipai/README.md) 定义 SDK 依赖例外、验证入口与批次结果。
 - [.gitignore](.gitignore) 与 [.gitattributes](.gitattributes)：Git 收纳、研究方法 demo 的跟踪例外与二进制属性、敏感旧文件排除、Notebook/Python 的 LF 和历史快照字节保护。忽略规则不会移除已跟踪的数据。
 - [.env.template](.env.template)：根目录定位、统一采集起点和正式湖根路径。
@@ -12,10 +12,14 @@
 - [采集检查](02_Market_Data/a01_Collection/checks/README.md)：来源质量、API 行为与连接确认、采集代码本地测试及检查记录。
 - [湖仓 AGENTS](02_Market_Data/a02_Lake/AGENTS.md)：字段与类型、Schema metadata、raw/silver 边界、研究成果边界及 Notebook 契约展示。
 - [数据湖读取 Demo](02_Market_Data/a02_Lake/read_futures_lake_demo.ipynb)：17 张 silver 表逐表独立演示，另含生意社 raw 字节与摘要核对。
+- [数据呈现附带中文](#数据呈现附带中文)：市场数据与 `04_Research` 的表头、索引及研究派生字段展示规则。
 - [operations AGENTS](02_Market_Data/a01_Collection/operations/AGENTS.md)：单项/批量授权、18 项日常配置、维护白名单、worker、监控与失败处置。
 - [operations README](02_Market_Data/a01_Collection/operations/README.md)：GUI、看板、参数、代码检查、完整导出同步、日志与历史查看。
-- [研究 AGENTS](04_Research/AGENTS.md) 与 [README](04_Research/README.md)：方法及派生编号、demo 的 Git 收纳与引用、Notebook 代理、时间分区实验、本地／云端成果边界及 `referance/` 参考资料。
+- [研究 AGENTS](04_Research/AGENTS.md) 与 [README](04_Research/README.md)：研究主题 `bNN`、主题内单元 `cNN` 及派生编号、同单元 Notebook／代理／`cNN_Name_DemoData/` 的归属、采样位置与价格执行的分工、可调用的单图交互选择、一个 b 层级内的收益／波动率建模、demo 的品种／范围／参数命名（涉及划分时分别列出训练与测试范围）、Git 收纳与引用、只读旧采样实现、Notebook 代理、[上游契约与研究校验](04_Research/AGENTS.md#上游契约与研究校验)、实验命名与 scope、本地／云端成果边界及 `referance/` 参考资料。
 - [研究 Notebook 加载器](04_Research/a00_notebook_loader.py)：按 `export` 标签加载同名 Notebook 定义，不执行未标记 demo，也不复制算法源码。
+- [研究真实 demo](04_Research/AGENTS.md#notebook-与代理)：逐环节使用真实上游产物调用计算函数；完整重采样序列的逐点重估、失败保留及实际验收状态与合成边界测试分别记录。
+- [期限结构与 NSS 校准](04_Research/README.md#期限结构输入)：`b05_TermStructureModeling` 的 c01 输入尺度与最后有效日自然日末终点、c02 固定 λ 约束拟合及 c03 训练期网格、三种并列参数选择、测试期固定 λ 和独立单张热力图；[共用参数](04_Research/a01_Methods/b05_TermStructureModeling/c03_NSSCalibration.yaml) 定义 RB、N15 的 σ×成交额完整云 demo 及不落盘小样本，真实状态与执行规则分别见研究说明及 [研究 AGENTS](04_Research/AGENTS.md#目录与文件)。
+- [小波分析](04_Research/README.md#小波分析)：`b06_WaveletAnalysis` 的 c01 复因果 Gammatone 导数核与离线 Morlet、采样点周期、显式递推状态、逐周期预热和缺失分段；c02 的正式 SST、核导数频率映射、当前点比例／绝对阈值、固定尺度权重、频率区间及排除诊断；c03 的连续序列状态、采样与可得时刻对齐、宽表契约及参数化独立单图；c04 的逐点谱特征、区间宽度权重、圆周相位一致性、未定义原因与独立单图。真实 demo 状态见研究说明，执行规则见 [研究 AGENTS](04_Research/AGENTS.md#目录与文件)。
 - [市场演变复现规则](01_project_collection/china_futures_market_evolution_reproduction/AGENTS.md)：只读 silver、方法说明及逐项执行。
 - [日内波动预测复现规则](01_project_collection/china_commodity_futures_intraday_volatility_forecasting_reproduction/AGENTS.md)：固定研究口径、Notebook、版本化成果与项目内长批次。
 - [波动率研究入口](01_project_collection/JQ_strategy/volatility_research/README.md)、[阅读教程](01_project_collection/JQ_strategy/volatility_research/READING_TUTORIAL.md) 与 [支持附件说明](01_project_collection/JQ_strategy/volatility_research/supporting_materials/README.md)：分别定义通用符号与方法、学习顺序、一次 IM 研究的归档证据和适用边界。
@@ -272,9 +276,31 @@
 
 文本不必重演编写者的全部经历，也不应为了摆脱过程叙述而删去必要的依据、解释和限制。应当使目标读者在约定的阅读条件下，得到完成任务所需的信息，而不必额外恢复编写现场。
 
+# 数据呈现附带中文
+
+适用于 `02_Market_Data` 和 `04_Research` 中面向读者的数据表预览，包括 Notebook 的 `display`、末行返回的表格、HTML 样例、终端表格和 GUI 数据结果表。
+
+- 英文字段以 `英文字段名（中文含义）` 呈现；作为表格索引的字段名或范围键也须附带中文。已经使用中文的摘要表头可保留。
+- 中文仅用于展示副本，例如 `display(preview_df.rename(columns=column_labels))`。计算、连接、过滤、缓存、Schema、Parquet、CSV、JSON、状态协议及原始日志仍使用原字段和原值；状态枚举不因表头展示而改写。
+- silver 字段的中文直接读取当前权威 Schema 的 `field_name_zh` metadata，不维护另一份字段翻译。研究派生字段、检查指标和展示专用范围键在所属 Notebook 或入口中定义明确的中文映射，含义不确定时先向用户确认。
+- 共用研究标签可以放在独立的 `export` 单元格供下游导入；纯展示定义不标记为 `demo-dependency`，不得为更新表头改变算法、局部 Schema 或既有数据产物身份。
+- 历史证据、归档、参考材料及已经落盘的数据不为展示偏好批量改写。图表和纯说明性表格按读者任务使用中文，不机械套用数据字段表头格式。
+
+具体入口和同步边界见[采集规则](02_Market_Data/a01_Collection/AGENTS.md#共享配置与-notebook-展示归属)、[湖仓展示规则](02_Market_Data/a02_Lake/AGENTS.md#33-notebook-开篇-schema-契约呈现)、[operations 规则](02_Market_Data/a01_Collection/operations/AGENTS.md)及[研究规则](04_Research/AGENTS.md#notebook-与代理)。
+
 # 协作纠错与执行状态
 
 由于言语与事实后果可能脱节，Agent 不能仅凭改变说法，就宣称先前行为及其后果已经改变或消除。尤其不得将后续改口称为“撤回”，暗示已发出的消息、已耗费的用户时间或已造成的影响因此消失。纠错时只准确说明哪里说错了、纠正了什么、实际改了什么，不花费篇幅展示自责或宣称负责。
+
+# 层级编号与资源归属
+
+编号分配给所属层级中职责明确的业务单元。同一单元的 Notebook、Python 文件、配置与附属资源共同归属该编号；编号用于业务归属和浏览排序，实际依赖及执行顺序由调用关系确定。
+
+- `a`、`b`、`c` 等字母表示所属工作流的业务层级。新增独立职责才分配新编号；增加文件格式、数据目录或输出目录不占用下一个编号，资源目录的嵌套也不自动产生下一业务层级。
+- 同一编号下的文件及资源保留同一个业务词根。附属资源使用 `<所属单元完整基名>_<资源用途>`，例如 `c01_MainContinuousAdjustment.ipynb`、同名 `.py` 与 `c01_MainContinuousAdjustment_DemoData/`；资源用途后缀不改变其所属单元。
+- 同一父级内，不同职责不得借用同一编号；同一职责也不得仅按代码、数据等资源类型各自编号。派生业务单元的编号形式及支撑单元的保留编号由目录规则定义。
+- 多个单元共有且归属于父级的材料按用途命名，例如实验的 `Data/`、`Tracking/`。它们不占子级业务单元编号，也不改变既有按职责命名的 `checks/`、`operations/`、`referance/` 等目录。
+- 目录规则明确具体业务层级和资源用途，并反向引用本节。历史证据、归档及只读旧项目保留原编号和路径；当前入口迁移须同步活动引用、说明和 Git 收纳规则，不因路径整理改写已落盘的数据身份或内容。
 
 # 变量命名与最小改动
 
@@ -375,6 +401,6 @@ Choose direct library code first, then explanatory comments, an independently me
 
 - 在 `00_draft_collection_01/` 内创建、修改或执行实验，读取[实验草稿区 AGENTS](00_draft_collection_01/AGENTS.md)。
 - 在采集目录树内工作，读取[采集 AGENTS](02_Market_Data/a01_Collection/AGENTS.md)；涉及 worker、monitor、状态或失败处置，再读[operations AGENTS](02_Market_Data/a01_Collection/operations/AGENTS.md)。在其他目录涉及湖仓契约，也须遵守上节规则。
-- 在 `04_Research` 内工作，读取[研究 AGENTS](04_Research/AGENTS.md)。当前已建立方法／实验骨架、加载器与主力识别方法、导入代理和 RB 只读 demo，尚无具体实验时间分区；原特征工程留存与已知阻塞见[研究说明](04_Research/README.md)。研究代理与采集完整 PythonExporter 导出分别遵循所属目录规则。其他研究项目遵循上方索引中的项目入口。
+- 在 `04_Research` 内工作，读取[研究 AGENTS](04_Research/AGENTS.md)。主力识别和复权的 CU、RB 全历史 demo 归生产单元的 `cNN_Name_DemoData/`；分界采样在同一 `b03_Sampling/` 内由位置与价格执行两本 Notebook 分工，各自保存 demo，轴及初始单位校准并入位置定义，不保留独立校准入口。收益／波动率建模统一归一个 b 主题，c01 已实现分钟贡献、每日季节曲线及训练期初始回填，c02 已实现分钟去季节、区间汇总及模型输入转换；c03 已实现六组收益模型的 QML 联合拟合、预测和状态更新；c04 已实现 ARMA、ARFIMA、HAR、MEM 的直接观测拟合、预测和状态更新。close 重采样按只读规则保护，采样生成状态见研究说明。首个按日建模实验已建立实验草稿，已接入数据准备、逐日计算、输入冻结及 DLC／MLflow 显式入口，RB、CU 的完整输入准备及冻结验收已完成；全配置云批次在首次创建请求时因 SDK 默认会话使用 VPC 端点而 TLS 失败停止，尚无确认的 DLC job ID，模型拟合／预测尚未执行；会话初始化已修正并通过离线检查；本会话已获授权继续，原范围的 c01—c03 真实 demo 已完成复读验收；b04 方法 Notebook 先做不输出数据文件的小范围真实试算，完整 demo 使用上游 2010—2026-09-30 全区间、GK sigma×全合约成交额轴及 N=15，并在云端执行；完整验收后重新冻结正式实验输入，再接续每作业 10 节点的云批次。用户取消金额上限，每作业 10 节点，实际云作业和链路验收状态见研究说明；原特征工程留存与已知阻塞见[研究说明](04_Research/README.md)。研究代理与采集完整 PythonExporter 导出分别遵循所属目录规则。其他研究项目遵循上方索引中的项目入口。
 - `05_Old_Projects` 遵守[归档只读规则](05_Old_Projects/AGENTS.md)。归档规范中的旧采集路径属于迁移前标识；当前维护入口以根 README 和采集 AGENTS 为准，不改写归档文件。
 - 目录业务细则在所属 AGENTS 中定义，根文件只保留全仓规则和必要路由，不复制目录细则。
