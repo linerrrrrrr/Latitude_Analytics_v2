@@ -1,0 +1,62 @@
+# c01、c02、c03 共用的真实试算与完整云 demo 参数。
+# Notebook 默认只执行 trial；cloud_full 由已通过试算的显式云入口启动。
+scope:
+  underlying_code: RB
+  exchange_code: XSGE
+  train: {start: '2010-01-01', end: '2024-12-31'}
+  test: {start: '2025-01-01', end: '2026-09-30'}
+  timezone: Asia/Shanghai
+input:
+  # σ 为主力合约当分钟 GK 波动率，轴增量为 σ × 全合约成交额。
+  N: 15
+  axis: gk_money
+  quantity_scope: all_contracts
+  sampling_method: log_interpolate
+  execution_mode: fixed
+  t: '2024-12-31 15:00:00+08:00'
+  value_col: sampled_close
+  # 本环节不追加 log；最后有效日的自然日末为期限终点。
+  transform: identity
+  terminal_rule: end_of_delist_date
+trial:
+  train_points: 32
+  test_points: 16
+  # 每侧取前几个完整采样点，保留该点全部真实合约。
+  selection: first_points_per_side
+  save_data: false
+nss:
+  fixed_lambda: {lambda1: 0.01, lambda2: 0.003}
+  grid:
+    lambda1_min: 0.005
+    lambda1_max: 0.01
+    lambda1_step: 0.005
+    lambda2_min: 0.001
+    lambda2_max: 0.003
+    lambda2_step: 0.002
+  fitting:
+    coefficient_constraints: {level_lower_bound: 1.0e-6, short_lower_bound: 1.0e-6}
+    solver_tol: 1.0e-10
+    max_iter: 100
+    constraint_tolerance: 1.0e-8
+  selection:
+    error_metric: sse
+    error_aggregation: sum
+    weight_power: 3
+    default_method: min_error
+    methods: [min_error, legacy_frequency, legacy_error_weighted]
+  # 分块只分配独立采样点，不改变训练集合、λ 汇总或系数拟合。
+  point_chunk_size: 512
+cloud:
+  region: cn-shenzhen
+  workspace_id: '351454'
+  bucket_name: oss-pai-q00s96z5hnrhywm9ns-cn-shenzhen
+  network: PUBLIC
+  image_uri: dsw-registry-vpc.cn-shenzhen.cr.aliyuncs.com/pai/python:3.13.9-cpu-ubuntu22.04-9e1c8c7e-1764329431
+  instance_type: ecs.c6.large
+  # 首版一个 DLC 作业、一个节点；进程分块使用该节点的两核。
+  instance_count: 1
+  worker_processes: 2
+  max_run_time: null
+  poll_seconds: 15
+plot:
+  plot_type: error

@@ -65,9 +65,13 @@ if args.mode == "single":
         (config_dir / "config.yaml").write_text("interval: 1min\nsplit: 8\n")
         with hydra.initialize_config_dir(config_dir=str(config_dir), version_base=None):
             config = hydra.compose(config_name="config", overrides=[f"interval={args.interval}", f"split={args.split}"])
-        mlflow.set_tracking_uri((Path(temp_dir) / "mlruns").as_uri())
-        mlflow.set_experiment("alipai-compatibility")
-        with mlflow.start_run() as run:
+        # 验证记录和附件都只归本次临时目录，不使用当前工作目录的默认路径。
+        tracking_dir = Path(temp_dir).resolve() / "Tracking"
+        mlflow.set_tracking_uri(tracking_dir.as_uri())
+        experiment_id = mlflow.create_experiment(
+            "alipai-compatibility", artifact_location=(tracking_dir / "artifacts").as_uri()
+        )
+        with mlflow.start_run(experiment_id=experiment_id) as run:
             mlflow.log_params(OmegaConf.to_container(config))
             mlflow.log_metric("mse", mse)
         logged_run = mlflow.get_run(run.info.run_id)

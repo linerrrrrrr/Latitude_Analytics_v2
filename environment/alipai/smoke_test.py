@@ -1,6 +1,6 @@
 r"""用本地 Python 3.13 / NumPy 2 验证 alipai 提交、云端 1+1 和 OSS 结果读取。
 
-参考 00_draft_collection_01/testing_11.ipynb，沿用本机 PAI 默认配置及认证。
+参考 R00_draft_collection_01/testing_11.ipynb，沿用本机 PAI 默认配置及认证。
 运行前按 environment/README.md 配置 latitude_env_v2；SDK 的 NumPy 声明例外见该说明。
 云端使用 PAI CPU 镜像自己的 Python；本地结果写入 results/<批次名>/smoke_result.json。
 

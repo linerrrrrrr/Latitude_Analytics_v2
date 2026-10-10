@@ -5,20 +5,20 @@
 !.env.example
 
 # Materialized data lake datasets
-/02_Market_Data/a02_Lake/*
-!/02_Market_Data/a02_Lake/AGENTS.md
-!/02_Market_Data/a02_Lake/read_futures_lake_demo.ipynb
+/R02_Market_Data/a02_Lake/*
+!/R02_Market_Data/a02_Lake/AGENTS.md
+!/R02_Market_Data/a02_Lake/read_futures_lake_demo.ipynb
 
 # Local operations and data-source audit evidence
-/02_Market_Data/a01_Collection/operations/run_history/
-/02_Market_Data/a01_Collection/checks/results/
+/R02_Market_Data/a01_Collection/operations/run_history/
+/R02_Market_Data/a01_Collection/checks/results/
 
 # Research scope-local caches, MLflow database/sidecars, artifacts and staging
-/04_Research/a02_Experiments/*/Data/
-/04_Research/a02_Experiments/*/Tracking/
+/R04_Research/a02_Experiments/*/Data/
+/R04_Research/a02_Experiments/*/Tracking/
 
-# Local notebook outputs; ownership and export rules: 00_draft_collection_01/AGENTS.md
-/00_draft_collection_01/testing_[0-9]*/
+# Local notebook outputs; ownership and export rules: R00_draft_collection_01/AGENTS.md
+/R00_draft_collection_01/testing_[0-9]*/
 
 # Materialized research data and local backup archives (existing tracked files stay tracked)
 *.parquet
@@ -38,33 +38,33 @@
 *.xz
 *.pid
 
-# Versioned method demos share their producer's cNN business unit: 04_Research/AGENTS.md
-!/04_Research/a01_Methods/**/c[0-9][0-9]_*_DemoData/*_demo.parquet
+# Versioned method demos share their producer's cNN business unit: R04_Research/AGENTS.md
+!/R04_Research/a01_Methods/**/c[0-9][0-9]_*_DemoData/*_demo.parquet
 
 # Local environment rebuild evidence
 /environment/rebuild_20261001/
 
 # Draft lakes, execution evidence, and one-off local backups
-/00_draft_collection_02/git_coverage_20260926/
-/00_draft_collection_02/migration_reports/
-/00_draft_collection_02/质检交付包/Runoff_inventory.csv
+/R00_draft_collection_02/git_coverage_20260926/
+/R00_draft_collection_02/migration_reports/
+/R00_draft_collection_02/质检交付包/Runoff_inventory.csv
 
 # Keep written experiment analyses; exclude raw execution captures and generated snapshots
-/01_project_collection/JQ_strategy/financial_futures_data/experiment_records/**
-!/01_project_collection/JQ_strategy/financial_futures_data/experiment_records/**/
-!/01_project_collection/JQ_strategy/financial_futures_data/experiment_records/**/*.md
-/01_project_collection/JQ_strategy/volatility_research/supporting_materials/intraday_modeling_research/data/input/
-/01_project_collection/JQ_strategy/volatility_research/supporting_materials/intraday_modeling_research/results/
-/01_project_collection/JQ_strategy/volatility_research/supporting_materials/intraday_modeling_research/runs/
-/01_project_collection/JQ_strategy/volatility_research/supporting_materials/intraday_modeling_research/sources/notebook_snapshot.json
-/05_Old_Projects/futures_lake_pre_rebuild_20260810/
+/R01_project_collection/JQ_strategy/financial_futures_data/experiment_records/**
+!/R01_project_collection/JQ_strategy/financial_futures_data/experiment_records/**/
+!/R01_project_collection/JQ_strategy/financial_futures_data/experiment_records/**/*.md
+/R01_project_collection/JQ_strategy/volatility_research/supporting_materials/intraday_modeling_research/data/input/
+/R01_project_collection/JQ_strategy/volatility_research/supporting_materials/intraday_modeling_research/results/
+/R01_project_collection/JQ_strategy/volatility_research/supporting_materials/intraday_modeling_research/runs/
+/R01_project_collection/JQ_strategy/volatility_research/supporting_materials/intraday_modeling_research/sources/notebook_snapshot.json
+/R05_Old_Projects/futures_lake_pre_rebuild_20260810/
 
 # Read-only legacy files containing embedded credentials; retain locally only
-/05_Old_Projects/old_01_Data_Fetching/b01_Native_Exchange_Data_initial/c00_utils.py
-/05_Old_Projects/old_01_Data_Fetching/b02_Native_Exchange_Data_timeseries/c00_utils.py
-/05_Old_Projects/old_01_Data_Fetching/b03_External_Integrated_Data_initial/c00_utils.py
-/05_Old_Projects/old_01_Data_Fetching/b04_External_Integrated_Data_timeseries/c00_utils.py
-/05_Old_Projects/old_02_Feature_Engineering/utils_00.py
+/R05_Old_Projects/old_01_Data_Fetching/b01_Native_Exchange_Data_initial/c00_utils.py
+/R05_Old_Projects/old_01_Data_Fetching/b02_Native_Exchange_Data_timeseries/c00_utils.py
+/R05_Old_Projects/old_01_Data_Fetching/b03_External_Integrated_Data_initial/c00_utils.py
+/R05_Old_Projects/old_01_Data_Fetching/b04_External_Integrated_Data_timeseries/c00_utils.py
+/R05_Old_Projects/old_02_Feature_Engineering/utils_00.py
 
 # Python bytecode, caches, and local test output
 __pycache__/
@@ -90,3 +90,6 @@ htmlcov/
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# b04 full-demo frozen inputs/code and cloud records; products remain versioned.
+/R04_Research/a01_Methods/b04_ReturnVolatilityModeling/c[0-9][0-9]_*_CloudRuns/

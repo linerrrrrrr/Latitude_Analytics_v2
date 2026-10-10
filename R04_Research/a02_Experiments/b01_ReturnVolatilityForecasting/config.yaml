@@ -1,0 +1,125 @@
+# 固定实验参数；默认入口读取已保存结果。
+experiment:
+  name: ReturnVolatilityForecasting
+  state: completed_one_time
+# 整体范围、尺度校准训练期与测试期；日期两端包含，使用上海时区。
+scope:
+  adjustment:
+    end: '2026-06-30'
+    start: '2010-01-01'
+  date_field: trading_date
+  experiment_dates:
+    end: '2026-06-30'
+    start: '2025-01-01'
+  interval_closed: both
+  period:
+    end: '2026-06-30'
+    start: '2010-01-01'
+  read:
+    end: '2026-06-30'
+    start: '2010-01-01'
+  test:
+    end: '2026-06-30'
+    start: '2025-01-01'
+  timezone: Asia/Shanghai
+  train:
+    end: '2024-12-31'
+    start: '2010-01-01'
+# 原冻结输入位于本实验Data；成交额统计覆盖全部合约。
+input:
+  directory: Data
+  varieties:
+  - RB
+  - CU
+  quantity_scope: all_contracts
+  price: adjusted
+# 固定采样单位为校准训练期平均分钟轴增量的N倍；测试期沿用。
+sampling:
+  axes:
+  - time
+  - money
+  - gk_money
+  N: 15
+  method: log_interpolate
+# 每个测试日使用此前完整三个自然年的历史，历史不足保留失败。
+rolling:
+  train_years: 3
+  insufficient_history_policy: require_full_window
+# TD120为120交易日季节窗口；RV和BPV对应两种分钟季节因素。
+seasonality:
+  lookbacks:
+    td120:
+      trading_days: 120
+  huber_t: 1.345
+# 三种收益观测处理：不去季节、TD120-RV、TD120-BPV；模型阶数相同。
+model_cases:
+- fit_kwargs:
+    include_mean: true
+    mean_order:
+    - 1
+    - 1
+    volatility_order:
+    - 1
+    - 1
+  id: arma_garch_no_seasonality
+  kind: return
+  model: ARMA-GARCH
+  observation_col: log_return
+  require_nonnegative_input: false
+  return_seasonality: null
+  seasonality_window: null
+  transform: identity
+  zero_replacement: null
+- fit_kwargs:
+    include_mean: true
+    mean_order:
+    - 1
+    - 1
+    volatility_order:
+    - 1
+    - 1
+  id: arma_garch_td120_rv
+  kind: return
+  model: ARMA-GARCH
+  observation_col: log_return
+  require_nonnegative_input: false
+  return_seasonality: rv
+  seasonality_window: td120
+  transform: identity
+  zero_replacement: null
+- fit_kwargs:
+    include_mean: true
+    mean_order:
+    - 1
+    - 1
+    volatility_order:
+    - 1
+    - 1
+  id: arma_garch_td120_bpv
+  kind: return
+  model: ARMA-GARCH
+  observation_col: log_return
+  require_nonnegative_input: false
+  return_seasonality: bpv
+  seasonality_window: td120
+  transform: identity
+  zero_replacement: null
+# 固定359个测试交易日的位置0、179、358。
+dates:
+- '2025-01-02'
+- '2025-09-25'
+- '2026-06-30'
+# 结果已验收；云提交和原1944组配置队列的继续入口关闭。
+execution:
+  state: completed
+  allow_submission: false
+  allow_original_1944_resume: false
+# 四张结果表的路径相对于本实验目录。
+results:
+  fit: Data/fit.parquet
+  prediction: Data/prediction.parquet
+  previous_fit: Data/previous_fit.parquet
+  previous_prediction: Data/previous_prediction.parquet
+# 执行身份与验收记录；源码快照保留实际云来源。
+provenance: provenance.json
+sources: sources.zip
