@@ -1,54 +1,139 @@
 # Latitude_Analytics_v2
 
-顶层编号分区使用大写 `R`，例如 `R02_Market_Data`；分区内保留 `a01 → b01 → c01` 的业务层级。代码从仓库根使用完整包路径导入，编号继续用于浏览排序和业务归属。共用的 `config/`、`environment/` 等目录按职责命名。
+面向中国期货市场的数据采集与量化研究仓库。市场数据由正式采集入口更新，以统一的 Arrow/Parquet 契约供下游读取；研究工作包括主力合约识别、连续复权、采样、收益与波动率建模、期限结构及小波分析，也包含独立的论文复现和策略研究项目。
 
-本仓库包含市场数据采集、正式数据湖、研究项目和实验工作流。目录级规则由 [AGENTS.md](AGENTS.md) 统一索引；协作中的纠错与执行状态遵循[对应规则](AGENTS.md#协作纠错与执行状态)。
+## 常用入口
 
-本地入口统一使用 v2，安装、alipai 依赖例外和云端环境边界见[环境说明](environment/README.md)。
+| 要做的事 | 从这里开始 |
+| --- | --- |
+| 配置本地 Python、Notebook 或云端 SDK 环境 | [环境说明](environment/README.md)、[依赖清单](environment/requirements.txt) |
+| 读取已有市场数据 | [数据湖读取 Demo](R02_Market_Data/a02_Lake/read_futures_lake_demo.ipynb)、[湖仓规则](R02_Market_Data/a02_Lake/AGENTS.md) |
+| 采集、更新数据或查看运行历史 | [采集说明](R02_Market_Data/a01_Collection/README.md)、[总控台操作说明](R02_Market_Data/a01_Collection/operations/README.md) |
+| 排查数据来源、连接或采集代码问题 | [采集检查](R02_Market_Data/a01_Collection/checks/README.md) |
+| 使用研究方法、查看 demo 或组织实验 | [研究说明](R04_Research/README.md)、[收益与波动率预测实验](R04_Research/a02_Experiments/b01_ReturnVolatilityForecasting/README.md) |
+| 查找论文复现、波动率学习材料或金融期货数据工作流 | [研究项目入口](#研究项目) |
+| 修改代码、文档或数据契约 | [全仓规则与规范索引](AGENTS.md)，再读取目标目录的规则 |
 
-研究方法中超过 100 MiB 的 demo 通过 Git LFS 保存。首次克隆后，在仓库根运行 `git lfs install --local` 和 `git lfs pull`，取得原路径下的完整 Parquet 数据；后续检出版本也需保持 Git LFS 可用。文件内容、metadata 和生成身份不因存储方式改变。
-
-市场数据和 `R04_Research` 的数据预览采用 `英文字段名（中文含义）` 表头。中文只作用于展示，silver 含义取权威 Schema，研究派生字段由所属方法定义；范围和边界见[展示规则](AGENTS.md#数据呈现附带中文)。
+## 目录与职责
 
 ```text
-R00_draft_collection_01/       # 探索 Notebook
-  testing_N/         # 对应 Notebook 的本地数据与显式导出文件
-R00_draft_collection_02/       # 临时或待用户决定去留、复用与最终归属的材料
-R01_project_collection/       # 各研究项目
-R02_Market_Data/
-  a01_Collection/            # 数据采集、更新和运维
-    checks/                  # 数据源检查、采集本地测试与检查结果
-    operations/console.py    # 采集 GUI 入口
-    operations/run_history/  # 采集运行历史、日志和状态
-  a02_Lake/                  # 正式数据湖及读取示例
-    raw/                     # 来源原文与证据
-    silver/                  # 17 张稳定契约表
-R04_Research/                 # 方法、可串联 demo 和按主题命名的实验
-  a01_Methods/               # bNN 研究主题；cNN 单元的 Notebook、代理和同基名 DemoData 共同归属
-  a02_Experiments/           # 按实验命名；收益与波动率预测入口已建立
-  referance/                # 研究参考资料、文献和资料包
-R05_Old_Projects/             # 只读历史归档，含 collection_maintenance_20261002.zip
-config/                      # 项目共享配置与可执行数据契约
-environment/                 # 环境安装、依赖清单、验证代码与证据
-  alipai/                    # SDK 验证入口与分批结果
-  rebuild_20261001/          # 已有环境重建证据
+Latitude_Analytics_v2/
+├─ R00_draft_collection_01/     # 探索 Notebook
+│  └─ testing_N/               # 同名 Notebook 的本地配套输出
+├─ R00_draft_collection_02/     # 临时材料与待确认归属的文件
+├─ R01_project_collection/     # 独立研究、策略与论文复现项目
+├─ R02_Market_Data/
+│  ├─ a01_Collection/          # 正式采集入口及共用支撑模块
+│  │  ├─ checks/              # 来源检查、采集本地测试及检查结果
+│  │  └─ operations/          # 采集总控台、监控及运行历史
+│  └─ a02_Lake/               # 正式数据湖及读取 Demo
+│     ├─ raw/                 # 来源原文与证据
+│     └─ silver/              # 17 张稳定契约表
+├─ R04_Research/
+│  ├─ a01_Methods/             # 可组合方法、Notebook 代理及方法 demo
+│  ├─ a02_Experiments/         # 按实验名称组织的配置、计算与成果
+│  └─ referance/               # 研究参考资料、文献和资料包
+├─ R05_Old_Projects/           # 只读历史归档
+├─ config/                    # 共享配置、连接及可执行数据契约
+├─ environment/               # 环境安装、依赖、验证入口与证据
+├─ .env.template              # 本地配置模板与项目根定位约定
+└─ AGENTS.md                  # 全仓规则与目录规范索引
 ```
 
-目录编号标识业务单元，同一单元的文件与附属资源共享编号和业务词根，详见[编号与资源归属](AGENTS.md#层级编号与资源归属)。研究 demo 使用 `cNN_Name_DemoData/`；实验共有材料使用 `Data/`、`Tracking/`，不占 c 单元编号。收益／波动率建模集中在一个 `b04_ReturnVolatilityModeling/` 主题：c01 已实现分钟贡献、每日季节曲线与训练期初始回填；c02 已实现分钟去季节、采样区间汇总和模型输入转换；c03 已实现六组收益模型的 QML 联合拟合、预测及状态更新；c04 已实现 ARMA、ARFIMA、HAR、MEM 的直接观测拟合、下一步预测和固定参数更新。
+顶层 `RNN` 标识仓库分区，分区内的 `a`、`b`、`c` 编号标识业务层级。同一业务单元的 Notebook、Python 文件、配置和附属资源共享编号及业务词根；实际依赖由调用关系确定。命名规则见[层级编号与资源归属](AGENTS.md#层级编号与资源归属)。
 
-- 采集入口、GUI 启动和维护命令见 [采集说明](R02_Market_Data/a01_Collection/README.md) 与 [运维说明](R02_Market_Data/a01_Collection/operations/README.md)。
-- 环节函数 Notebook 的 demo 使用独立的 15 格：读取完整输入、切小样本内存试错，同一完整输入提交 DLC，每 60 秒查询，回收验收保存后独立展示；不生成额外执行脚本，不默认创建 Agent 恢复任务。当前 b04 完整 demo 已另获失败排错、重新提交及每 30 分钟唤醒本聊天的明确授权；其定时任务在全部验收后停用。实验层不套用此 demo 排列。具体要求见[研究规则](R04_Research/AGENTS.md#notebook-dlc-流程)。
-- 研究各环节的业务 demo 使用真实上游产物，合成边界测试与真实链路验收分别记录；收益／波动率 demo 已加入完整采样序列逐点重估，当前执行状态见[研究说明](R04_Research/README.md#收益波动率建模)。
-- 期限结构建模归 `b05_TermStructureModeling/`，已实现 [c01 输入构造](R04_Research/a01_Methods/b05_TermStructureModeling/c01_TermStructureInputs.ipynb)、[c02 固定 λ 的 NSS 拟合](R04_Research/a01_Methods/b05_TermStructureModeling/c02_NSSFitting.ipynb)及 [c03 网格校准](R04_Research/a01_Methods/b05_TermStructureModeling/c03_NSSCalibration.ipynb)：以合约最后有效日的自然日末（上海时区次日 00:00）计算剩余期限，保持上游输入尺度，按显式经济约束拟合并保留失败记录。c03 暴露网格上下限与步长，只用训练期选择 λ，测试期固定 λ 重估 β，计算和单张热力图分开调用；真实 demo 验收状态见[期限结构说明](R04_Research/README.md#期限结构输入)。 当前 [共用配置](R04_Research/a01_Methods/b05_TermStructureModeling/c03_NSSCalibration.yaml) 为 RB、N15 的 σ×成交额采样；三个 Notebook 默认不落盘小样本，完整云 demo 状态见本批记录。
+## 本地准备
+
+### Python 与 Notebook
+
+本地开发、采集和研究统一使用 `latitude_env_v2`，Notebook 选择 `Python (latitude_env_v2)` 内核。新机器按[环境说明](environment/README.md)重建；alipai 的依赖例外、Jupyter 配置及本地／云端验证边界也在该说明中定义。
+
+本机可在仓库根目录运行环境检查：
+
+```powershell
+& 'E:\anaconda3\envs\latitude_env_v2\python.exe' 'R02_Market_Data\a01_Collection\b00_01_verify_runtime.py'
+```
+
+### 本地配置与数据位置
+
+按 [.env.template](.env.template) 在仓库根目录准备 `.env`，填写所用数据来源的凭据。模板中的采集起点和正式湖路径为：
+
+```dotenv
+FUTURES_DATA_START_DATE=2010-01-01
+FUTURES_LAKE_ROOT=R02_Market_Data/a02_Lake
+```
+
+正式湖路径由 `config.settings.settings.futures_lake_root` 读取，相对路径按仓库根解析。项目根定位统一使用模板中的约定，Python 导入从仓库根使用完整包路径。
+
+`.env` 和物化的正式湖数据保留在本地；克隆代码后，需要另行准备数据才能运行湖仓读取和依赖它的研究。Git 收纳范围见 [.gitignore](.gitignore)。
+
+### 研究 demo 与 Git LFS
+
+方法 demo 随代码版本保存，其中超过 100 MiB 的 Parquet 使用 Git LFS。首次克隆后，在仓库根目录运行：
+
+```powershell
+git lfs install --local
+git lfs pull
+```
+
+后续检出版本也需保持 Git LFS 可用，以取得原路径下的完整数据文件。具体文件属性见 [.gitattributes](.gitattributes)。
+
+## 市场数据
+
+`R02_Market_Data/a01_Collection/` 维护国内期货日历与行情、交易所报告、外部市场、宏观与利率四组采集业务。19 个正式入口的来源、更新范围、写入和验收要求见[采集说明](R02_Market_Data/a01_Collection/README.md)。
+
+日常操作通过 [console.py](R02_Market_Data/a01_Collection/operations/console.py) 总控台选择环节、配置参数、运行批次及查看历史，启动命令见[总控台操作说明](R02_Market_Data/a01_Collection/operations/README.md)。日常快捷配置包含 18 个阶段；全量分钟质检 c08 需人工显式选择和确认。业务入口用 `--write` 控制提交，不带该参数仍可能访问来源 API；具体执行边界由[采集规则](R02_Market_Data/a01_Collection/AGENTS.md)及 [operations 规则](R02_Market_Data/a01_Collection/operations/AGENTS.md)定义。
+
+正式湖根为 `R02_Market_Data/a02_Lake/`。`raw/` 保存生产者约定的原文与证据，生意社链路只归档原始响应字节及摘要；`silver/` 提供 7 张日历维度表和 10 张事实表。稳定表的字段、类型、主键、分区和 metadata 统一定义在 [config/data_contracts.py](config/data_contracts.py)。`gold` 的产物与 Schema 由所属工作流定义。
+
+读取时从[数据湖 Demo](R02_Market_Data/a02_Lake/read_futures_lake_demo.ipynb)开始：17 张 silver 表各有独立示例，另有生意社 raw 字节与摘要核对。修改生产者或消费者时遵循[湖仓规则](R02_Market_Data/a02_Lake/AGENTS.md)。
+
+## 研究方法与实验
+
+`R04_Research/a01_Methods/` 按研究主题组织可组合的计算单元：
+
+| 主题 | 主要内容 |
+| --- | --- |
+| [b01_MainContractSelection](R04_Research/a01_Methods/b01_MainContractSelection/) | 主力合约识别与每日映射 |
+| [b02_MainContinuousAdjustment](R04_Research/a01_Methods/b02_MainContinuousAdjustment/) | 训练／测试划分下的连续复权 |
+| [b03_Sampling](R04_Research/README.md#分界采样) | 采样轴、固定单位、位置与价格执行 |
+| [b04_ReturnVolatilityModeling](R04_Research/README.md#收益波动率建模) | 日内季节性、模型观测、收益及波动率模型 |
+| [b05_TermStructureModeling](R04_Research/a01_Methods/b05_TermStructureModeling/) | 期限结构输入、固定 λ 的 NSS 拟合与网格校准 |
+| [b06_WaveletAnalysis](R04_Research/README.md#小波分析) | 小波变换、同步压缩、连续序列与谱特征 |
+
+研究算法由 Notebook 的 `export` 单元格定义，同名 `.py` 通过[加载器](R04_Research/a00_notebook_loader.py)导入定义。采集目录采用 Notebook 完整导出为 Python 的方式；两者的同步要求分别见[研究规则](R04_Research/AGENTS.md)和[采集规则](R02_Market_Data/a01_Collection/AGENTS.md)。
+
+方法 demo 使用真实上游产物，保存在生产单元的 `cNN_Name_DemoData/`；下游按品种、范围、参数和生成身份选择输入。各方法的定义、demo 覆盖范围及实际验收状态见[研究说明](R04_Research/README.md)。
 
 <!-- nss-cloud-status:start -->
-NSS N15 σ×交易额完整云 demo 已计算并验收：78,007 点、936,060 合约行、九份文件；具体失败状态见本批记录。 [批次记录](R04_Research/a01_Methods/b05_TermStructureModeling/c03_NSSCalibration_CloudRuns/20261007_nss_n15_31bc82d6/submission.json)。
+NSS 完整 demo 的配置、验收结果与批次证据见[期限结构说明](R04_Research/README.md#期限结构输入)。
 <!-- nss-cloud-status:end -->
 
-- 来源质量、连接排查和采集本地测试见 [采集检查](R02_Market_Data/a01_Collection/checks/README.md)。
-- 小波分析归 `b06_WaveletAnalysis/`，[c01 小波变换](R04_Research/a01_Methods/b06_WaveletAnalysis/c01_WaveletTransform.ipynb)提供复因果连续递推及离线 Morlet，周期按采样点数，预热与失败分别记录；[c02 同步压缩](R04_Research/a01_Methods/b06_WaveletAnalysis/c02_Synchrosqueezing.ipynb)默认采用正式 SST，支持当前点比例／绝对阈值、固定频率网格与排除诊断；[c03 完整序列](R04_Research/a01_Methods/b06_WaveletAnalysis/c03_RollingWavelet.ipynb)接入连续状态、可得时刻对齐和按参数选择的独立单张图；[c04 谱特征](R04_Research/a01_Methods/b06_WaveletAnalysis/c04_SpectralFeatures.ipynb)从已有 SST 提取逐点统计，暴露权重、分频和带宽参数，保留退化原因及信息时刻。四本 Notebook 的完整真实 demo 均已验收，方法与实际状态见[小波分析说明](R04_Research/README.md#小波分析)。
-- 正式湖通过 `.env` 中的 `FUTURES_LAKE_ROOT=R02_Market_Data/a02_Lake` 定位；配置说明见 [.env.template](.env.template)，读取示例见 [read_futures_lake_demo.ipynb](R02_Market_Data/a02_Lake/read_futures_lake_demo.ipynb)。
-- 草稿区材料经用户确认后删除或移至最终目录；全部待办处理完且无新增材料时应为空，持续工作中允许暂时非空。价值判断、复用和处置边界见[草稿区规则](AGENTS.md#草稿区与文件收纳规则)。
-- 探索 Notebook 的配套文件统一收纳到 `R00_draft_collection_01/<notebook 名>/`；图表默认内嵌，独立文件显式导出，输出目录留在本地。目录规则与 `testing_10` 分钟数据的跨 Notebook 读取路径见[实验草稿区 AGENTS](R00_draft_collection_01/AGENTS.md)。
-- 固定产生的运行历史、日志和状态保存在产生它们的项目目录内；研究实验记录由所属研究项目保存。运行输出使用所属目录的显式路径，仓库根目录禁止生成 `mlruns/`、`mlartifacts/`、`mlflow.db` 等工具默认输出；MLflow 数据库与附件须分别定位，具体见[文件收纳规则](AGENTS.md#草稿区与文件收纳规则)。
-- 研究结构、Notebook 代理、demo 引用及 Hydra/MLflow/DLC 接入见 [研究说明](R04_Research/README.md)。主力识别已保存并验收 CU、RB 两份 2010-01-01 至 2026-09-30 demo；训练期双向、测试期固定起点复权的 CU、RB 数据已重算并验收，数据归生产单元的 `cNN_Name_DemoData/`。复权锚点使用片段首末实际分钟，理论网格缺口保留为诊断；原始零价格保留、对应 log 和复权字段置空。复权与采样文件名分别列出训练范围和测试范围，两段合并即完整区间；以品种、范围和关键参数选择，精确条件及输入身份沿用 Parquet metadata。分界采样统一归 `b03_Sampling/`，使用 `c01_SamplingPositions`、`c02_SamplingExecution` 两本 Notebook 和各自代理；轴及初始单位校准归位置 Notebook，滚动时固定 a 和复权输入。过期采样 demo 已删除，完整范围重新生成及验收状态见研究说明；价格与 GH 分开绘图，覆盖 CU、RB × N=10、15、30、60 × 三条轴 × 两种方式的 48 组配置，并可在独立单元格逐张选择图像进行比较。旧 close 重采样按只读规则保护。首个按日建模实验已建立实验草稿，数据准备、逐日计算、输入冻结及 DLC／MLflow 显式入口已接入，RB、CU 的完整输入准备及冻结验收已完成，首次云创建请求因 SDK 默认会话使用 VPC 端点而 TLS 失败停止，尚无确认的 DLC job ID；会话初始化已修正并通过离线检查，模型拟合／预测尚未执行，云端链路尚未验收。方法代码和 demo 数据都纳入 Git，方法或输入变化时同步更新受影响的产物。原特征工程留存与运行边界见研究说明。
+`a02_Experiments/` 将方法组合为具体实验，以实验配置明确样本、训练／测试范围和比较条件。已有[收益与波动率预测实验](R04_Research/a02_Experiments/b01_ReturnVolatilityForecasting/README.md)的范围、结果、失败记录及复现入口由其项目说明集中维护。Hydra、MLflow 和 DLC 的分工与成果归属见[工具与云计算说明](R04_Research/README.md#工具分工与云计算)。
+
+## 研究项目
+
+`R01_project_collection/` 保存独立项目。以下入口分别说明各自的研究口径、数据依赖和成果边界：
+
+| 项目入口 | 用途 |
+| --- | --- |
+| [中国期货市场演变复现](R01_project_collection/china_futures_market_evolution_reproduction/README.md) | 基于正式 silver 逐项复现市场演变统计方法 |
+| [中国商品期货日内波动预测复现](R01_project_collection/china_commodity_futures_intraday_volatility_forecasting_reproduction/README.md) | 复现日内波动预测方法及比较框架 |
+| [波动率阅读教程](R01_project_collection/JQ_strategy/volatility_research/READING_TUTORIAL.md)与[符号和方法](R01_project_collection/JQ_strategy/volatility_research/README.md) | 学习高频实现波动、日内周期与去季节方法 |
+| [金融期货本地数据工作流](R01_project_collection/JQ_strategy/financial_futures_data/README.md) | 人工聚宽传输、缺失检测与项目数据库管理 |
+
+## 文件归属与修改约定
+
+文件按产生它们的项目和业务单元收纳：
+
+| 材料 | 位置与规则 |
+| --- | --- |
+| 采集运行历史、日志和状态 | `R02_Market_Data/a01_Collection/operations/run_history/`；来源检查结果归 `checks/results/` |
+| 研究方法 demo | 所属方法的 `cNN_Name_DemoData/`，按[研究规则](R04_Research/AGENTS.md)纳入 Git |
+| 研究实验数据与追踪记录 | 所属实验的 `Data/`、`Tracking/`，本地收纳边界见[研究说明](R04_Research/README.md#数据和维护边界) |
+| 探索 Notebook 的配套输出 | `R00_draft_collection_01/<Notebook 基名>/`，图表默认内嵌；见[探索规则](R00_draft_collection_01/AGENTS.md) |
+| 临时文件与尚待决定的材料 | `R00_draft_collection_02/`，由用户确认保留、删除、复用及最终去向；见[草稿区规则](AGENTS.md#草稿区与文件收纳规则) |
+
+运行输出须显式指向所属目录；MLflow 数据库与附件位置分别配置，仓库根目录禁止产生 `mlruns/`、`mlartifacts/`、`mlflow.db` 等默认输出。
+
+修改前读取 [AGENTS.md](AGENTS.md) 及目标目录的规则；修改规范或可执行契约时，同步检查索引中的关联说明、示例和代码。市场数据与研究数据预览按[中文展示规则](AGENTS.md#数据呈现附带中文)呈现字段含义，计算和落盘保留原字段名。[R05_Old_Projects](R05_Old_Projects/AGENTS.md) 递归只读，历史代码与证据按归档规则保护。

@@ -13,6 +13,14 @@ python -m ipykernel install --user --name latitude_env_v2 --display-name "Python
 python -m pip check
 ```
 
+PyCharm 托管 Jupyter 可显式加载项目内的 [jupyter_server_config.py](jupyter_server_config.py)。脚本根据自身位置设置 `ServerApp.root_dir`，使新内核的工作目录位于项目内；共享 Python 环境无需安装项目级配置。在 Notebook 工具栏的服务器菜单中打开“配置 Jupyter 服务器”，为本项目选择或新建托管连接，关闭自动检测执行模式并选择 Jupyter 服务器模式，在命令行参数中设置：
+
+```text
+--no-browser --allow-root --config="E:/Latitude_Analytics_v2/environment/jupyter_server_config.py"
+```
+
+将此连接用于本项目的 Notebook。配置只作用于显式传入该参数的服务器；项目迁移时只需更新参数中的配置路径。更改后停止并重新启动该 Jupyter 服务器，仅重启内核不会重新加载服务器配置。从终端启动时可在 `python -m jupyterlab` 后传入同样的参数。Notebook 的项目根定位仍按[环境模板](../.env.template)从工作目录向上查找。
+
 [requirements.txt](requirements.txt) 先安装核心库和 SDK 所需依赖，再单独安装 alipai。这是已验证路径的依赖声明例外：官方包要求 `numpy<2`，不能与本项目 NumPy 2 放入同一个普通解析清单。保留官方包及元数据，不降级 NumPy；`pip check` 仍会报告这一条冲突，其他告警须另查。`--no-deps` 只跳过解析，不代表全面兼容。GPU 依赖按清单的可选说明另配。
 
 [环境重建验收](rebuild_20261001/migration_result.json)支持核心库、Schema 往返和采集运维检查；[alipai 实测](alipai/results/20261002T174304Z-7f65e796/REPORT.txt)支持 CPU 提交、输入输出、函数组合、双机分片、checkpoint、失败识别与停止。正式安装已核对同版 SDK 源码、依赖差异及干净内核，并只读查询成功任务；已有依赖未变更。这些微型验证不覆盖完整研究或所有 SDK 接口。
