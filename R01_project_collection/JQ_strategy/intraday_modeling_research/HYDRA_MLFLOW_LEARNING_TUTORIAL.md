@@ -274,6 +274,7 @@ batch_label: first_scheme_matrix
 
 paths:
   strategy_dir: E:/Latitude_Analytics_v2/R01_project_collection/JQ_strategy
+  learning_outputs: ${paths.strategy_dir}/intraday_modeling_research/learning_outputs
 
 tracking:
   uri: http://127.0.0.1:5000
@@ -287,15 +288,15 @@ hydra:
   job:
     chdir: false
   run:
-    dir: learning_outputs/single/${now:%Y-%m-%d}/${now:%H-%M-%S_%f}
+    dir: ${paths.learning_outputs}/single/${now:%Y-%m-%d}/${now:%H-%M-%S_%f}
   sweep:
-    dir: learning_outputs/sweep/${now:%Y-%m-%d}/${now:%H-%M-%S_%f}
+    dir: ${paths.learning_outputs}/sweep/${now:%Y-%m-%d}/${now:%H-%M-%S_%f}
     subdir: ${hydra.job.num}
 ~~~
 
 这里 evaluation.protocol 是待后续建模课具体实现的协议名称，配置检查练习不会执行评价。进入训练前必须补齐目标、预测原点、horizon、切分日期和共同评价键，不能仅凭该名称宣布结果可比较。
 
-输出相对当前项目目录。运行前先进入上述 `intraday_modeling_research` 目录；使用数字 job 子目录可避免 Windows 路径因参数名过长或非法字符出错。
+输出由 `paths.learning_outputs` 显式定位到本项目目录，不随终端当前目录改变。运行命令前先进入上述 `intraday_modeling_research` 目录以定位示例脚本；使用数字 job 子目录可避免 Windows 路径因参数名过长或非法字符出错。
 
 ### 3.3 公共主力片段配置
 
