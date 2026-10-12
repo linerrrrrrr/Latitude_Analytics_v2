@@ -36,7 +36,7 @@ python test_huber_seasonality_diagnostics.py
 
 这里，\(x_i\) 是该分钟位置的有效历史日贡献，\(n\) 是有效样本数，\(\mu\) 是待估位置，\(s\) 是固定尺度，\(\psi\) 是 Huber 截断影响函数。尺度固定时，极端观测对位置方程的影响有界；但当 \(s=0\) 时标准化残差不可用。`c01_IntradaySeasonality` 在进入迭代前检测到此情形并返回 `zero_scale`，这是明确的失败诊断，不是数值溢出。
 
-另一样本的尺度为正，但迭代 30 次未通过 `|μ_new−μ| < s × 10⁻⁶`。把上限增加到 32 次可通过同一停止条件。这说明固定点迭代可能在给定上限内太慢；增大上限只是一个诊断对照，不足以证明真实窗口的统计估计稳定，也不应自动用于已验收实验。
+另一样本的尺度为正，但迭代 30 次未通过 `|μ_new−μ| < s × 10⁻⁶`。把上限增加到 32 次可通过同一停止条件。这说明固定点迭代可能在给定上限内太慢；增大上限只是一个诊断对照，不足以证明真实窗口的统计估计稳定，也不应用于已验收实验。
 
 ## 替代定义对照
 
@@ -56,22 +56,3 @@ python test_huber_seasonality_diagnostics.py
 ## 使用边界与下一步
 
 这些结果只证明退化机制可被小样本重现，并展示几个定义不同的估计量在同一输入上的差别。尚不能据此决定生产季节曲线的替代方法。若继续比较，应在冻结数据副本上评估逐分钟位置的覆盖率、曲线均值归一化后的变化、日间稳定性和收益／波动率预测指标；单独写入新结果目录，保留原 2026-10-07 验收交付及失败记录。
-#!/usr/bin/env python3
-"""Minimal, dependency-free reproductions of seasonal Huber failure modes.
-
-This script mirrors the relevant statsmodels estimate_location iteration and
-c01_IntradaySeasonality wrapper decisions. Inputs are finite observed samples;
-no missing observations are filled or silently dropped here.
-"""
-from __future__ import annotations
-
-import math
-from statistics import median
-
-MAD_NORMALIZER = 1.482602218505602
-HUBER_T = 1.345
-HUBER_TOL = 1e-6
-HUBER_MAXITER = 30
-
-
-def require_finite(values:
