@@ -123,6 +123,7 @@ def main() -> None:
     zero_mad = [0, 0, 0, 0, 1]
     slow_huber = [0] * 6 + [100] * 2 + [1000] * 7
 
+    assert current_wrapper([2, 2, 2, 2]) == (2.0, "ok")
     value, status = current_wrapper(zero_mad)
     assert value is None and status == "zero_scale"
     assert standardized_mad(zero_mad) == 0
