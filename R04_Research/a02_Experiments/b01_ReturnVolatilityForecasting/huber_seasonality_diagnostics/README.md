@@ -8,7 +8,7 @@
 python test_huber_seasonality_diagnostics.py
 ```
 
-脚本仅使用 Python 标准库。它按 `statsmodels.robust.norms.estimate_location` 的 Huber 加权迭代定义，复现实现中与其一致的固定 MAD、Huber 阈值、停止容差和迭代上限，并覆盖生产包装器对常量、零尺度和 `ValueError` 的状态处理。参考：[statsmodels `estimate_location` 源码](https://github.com/statsmodels/statsmodels/blob/main/statsmodels/robust/norms.py)；项目实现：[c01_IntradaySeasonality.ipynb](../../a01_Methods/b04_ReturnVolatilityModeling/c01_IntradaySeasonality.ipynb)。
+脚本仅使用 Python 标准库。它按 `statsmodels.robust.norms.estimate_location` 的 Huber 加权迭代定义，复现实现中与其一致的固定 MAD、Huber 阈值、停止容差和迭代上限，并覆盖生产包装器对常量、零尺度和 `ValueError` 的状态处理。参考：[statsmodels `estimate_location` 源码](https://github.com/statsmodels/statsmodels/blob/main/statsmodels/robust/norms.py)；项目实现：[c01_IntradaySeasonality.ipynb](../../../a01_Methods/b04_ReturnVolatilityModeling/c01_IntradaySeasonality.ipynb)。
 
 ## 最小样本与复现结果
 
@@ -46,7 +46,7 @@ python test_huber_seasonality_diagnostics.py
 | --- | --- | ---: | ---: | --- |
 | 20% 对称截尾均值 | 每侧去掉 `floor(0.2n)` 个极端次序统计量，再对剩余观测取算术平均。 | 0.000000 | 466.666667 | 不需要尺度或迭代；约 20% 尾部污染抗性。估计对象改成中间样本的均值；小样本中 `floor(0.2n)=0` 时退化为普通均值。 |
 | 20% 对称 Winsor 均值 | 将每侧 `floor(0.2n)` 个尾部数值截到保留区边界，再对全部观测取平均。 | 0.000000 | 480.000000 | 不丢弃观测，但尾部数值被边界替换；估计对象是截尾后分布的均值。大量并列值时可能与原均值相同。 |
-| Huber M 位置 + 均值绝对偏差尺度 | 保留 Huber 影响函数，但用 `mean(|x−mean(x)|)` 作正尺度，并以均值初始化。 | 0.107600 | 480.000000 | 给零 MAD 提供尺度并避开本例 30 次失败；该尺度对极端值不稳健，本例第二组权重全部落在近似线性区，结果等于普通均值。适合作为对照，不建议无条件替代。 |
+| Huber M 位置 + 均值绝对偏差尺度 | 保留 Huber 影响函数，但用 `mean(|x−mean(x)|)` 作正尺度，并以均值初始化。 | 0.107600 | 480.000000 | 给零 MAD 提供尺度并避开本例 30 次失败；该尺度对极端值不稳健，本例第二组权重全部落在线性区，结果等于普通均值。适合作为对照，不建议无条件替代。 |
 | 普通算术均值（参照） | 直接平均全部观测。 | 0.200000 | 480.000000 | 无迭代、无缺失；但对极端值不稳健，仅用作解释标尺。 |
 
 截尾均值是首选的独立稳健基线：它无需尺度估计、不会因 MAD 为零而失效，也不靠补值制造完整曲线。它改变了原 Huber M 位置定义，不能视为等价修复。Winsor 均值保留样本数但改变尾部数值；Huber 更换尺度则保留 M 方程形式、改变每个残差的标准化强度，并可能削弱稳健性。
