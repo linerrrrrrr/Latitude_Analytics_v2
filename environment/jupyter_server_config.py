@@ -1,4 +1,13 @@
-"""由本项目的 Jupyter 启动参数显式加载，设置服务器及新内核的根目录。"""
+"""本项目的 Jupyter Server 配置，将服务器根目录设为仓库根目录。
+
+由 Jupyter 启动时通过 --config 参数加载。
+
+命令行示例（先激活 latitude_env_v2 环境）：
+    python -m jupyterlab --config="E:/Latitude_Analytics_v2/environment/jupyter_server_config.py"
+
+PyCharm 托管服务器：
+    将上述 --config 参数填入 Jupyter 服务器的启动参数。
+"""
 
 from pathlib import Path
 
